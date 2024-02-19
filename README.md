@@ -24,5 +24,9 @@ BLUESKY_APP_PASSWORD=
 composer remove revolution/laravel-bluesky
 ```
 
+## Usage
+- [BlueskyClient](./docs/bluesky-client.md)
+- [Laravel Notifications](./docs/notification.md)
+
 ## LICENCE
 MIT
