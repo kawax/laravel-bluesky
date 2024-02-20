@@ -57,9 +57,9 @@ class BlueskyClient implements Factory
     public function feed(string $filter = 'posts_with_replies'): Collection
     {
         return Http::baseUrl($this->baseUrl())
-            ->withToken($this->session->get('accessJwt'))
+            ->withToken($this->session('accessJwt'))
             ->get(AtProto::getAuthorFeed->value, [
-                'actor' => $this->session->get('did'),
+                'actor' => $this->session('did'),
                 'filter' => $filter,
             ])
             ->throw()
@@ -74,7 +74,7 @@ class BlueskyClient implements Factory
     public function timeline(string $cursor = ''): Collection
     {
         return Http::baseUrl($this->baseUrl())
-            ->withToken($this->session->get('accessJwt'))
+            ->withToken($this->session('accessJwt'))
             ->get(AtProto::getTimeline->value, [
                 'cursor' => $cursor,
             ])
@@ -88,9 +88,9 @@ class BlueskyClient implements Factory
     public function post(string $text): Collection
     {
         return Http::baseUrl($this->baseUrl())
-            ->withToken($this->session->get('accessJwt'))
+            ->withToken($this->session('accessJwt'))
             ->post(AtProto::createRecord->value, [
-                'repo' => $this->session->get('did'),
+                'repo' => $this->session('did'),
                 'collection' => 'app.bsky.feed.post',
                 'record' => [
                     'text' => $text,
