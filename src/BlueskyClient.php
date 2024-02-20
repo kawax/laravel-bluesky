@@ -28,7 +28,7 @@ class BlueskyClient implements Factory
         return $this;
     }
 
-    public function session(string $key)
+    public function session(string $key): mixed
     {
         return $this->session->get($key);
     }
