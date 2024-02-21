@@ -14,7 +14,7 @@ class BlueskyClient implements Factory
 {
     use Macroable;
 
-    protected Collection $session;
+    protected ?Collection $session = null;
 
     public function __construct(protected string $service = 'https://bsky.social')
     {
@@ -28,9 +28,9 @@ class BlueskyClient implements Factory
         return $this;
     }
 
-    public function session(string $key): mixed
+    public function session(string $key = null): mixed
     {
-        return $this->session->get($key);
+        return empty($key) ? $this->session : $this->session?->get($key);
     }
 
     /**

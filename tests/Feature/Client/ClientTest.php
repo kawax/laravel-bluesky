@@ -28,6 +28,19 @@ class ClientTest extends TestCase
         $this->assertSame('test', $client->session('accessJwt'));
     }
 
+    public function test_session()
+    {
+        Http::fake(fn () => ['accessJwt' => 'test', 'did' => 'test']);
+
+        $client = new BlueskyClient();
+
+        $client->service('https://bsky.social')
+            ->login(identifier: 'identifier', password: 'password');
+
+        $this->assertSame(['accessJwt' => 'test', 'did' => 'test'], $client->session()->toArray());
+        $this->assertSame('test', $client->session('accessJwt'));
+    }
+
     public function test_feed()
     {
         Http::fakeSequence()
