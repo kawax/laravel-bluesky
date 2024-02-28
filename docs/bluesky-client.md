@@ -4,7 +4,7 @@ BlueskyClient
 Basic client.
 
 ## Viewing my feed
-post and repost.
+Only my posts and reposts.
 
 ```php
 use Revolution\Bluesky\Facades\Bluesky;
