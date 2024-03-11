@@ -48,7 +48,7 @@ class ClientTest extends TestCase
             ->push(['feed' => ['post' => []]]);
 
         $response = Bluesky::login(identifier: 'identifier', password: 'password')
-            ->feed(filter: 'posts_with_replies');
+            ->feed(filter: 'posts_with_media', cursor: 'test');
 
         $this->assertTrue($response->collect()->has('feed'));
     }

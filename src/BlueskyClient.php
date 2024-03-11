@@ -54,13 +54,14 @@ class BlueskyClient implements Factory
     /**
      * My feed.
      */
-    public function feed(string $filter = 'posts_with_replies'): Response
+    public function feed(string $filter = 'posts_with_replies', string $cursor = ''): Response
     {
         return Http::baseUrl($this->baseUrl())
             ->withToken($this->session('accessJwt'))
             ->get(AtProto::getAuthorFeed->value, [
                 'actor' => $this->session('did'),
                 'filter' => $filter,
+                'cursor' => $cursor,
             ]);
     }
 
