@@ -13,7 +13,7 @@ use Revolution\Bluesky\Facades\Bluesky;
 $response = Bluesky::login(identifier: config('bluesky.identifier'), password: config('bluesky.password'))
        ->feed();
 
-dump($response->json());
+dump($response->collect('feed'));
 ```
 
 ## Viewing my timeline
@@ -25,7 +25,7 @@ $response = Bluesky::login(identifier: config('bluesky.identifier'), password: c
        ->timeline()
        ->throw();
 
-dump($response->collect());
+dump($response->json());
 ```
 
 ## Creating a post
