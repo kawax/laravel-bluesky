@@ -48,7 +48,7 @@ class ClientTest extends TestCase
             ->push(['feed' => ['post' => []]]);
 
         $response = Bluesky::login(identifier: 'identifier', password: 'password')
-            ->feed(filter: 'posts_with_media', cursor: 'test');
+            ->feed(limit: 10, cursor: '2024', filter: 'posts_with_media');
 
         $this->assertTrue($response->collect()->has('feed'));
     }
@@ -60,7 +60,7 @@ class ClientTest extends TestCase
             ->push(['feed' => ['post' => []]]);
 
         $response = Bluesky::login(identifier: 'identifier', password: 'password')
-            ->timeline(cursor: '1');
+            ->timeline(limit: 10, cursor: '2024');
 
         $this->assertTrue($response->collect()->has('feed'));
     }

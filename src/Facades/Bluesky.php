@@ -12,8 +12,8 @@ use Revolution\Bluesky\Contracts\Factory;
  * @method static static service(string $service)
  * @method static mixed session(string $key)
  * @method static static login(string $identifier, string $password)
- * @method static Response feed(string $filter = 'posts_with_replies', string $cursor = '')
- * @method static Response timeline(string $cursor = '')
+ * @method static Response feed(int $limit = 50, string $cursor = '', string $filter = 'posts_with_replies')
+ * @method static Response timeline(int $limit = 50, string $cursor = '')
  * @method static Response post(string $text)
  */
 class Bluesky extends Facade

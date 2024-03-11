@@ -54,25 +54,27 @@ class BlueskyClient implements Factory
     /**
      * My feed.
      */
-    public function feed(string $filter = 'posts_with_replies', string $cursor = ''): Response
+    public function feed(int $limit = 50, string $cursor = '', string $filter = 'posts_with_replies'): Response
     {
         return Http::baseUrl($this->baseUrl())
             ->withToken($this->session('accessJwt'))
             ->get(AtProto::getAuthorFeed->value, [
                 'actor' => $this->session('did'),
-                'filter' => $filter,
+                'limit' => $limit,
                 'cursor' => $cursor,
+                'filter' => $filter,
             ]);
     }
 
     /**
      * My timeline.
-    */
-    public function timeline(string $cursor = ''): Response
+     */
+    public function timeline(int $limit = 50, string $cursor = ''): Response
     {
         return Http::baseUrl($this->baseUrl())
             ->withToken($this->session('accessJwt'))
             ->get(AtProto::getTimeline->value, [
+                'limit' => $limit,
                 'cursor' => $cursor,
             ]);
     }
