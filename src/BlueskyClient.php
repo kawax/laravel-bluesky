@@ -5,10 +5,12 @@ declare(strict_types=1);
 namespace Revolution\Bluesky;
 
 use Illuminate\Http\Client\RequestException;
+use Illuminate\Http\Client\Response;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Traits\Macroable;
 use Revolution\Bluesky\Contracts\Factory;
+use Revolution\Bluesky\Enums\AtProto;
 
 class BlueskyClient implements Factory
 {
@@ -51,41 +53,33 @@ class BlueskyClient implements Factory
 
     /**
      * My feed.
-     *
-     * @throws RequestException
      */
-    public function feed(string $filter = 'posts_with_replies'): Collection
+    public function feed(string $filter = 'posts_with_replies'): Response
     {
         return Http::baseUrl($this->baseUrl())
             ->withToken($this->session('accessJwt'))
             ->get(AtProto::getAuthorFeed->value, [
                 'actor' => $this->session('did'),
                 'filter' => $filter,
-            ])
-            ->throw()
-            ->collect();
+            ]);
     }
 
     /**
      * My timeline.
-     *
-     * @throws RequestException
-     */
-    public function timeline(string $cursor = ''): Collection
+    */
+    public function timeline(string $cursor = ''): Response
     {
         return Http::baseUrl($this->baseUrl())
             ->withToken($this->session('accessJwt'))
             ->get(AtProto::getTimeline->value, [
                 'cursor' => $cursor,
-            ])
-            ->throw()
-            ->collect();
+            ]);
     }
 
     /**
-     * @throws RequestException
+     * Create new post.
      */
-    public function post(string $text): Collection
+    public function post(string $text): Response
     {
         return Http::baseUrl($this->baseUrl())
             ->withToken($this->session('accessJwt'))
@@ -96,9 +90,7 @@ class BlueskyClient implements Factory
                     'text' => $text,
                     'createdAt' => now()->toISOString(),
                 ]
-            ])
-            ->throw()
-            ->collect();
+            ]);
     }
 
     private function baseUrl(): string

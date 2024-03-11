@@ -50,7 +50,7 @@ class ClientTest extends TestCase
         $response = Bluesky::login(identifier: 'identifier', password: 'password')
             ->feed(filter: 'posts_with_replies');
 
-        $this->assertTrue($response->has('feed'));
+        $this->assertTrue($response->collect()->has('feed'));
     }
 
     public function test_timeline()
@@ -62,7 +62,7 @@ class ClientTest extends TestCase
         $response = Bluesky::login(identifier: 'identifier', password: 'password')
             ->timeline(cursor: '1');
 
-        $this->assertTrue($response->has('feed'));
+        $this->assertTrue($response->collect()->has('feed'));
     }
 
     public function test_post()
@@ -74,6 +74,6 @@ class ClientTest extends TestCase
         $response = Bluesky::login(identifier: 'identifier', password: 'password')
             ->post(text: 'test');
 
-        $this->assertTrue($response->has('uri'));
+        $this->assertTrue($response->collect()->has('uri'));
     }
 }

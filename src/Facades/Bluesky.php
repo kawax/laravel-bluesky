@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Revolution\Bluesky\Facades;
 
-use Illuminate\Support\Collection;
+use Illuminate\Http\Client\Response;
 use Illuminate\Support\Facades\Facade;
 use Revolution\Bluesky\Contracts\Factory;
 
@@ -12,9 +12,9 @@ use Revolution\Bluesky\Contracts\Factory;
  * @method static static service(string $service)
  * @method static mixed session(string $key)
  * @method static static login(string $identifier, string $password)
- * @method static Collection feed(string $filter = 'posts_with_replies')
- * @method static Collection timeline(string $cursor = '')
- * @method static Collection post(string $text)
+ * @method static Response feed(string $filter = 'posts_with_replies')
+ * @method static Response timeline(string $cursor = '')
+ * @method static Response post(string $text)
  */
 class Bluesky extends Facade
 {

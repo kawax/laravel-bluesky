@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Revolution\Bluesky;
+namespace Revolution\Bluesky\Enums;
 
 enum AtProto: string
 {
