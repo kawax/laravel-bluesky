@@ -8,6 +8,7 @@ use Illuminate\Http\Client\RequestException;
 use Illuminate\Http\Client\Response;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Traits\Conditionable;
 use Illuminate\Support\Traits\Macroable;
 use Revolution\Bluesky\Contracts\Factory;
 use Revolution\Bluesky\Enums\AtProto;
@@ -15,6 +16,7 @@ use Revolution\Bluesky\Enums\AtProto;
 class BlueskyClient implements Factory
 {
     use Macroable;
+    use Conditionable;
 
     protected ?Collection $session = null;
 
@@ -94,6 +96,18 @@ class BlueskyClient implements Factory
                     'createdAt' => now()->toISOString(),
                 ]
             ]);
+    }
+
+    public function check(): bool
+    {
+        return ! empty($this->session['accessJwt']);
+    }
+
+    public function logout(): static
+    {
+        $this->session = null;
+
+        return $this;
     }
 
     private function baseUrl(): string

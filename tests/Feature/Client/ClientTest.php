@@ -26,6 +26,26 @@ class ClientTest extends TestCase
         });
 
         $this->assertSame('test', $client->session('accessJwt'));
+        $this->assertTrue($client->check());
+    }
+
+    public function test_logout()
+    {
+        Http::fake(fn () => ['accessJwt' => 'test', 'did' => 'test']);
+
+        $client = new BlueskyClient();
+
+        $client->service('https://bsky.social')
+            ->login(identifier: 'identifier', password: 'password');
+
+        Http::assertSent(function (Request $request) {
+            return $request['identifier'] === 'identifier';
+        });
+
+        $client->logout();
+
+        $this->assertNull($client->session());
+        $this->assertFalse($client->check());
     }
 
     public function test_session()
@@ -48,7 +68,9 @@ class ClientTest extends TestCase
             ->push(['feed' => ['post' => []]]);
 
         $response = Bluesky::login(identifier: 'identifier', password: 'password')
-            ->feed(limit: 10, cursor: '2024', filter: 'posts_with_media');
+            ->when(Bluesky::check(), function () {
+                return Bluesky::feed(limit: 10, cursor: '2024', filter: 'posts_with_media');
+            });
 
         $this->assertTrue($response->collect()->has('feed'));
     }

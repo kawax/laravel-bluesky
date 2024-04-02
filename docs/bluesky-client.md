@@ -39,3 +39,23 @@ Bluesky::login(identifier: config('bluesky.identifier'), password: config('blues
 
 dump($response);
 ```
+
+## Login
+```php
+use Revolution\Bluesky\Facades\Bluesky;
+
+Bluesky::login(identifier: config('bluesky.identifier'), password: config('bluesky.password'));
+
+dump(Bluesky::check());
+// true
+```
+
+## Logout
+```php
+use Revolution\Bluesky\Facades\Bluesky;
+
+Bluesky::logout();
+
+dump(Bluesky::check());
+// false
+```
