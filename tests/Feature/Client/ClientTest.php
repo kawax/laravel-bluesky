@@ -81,7 +81,7 @@ class ClientTest extends TestCase
             ->push(['accessJwt' => 'test', 'did' => 'test'])
             ->push(['feed' => ['post' => []]]);
 
-        $response = Bluesky::login(identifier: 'identifier', password: 'password')
+        $response = Bluesky::unless(Bluesky::check(), fn () => Bluesky::login(identifier: 'identifier', password: 'password'))
             ->timeline(limit: 10, cursor: '2024');
 
         $this->assertTrue($response->collect()->has('feed'));
