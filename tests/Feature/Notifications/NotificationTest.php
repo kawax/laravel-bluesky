@@ -60,15 +60,20 @@ class NotificationTest extends TestCase
     public function test_message()
     {
         $m = new BlueskyMessage(text: 'test');
+        $m2 = BlueskyMessage::create(text: 'test');
 
         $this->assertIsArray($m->toArray());
+        $this->assertSame('test', $m->toArray()['text']);
+        $this->assertSame('test', $m2->toArray()['text']);
     }
 
     public function test_route()
     {
         $route = new BlueskyRoute(identifier: 'identifier', password: 'password', service: 'https://');
+        $route2 = BlueskyRoute::to(identifier: 'identifier', password: 'password', service: 'https://');
 
         $this->assertSame('identifier', $route->identifier);
+        $this->assertSame('identifier', $route2->identifier);
     }
 
     public function test_user_notify()
@@ -87,8 +92,7 @@ class TestNotification extends \Illuminate\Notifications\Notification
 {
     public function __construct(
         protected string $text,
-    )
-    {
+    ) {
     }
 
     public function via(object $notifiable): array
