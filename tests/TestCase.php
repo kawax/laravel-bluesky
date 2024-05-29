@@ -7,7 +7,7 @@ namespace Tests;
 use Illuminate\Foundation\Application;
 use Revolution\Bluesky\BlueskyServiceProvider;
 
-class TestCase extends \Orchestra\Testbench\TestCase
+abstract class TestCase extends \Orchestra\Testbench\TestCase
 {
     /**
      * Load package service provider.
