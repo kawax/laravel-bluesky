@@ -40,7 +40,7 @@ class BlueskyClient implements Factory
     /**
      * @throws RequestException
      */
-    public function login(string $identifier, string $password): static
+    public function login(string $identifier, #[\SensitiveParameter] string $password): static
     {
         $response = Http::baseUrl($this->baseUrl())
             ->post(AtProto::createSession->value, [
