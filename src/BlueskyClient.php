@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Revolution\Bluesky;
 
+use Illuminate\Http\Client\ConnectionException;
 use Illuminate\Http\Client\RequestException;
 use Illuminate\Http\Client\Response;
 use Illuminate\Support\Collection;
@@ -39,6 +40,7 @@ class BlueskyClient implements Factory
 
     /**
      * @throws RequestException
+     * @throws ConnectionException
      */
     public function login(string $identifier, #[\SensitiveParameter] string $password): static
     {
@@ -55,6 +57,7 @@ class BlueskyClient implements Factory
 
     /**
      * My feed.
+     * @throws ConnectionException
      */
     public function feed(int $limit = 50, string $cursor = '', string $filter = 'posts_with_replies'): Response
     {
@@ -70,6 +73,7 @@ class BlueskyClient implements Factory
 
     /**
      * My timeline.
+     * @throws ConnectionException
      */
     public function timeline(int $limit = 50, string $cursor = ''): Response
     {
@@ -83,6 +87,7 @@ class BlueskyClient implements Factory
 
     /**
      * Create new post.
+     * @throws ConnectionException
      */
     public function post(string $text): Response
     {
