@@ -11,11 +11,9 @@ class BlueskyServiceProvider extends ServiceProvider
 {
     public function register(): void
     {
-        $this->app->scoped(Factory::class, fn () => new BlueskyClient(config('bluesky.service', 'https://bsky.social')));
+        $this->mergeConfigFrom(__DIR__.'/../config/bluesky.php', 'bluesky');
 
-        if (! $this->app->configurationIsCached()) {
-            $this->mergeConfigFrom(__DIR__.'/../config/bluesky.php', 'bluesky');
-        }
+        $this->app->scoped(Factory::class, fn () => new BlueskyClient(config('bluesky.service', 'https://bsky.social')));
     }
 
     public function boot(): void
