@@ -94,7 +94,7 @@ class ClientTest extends TestCase
             ->push(['uri' => 'at']);
 
         $response = Bluesky::login(identifier: 'identifier', password: 'password')
-            ->post(text: 'test');
+            ->post(text: 'test', facets: [], embed: []);
 
         $this->assertTrue($response->collect()->has('uri'));
     }
