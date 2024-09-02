@@ -67,6 +67,28 @@ class NotificationTest extends TestCase
         $this->assertSame('test', $m2->toArray()['text']);
     }
 
+    public function test_message_facets()
+    {
+        $m = BlueskyMessage::create(text: 'test')
+            ->text('text')
+            ->mention('at', 'did:')
+            ->link('link', 'http://')
+            ->tag('tag', 'tag');
+
+        $this->assertIsArray($m->toArray());
+        $this->assertSame('testtextatlinktag', $m->text);
+        $this->assertIsArray($m->facets);
+    }
+
+    public function test_message_embed()
+    {
+        $m = BlueskyMessage::create(text: 'test')
+            ->embed([]);
+
+        $this->assertIsArray($m->toArray());
+        $this->assertIsArray($m->embed);
+    }
+
     public function test_route()
     {
         $route = new BlueskyRoute(identifier: 'identifier', password: 'password', service: 'https://');

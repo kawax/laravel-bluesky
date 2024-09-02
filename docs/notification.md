@@ -18,7 +18,9 @@ class TestNotification extends Notification
 
     public function toBluesky(object $notifiable): BlueskyMessage
     {
-        return BlueskyMessage::create(text: 'test');
+        return BlueskyMessage::create(text: 'test')
+                              ->text(PHP_EOL)
+                              ->link('http://', 'http://');
     }
 }
 ```

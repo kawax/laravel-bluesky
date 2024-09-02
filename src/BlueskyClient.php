@@ -89,7 +89,7 @@ class BlueskyClient implements Factory
      * Create new post.
      * @throws ConnectionException
      */
-    public function post(string $text): Response
+    public function post(string $text, ?array $facets = null, ?array $embed = null): Response
     {
         return Http::baseUrl($this->baseUrl())
             ->withToken($this->session('accessJwt'))
@@ -98,8 +98,10 @@ class BlueskyClient implements Factory
                 'collection' => 'app.bsky.feed.post',
                 'record' => [
                     'text' => $text,
+                    'facets' => $facets,
+                    'embed' => $embed,
                     'createdAt' => now()->toISOString(),
-                ]
+                ],
             ]);
     }
 
