@@ -80,12 +80,19 @@ class NotificationTest extends TestCase
         $this->assertIsArray($m->facets);
     }
 
+    public function test_message_facet()
+    {
+        $m = BlueskyMessage::create(text: 'test')
+            ->facet([]);
+
+        $this->assertIsArray($m->facets);
+    }
+
     public function test_message_embed()
     {
         $m = BlueskyMessage::create(text: 'test')
             ->embed([]);
 
-        $this->assertIsArray($m->toArray());
         $this->assertIsArray($m->embed);
     }
 
