@@ -23,7 +23,7 @@ class BlueskyMessage implements Arrayable
     }
 
     /**
-     * Add text.
+     * Append to existing text.
      */
     public function text(string $text): static
     {
