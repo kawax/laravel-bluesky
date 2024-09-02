@@ -20,7 +20,9 @@ class TestNotification extends Notification
     {
         return BlueskyMessage::create(text: 'test')
                               ->text(PHP_EOL)
-                              ->link('http://', 'http://');
+                              ->link(text: 'http://', link: 'http://')
+                              ->text(PHP_EOL)
+                              ->tag(text: '#Laravel', tag: 'Laravel');
     }
 }
 ```
