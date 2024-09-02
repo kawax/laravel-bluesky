@@ -37,14 +37,8 @@ class BlueskyMessage implements Arrayable
      */
     public function mention(string $text, string $did): static
     {
-        $byteStart = strlen($this->text);
-        $byteEnd = $byteStart + strlen($text);
-
         $this->facets[] = [
-            'index' => [
-                'byteStart' => $byteStart,
-                'byteEnd' => $byteEnd,
-            ],
+            'index' => $this->buildFacetIndex($text),
             'features' => [
                 [
                     '$type' => Facet::Mention->value,
@@ -63,14 +57,8 @@ class BlueskyMessage implements Arrayable
      */
     public function link(string $text, string $uri): static
     {
-        $byteStart = strlen($this->text);
-        $byteEnd = $byteStart + strlen($text);
-
         $this->facets[] = [
-            'index' => [
-                'byteStart' => $byteStart,
-                'byteEnd' => $byteEnd,
-            ],
+            'index' => $this->buildFacetIndex($text),
             'features' => [
                 [
                     '$type' => Facet::Link->value,
@@ -89,14 +77,8 @@ class BlueskyMessage implements Arrayable
      */
     public function tag(string $text, string $tag): static
     {
-        $byteStart = strlen($this->text);
-        $byteEnd = $byteStart + strlen($text);
-
         $this->facets[] = [
-            'index' => [
-                'byteStart' => $byteStart,
-                'byteEnd' => $byteEnd,
-            ],
+            'index' => $this->buildFacetIndex($text),
             'features' => [
                 [
                     '$type' => Facet::Tag->value,
@@ -108,6 +90,27 @@ class BlueskyMessage implements Arrayable
         $this->text .= $text;
 
         return $this;
+    }
+
+    /**
+     * Add facet.
+     */
+    public function facet(array $facet): static
+    {
+        $this->facets[] = $facet;
+
+        return $this;
+    }
+
+    private function buildFacetIndex(string $text): array
+    {
+        $byteStart = strlen($this->text);
+        $byteEnd = $byteStart + strlen($text);
+
+        return [
+            'byteStart' => $byteStart,
+            'byteEnd' => $byteEnd,
+        ];
     }
 
     /**
