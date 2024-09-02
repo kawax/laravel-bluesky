@@ -31,8 +31,8 @@ class BlueskyMessage implements Arrayable
 
     public function mention(string $text, string $did): static
     {
-        $byteStart = mb_strlen($this->text);
-        $byteEnd = $byteStart + mb_strlen($text);
+        $byteStart = strlen($this->text);
+        $byteEnd = $byteStart + strlen($text);
 
         $this->facets[] = [
             'index' => [
@@ -54,8 +54,8 @@ class BlueskyMessage implements Arrayable
 
     public function link(string $text, string $uri): static
     {
-        $byteStart = mb_strlen($this->text);
-        $byteEnd = $byteStart + mb_strlen($text);
+        $byteStart = strlen($this->text);
+        $byteEnd = $byteStart + strlen($text);
 
         $this->facets[] = [
             'index' => [
@@ -77,8 +77,8 @@ class BlueskyMessage implements Arrayable
 
     public function tag(string $text, string $tag): static
     {
-        $byteStart = mb_strlen($this->text);
-        $byteEnd = $byteStart + mb_strlen($text);
+        $byteStart = strlen($this->text);
+        $byteEnd = $byteStart + strlen($text);
 
         $this->facets[] = [
             'index' => [
