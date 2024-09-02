@@ -91,17 +91,21 @@ class BlueskyClient implements Factory
      */
     public function post(string $text, ?array $facets = null, ?array $embed = null): Response
     {
+        $record = collect([
+            'text' => $text,
+            'createdAt' => now()->toISOString(),
+        ])->when(filled($facets),
+            fn (Collection $collection) => $collection->put('facets', $facets),
+        )->when(filled($embed),
+            fn (Collection $collection) => $collection->put('embed', $embed),
+        )->toArray();
+
         return Http::baseUrl($this->baseUrl())
             ->withToken($this->session('accessJwt'))
             ->post(AtProto::createRecord->value, [
                 'repo' => $this->session('did'),
                 'collection' => 'app.bsky.feed.post',
-                'record' => [
-                    'text' => $text,
-                    'facets' => $facets,
-                    'embed' => $embed,
-                    'createdAt' => now()->toISOString(),
-                ],
+                'record' => $record,
             ]);
     }
 
