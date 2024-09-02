@@ -93,12 +93,11 @@ class BlueskyClient implements Factory
     {
         $record = collect([
             'text' => $text,
+            'facets' => $facets,
+            'embed' => $embed,
             'createdAt' => now()->toISOString(),
-        ])->when(filled($facets),
-            fn (Collection $collection) => $collection->put('facets', $facets),
-        )->when(filled($embed),
-            fn (Collection $collection) => $collection->put('embed', $embed),
-        )->toArray();
+        ])->reject(fn ($item) => is_null($item))
+            ->toArray();
 
         return Http::baseUrl($this->baseUrl())
             ->withToken($this->session('accessJwt'))
