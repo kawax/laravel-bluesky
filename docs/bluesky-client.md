@@ -40,6 +40,25 @@ Bluesky::login(identifier: config('bluesky.identifier'), password: config('blues
 dump($response);
 ```
 
+You can use `BlueskyMessage` class from [Laravel Notifications](./notification.md) as a text builder.
+
+```php
+use Revolution\Bluesky\Facades\Bluesky;
+use Revolution\Bluesky\Notifications\BlueskyMessage;
+
+$message = BlueskyMessage::create(text: 'test')
+                          ->text(PHP_EOL)
+                          ->link(text: 'http://', link: 'http://')
+                          ->text(PHP_EOL)
+                          ->tag(text: '#Laravel', tag: 'Laravel');
+
+/** @var \Illuminate\Http\Client\Response $response */
+Bluesky::login(identifier: config('bluesky.identifier'), password: config('bluesky.password'))
+       ->post(text: $message->text, facets: $message->facets);
+
+dump($response);
+```
+
 ## Login
 ```php
 use Revolution\Bluesky\Facades\Bluesky;
