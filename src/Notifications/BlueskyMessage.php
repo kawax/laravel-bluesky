@@ -22,6 +22,9 @@ class BlueskyMessage implements Arrayable
         return new static(text: $text);
     }
 
+    /**
+     * Add text.
+     */
     public function text(string $text): static
     {
         $this->text .= $text;
@@ -29,6 +32,9 @@ class BlueskyMessage implements Arrayable
         return $this;
     }
 
+    /**
+     * Add mention facets.
+     */
     public function mention(string $text, string $did): static
     {
         $byteStart = strlen($this->text);
@@ -52,6 +58,9 @@ class BlueskyMessage implements Arrayable
         return $this;
     }
 
+    /**
+     * Add link facets.
+     */
     public function link(string $text, string $uri): static
     {
         $byteStart = strlen($this->text);
@@ -75,6 +84,9 @@ class BlueskyMessage implements Arrayable
         return $this;
     }
 
+    /**
+     * Add tag facets.
+     */
     public function tag(string $text, string $tag): static
     {
         $byteStart = strlen($this->text);
@@ -98,6 +110,9 @@ class BlueskyMessage implements Arrayable
         return $this;
     }
 
+    /**
+     * Add embed.
+     */
     public function embed(array $embed): static
     {
         $this->embed = $embed;
