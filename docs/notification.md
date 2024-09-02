@@ -27,7 +27,7 @@ class TestNotification extends Notification
 }
 ```
 
-Bluesky is not automatically linked, so you need to specify `facets` to link it.
+Bluesky is not automatically linked, so you need to specify `facets` to link it.  
 https://docs.bsky.app/docs/advanced-guides/post-richtext
 
 ## On-Demand Notifications
