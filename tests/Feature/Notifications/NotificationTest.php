@@ -80,6 +80,17 @@ class NotificationTest extends TestCase
         $this->assertIsArray($m->facets);
     }
 
+    public function test_message_facet_index()
+    {
+        $m = BlueskyMessage::create(text: 'test')
+            ->link('テスト', 'http://');
+
+        $this->assertSame([
+            'byteStart' => 4,
+            'byteEnd' => 13,
+        ], $m->facets[0]['index']);
+    }
+
     public function test_message_facet()
     {
         $m = BlueskyMessage::create(text: 'test')
