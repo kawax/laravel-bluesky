@@ -104,12 +104,9 @@ class BlueskyMessage implements Arrayable
 
     private function buildFacetIndex(string $text): array
     {
-        $byteStart = strlen($this->text);
-        $byteEnd = $byteStart + strlen($text);
-
         return [
-            'byteStart' => $byteStart,
-            'byteEnd' => $byteEnd,
+            'byteStart' => $byteStart = strlen($this->text),
+            'byteEnd' => $byteStart + strlen($text),
         ];
     }
 
