@@ -17,6 +17,7 @@ use Revolution\Bluesky\Contracts\Factory;
  * @method static Response feed(int $limit = 50, string $cursor = '', string $filter = 'posts_with_replies')
  * @method static Response timeline(int $limit = 50, string $cursor = '')
  * @method static Response post(string $text, ?array $facets = null, ?array $embed = null)
+ * @method static Response uploadBlob(mixed $data)
  * @method static void macro(string $name, object|callable $macro)
  * @method static \Revolution\Bluesky\BlueskyClient|Response|mixed when(\Closure|mixed|null $value = null, callable|null $callback = null, callable|null $default = null)
  * @method static \Revolution\Bluesky\BlueskyClient|Response|mixed unless(\Closure|mixed|null $value = null, callable|null $callback = null, callable|null $default = null)

@@ -108,6 +108,19 @@ class BlueskyClient implements Factory
             ]);
     }
 
+    /**
+     * Upload blob.
+     *
+     * @throws ConnectionException
+     */
+    public function uploadBlob(mixed $data): Response
+    {
+        return Http::baseUrl($this->baseUrl())
+            ->withToken($this->session('accessJwt'))
+            ->withBody($data)
+            ->post(AtProto::uploadBlob->value);
+    }
+
     public function check(): bool
     {
         return ! empty($this->session['accessJwt']);

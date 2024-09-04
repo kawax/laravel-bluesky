@@ -98,4 +98,16 @@ class ClientTest extends TestCase
 
         $this->assertTrue($response->collect()->has('uri'));
     }
+
+    public function test_upload_blob()
+    {
+        Http::fakeSequence()
+            ->push(['accessJwt' => 'test', 'did' => 'test'])
+            ->push(['blob' => '...']);
+
+        $response = Bluesky::login(identifier: 'identifier', password: 'password')
+            ->uploadBlob('test');
+
+        $this->assertTrue($response->collect()->has('blob'));
+    }
 }
