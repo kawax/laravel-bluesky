@@ -106,7 +106,7 @@ class ClientTest extends TestCase
             ->push(['blob' => '...']);
 
         $response = Bluesky::login(identifier: 'identifier', password: 'password')
-            ->uploadBlob('test');
+            ->uploadBlob('test', 'image/png');
 
         $this->assertTrue($response->collect()->has('blob'));
     }

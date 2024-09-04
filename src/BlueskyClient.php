@@ -113,11 +113,11 @@ class BlueskyClient implements Factory
      *
      * @throws ConnectionException
      */
-    public function uploadBlob(mixed $data): Response
+    public function uploadBlob(mixed $data, string $type = 'image/png'): Response
     {
         return Http::baseUrl($this->baseUrl())
             ->withToken($this->session('accessJwt'))
-            ->withBody($data)
+            ->withBody($data, $type)
             ->post(AtProto::uploadBlob->value);
     }
 
