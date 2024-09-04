@@ -34,10 +34,10 @@ dump($response->json());
 use Revolution\Bluesky\Facades\Bluesky;
 
 /** @var \Illuminate\Http\Client\Response $response */
-Bluesky::login(identifier: config('bluesky.identifier'), password: config('bluesky.password'))
+$response = Bluesky::login(identifier: config('bluesky.identifier'), password: config('bluesky.password'))
        ->post('test');
 
-dump($response);
+dump($response->json());
 ```
 
 ### TextBuilder
@@ -54,10 +54,10 @@ $message = BlueskyMessage::create(text: 'test')
                           ->tag(text: '#Laravel', tag: 'Laravel');
 
 /** @var \Illuminate\Http\Client\Response $response */
-Bluesky::login(identifier: config('bluesky.identifier'), password: config('bluesky.password'))
+$response = Bluesky::login(identifier: config('bluesky.identifier'), password: config('bluesky.password'))
        ->post(text: $message->text, facets: $message->facets);
 
-dump($response);
+dump($response->json());
 ```
 
 ### Social Card
@@ -72,10 +72,36 @@ $message = BlueskyMessage::create(text: 'test')
                           ->embed($external);
 
 /** @var \Illuminate\Http\Client\Response $response */
-Bluesky::login(identifier: config('bluesky.identifier'), password: config('bluesky.password'))
+$response = Bluesky::login(identifier: config('bluesky.identifier'), password: config('bluesky.password'))
        ->post(text: $message->text, embed: $message->embed);
 
-dump($response);
+dump($response->json());
+```
+
+### Upload Images
+You can upload up to 4 images at a time.
+
+```php
+use Illuminate\Support\Facades\Storage;
+use Revolution\Bluesky\Facades\Bluesky;
+use Revolution\Bluesky\Notifications\BlueskyMessage;
+use Revolution\Bluesky\Embed\Images;
+
+Bluesky::login(identifier: config('bluesky.identifier'), password: config('bluesky.password'));
+
+$images = Images::create()
+                ->add(alt: 'ALT TEXT', blob: function (): array {
+                    return Bluesky::uploadBlob(Storage::get('test.png'), Storage::mimeType('test.png'))->json('blob');
+                   })
+                ->add(alt: 'image 2', blob: []);
+
+$message = BlueskyMessage::create(text: 'test')
+                          ->embed($images);
+
+/** @var \Illuminate\Http\Client\Response $response */
+$response = Bluesky::post(text: $message->text, embed: $message->embed);
+
+dump($response->json());
 ```
 
 ## Login

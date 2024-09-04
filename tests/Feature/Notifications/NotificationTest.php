@@ -10,6 +10,7 @@ use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Notification;
 use Revolution\Bluesky\Embed\External;
+use Revolution\Bluesky\Embed\Images;
 use Revolution\Bluesky\Enums\AtProto;
 use Revolution\Bluesky\Notifications\BlueskyChannel;
 use Revolution\Bluesky\Notifications\BlueskyMessage;
@@ -120,6 +121,22 @@ class NotificationTest extends TestCase
         $this->assertSame('test', $m->embed['external']['title']);
         $this->assertSame('http://', $m->embed['external']['uri']);
         $this->assertSame(AtProto::External->value, $m->embed['$type']);
+    }
+
+    public function test_message_embed_images()
+    {
+        $images = Images::create()
+            ->add(alt: 'alt', blob: ['blob'])
+            ->add('alt2', fn () => ['blob2']);
+
+        $m = BlueskyMessage::create(text: 'test')
+            ->embed($images);
+
+        $this->assertIsArray($m->embed);
+        $this->assertSame('alt', $m->embed['images'][0]['alt']);
+        $this->assertSame('alt2', $m->embed['images'][1]['alt']);
+        $this->assertSame(['blob2'], $m->embed['images'][1]['image']);
+        $this->assertSame(AtProto::Images->value, $m->embed['$type']);
     }
 
     public function test_message_new_line()
