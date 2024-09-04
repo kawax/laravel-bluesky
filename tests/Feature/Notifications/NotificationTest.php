@@ -9,6 +9,8 @@ use Illuminate\Http\Client\RequestException;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Notification;
+use Revolution\Bluesky\Embed\External;
+use Revolution\Bluesky\Enums\AtProto;
 use Revolution\Bluesky\Notifications\BlueskyChannel;
 use Revolution\Bluesky\Notifications\BlueskyMessage;
 use Revolution\Bluesky\Notifications\BlueskyRoute;
@@ -105,6 +107,28 @@ class NotificationTest extends TestCase
             ->embed([]);
 
         $this->assertIsArray($m->embed);
+    }
+
+    public function test_message_embed_external()
+    {
+        $e = External::create(title: 'test', description: 'test', uri: 'http://');
+
+        $m = BlueskyMessage::create(text: 'test')
+            ->embed($e);
+
+        $this->assertIsArray($m->embed);
+        $this->assertSame('test', $m->embed['external']['title']);
+        $this->assertSame('http://', $m->embed['external']['uri']);
+        $this->assertSame(AtProto::External->value, $m->embed['$type']);
+    }
+
+    public function test_message_new_line()
+    {
+        $m = BlueskyMessage::create(text: 'test')
+            ->newLine(2)
+            ->text('test');
+
+        $this->assertSame('test'.PHP_EOL.PHP_EOL.'test', $m->text);
     }
 
     public function test_route()

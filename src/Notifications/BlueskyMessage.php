@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Revolution\Bluesky\Notifications;
 
 use Illuminate\Contracts\Support\Arrayable;
+use Illuminate\Support\Str;
 use Revolution\Bluesky\Enums\Facet;
 
 class BlueskyMessage implements Arrayable
@@ -28,6 +29,16 @@ class BlueskyMessage implements Arrayable
     public function text(string $text): static
     {
         $this->text .= $text;
+
+        return $this;
+    }
+
+    /**
+     * Add new lines to text.
+     */
+    public function newLine(int $count = 1): static
+    {
+        $this->text .= Str::repeat(PHP_EOL, $count);
 
         return $this;
     }
@@ -113,9 +124,9 @@ class BlueskyMessage implements Arrayable
     /**
      * Add embed.
      */
-    public function embed(array $embed): static
+    public function embed(array|Arrayable $embed): static
     {
-        $this->embed = $embed;
+        $this->embed = $embed instanceof Arrayable ? $embed->toArray() : $embed;
 
         return $this;
     }
