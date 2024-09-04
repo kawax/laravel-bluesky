@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Revolution\Bluesky;
 
+use Illuminate\Container\Attributes\Config;
 use Illuminate\Http\Client\ConnectionException;
 use Illuminate\Http\Client\RequestException;
 use Illuminate\Http\Client\Response;
@@ -21,8 +22,10 @@ class BlueskyClient implements Factory
 
     protected ?Collection $session = null;
 
-    public function __construct(protected string $service = 'https://bsky.social')
-    {
+    public function __construct(
+        #[Config('bluesky.service', 'https://bsky.social')]
+        protected string $service = 'https://bsky.social',
+    ) {
         //
     }
 
