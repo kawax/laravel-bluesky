@@ -142,6 +142,9 @@ class BlueskyMessage implements Arrayable
         return $this;
     }
 
+    /**
+     * @return array{text: string, facets?: array, embed?: array, langs?: array}
+     */
     public function toArray(): array
     {
         return get_object_vars($this);
