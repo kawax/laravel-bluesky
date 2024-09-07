@@ -139,6 +139,14 @@ class NotificationTest extends TestCase
         $this->assertSame(AtProto::Images->value, $m->embed['$type']);
     }
 
+    public function test_message_langs()
+    {
+        $m = BlueskyMessage::create(text: 'test')
+            ->langs(['en']);
+
+        $this->assertSame(['en'], $m->langs);
+    }
+
     public function test_message_new_line()
     {
         $m = BlueskyMessage::create(text: 'test')

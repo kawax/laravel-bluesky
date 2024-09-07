@@ -12,6 +12,7 @@ class BlueskyMessage implements Arrayable
 {
     public ?array $facets = null;
     public ?array $embed = null;
+    public ?array $langs = null;
 
     public function __construct(
         public string $text = '',
@@ -127,6 +128,16 @@ class BlueskyMessage implements Arrayable
     public function embed(array|Arrayable $embed): static
     {
         $this->embed = $embed instanceof Arrayable ? $embed->toArray() : $embed;
+
+        return $this;
+    }
+
+    /**
+     * Add langs.
+     */
+    public function langs(array $langs): static
+    {
+        $this->langs = $langs;
 
         return $this;
     }
