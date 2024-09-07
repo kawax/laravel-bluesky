@@ -7,6 +7,7 @@ namespace Revolution\Bluesky\Facades;
 use Illuminate\Http\Client\Response;
 use Illuminate\Support\Facades\Facade;
 use Revolution\Bluesky\Contracts\Factory;
+use Revolution\Bluesky\Notifications\BlueskyMessage;
 
 /**
  * @method static static service(string $service)
@@ -16,7 +17,7 @@ use Revolution\Bluesky\Contracts\Factory;
  * @method static bool check()
  * @method static Response feed(int $limit = 50, string $cursor = '', string $filter = 'posts_with_replies')
  * @method static Response timeline(int $limit = 50, string $cursor = '')
- * @method static Response post(string $text, ?array $facets = null, ?array $embed = null)
+ * @method static Response post(string|BlueskyMessage $text)
  * @method static Response uploadBlob(mixed $data, string $type = 'image/png')
  * @method static void macro(string $name, object|callable $macro)
  * @method static \Revolution\Bluesky\BlueskyClient|Response|mixed when(\Closure|mixed|null $value = null, callable|null $callback = null, callable|null $default = null)

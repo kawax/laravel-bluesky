@@ -41,7 +41,7 @@ dump($response->json());
 ```
 
 ### TextBuilder
-You can use `BlueskyMessage` class from [Laravel Notifications](./notification.md) as a text builder.
+You can use `BlueskyMessage` class from [Notifications](./notification.md) as a text builder.
 
 ```php
 use Revolution\Bluesky\Facades\Bluesky;
@@ -55,7 +55,7 @@ $message = BlueskyMessage::create(text: 'test')
 
 /** @var \Illuminate\Http\Client\Response $response */
 $response = Bluesky::login(identifier: config('bluesky.identifier'), password: config('bluesky.password'))
-       ->post(text: $message->text, facets: $message->facets);
+       ->post($message);
 
 dump($response->json());
 ```
@@ -73,7 +73,7 @@ $message = BlueskyMessage::create(text: 'test')
 
 /** @var \Illuminate\Http\Client\Response $response */
 $response = Bluesky::login(identifier: config('bluesky.identifier'), password: config('bluesky.password'))
-       ->post(text: $message->text, embed: $message->embed);
+       ->post($message);
 
 dump($response->json());
 ```
@@ -99,7 +99,7 @@ $message = BlueskyMessage::create(text: 'test')
                           ->embed($images);
 
 /** @var \Illuminate\Http\Client\Response $response */
-$response = Bluesky::post(text: $message->text, embed: $message->embed);
+$response = Bluesky::post($message);
 
 dump($response->json());
 ```

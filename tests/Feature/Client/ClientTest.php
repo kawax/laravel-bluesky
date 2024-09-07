@@ -8,6 +8,7 @@ use Illuminate\Http\Client\Request;
 use Illuminate\Support\Facades\Http;
 use Revolution\Bluesky\BlueskyClient;
 use Revolution\Bluesky\Facades\Bluesky;
+use Revolution\Bluesky\Notifications\BlueskyMessage;
 use Tests\TestCase;
 
 class ClientTest extends TestCase
@@ -94,7 +95,21 @@ class ClientTest extends TestCase
             ->push(['uri' => 'at']);
 
         $response = Bluesky::login(identifier: 'identifier', password: 'password')
-            ->post(text: 'test', facets: [], embed: []);
+            ->post(text: 'test');
+
+        $this->assertTrue($response->collect()->has('uri'));
+    }
+
+    public function test_post_message()
+    {
+        Http::fakeSequence()
+            ->push(['accessJwt' => 'test', 'did' => 'test'])
+            ->push(['uri' => 'at']);
+
+        $m = BlueskyMessage::create('text');
+
+        $response = Bluesky::login(identifier: 'identifier', password: 'password')
+            ->post(text: $m);
 
         $this->assertTrue($response->collect()->has('uri'));
     }

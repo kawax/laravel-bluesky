@@ -14,6 +14,7 @@ use Illuminate\Support\Traits\Conditionable;
 use Illuminate\Support\Traits\Macroable;
 use Revolution\Bluesky\Contracts\Factory;
 use Revolution\Bluesky\Enums\AtProto;
+use Revolution\Bluesky\Notifications\BlueskyMessage;
 
 class BlueskyClient implements Factory
 {
@@ -92,14 +93,13 @@ class BlueskyClient implements Factory
      * Create new post.
      * @throws ConnectionException
      */
-    public function post(string $text, ?array $facets = null, ?array $embed = null): Response
+    public function post(string|BlueskyMessage $text): Response
     {
-        $record = collect([
-            'text' => $text,
-            'facets' => $facets,
-            'embed' => $embed,
-            'createdAt' => now()->toISOString(),
-        ])->reject(fn ($item) => is_null($item))
+        $message = $text instanceof BlueskyMessage ? $text : BlueskyMessage::create($text);
+
+        $record = collect($message->toArray())
+            ->put('createdAt', now()->toISOString())
+            ->reject(fn ($item) => is_null($item))
             ->toArray();
 
         return Http::baseUrl($this->baseUrl())

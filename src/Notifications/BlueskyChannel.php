@@ -31,7 +31,7 @@ class BlueskyChannel
 
         Bluesky::service($route->service)
             ->login($route->identifier, $route->password)
-            ->post($message->text, $message->facets, $message->embed)
+            ->post($message)
             ->throw();
     }
 }
