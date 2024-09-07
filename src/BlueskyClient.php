@@ -99,7 +99,7 @@ class BlueskyClient implements Factory
 
         $record = collect($message->toArray())
             ->put('createdAt', now()->toISOString())
-            ->reject(fn ($item) => is_null($item))
+            ->reject(fn ($item) => blank($item))
             ->toArray();
 
         return Http::baseUrl($this->baseUrl())
