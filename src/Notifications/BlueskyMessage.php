@@ -10,12 +10,12 @@ use Revolution\Bluesky\Enums\Facet;
 
 class BlueskyMessage implements Arrayable
 {
-    public ?array $facets = null;
-    public ?array $embed = null;
-    public ?array $langs = null;
+    protected ?array $facets = null;
+    protected ?array $embed = null;
+    protected ?array $langs = null;
 
     public function __construct(
-        public string $text = '',
+        protected string $text = '',
     ) {
     }
 

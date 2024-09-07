@@ -79,8 +79,8 @@ class NotificationTest extends TestCase
             ->tag('tag', 'tag');
 
         $this->assertIsArray($m->toArray());
-        $this->assertSame('testtextatlinktag', $m->text);
-        $this->assertIsArray($m->facets);
+        $this->assertSame('testtextatlinktag', $m->toArray()['text']);
+        $this->assertIsArray($m->toArray()['facets']);
     }
 
     public function test_message_facet_index()
@@ -91,7 +91,7 @@ class NotificationTest extends TestCase
         $this->assertSame([
             'byteStart' => 4,
             'byteEnd' => 13,
-        ], $m->facets[0]['index']);
+        ], $m->toArray()['facets'][0]['index']);
     }
 
     public function test_message_facet()
@@ -99,7 +99,7 @@ class NotificationTest extends TestCase
         $m = BlueskyMessage::create(text: 'test')
             ->facet([]);
 
-        $this->assertIsArray($m->facets);
+        $this->assertIsArray($m->toArray()['facets']);
     }
 
     public function test_message_embed()
@@ -107,7 +107,7 @@ class NotificationTest extends TestCase
         $m = BlueskyMessage::create(text: 'test')
             ->embed([]);
 
-        $this->assertIsArray($m->embed);
+        $this->assertIsArray($m->toArray()['embed']);
     }
 
     public function test_message_embed_external()
@@ -117,10 +117,10 @@ class NotificationTest extends TestCase
         $m = BlueskyMessage::create(text: 'test')
             ->embed($e);
 
-        $this->assertIsArray($m->embed);
-        $this->assertSame('test', $m->embed['external']['title']);
-        $this->assertSame('http://', $m->embed['external']['uri']);
-        $this->assertSame(AtProto::External->value, $m->embed['$type']);
+        $this->assertIsArray($m->toArray()['embed']);
+        $this->assertSame('test', $m->toArray()['embed']['external']['title']);
+        $this->assertSame('http://', $m->toArray()['embed']['external']['uri']);
+        $this->assertSame(AtProto::External->value, $m->toArray()['embed']['$type']);
     }
 
     public function test_message_embed_images()
@@ -132,11 +132,11 @@ class NotificationTest extends TestCase
         $m = BlueskyMessage::create(text: 'test')
             ->embed($images);
 
-        $this->assertIsArray($m->embed);
-        $this->assertSame('alt', $m->embed['images'][0]['alt']);
-        $this->assertSame('alt2', $m->embed['images'][1]['alt']);
-        $this->assertSame(['blob2'], $m->embed['images'][1]['image']);
-        $this->assertSame(AtProto::Images->value, $m->embed['$type']);
+        $this->assertIsArray($m->toArray()['embed']);
+        $this->assertSame('alt', $m->toArray()['embed']['images'][0]['alt']);
+        $this->assertSame('alt2', $m->toArray()['embed']['images'][1]['alt']);
+        $this->assertSame(['blob2'], $m->toArray()['embed']['images'][1]['image']);
+        $this->assertSame(AtProto::Images->value, $m->toArray()['embed']['$type']);
     }
 
     public function test_message_langs()
@@ -144,7 +144,7 @@ class NotificationTest extends TestCase
         $m = BlueskyMessage::create(text: 'test')
             ->langs(['en']);
 
-        $this->assertSame(['en'], $m->langs);
+        $this->assertSame(['en'], $m->toArray()['langs']);
     }
 
     public function test_message_new_line()
@@ -153,7 +153,7 @@ class NotificationTest extends TestCase
             ->newLine(2)
             ->text('test');
 
-        $this->assertSame('test'.PHP_EOL.PHP_EOL.'test', $m->text);
+        $this->assertSame('test'.PHP_EOL.PHP_EOL.'test', $m->toArray()['text']);
     }
 
     public function test_route()
