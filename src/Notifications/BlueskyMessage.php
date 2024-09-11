@@ -6,10 +6,15 @@ namespace Revolution\Bluesky\Notifications;
 
 use Illuminate\Contracts\Support\Arrayable;
 use Illuminate\Support\Str;
+use Illuminate\Support\Traits\Conditionable;
+use Illuminate\Support\Traits\Macroable;
 use Revolution\Bluesky\Enums\Facet;
 
 class BlueskyMessage implements Arrayable
 {
+    use Conditionable;
+    use Macroable;
+
     protected ?array $facets = null;
     protected ?array $embed = null;
     protected ?array $langs = null;
