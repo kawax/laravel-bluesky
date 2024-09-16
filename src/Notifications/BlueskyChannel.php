@@ -25,10 +25,7 @@ class BlueskyChannel
             return; // @codeCoverageIgnore
         }
 
-        /**
-         * @var BlueskyRoute $route
-         * @phpstan-ignore-next-line
-         */
+        /** @var BlueskyRoute $route */
         $route = $notifiable->routeNotificationFor('bluesky', $notification);
 
         if (! $route instanceof BlueskyRoute) {
