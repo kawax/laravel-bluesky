@@ -10,7 +10,7 @@ use Illuminate\Support\Traits\Conditionable;
 use Illuminate\Support\Traits\Macroable;
 use Revolution\Bluesky\Enums\Facet;
 
-class BlueskyMessage implements Arrayable
+final class BlueskyMessage implements Arrayable
 {
     use Conditionable;
     use Macroable;
@@ -24,15 +24,15 @@ class BlueskyMessage implements Arrayable
     ) {
     }
 
-    public static function create(string $text = ''): static
+    public static function create(string $text = ''): self
     {
-        return new static(text: $text);
+        return new self(text: $text);
     }
 
     /**
      * Append to existing text.
      */
-    public function text(string $text): static
+    public function text(string $text): self
     {
         $this->text .= $text;
 
@@ -42,7 +42,7 @@ class BlueskyMessage implements Arrayable
     /**
      * Add new lines to text.
      */
-    public function newLine(int $count = 1): static
+    public function newLine(int $count = 1): self
     {
         $this->text .= Str::repeat(PHP_EOL, $count);
 
@@ -52,7 +52,7 @@ class BlueskyMessage implements Arrayable
     /**
      * Add mention facets.
      */
-    public function mention(string $text, string $did): static
+    public function mention(string $text, string $did): self
     {
         $this->facets[] = [
             'index' => $this->buildFacetIndex($text),
@@ -72,7 +72,7 @@ class BlueskyMessage implements Arrayable
     /**
      * Add link facets.
      */
-    public function link(string $text, string $uri): static
+    public function link(string $text, string $uri): self
     {
         $this->facets[] = [
             'index' => $this->buildFacetIndex($text),
@@ -92,7 +92,7 @@ class BlueskyMessage implements Arrayable
     /**
      * Add tag facets.
      */
-    public function tag(string $text, string $tag): static
+    public function tag(string $text, string $tag): self
     {
         $this->facets[] = [
             'index' => $this->buildFacetIndex($text),
@@ -112,7 +112,7 @@ class BlueskyMessage implements Arrayable
     /**
      * Add facet.
      */
-    public function facet(array $facet): static
+    public function facet(array $facet): self
     {
         $this->facets[] = $facet;
 
@@ -130,7 +130,7 @@ class BlueskyMessage implements Arrayable
     /**
      * Add embed.
      */
-    public function embed(array|Arrayable $embed): static
+    public function embed(array|Arrayable $embed): self
     {
         $this->embed = $embed instanceof Arrayable ? $embed->toArray() : $embed;
 
@@ -140,7 +140,7 @@ class BlueskyMessage implements Arrayable
     /**
      * Add langs.
      */
-    public function langs(array $langs): static
+    public function langs(array $langs): self
     {
         $this->langs = $langs;
 

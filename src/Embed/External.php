@@ -5,7 +5,7 @@ namespace Revolution\Bluesky\Embed;
 use Illuminate\Contracts\Support\Arrayable;
 use Revolution\Bluesky\Enums\AtProto;
 
-readonly class External implements Arrayable
+final readonly class External implements Arrayable
 {
     public function __construct(
         private string $title,
@@ -15,9 +15,9 @@ readonly class External implements Arrayable
     ) {
     }
 
-    public static function create(string $title, string $description, string $uri, ?array $thumb = null): static
+    public static function create(string $title, string $description, string $uri, ?array $thumb = null): self
     {
-        return new static(...func_get_args());
+        return new self(...func_get_args());
     }
 
     public function toArray(): array

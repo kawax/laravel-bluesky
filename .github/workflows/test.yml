@@ -20,6 +20,8 @@ jobs:
           coverage: xdebug
       - name: Install Composer dependencies
         run: composer install -q
+      - name: phpstan
+        run: ./vendor/bin/phpstan analyse
       - name: Test & publish code coverage
         uses: paambaati/codeclimate-action@v8
         env:

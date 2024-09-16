@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Revolution\Bluesky\Notifications;
 
-readonly class BlueskyRoute
+final readonly class BlueskyRoute
 {
     public function __construct(
         public string $identifier,
@@ -13,8 +13,8 @@ readonly class BlueskyRoute
     ) {
     }
 
-    public static function to(string $identifier, #[\SensitiveParameter] string $password, string $service = 'https://bsky.social'): static
+    public static function to(string $identifier, #[\SensitiveParameter] string $password, string $service = 'https://bsky.social'): self
     {
-        return new static(...func_get_args());
+        return new self(...func_get_args());
     }
 }

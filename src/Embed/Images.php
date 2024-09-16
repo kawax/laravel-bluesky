@@ -5,7 +5,7 @@ namespace Revolution\Bluesky\Embed;
 use Illuminate\Contracts\Support\Arrayable;
 use Revolution\Bluesky\Enums\AtProto;
 
-class Images implements Arrayable
+final class Images implements Arrayable
 {
     private array $images = [];
 
@@ -13,12 +13,12 @@ class Images implements Arrayable
     {
     }
 
-    public static function create(): static
+    public static function create(): self
     {
-        return new static();
+        return new self();
     }
 
-    public function add(string $alt, array|callable $blob): static
+    public function add(string $alt, array|callable $blob): self
     {
         $this->images[] = [
             'image' => is_callable($blob) ? call_user_func($blob) : $blob,
