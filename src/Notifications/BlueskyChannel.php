@@ -15,14 +15,20 @@ class BlueskyChannel
      */
     public function send(mixed $notifiable, Notification $notification): void
     {
-        /** @var BlueskyMessage $message */
+        /**
+         * @var BlueskyMessage $message
+         * @phpstan-ignore-next-line
+         */
         $message = $notification->toBluesky($notifiable);
 
         if (! $message instanceof BlueskyMessage) {
             return; // @codeCoverageIgnore
         }
 
-        /** @var BlueskyRoute $route */
+        /**
+         * @var BlueskyRoute $route
+         * @phpstan-ignore-next-line
+         */
         $route = $notifiable->routeNotificationFor('bluesky', $notification);
 
         if (! $route instanceof BlueskyRoute) {
