@@ -20,10 +20,10 @@ use Revolution\Bluesky\Notifications\BlueskyMessage;
  * @method static Response post(string|BlueskyMessage $text)
  * @method static Response uploadBlob(mixed $data, string $type = 'image/png')
  * @method static void macro(string $name, object|callable $macro)
- * @method static \Revolution\Bluesky\BlueskyClient|Response|mixed when(\Closure|mixed|null $value = null, callable|null $callback = null, callable|null $default = null)
- * @method static \Revolution\Bluesky\BlueskyClient|Response|mixed unless(\Closure|mixed|null $value = null, callable|null $callback = null, callable|null $default = null)
+ * @method static static when(\Closure|mixed|null $value = null, callable|null $callback = null, callable|null $default = null)
+ * @method static static unless(\Closure|mixed|null $value = null, callable|null $callback = null, callable|null $default = null)
  *
- * @see \Revolution\Bluesky\BlueskyClient
+ * @mixin \Revolution\Bluesky\BlueskyClient
  */
 class Bluesky extends Facade
 {
