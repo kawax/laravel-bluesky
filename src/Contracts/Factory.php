@@ -20,6 +20,11 @@ interface Factory
     public function login(string $identifier, string $password): static;
 
     /**
+     * @throws ConnectionException
+     */
+    public function resolveHandle(string $handle): Response;
+
+    /**
      * My feed.
      * @throws ConnectionException
      */

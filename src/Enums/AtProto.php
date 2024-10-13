@@ -15,4 +15,6 @@ enum AtProto: string
     case createSession = 'com.atproto.server.createSession';
     case createRecord = 'com.atproto.repo.createRecord';
     case uploadBlob = 'com.atproto.repo.uploadBlob';
+
+    case resolveHandle = 'com.atproto.identity.resolveHandle';
 }

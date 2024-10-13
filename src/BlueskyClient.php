@@ -60,6 +60,18 @@ class BlueskyClient implements Factory
     }
 
     /**
+     * @throws ConnectionException
+     */
+    public function resolveHandle(string $handle): Response
+    {
+        return Http::baseUrl($this->baseUrl())
+            ->withToken($this->session('accessJwt'))
+            ->get(AtProto::resolveHandle->value, [
+                'handle' => $handle,
+            ]);
+    }
+
+    /**
      * My feed.
      * @throws ConnectionException
      */

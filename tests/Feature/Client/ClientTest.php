@@ -125,4 +125,17 @@ class ClientTest extends TestCase
 
         $this->assertTrue($response->collect()->has('blob'));
     }
+
+    public function test_resolve_handle()
+    {
+        Http::fakeSequence()
+            ->push(['accessJwt' => 'test', 'did' => 'test'])
+            ->push(['did' => 'test']);
+
+        $response = Bluesky::login(identifier: 'identifier', password: 'password')
+            ->resolveHandle(handle: 'test');
+
+        $this->assertTrue($response->collect()->has('did'));
+        $this->assertSame('test', $response->json('did'));
+    }
 }
