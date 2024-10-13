@@ -27,6 +27,8 @@ interface Factory
      */
     public function resolveHandle(string $handle): Response;
 
+    public function resolveDID(string $did): Response;
+
     /**
      * My feed.
      * @throws ConnectionException

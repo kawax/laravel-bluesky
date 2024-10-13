@@ -16,6 +16,7 @@ use Revolution\Bluesky\Notifications\BlueskyMessage;
  * @method static static withSession(array|Collection $session)
  * @method static static login(string $identifier, string $password)
  * @method static Response resolveHandle(string $handle)
+ * @method static Response resolveDID(string $did)
  * @method static static logout()
  * @method static bool check()
  * @method static Response feed(int $limit = 50, string $cursor = '', string $filter = 'posts_with_replies')

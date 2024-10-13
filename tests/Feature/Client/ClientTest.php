@@ -6,6 +6,7 @@ namespace Tests\Feature\Client;
 
 use Illuminate\Http\Client\Request;
 use Illuminate\Support\Facades\Http;
+use InvalidArgumentException;
 use Revolution\Bluesky\BlueskyClient;
 use Revolution\Bluesky\Facades\Bluesky;
 use Revolution\Bluesky\Notifications\BlueskyMessage;
@@ -156,5 +157,46 @@ class ClientTest extends TestCase
         Bluesky::withSession(['accessJwt' => 'test', 'refreshJwt' => 'test', 'did' => 'test']);
 
         $this->assertSame('test', Bluesky::session('did'));
+    }
+
+    public function test_resolve_did_plc()
+    {
+        Http::fakeSequence()
+            ->push(['id' => 'did:plc:test']);
+
+        $response = Bluesky::resolveDID(did: 'did:plc:test');
+
+        $this->assertTrue($response->collect()->has('id'));
+        $this->assertSame('did:plc:test', $response->json('id'));
+
+        Http::assertSent(function (Request $request) {
+            return $request->url() === 'https://plc.directory/did:plc:test';
+        });
+    }
+
+    public function test_resolve_did_web()
+    {
+        Http::fakeSequence()
+            ->push(['id' => 'did:web:localhost']);
+
+        $response = Bluesky::resolveDID(did: 'did:web:localhost');
+
+        $this->assertTrue($response->collect()->has('id'));
+        $this->assertSame('did:web:localhost', $response->json('id'));
+
+        Http::assertSent(function (Request $request) {
+            return $request->url() === 'https://localhost/.well-known/did.json';
+        });
+    }
+
+    public function test_resolve_did_unsupported()
+    {
+        $this->expectException(InvalidArgumentException::class);
+
+        Http::fake();
+
+        $response = Bluesky::resolveDID(did: 'test');
+
+        Http::assertNothingSent();
     }
 }

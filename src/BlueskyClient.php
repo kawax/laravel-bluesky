@@ -10,8 +10,10 @@ use Illuminate\Http\Client\RequestException;
 use Illuminate\Http\Client\Response;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Str;
 use Illuminate\Support\Traits\Conditionable;
 use Illuminate\Support\Traits\Macroable;
+use InvalidArgumentException;
 use Revolution\Bluesky\Contracts\Factory;
 use Revolution\Bluesky\Enums\AtProto;
 use Revolution\Bluesky\Notifications\BlueskyMessage;
@@ -76,6 +78,17 @@ class BlueskyClient implements Factory
             ->get(AtProto::resolveHandle->value, [
                 'handle' => $handle,
             ]);
+    }
+
+    public function resolveDID(string $did): Response
+    {
+        $url = match (true) {
+            Str::startsWith($did, 'did:plc:') => 'https://plc.directory/'.$did,
+            Str::startsWith($did, 'did:web:') => 'https://'.Str::remove('did:web:', $did).'/.well-known/did.json',
+            default => throw new InvalidArgumentException('Unsupported DID type'),
+        };
+
+        return Http::get($url);
     }
 
     /**
