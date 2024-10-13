@@ -136,6 +136,20 @@ class BlueskyClient implements Factory
             ->post(AtProto::uploadBlob->value);
     }
 
+    /**
+     * @throws ConnectionException
+     */
+    public function refreshSession(): static
+    {
+        $response = Http::baseUrl($this->baseUrl())
+            ->withToken($this->session('refreshJwt'))
+            ->post(AtProto::refreshSession->value);
+
+        $this->session = $response->collect();
+
+        return $this;
+    }
+
     public function check(): bool
     {
         return ! empty($this->session['accessJwt']);

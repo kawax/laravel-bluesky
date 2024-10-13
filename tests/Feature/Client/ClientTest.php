@@ -138,4 +138,16 @@ class ClientTest extends TestCase
         $this->assertTrue($response->collect()->has('did'));
         $this->assertSame('test', $response->json('did'));
     }
+
+    public function test_refresh_session()
+    {
+        Http::fakeSequence()
+            ->push(['accessJwt' => 'test', 'refreshJwt' => 'test', 'did' => 'test'])
+            ->push(['accessJwt' => 'test', 'refreshJwt' => 'test', 'did' => 'test']);
+
+        Bluesky::login(identifier: 'identifier', password: 'password')
+            ->refreshSession();
+
+        $this->assertSame('test', Bluesky::session('refreshJwt'));
+    }
 }

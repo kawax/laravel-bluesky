@@ -49,6 +49,11 @@ interface Factory
      */
     public function uploadBlob(mixed $data, string $type = 'image/png'): Response;
 
+    /**
+     * @throws ConnectionException
+     */
+    public function refreshSession(): static;
+
     public function check(): bool;
 
     public function logout(): static;

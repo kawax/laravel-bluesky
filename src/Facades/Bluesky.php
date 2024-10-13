@@ -20,6 +20,7 @@ use Revolution\Bluesky\Notifications\BlueskyMessage;
  * @method static Response timeline(int $limit = 50, string $cursor = '')
  * @method static Response post(string|BlueskyMessage $text)
  * @method static Response uploadBlob(mixed $data, string $type = 'image/png')
+ * @method static static refreshSession()
  * @method static void macro(string $name, object|callable $macro)
  * @method static static|Response when(\Closure|mixed|null $value = null, callable|null $callback = null, callable|null $default = null)
  * @method static static|Response unless(\Closure|mixed|null $value = null, callable|null $callback = null, callable|null $default = null)
