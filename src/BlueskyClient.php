@@ -42,6 +42,13 @@ class BlueskyClient implements Factory
         return empty($key) ? $this->session : $this->session?->get($key);
     }
 
+    public function withSession(array|Collection $session): static
+    {
+        $this->session = Collection::wrap($session);
+
+        return $this;
+    }
+
     /**
      * @throws RequestException
      * @throws ConnectionException

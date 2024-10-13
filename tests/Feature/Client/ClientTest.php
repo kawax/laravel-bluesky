@@ -150,4 +150,11 @@ class ClientTest extends TestCase
 
         $this->assertSame('test', Bluesky::session('refreshJwt'));
     }
+
+    public function test_with_session()
+    {
+        Bluesky::withSession(['accessJwt' => 'test', 'refreshJwt' => 'test', 'did' => 'test']);
+
+        $this->assertSame('test', Bluesky::session('did'));
+    }
 }

@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Revolution\Bluesky\Facades;
 
 use Illuminate\Http\Client\Response;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Facade;
 use Revolution\Bluesky\Contracts\Factory;
 use Revolution\Bluesky\Notifications\BlueskyMessage;
@@ -12,6 +13,7 @@ use Revolution\Bluesky\Notifications\BlueskyMessage;
 /**
  * @method static static service(string $service)
  * @method static mixed session(string $key)
+ * @method static static withSession(array|Collection $session)
  * @method static static login(string $identifier, string $password)
  * @method static Response resolveHandle(string $handle)
  * @method static static logout()

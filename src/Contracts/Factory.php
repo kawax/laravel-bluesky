@@ -5,6 +5,7 @@ namespace Revolution\Bluesky\Contracts;
 use Illuminate\Http\Client\ConnectionException;
 use Illuminate\Http\Client\RequestException;
 use Illuminate\Http\Client\Response;
+use Illuminate\Support\Collection;
 use Revolution\Bluesky\Notifications\BlueskyMessage;
 
 interface Factory
@@ -12,6 +13,8 @@ interface Factory
     public function service(string $service): static;
 
     public function session(string $key = null): mixed;
+
+    public function withSession(array|Collection $session): static;
 
     /**
      * @throws RequestException
