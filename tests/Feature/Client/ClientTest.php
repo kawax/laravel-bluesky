@@ -134,7 +134,7 @@ class ClientTest extends TestCase
             ->push(['did' => 'test']);
 
         $response = Bluesky::login(identifier: 'identifier', password: 'password')
-            ->resolveHandle(handle: 'test');
+            ->resolveHandle(handle: 'alice.test');
 
         $this->assertTrue($response->collect()->has('did'));
         $this->assertSame('test', $response->json('did'));
@@ -195,7 +195,29 @@ class ClientTest extends TestCase
 
         Http::fake();
 
-        $response = Bluesky::resolveDID(did: 'test');
+        $response = Bluesky::resolveDID(did: 'did:test:test');
+
+        Http::assertNothingSent();
+    }
+
+    public function test_resolve_handle_invalid()
+    {
+        $this->expectException(InvalidArgumentException::class);
+
+        Http::fake();
+
+        $response = Bluesky::resolveHandle(handle: 'invalid');
+
+        Http::assertNothingSent();
+    }
+
+    public function test_resolve_did_invalid()
+    {
+        $this->expectException(InvalidArgumentException::class);
+
+        Http::fake();
+
+        $response = Bluesky::resolveDID(did: 'did:test');
 
         Http::assertNothingSent();
     }
