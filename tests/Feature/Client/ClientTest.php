@@ -7,9 +7,12 @@ namespace Tests\Feature\Client;
 use Illuminate\Http\Client\Request;
 use Illuminate\Support\Facades\Http;
 use InvalidArgumentException;
+use Mockery\MockInterface;
 use Revolution\Bluesky\BlueskyClient;
 use Revolution\Bluesky\Facades\Bluesky;
 use Revolution\Bluesky\Notifications\BlueskyMessage;
+use Revolution\Bluesky\Support\DNS;
+use Revolution\Bluesky\Support\Identity;
 use Tests\TestCase;
 
 class ClientTest extends TestCase
@@ -164,7 +167,7 @@ class ClientTest extends TestCase
         Http::fakeSequence()
             ->push(['id' => 'did:plc:test']);
 
-        $response = Bluesky::resolveDID(did: 'did:plc:test');
+        $response = (new Identity())->resolveDID(did: 'did:plc:test');
 
         $this->assertTrue($response->collect()->has('id'));
         $this->assertSame('did:plc:test', $response->json('id'));
@@ -179,7 +182,7 @@ class ClientTest extends TestCase
         Http::fakeSequence()
             ->push(['id' => 'did:web:localhost']);
 
-        $response = Bluesky::resolveDID(did: 'did:web:localhost');
+        $response = (new Identity())->resolveDID(did: 'did:web:localhost');
 
         $this->assertTrue($response->collect()->has('id'));
         $this->assertSame('did:web:localhost', $response->json('id'));
@@ -195,7 +198,7 @@ class ClientTest extends TestCase
 
         Http::fake();
 
-        $response = Bluesky::resolveDID(did: 'did:test:test');
+        $response = (new Identity())->resolveDID(did: 'did:test:test');
 
         Http::assertNothingSent();
     }
@@ -217,8 +220,75 @@ class ClientTest extends TestCase
 
         Http::fake();
 
-        $response = Bluesky::resolveDID(did: 'did:test');
+        $response = (new Identity())->resolveDID(did: 'did:test');
 
         Http::assertNothingSent();
+    }
+
+    public function test_identity_resolve_handle_dns()
+    {
+        $this->mock(DNS::class, function (MockInterface $mock) {
+            $mock->shouldReceive('record')->andReturn([
+                [
+                    'txt' => 'did=did:plc:1234',
+                ],
+            ]);
+        });
+
+        $did = (new Identity())->resolveHandle('example.com');
+
+        $this->assertSame('did:plc:1234', $did);
+    }
+
+    public function test_identity_resolve_handle_wellknown()
+    {
+        $this->mock(DNS::class, function (MockInterface $mock) {
+            $mock->shouldReceive('record')->andReturn([]);
+        });
+
+        Http::fakeSequence()
+            ->push('did:plc:1234');
+
+        $did = (new Identity())->resolveHandle('example.com');
+
+        $this->assertSame('did:plc:1234', $did);
+    }
+
+    public function test_identity_resolve_identity_handle()
+    {
+        $this->mock(DNS::class, function (MockInterface $mock) {
+            $mock->shouldReceive('record')->andReturn([
+                [
+                    'txt' => 'did=did:web:example.com',
+                ],
+            ]);
+        });
+
+        Http::fakeSequence()
+            ->push(['id' => 'did:web:example.com']);
+
+        $response = (new Identity())->resolveIdentity('example.com');
+
+        $this->assertTrue($response->collect()->has('id'));
+        $this->assertSame('did:web:example.com', $response->json('id'));
+
+        Http::assertSent(function (Request $request) {
+            return $request->url() === 'https://example.com/.well-known/did.json';
+        });
+    }
+
+    public function test_identity_resolve_identity_did()
+    {
+        Http::fakeSequence()
+            ->push(['id' => 'did:web:example.com']);
+
+        $response = (new Identity())->resolveIdentity('did:web:example.com');
+
+        $this->assertTrue($response->collect()->has('id'));
+        $this->assertSame('did:web:example.com', $response->json('id'));
+
+        Http::assertSent(function (Request $request) {
+            return $request->url() === 'https://example.com/.well-known/did.json';
+        });
     }
 }
