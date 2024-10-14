@@ -10,7 +10,6 @@ use Illuminate\Http\Client\RequestException;
 use Illuminate\Http\Client\Response;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Http;
-use Illuminate\Support\Str;
 use Illuminate\Support\Traits\Conditionable;
 use Illuminate\Support\Traits\Macroable;
 use InvalidArgumentException;
@@ -85,24 +84,6 @@ class BlueskyClient implements Factory
             ->get(AtProto::resolveHandle->value, [
                 'handle' => $handle,
             ]);
-    }
-
-    /**
-     * @param  string  $did  e.g. "did:plc:1234..." "did:web:alice.test"
-     */
-    public function resolveDID(string $did): Response
-    {
-        if (! Identity::isDID($did)) {
-            throw new InvalidArgumentException("The did '$did' is not a valid DID.");
-        }
-
-        $url = match (true) {
-            Str::startsWith($did, 'did:plc:') => 'https://plc.directory/'.$did,
-            Str::startsWith($did, 'did:web:') => 'https://'.Str::remove('did:web:', $did).'/.well-known/did.json',
-            default => throw new InvalidArgumentException('Unsupported DID type'),
-        };
-
-        return Http::get($url);
     }
 
     /**
