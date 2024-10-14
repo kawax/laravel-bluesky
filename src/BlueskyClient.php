@@ -17,6 +17,7 @@ use InvalidArgumentException;
 use Revolution\Bluesky\Contracts\Factory;
 use Revolution\Bluesky\Enums\AtProto;
 use Revolution\Bluesky\Notifications\BlueskyMessage;
+use Revolution\Bluesky\Support\Identity;
 
 class BlueskyClient implements Factory
 {
@@ -69,10 +70,16 @@ class BlueskyClient implements Factory
     }
 
     /**
+     * @param  string  $handle  e.g. "alice.test"
+     *
      * @throws ConnectionException
      */
     public function resolveHandle(string $handle): Response
     {
+        if (! Identity::isHandle($handle)) {
+            throw new InvalidArgumentException("The handle '$handle' is not a valid handle.");
+        }
+
         return Http::baseUrl($this->baseUrl())
             ->withToken($this->session('accessJwt'))
             ->get(AtProto::resolveHandle->value, [
@@ -80,8 +87,15 @@ class BlueskyClient implements Factory
             ]);
     }
 
+    /**
+     * @param  string  $did  e.g. "did:plc:1234..." "did:web:alice.test"
+     */
     public function resolveDID(string $did): Response
     {
+        if (! Identity::isDID($did)) {
+            throw new InvalidArgumentException("The did '$did' is not a valid DID.");
+        }
+
         $url = match (true) {
             Str::startsWith($did, 'did:plc:') => 'https://plc.directory/'.$did,
             Str::startsWith($did, 'did:web:') => 'https://'.Str::remove('did:web:', $did).'/.well-known/did.json',
