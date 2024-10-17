@@ -9,8 +9,10 @@ use InvalidArgumentException;
 
 class Identity
 {
+    // "alice.test"
     protected const HANDLE_REGEX = '/^([a-zA-Z0-9]([a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?\.)+[a-zA-Z]([a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?$/';
 
+    // "did:plc:1234..." "did:web:alice.test"
     protected const DID_REGEX = '/^did:[a-z]+:[a-zA-Z0-9._:%-]*[a-zA-Z0-9._-]$/';
 
     public static function isHandle(?string $handle): bool
