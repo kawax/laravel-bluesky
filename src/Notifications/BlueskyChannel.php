@@ -32,9 +32,14 @@ class BlueskyChannel
             return; // @codeCoverageIgnore
         }
 
-        Bluesky::service($route->service)
-            ->login($route->identifier, $route->password)
-            ->post($message)
-            ->throw();
+        if (! is_null($route->oauth)) {
+            Bluesky::withToken($route->oauth)
+                ->post($message)
+                ->throw();
+        } else {
+            Bluesky::login($route->identifier, $route->password)
+                ->post($message)
+                ->throw();
+        }
     }
 }

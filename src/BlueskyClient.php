@@ -4,18 +4,22 @@ declare(strict_types=1);
 
 namespace Revolution\Bluesky;
 
-use Illuminate\Container\Attributes\Config;
 use Illuminate\Http\Client\ConnectionException;
+use Illuminate\Http\Client\PendingRequest;
 use Illuminate\Http\Client\RequestException;
 use Illuminate\Http\Client\Response;
-use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Traits\Conditionable;
 use Illuminate\Support\Traits\Macroable;
 use InvalidArgumentException;
+use Revolution\Bluesky\Agent\LegacyAgent;
+use Revolution\Bluesky\Agent\OAuthAgent;
+use Revolution\Bluesky\Contracts\Agent;
 use Revolution\Bluesky\Contracts\Factory;
 use Revolution\Bluesky\Enums\AtProto;
 use Revolution\Bluesky\Notifications\BlueskyMessage;
+use Revolution\Bluesky\Session\CredentialSession;
+use Revolution\Bluesky\Session\OAuthSession;
 use Revolution\Bluesky\Support\Identity;
 
 class BlueskyClient implements Factory
@@ -23,35 +27,21 @@ class BlueskyClient implements Factory
     use Macroable;
     use Conditionable;
 
-    protected ?Collection $session = null;
+    protected ?Agent $agent = null;
 
-    public function __construct(
-        #[Config('bluesky.service', 'https://bsky.social')]
-        protected string $service = 'https://bsky.social',
-    ) {
-        //
-    }
-
-    public function service(string $service): static
+    /**
+     * OAuth based authentication.
+     */
+    public function withToken(OAuthSession $token): static
     {
-        $this->service = $service;
-
-        return $this;
-    }
-
-    public function session(string $key = null): mixed
-    {
-        return empty($key) ? $this->session : $this->session?->get($key);
-    }
-
-    public function withSession(array|Collection $session): static
-    {
-        $this->session = Collection::wrap($session);
+        $this->agent = OAuthAgent::create($token);
 
         return $this;
     }
 
     /**
+     * Username / password based authentication.
+     *
      * @throws RequestException
      * @throws ConnectionException
      */
@@ -63,9 +53,31 @@ class BlueskyClient implements Factory
                 'password' => $password,
             ])->throw();
 
-        $this->session = $response->collect();
+        $session = CredentialSession::create($response->collect());
+        $this->agent = LegacyAgent::create($session);
 
         return $this;
+    }
+
+    public function agent(): ?Agent
+    {
+        return $this->agent;
+    }
+
+    public function withAgent(?Agent $agent): static
+    {
+        $this->agent = $agent;
+
+        return $this;
+    }
+
+    public function http(bool $auth = true): PendingRequest
+    {
+        if (! $this->check()) {
+            return Http::baseUrl($this->baseUrl());
+        }
+
+        return $this->agent()->http($auth);
     }
 
     /**
@@ -79,23 +91,33 @@ class BlueskyClient implements Factory
             throw new InvalidArgumentException("The handle '$handle' is not a valid handle.");
         }
 
-        return Http::baseUrl($this->baseUrl())
-            ->withToken($this->session('accessJwt'))
+        return $this->http()
             ->get(AtProto::resolveHandle->value, [
                 'handle' => $handle,
             ]);
     }
 
     /**
-     * My feed.
      * @throws ConnectionException
      */
-    public function feed(int $limit = 50, string $cursor = '', string $filter = 'posts_with_replies'): Response
+    public function profile(string $actor): Response
     {
-        return Http::baseUrl($this->baseUrl())
-            ->withToken($this->session('accessJwt'))
+        return $this->http(auth: false)
+            ->get(AtProto::getProfile->value, [
+                'actor' => $actor,
+            ]);
+    }
+
+    /**
+     * getAuthorFeed.
+     *
+     * @throws ConnectionException
+     */
+    public function feed(?string $actor = null, int $limit = 50, string $cursor = '', string $filter = 'posts_with_replies'): Response
+    {
+        return $this->http()
             ->get(AtProto::getAuthorFeed->value, [
-                'actor' => $this->session('did'),
+                'actor' => $actor ?? $this->agent()->did(),
                 'limit' => $limit,
                 'cursor' => $cursor,
                 'filter' => $filter,
@@ -108,8 +130,7 @@ class BlueskyClient implements Factory
      */
     public function timeline(int $limit = 50, string $cursor = ''): Response
     {
-        return Http::baseUrl($this->baseUrl())
-            ->withToken($this->session('accessJwt'))
+        return $this->http()
             ->get(AtProto::getTimeline->value, [
                 'limit' => $limit,
                 'cursor' => $cursor,
@@ -129,10 +150,9 @@ class BlueskyClient implements Factory
             ->reject(fn ($item) => blank($item))
             ->toArray();
 
-        return Http::baseUrl($this->baseUrl())
-            ->withToken($this->session('accessJwt'))
+        return $this->http()
             ->post(AtProto::createRecord->value, [
-                'repo' => $this->session('did'),
+                'repo' => $this->agent()->did(),
                 'collection' => 'app.bsky.feed.post',
                 'record' => $record,
             ]);
@@ -145,8 +165,7 @@ class BlueskyClient implements Factory
      */
     public function uploadBlob(mixed $data, string $type = 'image/png'): Response
     {
-        return Http::baseUrl($this->baseUrl())
-            ->withToken($this->session('accessJwt'))
+        return $this->http()
             ->withBody($data, $type)
             ->post(AtProto::uploadBlob->value);
     }
@@ -154,31 +173,32 @@ class BlueskyClient implements Factory
     /**
      * @throws ConnectionException
      */
-    public function refreshSession(): static
+    public function refreshCredentialSession(): static
     {
         $response = Http::baseUrl($this->baseUrl())
-            ->withToken($this->session('refreshJwt'))
+            ->withToken(token: $this->agent()->refresh())
             ->post(AtProto::refreshSession->value);
 
-        $this->session = $response->collect();
+        $session = CredentialSession::create($response->collect());
+        $this->withAgent(LegacyAgent::create($session));
 
         return $this;
     }
 
     public function check(): bool
     {
-        return ! empty($this->session['accessJwt']);
+        return ! empty($this->agent);
     }
 
     public function logout(): static
     {
-        $this->session = null;
+        $this->agent = null;
 
         return $this;
     }
 
-    private function baseUrl(): string
+    public static function baseUrl(): string
     {
-        return $this->service.'/xrpc/';
+        return AtProto::PublicEndpoint->value.'/xrpc/';
     }
 }

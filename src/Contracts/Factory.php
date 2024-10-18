@@ -2,62 +2,33 @@
 
 namespace Revolution\Bluesky\Contracts;
 
-use Illuminate\Http\Client\ConnectionException;
-use Illuminate\Http\Client\RequestException;
+use Illuminate\Http\Client\PendingRequest;
 use Illuminate\Http\Client\Response;
-use Illuminate\Support\Collection;
 use Revolution\Bluesky\Notifications\BlueskyMessage;
+use Revolution\Bluesky\Session\CredentialSession;
+use Revolution\Bluesky\Session\OAuthSession;
 
 interface Factory
 {
-    public function service(string $service): static;
+    public function withToken(OAuthSession $token): static;
 
-    public function session(string $key = null): mixed;
-
-    public function withSession(array|Collection $session): static;
-
-    /**
-     * @throws RequestException
-     * @throws ConnectionException
-     */
     public function login(string $identifier, string $password): static;
 
-    /**
-     * @throws ConnectionException
-     */
+    public function agent(): ?Agent;
+
+    public function withAgent(?Agent $agent): static;
+
+    public function http(bool $auth = true): PendingRequest;
+
     public function resolveHandle(string $handle): Response;
 
-    /**
-     * My feed.
-     * @throws ConnectionException
-     */
-    public function feed(int $limit = 50, string $cursor = '', string $filter = 'posts_with_replies'): Response;
+    public function feed(?string $actor = null, int $limit = 50, string $cursor = '', string $filter = 'posts_with_replies'): Response;
 
-    /**
-     * My timeline.
-     * @throws ConnectionException
-     */
     public function timeline(int $limit = 50, string $cursor = ''): Response;
 
-    /**
-     * Create new post.
-     * @throws ConnectionException
-     */
     public function post(string|BlueskyMessage $text): Response;
 
-    /**
-     * Upload blob.
-     *
-     * @throws ConnectionException
-     */
     public function uploadBlob(mixed $data, string $type = 'image/png'): Response;
 
-    /**
-     * @throws ConnectionException
-     */
-    public function refreshSession(): static;
-
-    public function check(): bool;
-
-    public function logout(): static;
+    public function refreshCredentialSession(): static;
 }

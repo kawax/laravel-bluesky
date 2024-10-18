@@ -19,10 +19,12 @@ use Tests\TestCase;
 
 class NotificationTest extends TestCase
 {
+    protected array $session = ['accessJwt' => 'test', 'refreshJwt' => 'test', 'did' => 'test', 'handle' => 'handle'];
+
     public function test_notification()
     {
         Http::fakeSequence()
-            ->push(['accessJwt' => 'test', 'did' => 'test'])
+            ->push($this->session)
             ->whenEmpty(Http::response());
 
         Notification::route('bluesky', BlueskyRoute::to(identifier: 'identifier', password: 'password'))
@@ -41,7 +43,7 @@ class NotificationTest extends TestCase
         $this->expectException(RequestException::class);
 
         Http::fakeSequence()
-            ->push(['accessJwt' => 'test', 'did' => 'test'])
+            ->push($this->session)
             ->whenEmpty(Http::response('', 500));
 
         Notification::route('bluesky', BlueskyRoute::to(identifier: 'identifier', password: 'password'))
@@ -158,8 +160,8 @@ class NotificationTest extends TestCase
 
     public function test_route()
     {
-        $route = new BlueskyRoute(identifier: 'identifier', password: 'password', service: 'https://');
-        $route2 = BlueskyRoute::to(identifier: 'identifier', password: 'password', service: 'https://');
+        $route = new BlueskyRoute(identifier: 'identifier', password: 'password');
+        $route2 = BlueskyRoute::to(identifier: 'identifier', password: 'password');
 
         $this->assertSame('identifier', $route->identifier);
         $this->assertSame('identifier', $route2->identifier);
@@ -167,7 +169,7 @@ class NotificationTest extends TestCase
 
     public function test_user_notify()
     {
-        Http::fake();
+        Http::fake(fn () => $this->session);
 
         $user = new TestUser();
 
