@@ -17,9 +17,9 @@ class DPoP
         return BlueskyKey::load($key)->toJWK();
     }
 
-    public static function proof(string $par_url, string $nonce, JsonWebKey $jwk): string
+    public static function proof(array $payload, JsonWebKey $jwk): string
     {
-        if (empty($nonce)) {
+        if (empty($payload['nonce'])) {
             return '';
         }
 
@@ -31,14 +31,14 @@ class DPoP
             'jwk' => $pub_jwk->toArray(),
         ];
 
-        $payload = [
-            'nonce' => $nonce,
-            'htm' => 'POST',
-            'htu' => $par_url,
-            'jti' => Str::random(40),
-            'iat' => now()->timestamp,
-            'exp' => now()->addSeconds(30)->timestamp,
-        ];
+//        $payload = [
+//            'nonce' => $nonce,
+//            'htm' => 'POST',
+//            'htu' => $par_url,
+//            'jti' => Str::random(40),
+//            'iat' => now()->timestamp,
+//            'exp' => now()->addSeconds(30)->timestamp,
+//        ];
 
         return JsonWebToken::encode($head, $payload, $jwk->key());
     }
