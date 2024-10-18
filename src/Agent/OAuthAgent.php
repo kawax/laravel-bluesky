@@ -41,16 +41,16 @@ class OAuthAgent implements Agent
 
     public function did(): string
     {
-        return $this->session('did');
+        return $this->session('did', '');
     }
 
     public function token(): string
     {
-        return $this->session('access_token');
+        return $this->session('access_token', '');
     }
 
     public function refresh(): string
     {
-        return $this->session('refresh_token');
+        return $this->session('refresh_token', '');
     }
 }

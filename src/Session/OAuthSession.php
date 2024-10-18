@@ -6,11 +6,11 @@ class OAuthSession extends AbstractSession
 {
     public function token(): string
     {
-        return $this->get('access_token');
+        return $this->get('access_token', '');
     }
 
     public function refresh(): string
     {
-        return $this->get('refresh_token');
+        return $this->get('refresh_token', '');
     }
 }
