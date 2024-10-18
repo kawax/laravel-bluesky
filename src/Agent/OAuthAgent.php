@@ -48,7 +48,7 @@ class OAuthAgent implements Agent
 
                 return $request->withHeader('DPoP', $dpop_proof);
             })->withResponseMiddleware(function (ResponseInterface $response) {
-                $dpop_nonce = $response->getHeader('DPoP-Nonce');
+                $dpop_nonce = collect($response->getHeader('DPoP-Nonce'))->first();
 
                 $this->session->put('dpop_nonce', $dpop_nonce);
 
