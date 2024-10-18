@@ -24,7 +24,7 @@ abstract class AbstractSession implements Arrayable
         return $this->session->get($key, $default);
     }
 
-    public function did(): mixed
+    public function did(): string
     {
         return $this->get('did', '');
     }
