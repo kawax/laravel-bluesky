@@ -38,12 +38,12 @@ class OAuthAgent implements Agent
         return $http->withToken($this->token(), 'DPoP')
             ->withRequestMiddleware(function (RequestInterface $request) {
                 $dpop_proof = DPoP::apiProof(
+                    jwk: DPoP::load($this->session('dpop_private_key')),
+                    iss: $this->session('iss'),
+                    url: $request->getUri(),
+                    token: $this->token(),
                     nonce: $this->session('dpop_nonce', ''),
                     method: $request->getMethod(),
-                    url: $request->getUri(),
-                    iss: $this->session('iss'),
-                    code: $this->token(),
-                    jwk: DPoP::load($this->session('dpop_private_key')),
                 );
 
                 return $request->withHeader('DPoP', $dpop_proof);
