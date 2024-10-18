@@ -38,10 +38,12 @@ class OAuthAgent implements Agent
     {
         $http->withToken(token: $this->token(), type: 'DPoP')
             ->beforeSending(function (Request $request, PendingRequest $http) {
-                $this->session->put('request_url', $request->url());
+                $url = $request->url();
+                info($url);
+                session()->put('request_url', $request->url());
             });
 
-        return $http->retry(times: 2, sleepMilliseconds: 10, when: function (Exception $exception, PendingRequest $request) {
+        return $http->retry(times: 2, sleepMilliseconds: 10, when: function ($exception, PendingRequest $request) {
             if (! $exception instanceof RequestException || $exception->response->status() !== 401) {
                 return false;
             }
@@ -49,7 +51,7 @@ class OAuthAgent implements Agent
             $dpop_nonce = $exception->response->header('DPoP-Nonce');
             info('retry.nonce', $dpop_nonce);
 
-            $url = $this->session->get('request_url');
+            $url = session()->get('request_url');
             info('retry.url', $url);
 
             $payload = [
