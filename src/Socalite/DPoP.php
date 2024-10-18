@@ -17,27 +17,44 @@ class DPoP
         return BlueskyKey::load($key)->toJWK();
     }
 
-    public static function authProof(array $payload, JsonWebKey $jwk): string
-    {
-        $pub_jwk = $jwk->asPublic();
-
+    /**
+     * Proof for OAuth.
+     */
+    public static function authProof(
+        JsonWebKey $jwk,
+        string $url,
+        string $nonce = '',
+        string $method = 'POST',
+    ): string {
         $head = [
             'typ' => 'dpop+jwt',
             'alg' => JsonWebKey::ALG,
-            'jwk' => $pub_jwk->toArray(),
+            'jwk' => $jwk->asPublic()->toArray(),
+        ];
+
+        $payload = [
+            'nonce' => $nonce,
+            'htm' => $method,
+            'htu' => $url,
+            'jti' => Str::random(64),
+            'iat' => now()->timestamp,
+            'exp' => now()->addSeconds(30)->timestamp,
         ];
 
         return JsonWebToken::encode($head, $payload, $jwk->key());
     }
 
+    /**
+     * Proof for API request.
+     */
     public static function apiProof(
-        string $nonce,
-        string $method,
-        string $url,
+        JsonWebKey $jwk,
         string $iss,
-        string $code,
-        JsonWebKey $jwk): string
-    {
+        string $url,
+        string $token,
+        string $nonce = '',
+        string $method = 'POST',
+    ): string {
         $head = [
             'typ' => 'dpop+jwt',
             'alg' => JsonWebKey::ALG,
@@ -49,10 +66,10 @@ class DPoP
             'iss' => $iss,
             'htu' => $url,
             'htm' => $method,
-            'jti' => Str::random(40),
+            'jti' => Str::random(64),
             'iat' => now()->timestamp,
             'exp' => now()->addSeconds(30)->timestamp,
-            'ath' => self::createCodeChallenge($code),
+            'ath' => self::createCodeChallenge($token),
         ];
 
         return JsonWebToken::encode($head, $payload, $jwk->key());
