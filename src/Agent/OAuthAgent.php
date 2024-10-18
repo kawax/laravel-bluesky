@@ -37,13 +37,13 @@ class OAuthAgent implements Agent
     protected function dpop(PendingRequest $http): PendingRequest
     {
         $http->withToken(token: $this->token(), type: 'DPoP')
-            ->beforeSending(function (Request $request, PendingRequest $http) {
+            ->beforeSending(function (Request $request) {
                 $url = $request->url();
                 info('before.url', $url);
                 session()->put('request_url', $request->url());
             });
 
-        return $http->retry(times: 1, sleepMilliseconds: 10, when: function ($exception, $request) {
+        return $http->retry(times: 1, sleepMilliseconds: 10, when: function (Exception $exception, PendingRequest $request) {
             info('retry.exception', $exception);
             info('retry.request', $request);
 
