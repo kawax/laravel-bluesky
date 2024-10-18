@@ -4,10 +4,11 @@ namespace Revolution\Bluesky\Agent;
 
 use Exception;
 use Illuminate\Http\Client\PendingRequest;
-use Illuminate\Http\Client\Request;
 use Illuminate\Http\Client\RequestException;
+use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Str;
+use Psr\Http\Message\RequestInterface;
 use Revolution\Bluesky\Contracts\Agent;
 use Revolution\Bluesky\Facades\Bluesky;
 use Revolution\Bluesky\Session\OAuthSession;
@@ -30,49 +31,48 @@ class OAuthAgent implements Agent
 
     public function http(bool $auth = true): PendingRequest
     {
-        return Http::baseUrl(Bluesky::baseUrl())
+        $base = $this->serviceEndpoint();
+        if (empty($base)) {
+            $base = Bluesky::baseUrl();
+        } else {
+            $base .= '/xrpc/';
+        }
+
+        dump($base);
+
+        return Http::baseUrl($base)
             ->when($auth, $this->dpop(...));
     }
 
     protected function dpop(PendingRequest $http): PendingRequest
     {
-        $http->withToken(token: $this->token(), type: 'DPoP')
-            ->beforeSending(function (Request $request) {
-                $url = $request->url();
-                info('before.url', $url);
-                session()->put('request_url', $request->url());
+        $http->withToken($this->token(), 'DPoP')
+            ->withRequestMiddleware(function (RequestInterface $request) {
+                $payload = [
+                    'nonce' => $this->session('dpop_nonce', ''),
+                    'iss' => $this->session('iss'),
+                    'htu' => $request->getUri(),
+                    'htm' => $request->getMethod(),
+                    'jti' => Str::random(40),
+                    'iat' => now()->timestamp,
+                    'exp' => now()->addSeconds(30)->timestamp,
+                    'ath' => DPoP::createCodeChallenge($this->token()),
+                ];
+
+                $dpop_private_jwk = DPoP::load($this->session('dpop_private_key'));
+                $dpop_proof = DPoP::proof($payload, $dpop_private_jwk);
+
+                return $request->withHeader('DPoP', $dpop_proof);
             });
 
-        return $http->retry(times: 1, sleepMilliseconds: 10, when: function (Exception $exception, PendingRequest $request) {
-            info('retry.exception', $exception);
-            info('retry.request', $request);
-
+        return $http->retry(times: 2, sleepMilliseconds: 10, when: function (Exception $exception, PendingRequest $request) {
             if (! $exception instanceof RequestException || $exception->response->status() !== 401) {
                 return false;
             }
 
-//
-//            $dpop_nonce = $exception->response->header('DPoP-Nonce');
-//            info('retry.nonce', $dpop_nonce);
-//
-//            $url = session()->get('request_url');
-//            info('retry.url', $url);
-//
-//            $payload = [
-//                'iss' => $this->session('iss'),
-//                'htu' => $url,
-//                'htm' => 'POST',
-//                'jti' => Str::random(40),
-//                'iat' => now()->timestamp,
-//                'exp' => now()->addSeconds(30)->timestamp,
-//                'ath' => DPoP::createCodeChallenge($this->token()),
-//            ];
-//
-//            $dpop_private_jwk = DPoP::load($this->session('dpop_private_key'));
-//            $dpop_proof = DPoP::proof($payload, $dpop_private_jwk);
-//            info('retry.proof', $dpop_proof);
-//
-//            $request->withHeader('DPoP', $dpop_proof);
+            $dpop_nonce = $exception->response->header('DPoP-Nonce');
+
+            $this->session->put('dpop_nonce', $dpop_nonce);
 
             return true;
         }, throw: false);
@@ -96,5 +96,10 @@ class OAuthAgent implements Agent
     public function refresh(): string
     {
         return $this->session('refresh_token', '');
+    }
+
+    public function serviceEndpoint(): ?string
+    {
+        return Arr::get($this->session->toArray(), 'service.0.serviceEndpoint');
     }
 }
