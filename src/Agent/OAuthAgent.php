@@ -39,7 +39,7 @@ class OAuthAgent implements Agent
         $http->withToken(token: $this->token(), type: 'DPoP')
             ->beforeSending(function (Request $request, PendingRequest $http) {
                 $url = $request->url();
-                info($url);
+                info('before.url', $url);
                 session()->put('request_url', $request->url());
             });
 
