@@ -43,35 +43,39 @@ class OAuthAgent implements Agent
                 session()->put('request_url', $request->url());
             });
 
-        return $http->retry(times: 1, sleepMilliseconds: 10, when: function ($exception, PendingRequest $request) {
+        return $http->retry(times: 1, sleepMilliseconds: 10, when: function ($exception, $request) {
+            info('retry.exception', $exception);
+            info('retry.request', $request);
+
             if (! $exception instanceof RequestException || $exception->response->status() !== 401) {
                 return false;
             }
 
-            $dpop_nonce = $exception->response->header('DPoP-Nonce');
-            info('retry.nonce', $dpop_nonce);
-
-            $url = session()->get('request_url');
-            info('retry.url', $url);
-
-            $payload = [
-                'iss' => $this->session('iss'),
-                'htu' => $url,
-                'htm' => 'POST',
-                'jti' => Str::random(40),
-                'iat' => now()->timestamp,
-                'exp' => now()->addSeconds(30)->timestamp,
-                'ath' => DPoP::createCodeChallenge($this->token()),
-            ];
-
-            $dpop_private_jwk = DPoP::load($this->session('dpop_private_key'));
-            $dpop_proof = DPoP::proof($payload, $dpop_private_jwk);
-            info('retry.proof', $dpop_proof);
-
-            $request->withHeader('DPoP', $dpop_proof);
+//
+//            $dpop_nonce = $exception->response->header('DPoP-Nonce');
+//            info('retry.nonce', $dpop_nonce);
+//
+//            $url = session()->get('request_url');
+//            info('retry.url', $url);
+//
+//            $payload = [
+//                'iss' => $this->session('iss'),
+//                'htu' => $url,
+//                'htm' => 'POST',
+//                'jti' => Str::random(40),
+//                'iat' => now()->timestamp,
+//                'exp' => now()->addSeconds(30)->timestamp,
+//                'ath' => DPoP::createCodeChallenge($this->token()),
+//            ];
+//
+//            $dpop_private_jwk = DPoP::load($this->session('dpop_private_key'));
+//            $dpop_proof = DPoP::proof($payload, $dpop_private_jwk);
+//            info('retry.proof', $dpop_proof);
+//
+//            $request->withHeader('DPoP', $dpop_proof);
 
             return true;
-        });
+        }, throw: false);
     }
 
     public function session(?string $key = null, $default = null): array|string|null
