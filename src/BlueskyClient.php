@@ -48,7 +48,7 @@ class BlueskyClient implements Factory
      */
     public function login(string $identifier, #[\SensitiveParameter] string $password): static
     {
-        $response = Http::baseUrl($this->baseUrl())
+        $response = Http::baseUrl('https://'.AtProto::Entryway->value.'/xrpc/')
             ->post(AtProto::createSession->value, [
                 'identifier' => $identifier,
                 'password' => $password,
