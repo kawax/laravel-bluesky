@@ -99,18 +99,22 @@ class BlueskyClient implements Factory
     }
 
     /**
+     * @param  string|null  $actor  DID or handle.
+     *
      * @throws ConnectionException
      */
-    public function profile(string $actor): Response
+    public function profile(?string $actor = null): Response
     {
         return $this->http(auth: false)
             ->get(AtProto::getProfile->value, [
-                'actor' => $actor,
+                'actor' => $actor ?? $this->agent()?->did() ?? '',
             ]);
     }
 
     /**
      * getAuthorFeed.
+     *
+     * @param  string|null  $actor  DID or handle.
      *
      * @throws ConnectionException
      */
@@ -118,7 +122,7 @@ class BlueskyClient implements Factory
     {
         return $this->http(auth: false)
             ->get(AtProto::getAuthorFeed->value, [
-                'actor' => $actor ?? $this->agent()->did(),
+                'actor' => $actor ?? $this->agent()?->did() ?? '',
                 'limit' => $limit,
                 'cursor' => $cursor,
                 'filter' => $filter,
