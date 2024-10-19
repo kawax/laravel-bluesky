@@ -7,11 +7,17 @@ use Illuminate\Support\Str;
 
 class DPoP
 {
+    /**
+     * Generate new private key for DPoP(url-safe base64 encoded).
+     */
     public static function generate(): string
     {
         return JWT::urlsafeB64Encode(BlueskyKey::create()->privatePEM());
     }
 
+    /**
+     * @param  string  $key url-safe base64 encoded private key
+     */
     public static function load(string $key): JsonWebKey
     {
         return BlueskyKey::load($key)->toJWK();

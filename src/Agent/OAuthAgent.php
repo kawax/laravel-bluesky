@@ -3,7 +3,6 @@
 namespace Revolution\Bluesky\Agent;
 
 use Illuminate\Http\Client\PendingRequest;
-use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Http;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
@@ -30,7 +29,7 @@ class OAuthAgent implements Agent
 
     public function http(bool $auth = true): PendingRequest
     {
-        return Http::baseUrl($this->baseUrl())
+        return Http::baseUrl($this->baseUrl($auth))
             ->when($auth, $this->dpop(...));
     }
 
@@ -77,11 +76,15 @@ class OAuthAgent implements Agent
         return $this->session('refresh_token', '');
     }
 
-    public function baseUrl(): string
+    public function baseUrl(bool $auth = true): string
     {
         $base = $this->session->get('service.0.serviceEndpoint');
 
         if (empty($base)) {
+            if ($auth) {
+                logger()->warning('If you get an error on the public endpoint, please authenticate.');
+            }
+
             $base = Bluesky::baseUrl();
         } else {
             $base .= '/xrpc/';
