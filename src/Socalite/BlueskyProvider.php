@@ -2,7 +2,6 @@
 
 namespace Revolution\Bluesky\Socalite;
 
-use GuzzleHttp\RequestOptions;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Http;
 use Laravel\Socialite\Two\AbstractProvider;
@@ -13,7 +12,6 @@ use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
 use Revolution\Bluesky\Facades\Bluesky;
 use Revolution\Bluesky\Session\OAuthSession;
-use Revolution\Bluesky\Support\Identity;
 use RuntimeException;
 
 class BlueskyProvider extends AbstractProvider implements ProviderInterface
