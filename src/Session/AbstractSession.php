@@ -46,6 +46,11 @@ abstract class AbstractSession implements Arrayable
         return $this->get('did', '');
     }
 
+    public function handle(): string
+    {
+        return $this->get('handle', '');
+    }
+
     public function toArray(): array
     {
         return $this->session->toArray();
