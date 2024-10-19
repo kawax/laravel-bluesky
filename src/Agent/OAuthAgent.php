@@ -18,11 +18,12 @@ use Revolution\Bluesky\Socalite\DPoP;
 class OAuthAgent implements Agent
 {
     public function __construct(
+        #[\SensitiveParameter]
         protected OAuthSession $session,
     ) {
     }
 
-    public static function create(OAuthSession $session): self
+    public static function create(#[\SensitiveParameter] OAuthSession $session): self
     {
         return new self($session);
     }
