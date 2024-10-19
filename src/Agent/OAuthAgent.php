@@ -4,6 +4,8 @@ namespace Revolution\Bluesky\Agent;
 
 use Illuminate\Http\Client\PendingRequest;
 use Illuminate\Support\Facades\Http;
+use Laravel\Socialite\Facades\Socialite;
+use Laravel\Socialite\Two\Token;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
 use Revolution\Bluesky\Contracts\Agent;
@@ -57,6 +59,21 @@ class OAuthAgent implements Agent
 
                 return $response;
             })->retry(times: 2, throw: false);
+    }
+
+    public function refreshToken(): static
+    {
+        /** @var Token $token */
+        $token = Socialite::driver('bluesky')
+            ->refreshToken($this->refresh());
+
+        $this->session->put('access_token', $token->token);
+        $this->session->put('refresh_token', $token->refreshToken);
+        $this->session->put('expires_in', $token->expiresIn);
+
+        OAuthSessionUpdated::dispatch($this->session);
+
+        return $this;
     }
 
     public function session(?string $key = null, $default = null): array|string|null

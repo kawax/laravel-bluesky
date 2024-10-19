@@ -175,6 +175,13 @@ class BlueskyClient implements Factory
             ->post(AtProto::uploadBlob->value);
     }
 
+    public function refreshToken(): static
+    {
+        $this->agent()->refreshToken();
+
+        return $this;
+    }
+
     public function identity(): Identity
     {
         return Container::getInstance()->make(Identity::class);
