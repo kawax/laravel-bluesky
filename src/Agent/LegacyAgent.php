@@ -2,12 +2,13 @@
 
 namespace Revolution\Bluesky\Agent;
 
+use Illuminate\Http\Client\ConnectionException;
 use Illuminate\Http\Client\PendingRequest;
 use Illuminate\Support\Facades\Http;
 use Revolution\Bluesky\Contracts\Agent;
 use Revolution\Bluesky\Enums\AtProto;
 use Revolution\Bluesky\Facades\Bluesky;
-use Revolution\Bluesky\Session\CredentialSession;
+use Revolution\Bluesky\Session\LegacySession;
 
 /**
  * App password based agent (deprecated).
@@ -15,11 +16,11 @@ use Revolution\Bluesky\Session\CredentialSession;
 class LegacyAgent implements Agent
 {
     public function __construct(
-        protected CredentialSession $session,
+        protected LegacySession $session,
     ) {
     }
 
-    public static function create(CredentialSession $session): self
+    public static function create(LegacySession $session): self
     {
         return new self($session);
     }
@@ -30,6 +31,20 @@ class LegacyAgent implements Agent
             ->when($auth, function (PendingRequest $http) {
                 $http->withToken(token: $this->token());
             });
+    }
+
+    /**
+     * @throws ConnectionException
+     */
+    public function refreshToken(): static
+    {
+        $response = Http::baseUrl($this->baseUrl())
+            ->withToken(token: $this->refresh())
+            ->post(AtProto::refreshSession->value);
+
+        $this->session = LegacySession::create($response->collect());
+
+        return $this;
     }
 
     public function session(?string $key = null, $default = null): array|string|null

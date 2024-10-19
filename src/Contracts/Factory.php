@@ -5,7 +5,7 @@ namespace Revolution\Bluesky\Contracts;
 use Illuminate\Http\Client\PendingRequest;
 use Illuminate\Http\Client\Response;
 use Revolution\Bluesky\Notifications\BlueskyMessage;
-use Revolution\Bluesky\Session\CredentialSession;
+use Revolution\Bluesky\Session\LegacySession;
 use Revolution\Bluesky\Session\OAuthSession;
 
 interface Factory

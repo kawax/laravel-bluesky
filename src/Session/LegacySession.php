@@ -2,7 +2,7 @@
 
 namespace Revolution\Bluesky\Session;
 
-class CredentialSession extends AbstractSession
+class LegacySession extends AbstractSession
 {
     public function token(): string
     {

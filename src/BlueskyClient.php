@@ -19,7 +19,7 @@ use Revolution\Bluesky\Contracts\Agent;
 use Revolution\Bluesky\Contracts\Factory;
 use Revolution\Bluesky\Enums\AtProto;
 use Revolution\Bluesky\Notifications\BlueskyMessage;
-use Revolution\Bluesky\Session\CredentialSession;
+use Revolution\Bluesky\Session\LegacySession;
 use Revolution\Bluesky\Session\OAuthSession;
 use Revolution\Bluesky\Support\Identity;
 
@@ -54,7 +54,7 @@ class BlueskyClient implements Factory
                 'password' => $password,
             ])->throw();
 
-        $session = CredentialSession::create($response->collect());
+        $session = LegacySession::create($response->collect());
         $this->agent = LegacyAgent::create($session);
 
         return $this;
@@ -184,7 +184,7 @@ class BlueskyClient implements Factory
             ->withToken(token: $this->agent()->refresh())
             ->post(AtProto::refreshSession->value);
 
-        $session = CredentialSession::create($response->collect());
+        $session = LegacySession::create($response->collect());
         $this->withAgent(LegacyAgent::create($session));
 
         return $this;

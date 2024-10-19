@@ -153,10 +153,6 @@ class BlueskyProvider extends AbstractProvider implements ProviderInterface
     {
         $meta = $this->request->session()->get('bluesky.meta');
 
-        if ($this->request->input('iss') !== Arr::get($meta, 'issuer')) {
-            throw new RuntimeException('Invalid iss.');
-        }
-
         return Arr::get($meta, 'token_endpoint', 'https://bsky.social/oauth/token');
     }
 

@@ -12,7 +12,7 @@ use Revolution\Bluesky\Agent\OAuthAgent;
 use Revolution\Bluesky\BlueskyClient;
 use Revolution\Bluesky\Facades\Bluesky;
 use Revolution\Bluesky\Notifications\BlueskyMessage;
-use Revolution\Bluesky\Session\CredentialSession;
+use Revolution\Bluesky\Session\LegacySession;
 use Revolution\Bluesky\Session\OAuthSession;
 use Revolution\Bluesky\Support\DNS;
 use Revolution\Bluesky\Support\Identity;
@@ -300,9 +300,9 @@ class ClientTest extends TestCase
         });
     }
 
-    public function test_credential_session()
+    public function test_legacy_session()
     {
-        $session = new CredentialSession($this->session);
+        $session = new LegacySession($this->session);
 
         $this->assertArrayHasKey('accessJwt', $session->toArray());
         $this->assertSame('test', $session->toArray()['accessJwt']);
