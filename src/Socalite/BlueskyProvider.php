@@ -2,6 +2,7 @@
 
 namespace Revolution\Bluesky\Socalite;
 
+use GuzzleHttp\RequestOptions;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Http;
 use Laravel\Socialite\Two\AbstractProvider;
@@ -71,7 +72,6 @@ class BlueskyProvider extends AbstractProvider implements ProviderInterface
             ]);
     }
 
-
     /**
      * {@inheritdoc}
      */
@@ -116,7 +116,12 @@ class BlueskyProvider extends AbstractProvider implements ProviderInterface
 
         $payload = $this->getTokenFields($code);
 
-        $response = Http::withRequestMiddleware(
+        return $this->sendTokenRequest($token_url, $payload);
+    }
+
+    protected function sendTokenRequest(string $token_url, array $payload): array
+    {
+        return Http::withRequestMiddleware(
             function (RequestInterface $request) use ($token_url) {
                 $dpop_private_key = $this->request->session()->get('bluesky.dpop_private_key');
                 $dpop_private_jwk = DPoP::load($dpop_private_key);
@@ -139,9 +144,8 @@ class BlueskyProvider extends AbstractProvider implements ProviderInterface
                 return $response;
             })
             ->retry(times: 2, throw: false)
-            ->post($token_url, $payload);
-
-        return $response->json();
+            ->post($token_url, $payload)
+            ->json();
     }
 
     /**
@@ -201,6 +205,27 @@ class BlueskyProvider extends AbstractProvider implements ProviderInterface
             'avatar' => Arr::get($user, 'avatar'),
             'session' => Arr::get($user, 'session'),
         ]);
+    }
+
+    /**
+     * Get the refresh token response for the given refresh token.
+     *
+     * @param  string  $refreshToken
+     * @return array
+     */
+    protected function getRefreshTokenResponse($refreshToken): array
+    {
+        $token_url = $this->getTokenUrl();
+
+        $payload = [
+            'grant_type' => 'refresh_token',
+            'refresh_token' => $refreshToken,
+            'client_id' => $this->clientId,
+            'client_assertion_type' => 'urn:ietf:params:oauth:client-assertion-type:jwt-bearer',
+            'client_assertion' => $this->getClientAssertion($this->endpoint()),
+        ];
+
+        return $this->sendTokenRequest($token_url, $payload);
     }
 
     public function service(string $service): self
