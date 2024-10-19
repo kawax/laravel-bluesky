@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\Http;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
 use Revolution\Bluesky\Contracts\Agent;
+use Revolution\Bluesky\Events\OAuthSessionUpdated;
 use Revolution\Bluesky\Facades\Bluesky;
 use Revolution\Bluesky\Session\OAuthSession;
 use Revolution\Bluesky\Socalite\DPoP;
@@ -51,6 +52,8 @@ class OAuthAgent implements Agent
                 $dpop_nonce = collect($response->getHeader('DPoP-Nonce'))->first();
 
                 $this->session->put(DPoP::API_NONCE, $dpop_nonce);
+
+                OAuthSessionUpdated::dispatch($this->session);
 
                 return $response;
             })->retry(times: 2, throw: false);
