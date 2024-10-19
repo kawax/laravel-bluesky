@@ -213,6 +213,11 @@ class BlueskyProvider extends AbstractProvider implements ProviderInterface
      */
     protected function getRefreshTokenResponse($refreshToken): array
     {
+        $auth_url = $this->endpoint();
+
+        $meta = $this->getServerMeta($auth_url);
+        $this->request->session()->put('bluesky.meta', $meta);
+
         $token_url = $this->getTokenUrl();
 
         $payload = [
@@ -249,9 +254,9 @@ class BlueskyProvider extends AbstractProvider implements ProviderInterface
     {
         $this->request->session()->forget([
             'code_verifier',
-            'bluesky.meta',
-            'bluesky.dpop_private_key',
-            'bluesky.dpop_nonce',
+//            'bluesky.meta',
+//            'bluesky.dpop_private_key',
+//            'bluesky.dpop_nonce',
         ]);
     }
 }
