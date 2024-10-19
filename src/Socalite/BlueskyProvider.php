@@ -238,7 +238,7 @@ class BlueskyProvider extends AbstractProvider implements ProviderInterface
         return $this;
     }
 
-    public function hint(string $login): self
+    public function hint(?string $login = null): self
     {
         $this->login_hint = $login;
 
