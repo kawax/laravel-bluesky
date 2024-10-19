@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Tests;
 
 use Illuminate\Foundation\Application;
+use Laravel\Socialite\SocialiteServiceProvider;
 use Revolution\Bluesky\BlueskyServiceProvider;
 
 abstract class TestCase extends \Orchestra\Testbench\TestCase
@@ -19,6 +20,7 @@ abstract class TestCase extends \Orchestra\Testbench\TestCase
     {
         return [
             BlueskyServiceProvider::class,
+            SocialiteServiceProvider::class,
         ];
     }
 
