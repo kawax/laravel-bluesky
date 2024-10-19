@@ -4,8 +4,12 @@ declare(strict_types=1);
 
 namespace Revolution\Bluesky;
 
+use Illuminate\Support\Facades\Route;
 use Illuminate\Support\ServiceProvider;
+use Laravel\Socialite\Facades\Socialite;
 use Revolution\Bluesky\Contracts\Factory;
+use Revolution\Bluesky\Socalite\BlueskyProvider;
+use Revolution\Bluesky\Socalite\Http\OAuthMetaController;
 
 class BlueskyServiceProvider extends ServiceProvider
 {
@@ -23,5 +27,26 @@ class BlueskyServiceProvider extends ServiceProvider
                 __DIR__.'/../config/bluesky.php' => config_path('bluesky.php'),
             ], 'bluesky-config');
         }
+
+        $this->socialite();
+    }
+
+    protected function socialite(): void
+    {
+        Socialite::extend('bluesky', function ($app) {
+            return Socialite::buildProvider(BlueskyProvider::class, [
+                'client_id' => route('bluesky.oauth.client-metadata'),
+                'client_secret' => '',
+                'redirect' => route('bluesky.oauth.redirect'),
+            ]);
+        });
+
+        Route::prefix(config('bluesky.oauth.prefix', '/bluesky/oauth/'))
+            ->group(function () {
+                Route::get('client-metadata.json', [OAuthMetaController::class, 'clientMetadata'])
+                    ->name('bluesky.oauth.client-metadata');
+                Route::get('jwks.json', [OAuthMetaController::class, 'jwks'])
+                    ->name('bluesky.oauth.jwks');
+            });
     }
 }
