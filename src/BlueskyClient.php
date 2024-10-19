@@ -105,7 +105,7 @@ class BlueskyClient implements Factory
      */
     public function profile(?string $actor = null): Response
     {
-        return $this->http(auth: false)
+        return $this->http()
             ->get(AtProto::getProfile->value, [
                 'actor' => $actor ?? $this->agent()?->did() ?? '',
             ]);
