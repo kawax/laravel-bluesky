@@ -7,6 +7,7 @@ namespace Revolution\Bluesky;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\ServiceProvider;
 use Laravel\Socialite\Facades\Socialite;
+use Revolution\Bluesky\Console\NewPrivateKeyCommand;
 use Revolution\Bluesky\Contracts\Factory;
 use Revolution\Bluesky\Socalite\BlueskyProvider;
 use Revolution\Bluesky\Socalite\Http\OAuthMetaController;
@@ -26,6 +27,10 @@ class BlueskyServiceProvider extends ServiceProvider
             $this->publishes([
                 __DIR__.'/../config/bluesky.php' => config_path('bluesky.php'),
             ], 'bluesky-config');
+
+            $this->commands([
+                NewPrivateKeyCommand::class,
+            ]);
         }
 
         $this->socialite();
