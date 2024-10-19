@@ -123,7 +123,7 @@ class BlueskyProvider extends AbstractProvider implements ProviderInterface
                 $dpop_private_key = $this->request->session()->get('bluesky.dpop_private_key');
                 $dpop_private_jwk = DPoP::load($dpop_private_key);
 
-                $dpop_nonce = $this->request->session()->get('bluesky.dpop_nonce', '');
+                $dpop_nonce = $this->request->session()->get(DPoP::AUTH_NONCE, '');
 
                 $dpop_proof = DPop::authProof(
                     jwk: $dpop_private_jwk,
@@ -136,7 +136,7 @@ class BlueskyProvider extends AbstractProvider implements ProviderInterface
             function (ResponseInterface $response) {
                 $dpop_nonce = collect($response->getHeader('DPoP-Nonce'))->first();
 
-                $this->request->session()->put('bluesky.dpop_nonce', $dpop_nonce);
+                $this->request->session()->put(DPoP::AUTH_NONCE, $dpop_nonce);
 
                 return $response;
             })
