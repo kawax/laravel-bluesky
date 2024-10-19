@@ -1,14 +1,15 @@
 <?php
 
 return [
-    'service' => env('BLUESKY_SERVICE', 'https://bsky.social'),
-
     // App password
     'identifier' => env('BLUESKY_IDENTIFIER'),
     'password' => env('BLUESKY_APP_PASSWORD'),
 
     // OAuth
     'oauth' => [
+        // Disable all OAuth features
+        'disabled' => env('BLUESKY_OAUTH_DISABLED', false),
+
         // Client Metadata
         'metadata' => [
             'scope' => env('BLUESKY_OAUTH_SCOPE', 'atproto transition:generic'),
@@ -32,6 +33,7 @@ return [
         // Private key(base64 encoded)
         'private_key' => env('BLUESKY_OAUTH_PRIVATE_KEY'),
 
+        // Route
         'prefix' => env('BLUESKY_OAUTH_PREFIX', '/bluesky/oauth/'),
     ],
 ];
