@@ -29,6 +29,11 @@ abstract class AbstractSession implements Arrayable
         return $this->session->only($keys);
     }
 
+    public function expect($keys): Collection
+    {
+        return $this->session->except($keys);
+    }
+
     public function put(string $key, $value): static
     {
         $this->session->put($key, $value);
