@@ -38,6 +38,10 @@ class BlueskyServiceProvider extends ServiceProvider
 
     protected function socialite(): void
     {
+        if (config('bluesky.oauth.disabled')) {
+            return;
+        }
+
         Socialite::extend('bluesky', function ($app) {
             return Socialite::buildProvider(BlueskyProvider::class, [
                 'client_id' => route('bluesky.oauth.client-metadata'),
