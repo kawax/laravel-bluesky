@@ -10,15 +10,15 @@ use Laravel\Socialite\Two\ProviderInterface;
 use Laravel\Socialite\Two\User;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
+use Revolution\Bluesky\Enums\AtProto;
 use Revolution\Bluesky\Facades\Bluesky;
 use Revolution\Bluesky\Session\OAuthSession;
-use RuntimeException;
 
 class BlueskyProvider extends AbstractProvider implements ProviderInterface
 {
     use WithPAR;
 
-    protected string $service = 'bsky.social';
+    protected string $service = AtProto::Entryway->value;
 
     protected ?string $login_hint = null;
 
