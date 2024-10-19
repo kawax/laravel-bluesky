@@ -141,6 +141,7 @@ class BlueskyProvider extends AbstractProvider implements ProviderInterface
                 return $response;
             })
             ->retry(times: 2, throw: false)
+            ->throw()
             ->post($token_url, $payload)
             ->json();
     }

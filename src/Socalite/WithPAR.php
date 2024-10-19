@@ -32,10 +32,6 @@ trait WithPAR
             dpop_private_jwk: $dpop_private_jwk,
         );
 
-        if ($response->failed()) {
-            throw new RuntimeException('Unable to get authorization response.');
-        }
-
         return $response->json('request_uri');
     }
 
@@ -82,6 +78,7 @@ trait WithPAR
                 return $response;
             })
             ->retry(times: 2, throw: false)
+            ->throw()
             ->post($par_url, $par_body);
     }
 
