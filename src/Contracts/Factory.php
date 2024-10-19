@@ -29,6 +29,4 @@ interface Factory
     public function post(string|BlueskyMessage $text): Response;
 
     public function uploadBlob(mixed $data, string $type = 'image/png'): Response;
-
-    public function refreshCredentialSession(): static;
 }

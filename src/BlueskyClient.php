@@ -175,21 +175,6 @@ class BlueskyClient implements Factory
             ->post(AtProto::uploadBlob->value);
     }
 
-    /**
-     * @throws ConnectionException
-     */
-    public function refreshCredentialSession(): static
-    {
-        $response = Http::baseUrl($this->baseUrl())
-            ->withToken(token: $this->agent()->refresh())
-            ->post(AtProto::refreshSession->value);
-
-        $session = LegacySession::create($response->collect());
-        $this->withAgent(LegacyAgent::create($session));
-
-        return $this;
-    }
-
     public function identity(): Identity
     {
         return Container::getInstance()->make(Identity::class);
