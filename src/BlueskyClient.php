@@ -54,10 +54,7 @@ class BlueskyClient implements Factory
                 'password' => $password,
             ])->throw();
 
-        $did = $response->json('did');
-        $plc = $this->identity()->resolveDID($did)->json();
-
-        $session = CredentialSession::create($response->collect()->put('pic', $plc));
+        $session = CredentialSession::create($response->collect());
         $this->agent = LegacyAgent::create($session);
 
         return $this;

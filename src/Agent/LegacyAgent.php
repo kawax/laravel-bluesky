@@ -54,6 +54,12 @@ class LegacyAgent implements Agent
 
     public function baseUrl(bool $auth = true): string
     {
+        $base = $this->session->get('didDoc.service.0.serviceEndpoint');
+
+        if (! empty($base)) {
+            return $base.'/xrpc/';
+        }
+
         if ($auth) {
             return 'https://'.AtProto::Entryway->value.'/xrpc/';
         } else {
