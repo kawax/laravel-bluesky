@@ -30,7 +30,7 @@ class OAuthAgent implements Agent
 
     public function http(bool $auth = true): PendingRequest
     {
-        return Http::baseUrl($this->serviceEndpoint())
+        return Http::baseUrl($this->baseUrl())
             ->when($auth, $this->dpop(...));
     }
 
@@ -77,7 +77,7 @@ class OAuthAgent implements Agent
         return $this->session('refresh_token', '');
     }
 
-    public function serviceEndpoint(): ?string
+    public function baseUrl(): string
     {
         $base = $this->session->get('service.0.serviceEndpoint');
 
