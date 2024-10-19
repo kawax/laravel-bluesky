@@ -92,7 +92,6 @@ class BlueskyProvider extends AbstractProvider implements ProviderInterface
         $session = OAuthSession::create(array_merge($user, $response, [
             'iss' => $this->request->input('iss'),
             'dpop_private_key' => $this->request->session()->get('bluesky.dpop_private_key'),
-            'dpop_nonce' => $this->request->session()->get('bluesky.dpop_nonce'),
         ]));
 
         $user['session'] = $session;
