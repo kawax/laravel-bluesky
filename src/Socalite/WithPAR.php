@@ -64,7 +64,7 @@ trait WithPAR
         return Http::asForm()
             ->withRequestMiddleware(function (RequestInterface $request) use ($dpop_private_jwk, $par_url) {
 
-                $dpop_nonce = $this->request->session()->get('bluesky.dpop_auth_nonce', '');
+                $dpop_nonce = $this->request->session()->get(DPoP::AUTH_NONCE, '');
 
                 $dpop_proof = DPoP::authProof(
                     jwk: $dpop_private_jwk,
@@ -77,7 +77,7 @@ trait WithPAR
             ->withResponseMiddleware(function (ResponseInterface $response) {
                 $dpop_nonce = collect($response->getHeader('DPoP-Nonce'))->first();
 
-                $this->request->session()->put('bluesky.dpop_auth_nonce', $dpop_nonce);
+                $this->request->session()->put(DPoP::AUTH_NONCE, $dpop_nonce);
 
                 return $response;
             })

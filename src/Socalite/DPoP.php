@@ -7,6 +7,10 @@ use Illuminate\Support\Str;
 
 class DPoP
 {
+    public const AUTH_NONCE = 'bluesky.dpop_auth_nonce';
+
+    public const API_NONCE = 'dpop_api_nonce';
+
     /**
      * Generate new private key for DPoP(url-safe base64 encoded).
      */
@@ -16,7 +20,7 @@ class DPoP
     }
 
     /**
-     * @param  string  $key url-safe base64 encoded private key
+     * @param  string  $key  url-safe base64 encoded private key
      */
     public static function load(string $key): JsonWebKey
     {
