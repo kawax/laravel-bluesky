@@ -289,6 +289,19 @@ class ClientTest extends TestCase
         });
     }
 
+    public function test_with_agent()
+    {
+        $agent = Bluesky::withAgent(OAuthAgent::create(OAuthSession::create()))
+            ->agent();
+
+        $this->assertInstanceOf(OAuthAgent::class, $agent);
+    }
+
+    public function test_client_identity()
+    {
+        $this->assertInstanceOf(Identity::class, Bluesky::identity());
+    }
+
     public function test_legacy_session()
     {
         $session = new LegacySession($this->session);
