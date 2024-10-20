@@ -11,8 +11,10 @@
   "require": {
     "php": "^8.2",
     "illuminate/support": "^11.20",
-    "laravel/socialite": "^v5.16",
-    "guzzlehttp/guzzle": "^7.8"
+    "laravel/socialite": "^5.16",
+    "guzzlehttp/guzzle": "^7.8",
+    "firebase/php-jwt": "^6.10",
+    "phpseclib/phpseclib": "^3.0"
   },
   "require-dev": {
     "orchestra/testbench": "^9.0"

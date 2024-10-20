@@ -1,6 +1,6 @@
 <?php
 
-namespace Revolution\Bluesky\Socalite;
+namespace Revolution\Bluesky\Socalite\Concerns;
 
 use Illuminate\Http\Client\Response;
 use Illuminate\Support\Arr;
@@ -8,6 +8,10 @@ use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Str;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
+use Revolution\Bluesky\Socalite\BlueskyKey;
+use Revolution\Bluesky\Socalite\DPoP;
+use Revolution\Bluesky\Socalite\JsonWebKey;
+use Revolution\Bluesky\Socalite\JsonWebToken;
 
 trait WithPAR
 {

@@ -79,10 +79,10 @@ class DPoP
         return JsonWebToken::encode($head, $payload, $jwk->key());
     }
 
-    public static function createCodeChallenge(string $code): string
+    protected static function createCodeChallenge(string $code): string
     {
         $hashed = hash('sha256', $code, true);
 
-        return rtrim(strtr(base64_encode($hashed), '+/', '-_'), '=');
+        return JWT::urlsafeB64Encode($hashed);
     }
 }

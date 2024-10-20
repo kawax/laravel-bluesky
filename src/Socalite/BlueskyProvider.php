@@ -13,6 +13,7 @@ use Psr\Http\Message\ResponseInterface;
 use Revolution\Bluesky\Enums\AtProto;
 use Revolution\Bluesky\Facades\Bluesky;
 use Revolution\Bluesky\Session\OAuthSession;
+use Revolution\Bluesky\Socalite\Concerns\WithPAR;
 use Revolution\Bluesky\Support\Identity;
 use RuntimeException;
 
