@@ -99,6 +99,7 @@ class BlueskyProvider extends AbstractProvider implements ProviderInterface
 
         $did = Arr::get($response, 'did', Arr::get($response, 'sub'));
         info('did:'.$did);
+        info('token.response', $response);
 
         $user = $this->getUserByToken($did);
 
