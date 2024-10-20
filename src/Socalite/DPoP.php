@@ -20,9 +20,9 @@ class DPoP
     }
 
     /**
-     * @param  string  $key  url-safe base64 encoded private key
+     * @param  string|null  $key  url-safe base64 encoded private key
      */
-    public static function load(string $key): JsonWebKey
+    public static function load(?string $key = null): JsonWebKey
     {
         return BlueskyKey::load($key)->toJWK();
     }

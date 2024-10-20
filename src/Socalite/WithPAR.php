@@ -18,10 +18,10 @@ trait WithPAR
     ) {
         $par_url = Arr::get($meta, 'pushed_authorization_request_endpoint', 'https://bsky.social/oauth/par');
 
-        $dpop_private_key = DPoP::generate();
-        $this->request->session()->put('bluesky.dpop_private_key', $dpop_private_key);
+        //$dpop_private_key = DPoP::generate();
+        //$this->getOAuthSession()->put('dpop_private_key', $dpop_private_key);
 
-        $dpop_private_jwk = DPoP::load($dpop_private_key);
+        $dpop_private_jwk = DPoP::load();
 
         $response = $this->sendParRequest(
             auth_url: $auth_url,

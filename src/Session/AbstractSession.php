@@ -9,12 +9,12 @@ abstract class AbstractSession implements Arrayable
 {
     protected Collection $session;
 
-    public function __construct(array|Collection $session)
+    public function __construct(array|Collection|null $session = null)
     {
         $this->session = Collection::wrap($session);
     }
 
-    public static function create(array|Collection $session): static
+    public static function create(array|Collection|null $session = null): static
     {
         return new static(Collection::wrap($session));
     }
@@ -24,14 +24,25 @@ abstract class AbstractSession implements Arrayable
         return $this->session->dot()->get($key, $default);
     }
 
-    public function only($keys): Collection
+    public function merge($items): static
     {
-        return $this->session->only($keys);
+        $this->session = $this->session->merge($items);
+
+        return $this;
     }
 
-    public function expect($keys): Collection
+    public function only($keys): static
     {
-        return $this->session->except($keys);
+        $this->session = $this->session->only($keys);
+
+        return $this;
+    }
+
+    public function except($keys): static
+    {
+        $this->session = $this->session->except($keys);
+
+        return $this;
     }
 
     public function put(string $key, $value): static
@@ -49,6 +60,11 @@ abstract class AbstractSession implements Arrayable
     public function handle(): string
     {
         return $this->get('handle', '');
+    }
+
+    public function collect(): Collection
+    {
+        return $this->session;
     }
 
     public function toArray(): array

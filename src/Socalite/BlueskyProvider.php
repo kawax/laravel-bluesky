@@ -13,12 +13,15 @@ use Psr\Http\Message\ResponseInterface;
 use Revolution\Bluesky\Enums\AtProto;
 use Revolution\Bluesky\Facades\Bluesky;
 use Revolution\Bluesky\Session\OAuthSession;
+use RuntimeException;
 
 class BlueskyProvider extends AbstractProvider implements ProviderInterface
 {
     use WithPAR;
 
     protected string $service = AtProto::Entryway->value;
+
+    protected ?OAuthSession $session = null;
 
     protected ?string $login_hint = null;
 
@@ -47,10 +50,18 @@ class BlueskyProvider extends AbstractProvider implements ProviderInterface
     protected $usesPKCE = true;
 
     /**
-     * {@inheritdoc}
+     * @inheritdoc
      */
     protected function getAuthUrl($state): string
     {
+        if ($this->isStateless() || empty($state)) {
+            throw new InvalidStateException('Bluesky does not support stateless.');
+        }
+
+        if (! $this->usesPKCE()) {
+            throw new RuntimeException('Bluesky requires PKCE.');
+        }
+
         $auth_url = $this->endpoint();
 
         $meta = $this->getServerMeta($auth_url);
@@ -89,11 +100,13 @@ class BlueskyProvider extends AbstractProvider implements ProviderInterface
 
         $user = $this->getUserByToken($did);
 
-        $session = collect($this->getUserByToken($did))
+        $session = $this->getOAuthSession()
+            ->collect()
+            ->merge($this->getUserByToken($did))
             ->merge($response)
             ->merge([
                 'iss' => $this->request->input('iss'),
-                'dpop_private_key' => $this->request->session()->get('bluesky.dpop_private_key'),
+                //'dpop_private_key' => $this->request->session()->get('bluesky.dpop_private_key'),
             ])
             ->except([
                 '@context',
@@ -125,10 +138,10 @@ class BlueskyProvider extends AbstractProvider implements ProviderInterface
     {
         return Http::withRequestMiddleware(
             function (RequestInterface $request) use ($token_url) {
-                $dpop_private_key = $this->request->session()->get('bluesky.dpop_private_key');
-                $dpop_private_jwk = DPoP::load($dpop_private_key);
+                //$dpop_private_key = $this->request->session()->get('bluesky.dpop_private_key');
+                $dpop_private_jwk = DPoP::load();
 
-                $dpop_nonce = $this->request->session()->get(DPoP::AUTH_NONCE, '');
+                $dpop_nonce = $this->getOAuthSession()->get(DPoP::AUTH_NONCE, '');
 
                 $dpop_proof = DPop::authProof(
                     jwk: $dpop_private_jwk,
@@ -141,7 +154,7 @@ class BlueskyProvider extends AbstractProvider implements ProviderInterface
             function (ResponseInterface $response) {
                 $dpop_nonce = collect($response->getHeader('DPoP-Nonce'))->first();
 
-                $this->request->session()->put(DPoP::AUTH_NONCE, $dpop_nonce);
+                $this->getOAuthSession()->put(DPoP::AUTH_NONCE, $dpop_nonce);
 
                 return $response;
             })
@@ -242,6 +255,22 @@ class BlueskyProvider extends AbstractProvider implements ProviderInterface
     public function hint(?string $login = null): self
     {
         $this->login_hint = $login;
+
+        return $this;
+    }
+
+    public function getOAuthSession(): OAuthSession
+    {
+        if (is_null($this->session)) {
+            $this->session = new OAuthSession();
+        }
+
+        return $this->session;
+    }
+
+    public function setOAuthSession(?OAuthSession $session = null): self
+    {
+        $this->session = $session;
 
         return $this;
     }

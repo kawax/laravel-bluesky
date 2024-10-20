@@ -12,6 +12,7 @@ use Revolution\Bluesky\Contracts\Agent;
 use Revolution\Bluesky\Events\OAuthSessionUpdated;
 use Revolution\Bluesky\Facades\Bluesky;
 use Revolution\Bluesky\Session\OAuthSession;
+use Revolution\Bluesky\Socalite\BlueskyKey;
 use Revolution\Bluesky\Socalite\DPoP;
 
 /**
@@ -33,15 +34,10 @@ class OAuthAgent implements Agent
     public function http(bool $auth = true): PendingRequest
     {
         return Http::baseUrl($this->baseUrl($auth))
-            ->when(true, $this->dpop(...));
-    }
-
-    protected function dpop(PendingRequest $http): PendingRequest
-    {
-        return $http->withToken($this->token(), 'DPoP')
+            ->withToken($this->token(), 'DPoP')
             ->withRequestMiddleware(function (RequestInterface $request) {
                 $dpop_proof = DPoP::apiProof(
-                    jwk: DPoP::load($this->session('dpop_private_key')),
+                    jwk: DPoP::load(),
                     iss: $this->session('iss'),
                     url: $request->getUri(),
                     token: $this->token(),
@@ -58,15 +54,17 @@ class OAuthAgent implements Agent
                 OAuthSessionUpdated::dispatch($this->session);
 
                 return $response;
-            })->retry(times: 2, throw: false);
+            })->retry(times: 2, throw: false);;
     }
 
     public function refreshToken(): static
     {
         /** @var Token $token */
         $token = Socialite::driver('bluesky')
+            ->setOAuthSession($this->session)
             ->refreshToken($this->refresh());
 
+        $this->session = Socialite::driver('bluesky')->getOAuthSession();
         $this->session->put('access_token', $token->token);
         $this->session->put('refresh_token', $token->refreshToken);
         $this->session->put('expires_in', $token->expiresIn);
