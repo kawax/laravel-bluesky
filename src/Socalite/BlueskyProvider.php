@@ -123,7 +123,7 @@ class BlueskyProvider extends AbstractProvider implements ProviderInterface
 
         $session = $this->getOAuthSession()
             ->collect()
-            ->merge($this->getUserByToken($did))
+            ->merge($user)
             ->merge($response)
             ->merge([
                 'iss' => $this->request->input('iss'),
