@@ -24,27 +24,6 @@ abstract class AbstractSession implements Arrayable
         return $this->session->dot()->get($key, $default);
     }
 
-    public function merge($items): static
-    {
-        $this->session = $this->session->merge($items);
-
-        return $this;
-    }
-
-    public function only($keys): static
-    {
-        $this->session = $this->session->only($keys);
-
-        return $this;
-    }
-
-    public function except($keys): static
-    {
-        $this->session = $this->session->except($keys);
-
-        return $this;
-    }
-
     public function put(string $key, $value): static
     {
         $this->session->put($key, $value);
