@@ -14,7 +14,7 @@ class JsonWebToken
     ): string {
         return JWT::encode(
             payload: $payload,
-            key: $key->toString('PKCS8'),
+            key: $key->toString(BlueskyKey::TYPE),
             alg: JsonWebKey::ALG,
             head: $head,
         );
