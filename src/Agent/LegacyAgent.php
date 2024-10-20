@@ -7,7 +7,6 @@ use Illuminate\Http\Client\PendingRequest;
 use Illuminate\Support\Facades\Http;
 use Revolution\Bluesky\Contracts\Agent;
 use Revolution\Bluesky\Enums\AtProto;
-use Revolution\Bluesky\Facades\Bluesky;
 use Revolution\Bluesky\Session\LegacySession;
 
 /**
@@ -78,7 +77,7 @@ class LegacyAgent implements Agent
         if ($auth) {
             return 'https://'.AtProto::Entryway->value.'/xrpc/';
         } else {
-            return Bluesky::baseUrl();
+            return AtProto::PublicEndpoint->value;
         }
     }
 }

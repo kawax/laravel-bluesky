@@ -8,7 +8,7 @@ enum AtProto: string
 {
     case Entryway = 'bsky.social';
 
-    case PublicEndpoint = 'https://public.api.bsky.app';
+    case PublicEndpoint = 'https://public.api.bsky.app/xrpc/';
 
     case createSession = 'com.atproto.server.createSession';
     case refreshSession = 'com.atproto.server.refreshSession';

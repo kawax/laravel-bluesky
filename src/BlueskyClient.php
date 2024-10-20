@@ -75,7 +75,7 @@ class BlueskyClient implements Factory
     public function http(bool $auth = true): PendingRequest
     {
         if (! $this->check()) {
-            return Http::baseUrl($this->baseUrl());
+            return Http::baseUrl(AtProto::PublicEndpoint->value);
         }
 
         return $this->agent()->http($auth);
@@ -189,7 +189,7 @@ class BlueskyClient implements Factory
 
     public function check(): bool
     {
-        return ! empty($this->agent);
+        return ! empty($this->agent()?->token());
     }
 
     public function logout(): static
@@ -197,10 +197,5 @@ class BlueskyClient implements Factory
         $this->agent = null;
 
         return $this;
-    }
-
-    public static function baseUrl(): string
-    {
-        return AtProto::PublicEndpoint->value.'/xrpc/';
     }
 }
