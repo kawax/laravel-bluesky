@@ -14,7 +14,11 @@ interface Agent
 
     public function did(): string;
 
+    public function handle(): string;
+
     public function token(): string;
 
     public function refresh(): string;
+
+    public function baseUrl(bool $auth = true): string;
 }
