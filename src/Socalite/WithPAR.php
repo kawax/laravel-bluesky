@@ -76,9 +76,15 @@ trait WithPAR
             ->post($par_url, $par_body);
     }
 
-    public function getServerMeta(string $url): array
+    public function getServerMeta(string $auth_url): array
     {
-        return Http::get($url.'/.well-known/oauth-authorization-server')
+        return Http::get($auth_url.'/.well-known/oauth-authorization-server')
+            ->json();
+    }
+
+    public function getPDSResource(string $pds_url): array
+    {
+        return Http::get($pds_url.'/.well-known/oauth-protected-resource')
             ->json();
     }
 

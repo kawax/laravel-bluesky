@@ -13,6 +13,7 @@ use Psr\Http\Message\ResponseInterface;
 use Revolution\Bluesky\Enums\AtProto;
 use Revolution\Bluesky\Facades\Bluesky;
 use Revolution\Bluesky\Session\OAuthSession;
+use Revolution\Bluesky\Support\Identity;
 use RuntimeException;
 
 class BlueskyProvider extends AbstractProvider implements ProviderInterface
@@ -95,18 +96,26 @@ class BlueskyProvider extends AbstractProvider implements ProviderInterface
             throw new InvalidStateException;
         }
 
+        if ($this->hasInvalidIssuer()) {
+            throw new RuntimeException('Invalid Issuer.');
+        }
+
         $response = $this->getAccessTokenResponse($this->getCode());
 
         $did = Arr::get($response, 'did', Arr::get($response, 'sub'));
-        info('did:'.$did);
-        info('token.response', $response);
+
+        if ($this->hasInvalidDID($did)) {
+            info('invalid did', Arr::wrap($did));
+
+            throw new RuntimeException('Invalid DID.');
+        }
 
         $user = $this->getUserByToken($did);
 
-        info('token.user', $user);
+        if ($this->hasInvalidUser($user)) {
+            info('invalid user', Arr::wrap($user));
 
-        if ($this->isInvalidUser($user)) {
-            throw new RuntimeException('Invalid user.');
+            throw new RuntimeException();
         }
 
         $session = $this->getOAuthSession()
@@ -127,9 +136,38 @@ class BlueskyProvider extends AbstractProvider implements ProviderInterface
         return $this->userInstance($response, $user);
     }
 
-    protected function isInvalidUser(array $user): bool
+    protected function hasInvalidIssuer(): bool
     {
+        $meta = $this->request->session()->get('bluesky.meta');
+
+        return Arr::get($meta, 'issuer') !== $this->request->input('iss');
+    }
+
+    protected function hasInvalidDID(?string $did): bool
+    {
+        if (! Identity::isDID($did)) {
+            return true;
+        }
+
+        if (! empty($this->login_hint)) {
+            if (Identity::isDID($this->login_hint)) {
+                return $this->login_hint === $did;
+            }
+            if (Identity::isHandle($this->login_hint)) {
+                return Bluesky::identity()->resolveHandle($this->login_hint) === $did;
+            }
+        }
+
         return false;
+    }
+
+    protected function hasInvalidUser(array $user): bool
+    {
+        $pds_url = Arr::get($user, 'service.0.serviceEndpoint');
+        $resource = $this->getPDSResource($pds_url);
+        $auth_url = Arr::get($resource, 'authorization_servers.0');
+
+        return $this->endpoint() === $auth_url;
     }
 
     /**
