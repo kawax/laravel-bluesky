@@ -45,6 +45,9 @@ abstract class TestCase extends \Orchestra\Testbench\TestCase
      */
     protected function defineEnvironment($app): void
     {
-        //
+        $app['config']->set('bluesky.oauth', [
+            //for testing
+            'private_key' => 'LS0tLS1CRUdJTiBQUklWQVRFIEtFWS0tLS0tDQpNSUdIQWdFQU1CTUdCeXFHU000OUFnRUdDQ3FHU000OUF3RUhCRzB3YXdJQkFRUWdEZkhxckZzSkRUUkVMa1ZIDQpHNG9DNTh2U2k0SnFkN3NPSTVNdTZzeVdrY21oUkFOQ0FBVHc2VU1DMlpYcFV4blhFc1BjRTA5aFdoYWdLbWxODQpRUXovSUlFYUVHdEFtSU5YeGUzTHZ0NE5KUS9YVWdGV3hkdEJBbUhQcFN4MlM3RnIvdmFhT2UzZw0KLS0tLS1FTkQgUFJJVkFURSBLRVktLS0tLQ',
+        ]);
     }
 }

@@ -17,6 +17,7 @@ use Revolution\Bluesky\Session\OAuthSession;
 use Revolution\Bluesky\Support\DNS;
 use Revolution\Bluesky\Support\Identity;
 use Tests\TestCase;
+use Mockery as m;
 
 class ClientTest extends TestCase
 {

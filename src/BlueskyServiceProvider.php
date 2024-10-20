@@ -44,9 +44,9 @@ class BlueskyServiceProvider extends ServiceProvider
 
         Socialite::extend('bluesky', function ($app) {
             return Socialite::buildProvider(BlueskyProvider::class, [
-                'client_id' => route('bluesky.oauth.client-metadata'),
+                'client_id' => Route::has('bluesky.oauth.client-metadata') ? route('bluesky.oauth.client-metadata') : '',
                 'client_secret' => '',
-                'redirect' => route('bluesky.oauth.redirect'),
+                'redirect' => Route::has('bluesky.oauth.redirect') ? route('bluesky.oauth.redirect') : url('bluesky/callback'),
             ]);
         });
 

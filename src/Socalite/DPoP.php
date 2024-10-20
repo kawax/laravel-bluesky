@@ -27,7 +27,7 @@ class DPoP
     public static function authProof(
         JsonWebKey $jwk,
         string $url,
-        string $nonce = '',
+        ?string $nonce = '',
         string $method = 'POST',
     ): string {
         $head = [
@@ -56,7 +56,7 @@ class DPoP
         string $iss,
         string $url,
         string $token,
-        string $nonce = '',
+        ?string $nonce = '',
         string $method = 'POST',
     ): string {
         $head = [

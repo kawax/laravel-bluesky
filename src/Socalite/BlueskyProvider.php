@@ -96,6 +96,9 @@ class BlueskyProvider extends AbstractProvider implements ProviderInterface
             throw new InvalidStateException;
         }
 
+        $meta = $this->getServerMeta($this->endpoint());
+        $this->request->session()->put('bluesky.meta', $meta);
+
         if ($this->hasInvalidIssuer()) {
             throw new RuntimeException('Invalid Issuer.');
         }
@@ -151,10 +154,10 @@ class BlueskyProvider extends AbstractProvider implements ProviderInterface
 
         if (! empty($this->login_hint)) {
             if (Identity::isDID($this->login_hint)) {
-                return $this->login_hint === $did;
+                return $this->login_hint !== $did;
             }
             if (Identity::isHandle($this->login_hint)) {
-                return Bluesky::identity()->resolveHandle($this->login_hint) === $did;
+                return Bluesky::identity()->resolveHandle($this->login_hint) !== $did;
             }
         }
 
