@@ -11,9 +11,7 @@ use Psr\Http\Message\ResponseInterface;
 use Revolution\Bluesky\Contracts\Agent;
 use Revolution\Bluesky\Enums\AtProto;
 use Revolution\Bluesky\Events\OAuthSessionUpdated;
-use Revolution\Bluesky\Facades\Bluesky;
 use Revolution\Bluesky\Session\OAuthSession;
-use Revolution\Bluesky\Socalite\BlueskyKey;
 use Revolution\Bluesky\Socalite\DPoP;
 
 /**

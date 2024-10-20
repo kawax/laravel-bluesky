@@ -332,6 +332,7 @@ class BlueskyProvider extends AbstractProvider implements ProviderInterface
     {
         $this->request->session()->forget([
             'code_verifier',
+            'bluesky.meta',
         ]);
     }
 }
