@@ -303,11 +303,6 @@ class ClientTest extends TestCase
             'refresh_token' => 'test',
             'did' => 'test',
             'handle' => 'handle',
-            'sub' => 'sub',
-            'scope' => 'scope',
-            'iss' => 'iss',
-            'dpop_nonce' => 'dpop_nonce',
-            'dpop_jwk' => 'dpop_jwk',
         ];
 
         $session = new OAuthSession($oauth);
@@ -323,11 +318,6 @@ class ClientTest extends TestCase
             'refresh_token' => 'test',
             'did' => 'test',
             'handle' => 'handle',
-            'sub' => 'sub',
-            'scope' => 'scope',
-            'iss' => 'iss',
-            'dpop_nonce' => 'dpop_nonce',
-            'dpop_jwk' => 'dpop_jwk',
         ];
 
         $session = OAuthSession::create($oauth);
@@ -335,5 +325,6 @@ class ClientTest extends TestCase
         $client = Bluesky::withToken($session);
 
         $this->assertInstanceOf(OAuthAgent::class, $client->agent());
+        $this->assertSame('test', $client->agent()->did());
     }
 }
