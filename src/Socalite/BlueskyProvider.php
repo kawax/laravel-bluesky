@@ -67,7 +67,6 @@ class BlueskyProvider extends AbstractProvider implements ProviderInterface
 
         $meta = $this->getServerMeta($auth_url);
         $this->request->session()->put('bluesky.meta', $meta);
-        info('meta', $meta);
 
         $par_request_uri = $this->getParRequestUrl(
             auth_url: $auth_url,
@@ -164,10 +163,8 @@ class BlueskyProvider extends AbstractProvider implements ProviderInterface
     protected function hasInvalidUser(array $user): bool
     {
         $pds_url = Arr::get($user, 'service.0.serviceEndpoint');
-        info($pds_url);
         $resource = $this->getPDSResource($pds_url);
         $auth_url = Arr::get($resource, 'authorization_servers.0');
-        info($auth_url, $resource);
 
         return $this->endpoint() !== $auth_url;
     }
