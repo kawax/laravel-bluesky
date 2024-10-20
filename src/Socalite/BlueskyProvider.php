@@ -167,7 +167,7 @@ class BlueskyProvider extends AbstractProvider implements ProviderInterface
         $resource = $this->getPDSResource($pds_url);
         $auth_url = Arr::get($resource, 'authorization_servers.0');
 
-        return $this->endpoint() === $auth_url;
+        return $this->endpoint() !== $auth_url;
     }
 
     /**
