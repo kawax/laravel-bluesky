@@ -53,7 +53,7 @@ class OAuthAgent implements Agent
                 OAuthSessionUpdated::dispatch($this->session);
 
                 return $response;
-            })->retry(times: 2, throw: false);;
+            })->retry(times: 2, throw: false);
     }
 
     public function refreshToken(): static
@@ -80,17 +80,22 @@ class OAuthAgent implements Agent
 
     public function did(): string
     {
-        return $this->session('did', '');
+        return $this->session->did();
+    }
+
+    public function handle(): string
+    {
+        return $this->session->handle();
     }
 
     public function token(): string
     {
-        return $this->session('access_token', '');
+        return $this->session->token();
     }
 
     public function refresh(): string
     {
-        return $this->session('refresh_token', '');
+        return $this->session->refresh();
     }
 
     public function baseUrl(bool $auth = true): string
