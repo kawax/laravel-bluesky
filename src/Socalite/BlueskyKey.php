@@ -11,6 +11,10 @@ use phpseclib3\Crypt\EC;
 
 class BlueskyKey
 {
+    public const CURVE = 'secp256r1';
+
+    public const TYPE = 'PKCS8';
+
     protected PrivateKey|CommonPrivateKey $pk;
 
     /**
@@ -37,7 +41,7 @@ class BlueskyKey
     {
         $self = new static();
 
-        $self->pk = EC::createKey('secp256r1');
+        $self->pk = EC::createKey($self::CURVE);
 
         return $self;
     }
@@ -49,12 +53,12 @@ class BlueskyKey
 
     public function privatePEM(): string
     {
-        return $this->pk->toString('PKCS8');
+        return $this->pk->toString(self::TYPE);
     }
 
     public function publicPEM(): string
     {
-        return $this->pk->getPublicKey()->toString('PKCS8');
+        return $this->pk->getPublicKey()->toString(self::TYPE);
     }
 
     public function publicKey(): PublicKey
