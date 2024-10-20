@@ -56,6 +56,11 @@ class LegacyAgent implements Agent
         return $this->session->did();
     }
 
+    public function handle(): string
+    {
+        return $this->session->handle();
+    }
+
     public function token(): string
     {
         return $this->session->token();
