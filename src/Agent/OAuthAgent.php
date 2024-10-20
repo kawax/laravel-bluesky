@@ -73,7 +73,7 @@ class OAuthAgent implements Agent
         return $this;
     }
 
-    public function session(?string $key = null, $default = null): array|string|null
+    public function session(?string $key = null, $default = null): mixed
     {
         return empty($key) ? $this->session->toArray() : $this->session->get($key, $default);
     }
@@ -96,6 +96,11 @@ class OAuthAgent implements Agent
     public function refresh(): string
     {
         return $this->session->refresh();
+    }
+
+    public function isValid(): bool
+    {
+        return $this->session->collect()->has(['did', 'iss', 'access_token', 'refresh_token']);
     }
 
     public function baseUrl(bool $auth = true): string

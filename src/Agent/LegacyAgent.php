@@ -46,7 +46,7 @@ class LegacyAgent implements Agent
         return $this;
     }
 
-    public function session(?string $key = null, $default = null): array|string|null
+    public function session(?string $key = null, $default = null): mixed
     {
         return empty($key) ? $this->session->toArray() : $this->session->get($key, $default);
     }

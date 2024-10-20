@@ -40,8 +40,6 @@ trait WithPAR
         ?string $login_hint,
         JsonWebKey $dpop_private_jwk,
     ): Response {
-        $client_assertion = $this->getClientAssertion($auth_url);
-
         $par_body = [
             'response_type' => 'code',
             'code_challenge' => $this->getCodeChallenge(),
@@ -51,7 +49,7 @@ trait WithPAR
             'redirect_uri' => $this->redirectUrl,
             'scope' => $this->formatScopes($this->getScopes(), $this->scopeSeparator),
             'client_assertion_type' => 'urn:ietf:params:oauth:client-assertion-type:jwt-bearer',
-            'client_assertion' => $client_assertion,
+            'client_assertion' => $this->getClientAssertion($auth_url),
             'login_hint' => $login_hint,
         ];
 
@@ -92,7 +90,7 @@ trait WithPAR
             ->json();
     }
 
-    protected function getClientAssertion(string $url): string
+    protected function getClientAssertion(string $auth_url): string
     {
         $client_secret_jwk = BlueskyKey::load()->toJWK();
 
@@ -104,7 +102,7 @@ trait WithPAR
         $payload = [
             'iss' => $this->clientId,
             'sub' => $this->clientId,
-            'aud' => $url,
+            'aud' => $auth_url,
             'jti' => Str::random(40),
             'iat' => now()->timestamp,
         ];

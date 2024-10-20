@@ -10,7 +10,7 @@ interface Agent
 
     public function refreshToken(): static;
 
-    public function session(?string $key = null, $default = null): array|string|null;
+    public function session(?string $key = null, $default = null): mixed;
 
     public function did(): string;
 
