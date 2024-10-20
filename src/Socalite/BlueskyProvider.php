@@ -66,6 +66,7 @@ class BlueskyProvider extends AbstractProvider implements ProviderInterface
 
         $meta = $this->getServerMeta($auth_url);
         $this->request->session()->put('bluesky.meta', $meta);
+        info('meta', $meta);
 
         $par_request_uri = $this->getParRequestUrl(
             auth_url: $auth_url,
@@ -97,6 +98,7 @@ class BlueskyProvider extends AbstractProvider implements ProviderInterface
         $response = $this->getAccessTokenResponse($this->getCode());
 
         $did = Arr::get($response, 'did', Arr::get($response, 'sub'));
+        info('did:'.$did);
 
         $user = $this->getUserByToken($did);
 
@@ -106,7 +108,6 @@ class BlueskyProvider extends AbstractProvider implements ProviderInterface
             ->merge($response)
             ->merge([
                 'iss' => $this->request->input('iss'),
-                //'dpop_private_key' => $this->request->session()->get('bluesky.dpop_private_key'),
             ])
             ->except([
                 '@context',
@@ -138,13 +139,10 @@ class BlueskyProvider extends AbstractProvider implements ProviderInterface
     {
         return Http::withRequestMiddleware(
             function (RequestInterface $request) use ($token_url) {
-                //$dpop_private_key = $this->request->session()->get('bluesky.dpop_private_key');
-                $dpop_private_jwk = DPoP::load();
-
                 $dpop_nonce = $this->getOAuthSession()->get(DPoP::AUTH_NONCE, '');
 
                 $dpop_proof = DPop::authProof(
-                    jwk: $dpop_private_jwk,
+                    jwk: DPoP::load(),
                     url: $token_url,
                     nonce: $dpop_nonce,
                 );

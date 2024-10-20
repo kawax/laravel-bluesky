@@ -7,17 +7,11 @@ use Illuminate\Support\Str;
 
 class DPoP
 {
-    public const AUTH_NONCE = 'bluesky.dpop_auth_nonce';
+    public const AUTH_NONCE = 'dpop_auth_nonce';
 
     public const API_NONCE = 'dpop_api_nonce';
 
-    /**
-     * Generate new private key for DPoP(url-safe base64 encoded).
-     */
-    public static function generate(): string
-    {
-        return JWT::urlsafeB64Encode(BlueskyKey::create()->privatePEM());
-    }
+    protected const TYP = 'dpop+jwt';
 
     /**
      * @param  string|null  $key  url-safe base64 encoded private key
@@ -37,7 +31,7 @@ class DPoP
         string $method = 'POST',
     ): string {
         $head = [
-            'typ' => 'dpop+jwt',
+            'typ' => self::TYP,
             'alg' => JsonWebKey::ALG,
             'jwk' => $jwk->asPublic()->toArray(),
         ];
@@ -66,7 +60,7 @@ class DPoP
         string $method = 'POST',
     ): string {
         $head = [
-            'typ' => 'dpop+jwt',
+            'typ' => self::TYP,
             'alg' => JsonWebKey::ALG,
             'jwk' => $jwk->asPublic()->toArray(),
         ];

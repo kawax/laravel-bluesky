@@ -32,10 +32,11 @@ class NewPrivateKeyCommand extends Command
     public function handle(): int
     {
         $private = BlueskyKey::create()->privatePEM();
+        $private = JWT::urlsafeB64Encode($private);
 
-        $this->comment('Please set this private key in .env.');
+        $this->comment('Please set this private key in .env');
         $this->newLine();
-        $this->info('BLUESKY_OAUTH_PRIVATE_KEY="'.JWT::urlsafeB64Encode($private).'"');
+        $this->info('BLUESKY_OAUTH_PRIVATE_KEY="'.$private.'"');
 
         return 0;
     }

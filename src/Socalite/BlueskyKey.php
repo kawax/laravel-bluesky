@@ -41,7 +41,7 @@ class BlueskyKey
     {
         $self = new static();
 
-        $self->pk = EC::createKey($self::CURVE);
+        $self->pk = EC::createKey(self::CURVE);
 
         return $self;
     }
