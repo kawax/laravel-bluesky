@@ -31,6 +31,13 @@ abstract class AbstractSession implements Arrayable
         return $this;
     }
 
+    public function merge($items): static
+    {
+        $this->session = $this->session->merge($items);
+
+        return $this;
+    }
+
     public function did(): string
     {
         return $this->get('did', '');

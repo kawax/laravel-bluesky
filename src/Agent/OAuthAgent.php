@@ -11,6 +11,7 @@ use Psr\Http\Message\ResponseInterface;
 use Revolution\Bluesky\Contracts\Agent;
 use Revolution\Bluesky\Enums\AtProto;
 use Revolution\Bluesky\Events\OAuthSessionUpdated;
+use Revolution\Bluesky\Facades\Bluesky;
 use Revolution\Bluesky\Session\OAuthSession;
 use Revolution\Bluesky\Socalite\DPoP;
 
@@ -68,7 +69,19 @@ class OAuthAgent implements Agent
         $this->session->put('refresh_token', $token->refreshToken);
         $this->session->put('expires_in', $token->expiresIn);
 
+        $this->refreshProfile($this->did());
+
         OAuthSessionUpdated::dispatch($this->session);
+
+        return $this;
+    }
+
+    public function refreshProfile(string $did): static
+    {
+        $profile = Bluesky::identity()->resolveDID($did)->collect()
+            ->merge(Bluesky::profile($did)->json());
+
+        $this->session = $this->session->merge($profile);
 
         return $this;
     }

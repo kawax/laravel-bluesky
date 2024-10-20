@@ -105,6 +105,7 @@ class OAuthAgentTest extends TestCase
         Event::fake();
 
         $session = OAuthSession::create([
+            'did' => 'did',
             'iss' => 'iss',
             'access_token' => 'access_token',
         ]);
@@ -112,10 +113,14 @@ class OAuthAgentTest extends TestCase
         Socialite::shouldReceive('driver->setOAuthSession->refreshToken')->andReturn(new Token('token', '', 1, []));
         Socialite::shouldReceive('driver->getOAuthSession')->andReturn(new OAuthSession([]));
 
-        Bluesky::withToken($session)
-            ->refreshToken();
+        Bluesky::shouldReceive('identity->resolveDID->collect->merge')->andReturn(collect(['handle' => 'handle']));
+        Bluesky::shouldReceive('profile->json')->once()->andReturn([]);
 
-        $this->assertSame('token', Bluesky::agent()->token());
+        $agent = new OAuthAgent($session);
+        $agent->refreshToken();
+
+        $this->assertSame('token', $agent->token());
+        $this->assertSame('handle', $agent->handle());
 
         Event::assertDispatched(OAuthSessionUpdated::class);
     }

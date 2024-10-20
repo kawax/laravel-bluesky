@@ -2,6 +2,7 @@
 
 namespace Revolution\Bluesky\Socalite;
 
+use Illuminate\Http\Client\Response;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Http;
 use Laravel\Socialite\Two\AbstractProvider;
@@ -206,6 +207,11 @@ class BlueskyProvider extends AbstractProvider implements ProviderInterface
                 $dpop_nonce = collect($response->getHeader('DPoP-Nonce'))->first();
 
                 $this->getOAuthSession()->put(DPoP::AUTH_NONCE, $dpop_nonce);
+
+                $sub = (new Response($response))->json('sub');
+                if (! empty($sub)) {
+                    $this->getOAuthSession()->put('sub', $sub);
+                }
 
                 return $response;
             })
