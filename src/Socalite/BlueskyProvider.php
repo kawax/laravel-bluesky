@@ -103,6 +103,12 @@ class BlueskyProvider extends AbstractProvider implements ProviderInterface
 
         $user = $this->getUserByToken($did);
 
+        info('token.user', $user);
+
+        if ($this->isInvalidUser($user)) {
+            throw new RuntimeException('Invalid user.');
+        }
+
         $session = $this->getOAuthSession()
             ->collect()
             ->merge($this->getUserByToken($did))
@@ -119,6 +125,11 @@ class BlueskyProvider extends AbstractProvider implements ProviderInterface
         $this->clearSession();
 
         return $this->userInstance($response, $user);
+    }
+
+    protected function isInvalidUser(array $user): bool
+    {
+        return false;
     }
 
     /**
