@@ -42,7 +42,7 @@ class DPoP
             'htu' => $url,
             'jti' => Str::random(64),
             'iat' => now()->timestamp,
-            'exp' => now()->addSeconds(30)->timestamp,
+            'exp' => now()->addMinutes(60)->timestamp,
         ];
 
         return JsonWebToken::encode($head, $payload, $jwk->key());
@@ -72,7 +72,7 @@ class DPoP
             'htm' => $method,
             'jti' => Str::random(64),
             'iat' => now()->timestamp,
-            'exp' => now()->addSeconds(30)->timestamp,
+            'exp' => now()->addMinutes(3600)->timestamp,
             'ath' => self::createCodeChallenge($token),
         ];
 
