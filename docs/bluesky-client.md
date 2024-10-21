@@ -3,6 +3,33 @@ BlueskyClient
 
 Basic client.
 
+## Authentication
+Bluesky has two authentication methods: "App password" and "OAuth". "OAuth" is recommended from now on, so please also read the [Socialite](./socialite.md) docs.
+
+### App password(Legacy)
+You can easily log in with the identifier and password you set in .env.
+
+```php
+use Revolution\Bluesky\Facades\Bluesky;
+
+$profile = Bluesky::login(identifier: config('bluesky.identifier'), password: config('bluesky.password'))->profile()->json();
+```
+
+### OAuth
+Specify the `OAuthSession` containing the token obtained from Socialite.
+
+```php
+use Revolution\Bluesky\Facades\Bluesky;
+use Revolution\Bluesky\Session\OAuthSession;
+
+/** @var OAuthSession $session */
+$session = session('bluesky_session');
+
+$profile = Bluesky::withToken($session)->profile()->json();
+```
+
+The following document uses App password as an example, but it is almost the same for OAuth.
+
 ## Viewing my feed
 Only my posts and reposts.
 
