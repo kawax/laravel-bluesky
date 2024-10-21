@@ -66,9 +66,14 @@ class LegacyAgent implements Agent
         return $this->session->token();
     }
 
+    public function pdsUrl(?string $default = null): ?string
+    {
+        return data_get($this->session->toArray(), 'didDoc.service.{first}.serviceEndpoint', $default);
+    }
+
     public function baseUrl(bool $auth = true): string
     {
-        $base = $this->session->get('didDoc.service.0.serviceEndpoint');
+        $base = $this->pdsUrl();
 
         if (! empty($base)) {
             return $base.'/xrpc/';

@@ -108,6 +108,8 @@ class SocialiteTest extends TestCase
         ]);
         $request->setLaravelSession($session);
 
+        Bluesky::partialMock();
+
         Bluesky::shouldReceive('identity->resolveIdentity->collect')->andReturn(collect(['service' => [['serviceEndpoint' => 'https://pds',]],]));
 
         Bluesky::shouldReceive('profile->json')->andReturn(collect([
@@ -175,6 +177,7 @@ class SocialiteTest extends TestCase
         $token = $provider->refreshToken('refresh_token');
 
         $this->assertSame('access_token', $token->token);
+        $this->assertSame('refresh_token', $token->refreshToken);
         $this->assertSame('refresh_token', $token->refreshToken);
     }
 

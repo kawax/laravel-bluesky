@@ -2,10 +2,9 @@
 
 namespace Revolution\Bluesky\Socalite\Concerns;
 
-use Illuminate\Support\Arr;
-use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rule;
+use Revolution\Bluesky\Facades\Bluesky;
 use RuntimeException;
 
 trait WithPDS
@@ -15,11 +14,10 @@ trait WithPDS
     protected function pdsProtectedResourceMeta(string $pds_url, string $key = '', ?string $default = null): array|string|null
     {
         if (empty($this->pds_resource_meta)) {
-            $this->pds_protected_resource_meta = Http::baseUrl($pds_url)
-                ->get('/.well-known/oauth-protected-resource')
-                ->json();
+            $this->pds_protected_resource_meta = Bluesky::pds()
+                ->protectedResource($pds_url);
 
-            if (Arr::get($this->pds_protected_resource_meta, 'resource') !== $pds_url) {
+            if (data_get($this->pds_protected_resource_meta, 'resource') !== $pds_url) {
                 throw new RuntimeException('Invalid PDS url.');
             }
         }
@@ -28,7 +26,7 @@ trait WithPDS
             return $this->pds_protected_resource_meta;
         }
 
-        return Arr::get($this->pds_protected_resource_meta, $key, $default);
+        return data_get($this->pds_protected_resource_meta, $key, $default);
     }
 
     protected function isSafeUrl(string $url): bool

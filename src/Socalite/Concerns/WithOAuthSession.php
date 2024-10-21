@@ -15,7 +15,7 @@ trait WithOAuthSession
      */
     protected function getUserWithSession(array $response): array
     {
-        $did = Arr::get($response, 'did', Arr::get($response, 'sub'));
+        $did = data_get($response, 'did', data_get($response, 'sub'));
 
         if ($this->hasInvalidDID($did)) {
             info('invalid did', Arr::wrap($did));
@@ -28,7 +28,7 @@ trait WithOAuthSession
         if ($this->hasInvalidUser($user)) {
             info('invalid user', Arr::wrap($user));
 
-            throw new RuntimeException();
+            throw new RuntimeException('Invalid User.');
         }
 
         $session = $this->getOAuthSession()

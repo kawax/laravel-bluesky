@@ -105,22 +105,25 @@ class OAuthAgentTest extends TestCase
         Event::fake();
 
         $session = OAuthSession::create([
-            'did' => 'did',
-            'iss' => 'iss',
-            'access_token' => 'access_token',
+            'refresh_token' => 'refresh_token',
         ]);
 
-        Socialite::shouldReceive('driver->setOAuthSession->refreshToken')->andReturn(new Token('token', '', 1, []));
+        Socialite::shouldReceive('driver->refreshToken')->andReturn(new Token('access_token', 'refresh_token', 1, []));
         Socialite::shouldReceive('driver->getOAuthSession')->andReturn(new OAuthSession([]));
 
         Bluesky::shouldReceive('identity->resolveDID->collect')->andReturn(collect(['handle' => 'handle']));
         Bluesky::shouldReceive('withAgent->profile->collect')->once()->andReturn([]);
+        Bluesky::shouldReceive('pds->protectedResource')->once()->andReturn([
+            'authorization_servers' => ['https://iss'],
+        ]);
 
         $agent = new OAuthAgent($session);
         $agent->refreshToken();
 
-        $this->assertSame('token', $agent->token());
+        $this->assertSame('access_token', $agent->token());
+        $this->assertSame('refresh_token', $agent->session('refresh_token'));
         $this->assertSame('handle', $agent->handle());
+        $this->assertSame('https://iss', $agent->session('iss'));
 
         Event::assertDispatched(OAuthSessionUpdated::class);
     }

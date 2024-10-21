@@ -4,9 +4,12 @@ namespace Revolution\Bluesky\Session;
 
 use Illuminate\Contracts\Support\Arrayable;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Traits\ForwardsCalls;
 
 abstract class AbstractSession implements Arrayable
 {
+    use ForwardsCalls;
+
     protected Collection $session;
 
     public function __construct(array|Collection|null $session = null)
@@ -68,5 +71,10 @@ abstract class AbstractSession implements Arrayable
     public function toArray(): array
     {
         return $this->session->toArray();
+    }
+
+    public function __call(string $name, array $arguments): mixed
+    {
+        return $this->forwardCallTo($this->session, $name, $arguments);
     }
 }

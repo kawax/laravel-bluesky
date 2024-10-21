@@ -2,7 +2,6 @@
 
 namespace Revolution\Bluesky\Socalite\Concerns;
 
-use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Http;
 
 trait WithAuthServer
@@ -23,6 +22,6 @@ trait WithAuthServer
             return $this->auth_server_meta;
         }
 
-        return Arr::get($this->auth_server_meta, $key, $default);
+        return data_get($this->auth_server_meta, $key, $default);
     }
 }

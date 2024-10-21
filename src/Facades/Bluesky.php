@@ -12,6 +12,7 @@ use Revolution\Bluesky\Contracts\Factory;
 use Revolution\Bluesky\Notifications\BlueskyMessage;
 use Revolution\Bluesky\Session\OAuthSession;
 use Revolution\Bluesky\Support\Identity;
+use Revolution\Bluesky\Support\PDS;
 
 /**
  * @method static Agent agent()
@@ -29,6 +30,7 @@ use Revolution\Bluesky\Support\Identity;
  * @method static Response uploadBlob(mixed $data, string $type = 'image/png')
  * @method static static refreshToken()
  * @method static Identity identity()
+ * @method static PDS pds()
  * @method static string entryway()
  * @method static void macro(string $name, object|callable $macro)
  * @method static static|mixed when(\Closure|mixed|null $value = null, callable|null $callback = null, callable|null $default = null)

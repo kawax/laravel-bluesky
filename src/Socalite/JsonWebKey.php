@@ -51,7 +51,7 @@ class JsonWebKey implements Arrayable, Jsonable, Stringable
 
     public function toArray(): array
     {
-        return Arr::get(json_decode($this->key->toString('JWK', [
+        return data_get(json_decode($this->key->toString('JWK', [
             'kid' => $this->kid,
             'alg' => self::ALG,
             'use' => 'sig',

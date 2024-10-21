@@ -22,6 +22,7 @@ use Revolution\Bluesky\Notifications\BlueskyMessage;
 use Revolution\Bluesky\Session\LegacySession;
 use Revolution\Bluesky\Session\OAuthSession;
 use Revolution\Bluesky\Support\Identity;
+use Revolution\Bluesky\Support\PDS;
 
 class BlueskyClient implements Factory
 {
@@ -185,6 +186,11 @@ class BlueskyClient implements Factory
     public function identity(): Identity
     {
         return Container::getInstance()->make(Identity::class);
+    }
+
+    public function pds(): PDS
+    {
+        return Container::getInstance()->make(PDS::class);
     }
 
     public function check(): bool

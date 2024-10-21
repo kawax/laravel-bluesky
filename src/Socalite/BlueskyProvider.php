@@ -137,9 +137,9 @@ class BlueskyProvider extends AbstractProvider implements ProviderInterface
 
     protected function hasInvalidUser(array $user): bool
     {
-        $pds_url = Arr::get($user, 'service.0.serviceEndpoint');
+        $pds_url = data_get($user, 'service.{first}.serviceEndpoint');
 
-        $auth_url = $this->pdsProtectedResourceMeta($pds_url, 'authorization_servers.0');
+        $auth_url = $this->pdsProtectedResourceMeta($pds_url, 'authorization_servers.{first}');
 
         return $this->authUrl() !== $auth_url;
     }

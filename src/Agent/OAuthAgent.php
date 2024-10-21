@@ -14,6 +14,7 @@ use Revolution\Bluesky\Events\OAuthSessionUpdated;
 use Revolution\Bluesky\Facades\Bluesky;
 use Revolution\Bluesky\Session\OAuthSession;
 use Revolution\Bluesky\Socalite\DPoP;
+use RuntimeException;
 
 /**
  * OAuth based agent.
@@ -59,10 +60,13 @@ class OAuthAgent implements Agent
 
     public function refreshToken(): self
     {
+        if (empty($refresh = $this->session->refresh())) {
+            throw new RuntimeException('Missing refresh token.');
+        }
+
         /** @var Token $token */
         $token = Socialite::driver('bluesky')
-            ->setOAuthSession($this->session)
-            ->refreshToken($this->session->refresh());
+            ->refreshToken($refresh);
 
         $this->session = Socialite::driver('bluesky')->getOAuthSession();
         $this->session->put('access_token', $token->token);
@@ -81,6 +85,10 @@ class OAuthAgent implements Agent
         $this->session->merge(Bluesky::identity()->resolveDID($did)->collect());
 
         $this->session->merge(Bluesky::withAgent($this)->profile($did)->collect());
+
+        if (! $this->session->has('iss')) {
+            $this->session->put('iss', data_get(Bluesky::pds()->protectedResource($this->pdsUrl()), 'authorization_servers.{first}'));
+        }
 
         return $this;
     }
@@ -105,14 +113,14 @@ class OAuthAgent implements Agent
         return $this->session->token();
     }
 
-    public function hasInvalidSession(): bool
+    public function pdsUrl(?string $default = null): ?string
     {
-        return ! $this->session->collect()->has(['did', 'iss', 'access_token', 'refresh_token']);
+        return data_get($this->session->toArray(), 'service.{first}.serviceEndpoint', $default);
     }
 
     public function baseUrl(bool $auth = true): string
     {
-        $base = $this->session->get('service.0.serviceEndpoint');
+        $base = $this->pdsUrl();
 
         if (empty($base)) {
             if ($auth) {
