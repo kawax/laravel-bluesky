@@ -12,7 +12,7 @@ trait WithPDS
     protected function pdsProtectedResourceMeta(string $pds_url, string $key = '', ?string $default = null): array|string|null
     {
         if (empty($this->pds_resource_meta)) {
-            $this->pds_protected_resource_meta = Http::get($pds_url.'/.well-known/oauth-authorization-server')
+            $this->pds_protected_resource_meta = Http::get($pds_url.'/.well-known/oauth-protected-resource')
                 ->json();
         }
 
