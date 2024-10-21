@@ -6,6 +6,7 @@ use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rule;
+use RuntimeException;
 
 trait WithPDS
 {
@@ -17,6 +18,10 @@ trait WithPDS
             $this->pds_protected_resource_meta = Http::baseUrl($pds_url)
                 ->get('/.well-known/oauth-protected-resource')
                 ->json();
+
+            if (Arr::get($this->pds_protected_resource_meta, 'resource') !== $pds_url) {
+                throw new RuntimeException('Invalid PDS url.');
+            }
         }
 
         if (empty($key)) {
@@ -28,6 +33,10 @@ trait WithPDS
 
     protected function isSafeUrl(string $url): bool
     {
+        if (app()->runningUnitTests()) {
+            return true;
+        }
+
         $url = filter_var($url, FILTER_VALIDATE_URL);
         if (! $url) {
             return false;

@@ -65,6 +65,37 @@ class SocialiteTest extends TestCase
         $this->assertStringContainsString(rawurlencode('httsp://request_uri'), $response->getTargetUrl());
     }
 
+    public function test_redirect_login_hint()
+    {
+        $session = app('Illuminate\Contracts\Session\Session');
+
+        $request = Request::create(uri: 'redirect');
+        $request->setLaravelSession($session);
+
+        Http::fake([
+            'localhost/.well-known/oauth-authorization-server' => Http::response([
+                'issuer' => 'https://iss',
+                'pushed_authorization_request_endpoint' => 'https://par/par',
+                'authorization_endpoint' => 'https://authorize/oauth/authorize',
+            ]),
+            'par/*' => Http::response([
+                'request_uri' => 'httsp://request_uri',
+            ]),
+            'pds/*' => Http::response([
+                'resource' => 'https://pds',
+                'authorization_servers' => ['https://localhost'],
+            ]),
+        ]);
+
+        $provider = new BlueskyProvider($request, 'client_id', 'client_secret', 'redirect');
+        $provider->service('localhost');
+
+        $response = $provider->hint('https://pds')->redirect();
+
+        $this->assertStringStartsWith('https://authorize/', $response->getTargetUrl());
+        $this->assertStringContainsString(rawurlencode('httsp://request_uri'), $response->getTargetUrl());
+    }
+
     public function test_user()
     {
         $session = app('Illuminate\Contracts\Session\Session');
@@ -77,7 +108,7 @@ class SocialiteTest extends TestCase
         ]);
         $request->setLaravelSession($session);
 
-        Bluesky::shouldReceive('identity->resolveIdentity->collect')->andReturn(collect(['service' => [['serviceEndpoint' => 'https://pds/',]],]));
+        Bluesky::shouldReceive('identity->resolveIdentity->collect')->andReturn(collect(['service' => [['serviceEndpoint' => 'https://pds',]],]));
 
         Bluesky::shouldReceive('profile->json')->andReturn(collect([
             'did' => 'did',
@@ -96,6 +127,7 @@ class SocialiteTest extends TestCase
                 'refresh_token' => 'refresh_token',
             ]),
             'pds/*' => Http::response([
+                'resource' => 'https://pds',
                 'authorization_servers' => ['https://localhost'],
             ]),
         ]);
@@ -131,6 +163,7 @@ class SocialiteTest extends TestCase
                 'expires_in' => 3600,
             ]),
             'pds/*' => Http::response([
+                'resource' => 'https://pds',
                 'authorization_servers' => ['https://localhost'],
             ]),
         ]);
