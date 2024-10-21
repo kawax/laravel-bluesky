@@ -34,6 +34,8 @@ trait WithTokenRequest
                     $this->getOAuthSession()->put('sub', $sub);
                 }
 
+                $this->getOAuthSession()->put('token_created_at', now()->toISOString());
+
                 return $response;
             })
             ->retry(times: 2, throw: false)
