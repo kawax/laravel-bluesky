@@ -69,12 +69,7 @@ class BlueskyProvider extends AbstractProvider implements ProviderInterface
             throw new InvalidArgumentException('Bluesky requires PKCE.');
         }
 
-        if (Str::startsWith($this->login_hint, 'https://') && $this->isSafeUrl($this->login_hint)) {
-            $auth_url = $this->pdsProtectedResourceMeta($this->login_hint, 'authorization_servers.0', Bluesky::entryway());
-            $this->service = Str::of($auth_url)->chopStart('https://')->toString();
-
-            $this->login_hint = null;
-        }
+        $this->updateServiceWithHint();
 
         $par_request_uri = $this->getParRequestUrl($state);
 
@@ -84,6 +79,16 @@ class BlueskyProvider extends AbstractProvider implements ProviderInterface
                 'client_id' => $this->clientId,
                 'request_uri' => $par_request_uri,
             ]);
+    }
+
+    public function updateServiceWithHint(): void
+    {
+        if (Str::startsWith($this->login_hint, 'https://') && $this->isSafeUrl($this->login_hint)) {
+            $auth_url = $this->pdsProtectedResourceMeta($this->login_hint, 'authorization_servers.0', Bluesky::entryway());
+            $this->service = Str::of($auth_url)->chopStart('https://')->toString();
+
+            $this->login_hint = null;
+        }
     }
 
     /**
