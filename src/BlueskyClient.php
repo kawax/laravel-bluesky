@@ -39,7 +39,7 @@ class BlueskyClient implements Factory
      */
     public function withToken(#[\SensitiveParameter] ?OAuthSession $token): self
     {
-        if (empty($token) || empty($token->refresh())) {
+        if (empty($token?->refresh())) {
             throw new AuthenticationException();
         }
 
