@@ -19,7 +19,9 @@ BLUESKY_APP_PASSWORD=
 ```php
 use Revolution\Bluesky\Facades\Bluesky;
 
-$profile = Bluesky::login(identifier: config('bluesky.identifier'), password: config('bluesky.password'))->profile()->json();
+$profile = Bluesky::login(identifier: config('bluesky.identifier'), password: config('bluesky.password'))
+                  ->profile()
+                  ->json();
 ```
 
 ### OAuth
