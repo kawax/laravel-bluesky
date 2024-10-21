@@ -33,7 +33,7 @@ class BlueskyClient implements Factory
     /**
      * OAuth based authentication.
      */
-    public function withToken(#[\SensitiveParameter] OAuthSession $token): static
+    public function withToken(#[\SensitiveParameter] OAuthSession $token): self
     {
         $this->agent = OAuthAgent::create($token);
 
@@ -46,7 +46,7 @@ class BlueskyClient implements Factory
      * @throws RequestException
      * @throws ConnectionException
      */
-    public function login(string $identifier, #[\SensitiveParameter] string $password): static
+    public function login(string $identifier, #[\SensitiveParameter] string $password): self
     {
         $response = Http::baseUrl('https://'.AtProto::Entryway->value.'/xrpc/')
             ->post(AtProto::createSession->value, [
@@ -65,7 +65,7 @@ class BlueskyClient implements Factory
         return $this->agent;
     }
 
-    public function withAgent(?Agent $agent): static
+    public function withAgent(?Agent $agent): self
     {
         $this->agent = $agent;
 

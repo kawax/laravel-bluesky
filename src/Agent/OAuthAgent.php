@@ -57,7 +57,7 @@ class OAuthAgent implements Agent
             })->retry(times: 2, throw: false);
     }
 
-    public function refreshToken(): static
+    public function refreshToken(): self
     {
         /** @var Token $token */
         $token = Socialite::driver('bluesky')
@@ -76,12 +76,11 @@ class OAuthAgent implements Agent
         return $this;
     }
 
-    public function refreshProfile(string $did): static
+    public function refreshProfile(string $did): self
     {
-        $profile = Bluesky::identity()->resolveDID($did)->collect()
-            ->merge(Bluesky::profile($did)->json());
+        $this->session->merge(Bluesky::identity()->resolveDID($did)->collect());
 
-        $this->session = $this->session->merge($profile);
+        $this->session->merge(Bluesky::withAgent($this)->profile($did)->collect());
 
         return $this;
     }

@@ -113,8 +113,8 @@ class OAuthAgentTest extends TestCase
         Socialite::shouldReceive('driver->setOAuthSession->refreshToken')->andReturn(new Token('token', '', 1, []));
         Socialite::shouldReceive('driver->getOAuthSession')->andReturn(new OAuthSession([]));
 
-        Bluesky::shouldReceive('identity->resolveDID->collect->merge')->andReturn(collect(['handle' => 'handle']));
-        Bluesky::shouldReceive('profile->json')->once()->andReturn([]);
+        Bluesky::shouldReceive('identity->resolveDID->collect')->andReturn(collect(['handle' => 'handle']));
+        Bluesky::shouldReceive('withAgent->profile->collect')->once()->andReturn([]);
 
         $agent = new OAuthAgent($session);
         $agent->refreshToken();

@@ -35,7 +35,7 @@ class LegacyAgent implements Agent
     /**
      * @throws ConnectionException
      */
-    public function refreshToken(): static
+    public function refreshToken(): self
     {
         $response = Http::baseUrl($this->baseUrl())
             ->withToken(token: $this->session->refresh())

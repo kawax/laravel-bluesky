@@ -10,13 +10,13 @@ use Revolution\Bluesky\Session\OAuthSession;
 
 interface Factory
 {
-    public function withToken(OAuthSession $token): static;
+    public function withToken(OAuthSession $token): self;
 
-    public function login(string $identifier, string $password): static;
+    public function login(string $identifier, string $password): self;
 
     public function agent(): ?Agent;
 
-    public function withAgent(?Agent $agent): static;
+    public function withAgent(?Agent $agent): self;
 
     public function http(bool $auth = true): PendingRequest;
 
