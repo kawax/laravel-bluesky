@@ -33,7 +33,7 @@ class BlueskyClient implements Factory
     protected ?Agent $agent = null;
 
     /**
-     * OAuth based authentication.
+     * OAuth authentication.
      *
      * @throws AuthenticationException
      */
@@ -49,18 +49,15 @@ class BlueskyClient implements Factory
     }
 
     /**
-     * Username / password based authentication.
-     *
-     * @throws RequestException
-     * @throws ConnectionException
+     * App password authentication.
      */
     public function login(string $identifier, #[\SensitiveParameter] string $password): self
     {
-        $response = Http::baseUrl('https://'.AtProto::Entryway->value.'/xrpc/')
+        $response = Http::baseUrl($this->entryway().'/xrpc/')
             ->post(AtProto::createSession->value, [
                 'identifier' => $identifier,
                 'password' => $password,
-            ])->throw();
+            ]);
 
         $session = LegacySession::create($response->collect());
         $this->agent = LegacyAgent::create($session);
@@ -87,23 +84,6 @@ class BlueskyClient implements Factory
         }
 
         return $this->agent()->http($auth);
-    }
-
-    /**
-     * @param  string  $handle  e.g. "alice.test"
-     *
-     * @throws ConnectionException
-     */
-    public function resolveHandle(string $handle): Response
-    {
-        if (! Identity::isHandle($handle)) {
-            throw new InvalidArgumentException("The handle '$handle' is not a valid handle.");
-        }
-
-        return $this->http()
-            ->get(AtProto::resolveHandle->value, [
-                'handle' => $handle,
-            ]);
     }
 
     /**
@@ -188,6 +168,23 @@ class BlueskyClient implements Factory
         $this->agent()->refreshToken();
 
         return $this;
+    }
+
+    /**
+     * @param  string  $handle  e.g. "alice.test"
+     *
+     * @throws ConnectionException
+     */
+    public function resolveHandle(string $handle): Response
+    {
+        if (! Identity::isHandle($handle)) {
+            throw new InvalidArgumentException("The handle '$handle' is not a valid handle.");
+        }
+
+        return $this->http()
+            ->get(AtProto::resolveHandle->value, [
+                'handle' => $handle,
+            ]);
     }
 
     public function identity(): Identity
