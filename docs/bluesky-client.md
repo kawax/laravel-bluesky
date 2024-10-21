@@ -9,6 +9,13 @@ Bluesky has two authentication methods: "App password" and "OAuth". "OAuth" is r
 ### App password(Legacy)
 You can easily log in with the identifier and password you set in .env.
 
+```
+// .env
+
+BLUESKY_IDENTIFIER=
+BLUESKY_APP_PASSWORD=
+```
+
 ```php
 use Revolution\Bluesky\Facades\Bluesky;
 
