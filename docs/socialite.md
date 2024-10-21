@@ -255,7 +255,7 @@ class OAuthSessionListener
         ], [
             'iss' => $event->session->issuer(), // Bluesky iss (https://bsky.social)
             'handle' => $event->session->handle(), // Bluesky handle (alice.test)
-            'name' => $event->session->get('displayName') // Bluesky displayName (Alice)
+            'name' => $event->session->get('displayName'), // Bluesky displayName (Alice)
             'avatar' => $event->session->get('avatar'),
             'access_token' => $event->session->token(),
             'refresh_token' => $event->session->refresh(),
