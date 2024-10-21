@@ -38,7 +38,7 @@ class LegacyAgent implements Agent
     public function refreshToken(): static
     {
         $response = Http::baseUrl($this->baseUrl())
-            ->withToken(token: $this->refresh())
+            ->withToken(token: $this->session->refresh())
             ->post(AtProto::refreshSession->value);
 
         $this->session = LegacySession::create($response->collect());
@@ -64,11 +64,6 @@ class LegacyAgent implements Agent
     public function token(): string
     {
         return $this->session->token();
-    }
-
-    public function refresh(): string
-    {
-        return $this->session->refresh();
     }
 
     public function baseUrl(bool $auth = true): string

@@ -179,7 +179,7 @@ class ClientTest extends TestCase
         Http::fakeSequence()
             ->push(['id' => 'did:web:localhost']);
 
-        $response = (new Identity())->resolveDID(did: 'did:web:localhost');
+        $response = Bluesky::identity()->resolveDID(did: 'did:web:localhost');
 
         $this->assertTrue($response->collect()->has('id'));
         $this->assertSame('did:web:localhost', $response->json('id'));
@@ -195,7 +195,7 @@ class ClientTest extends TestCase
 
         Http::fake();
 
-        $response = (new Identity())->resolveDID(did: 'did:test:test');
+        $response = Bluesky::identity()->resolveDID(did: 'did:test:test');
 
         Http::assertNothingSent();
     }
@@ -217,7 +217,7 @@ class ClientTest extends TestCase
 
         Http::fake();
 
-        $response = (new Identity())->resolveDID(did: 'did:test');
+        $response = Bluesky::identity()->resolveDID(did: 'did:test');
 
         Http::assertNothingSent();
     }
@@ -232,7 +232,7 @@ class ClientTest extends TestCase
             ]);
         });
 
-        $did = (new Identity())->resolveHandle('example.com');
+        $did = Bluesky::identity()->resolveHandle('example.com');
 
         $this->assertSame('did:plc:1234', $did);
     }
@@ -246,7 +246,7 @@ class ClientTest extends TestCase
         Http::fakeSequence()
             ->push('did:plc:1234');
 
-        $did = (new Identity())->resolveHandle('example.com');
+        $did = Bluesky::identity()->resolveHandle('example.com');
 
         $this->assertSame('did:plc:1234', $did);
     }
@@ -264,7 +264,7 @@ class ClientTest extends TestCase
         Http::fakeSequence()
             ->push(['id' => 'did:web:example.com']);
 
-        $response = (new Identity())->resolveIdentity('example.com');
+        $response = Bluesky::identity()->resolveIdentity('example.com');
 
         $this->assertTrue($response->collect()->has('id'));
         $this->assertSame('did:web:example.com', $response->json('id'));
@@ -279,7 +279,7 @@ class ClientTest extends TestCase
         Http::fakeSequence()
             ->push(['id' => 'did:web:example.com']);
 
-        $response = (new Identity())->resolveIdentity('did:web:example.com');
+        $response = Bluesky::identity()->resolveIdentity('did:web:example.com');
 
         $this->assertTrue($response->collect()->has('id'));
         $this->assertSame('did:web:example.com', $response->json('id'));

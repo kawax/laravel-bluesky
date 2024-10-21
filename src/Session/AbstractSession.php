@@ -38,6 +38,13 @@ abstract class AbstractSession implements Arrayable
         return $this;
     }
 
+    public function except($keys): static
+    {
+        $this->session = $this->session->except($keys);
+
+        return $this;
+    }
+
     public function did(): string
     {
         return $this->get('did', '');

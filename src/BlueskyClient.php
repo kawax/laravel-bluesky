@@ -198,4 +198,9 @@ class BlueskyClient implements Factory
 
         return $this;
     }
+
+    public function entryway(): string
+    {
+        return 'https://'.AtProto::Entryway->value;
+    }
 }

@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
 use Laravel\Socialite\Facades\Socialite;
 use Revolution\Bluesky\Facades\Bluesky;
+use Revolution\Bluesky\Session\OAuthSession;
 use Revolution\Bluesky\Socalite\BlueskyKey;
 use Revolution\Bluesky\Socalite\BlueskyProvider;
 use Revolution\Bluesky\Socalite\JsonWebKey;
@@ -135,7 +136,8 @@ class SocialiteTest extends TestCase
         ]);
 
         $provider = new BlueskyProvider($request, 'client_id', 'client_secret', 'redirect');
-        $provider->service('localhost');
+        $provider->service('localhost')
+            ->setOAuthSession(OAuthSession::create());
 
         $token = $provider->refreshToken('refresh_token');
 

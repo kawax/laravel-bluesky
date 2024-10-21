@@ -29,6 +29,7 @@ use Revolution\Bluesky\Support\Identity;
  * @method static Response uploadBlob(mixed $data, string $type = 'image/png')
  * @method static static refreshToken()
  * @method static Identity identity()
+ * @method static string entryway()
  * @method static void macro(string $name, object|callable $macro)
  * @method static static|mixed when(\Closure|mixed|null $value = null, callable|null $callback = null, callable|null $default = null)
  * @method static static|mixed unless(\Closure|mixed|null $value = null, callable|null $callback = null, callable|null $default = null)

@@ -2,29 +2,32 @@
 
 namespace Revolution\Bluesky\Socalite;
 
-use Illuminate\Http\Client\Response;
 use Illuminate\Support\Arr;
-use Illuminate\Support\Facades\Http;
 use Laravel\Socialite\Two\AbstractProvider;
 use Laravel\Socialite\Two\InvalidStateException;
 use Laravel\Socialite\Two\ProviderInterface;
 use Laravel\Socialite\Two\User;
-use Psr\Http\Message\RequestInterface;
-use Psr\Http\Message\ResponseInterface;
 use Revolution\Bluesky\Enums\AtProto;
 use Revolution\Bluesky\Facades\Bluesky;
-use Revolution\Bluesky\Session\OAuthSession;
+use Revolution\Bluesky\Socalite\Concerns\WithAuthServer;
+use Revolution\Bluesky\Socalite\Concerns\WithClientAssertion;
+use Revolution\Bluesky\Socalite\Concerns\WithOAuthSession;
 use Revolution\Bluesky\Socalite\Concerns\WithPAR;
+use Revolution\Bluesky\Socalite\Concerns\WithPDS;
+use Revolution\Bluesky\Socalite\Concerns\WithTokenRequest;
 use Revolution\Bluesky\Support\Identity;
 use RuntimeException;
 
 class BlueskyProvider extends AbstractProvider implements ProviderInterface
 {
+    use WithAuthServer;
     use WithPAR;
+    use WithPDS;
+    use WithClientAssertion;
+    use WithTokenRequest;
+    use WithOAuthSession;
 
     protected string $service = AtProto::Entryway->value;
-
-    protected ?OAuthSession $session = null;
 
     protected ?string $login_hint = null;
 
@@ -65,18 +68,9 @@ class BlueskyProvider extends AbstractProvider implements ProviderInterface
             throw new RuntimeException('Bluesky requires PKCE.');
         }
 
-        $auth_url = $this->endpoint();
+        $par_request_uri = $this->getParRequestUrl(state: $state);
 
-        $meta = $this->getServerMeta($auth_url);
-        $this->request->session()->put('bluesky.meta', $meta);
-
-        $par_request_uri = $this->getParRequestUrl(
-            auth_url: $auth_url,
-            meta: $meta,
-            state: $state,
-        );
-
-        $authorize_url = Arr::get($meta, 'authorization_endpoint', 'https://bsky.social/oauth/authorize');
+        $authorize_url = $this->authServerMeta('authorization_endpoint', 'https://bsky.social/oauth/authorize');
 
         return $authorize_url.'?'.http_build_query([
                 'client_id' => $this->clientId,
@@ -97,43 +91,13 @@ class BlueskyProvider extends AbstractProvider implements ProviderInterface
             throw new InvalidStateException;
         }
 
-        $meta = $this->getServerMeta($this->endpoint());
-        $this->request->session()->put('bluesky.meta', $meta);
-
         if ($this->hasInvalidIssuer()) {
             throw new RuntimeException('Invalid Issuer.');
         }
 
         $response = $this->getAccessTokenResponse($this->getCode());
 
-        $did = Arr::get($response, 'did', Arr::get($response, 'sub'));
-
-        if ($this->hasInvalidDID($did)) {
-            info('invalid did', Arr::wrap($did));
-
-            throw new RuntimeException('Invalid DID.');
-        }
-
-        $user = $this->getUserByToken($did);
-
-        if ($this->hasInvalidUser($user)) {
-            info('invalid user', Arr::wrap($user));
-
-            throw new RuntimeException();
-        }
-
-        $session = $this->getOAuthSession()
-            ->collect()
-            ->merge($user)
-            ->merge($response)
-            ->merge([
-                'iss' => $this->request->input('iss'),
-            ])
-            ->except([
-                '@context',
-            ]);
-
-        $user['session'] = OAuthSession::create($session);
+        $user = $this->getUserWithSession($response);
 
         $this->clearSession();
 
@@ -142,9 +106,7 @@ class BlueskyProvider extends AbstractProvider implements ProviderInterface
 
     protected function hasInvalidIssuer(): bool
     {
-        $meta = $this->request->session()->get('bluesky.meta');
-
-        return Arr::get($meta, 'issuer') !== $this->request->input('iss');
+        return $this->authServerMeta('issuer') !== $this->request->input('iss');
     }
 
     protected function hasInvalidDID(?string $did): bool
@@ -168,10 +130,10 @@ class BlueskyProvider extends AbstractProvider implements ProviderInterface
     protected function hasInvalidUser(array $user): bool
     {
         $pds_url = Arr::get($user, 'service.0.serviceEndpoint');
-        $resource = $this->getPDSResource($pds_url);
-        $auth_url = Arr::get($resource, 'authorization_servers.0');
 
-        return $this->endpoint() !== $auth_url;
+        $auth_url = $this->pdsProtectedResourceMeta($pds_url, 'authorization_servers.0');
+
+        return $this->authUrl() !== $auth_url;
     }
 
     /**
@@ -189,46 +151,12 @@ class BlueskyProvider extends AbstractProvider implements ProviderInterface
         return $this->sendTokenRequest($token_url, $payload);
     }
 
-    protected function sendTokenRequest(string $token_url, array $payload): array
-    {
-        return Http::withRequestMiddleware(
-            function (RequestInterface $request) use ($token_url) {
-                $dpop_nonce = $this->getOAuthSession()->get(DPoP::AUTH_NONCE, '');
-
-                $dpop_proof = DPop::authProof(
-                    jwk: DPoP::load(),
-                    url: $token_url,
-                    nonce: $dpop_nonce,
-                );
-
-                return $request->withHeader('DPoP', $dpop_proof);
-            })->withResponseMiddleware(
-            function (ResponseInterface $response) {
-                $dpop_nonce = collect($response->getHeader('DPoP-Nonce'))->first();
-
-                $this->getOAuthSession()->put(DPoP::AUTH_NONCE, $dpop_nonce);
-
-                $sub = (new Response($response))->json('sub');
-                if (! empty($sub)) {
-                    $this->getOAuthSession()->put('sub', $sub);
-                }
-
-                return $response;
-            })
-            ->retry(times: 2, throw: false)
-            ->throw()
-            ->post($token_url, $payload)
-            ->json();
-    }
-
     /**
      * {@inheritdoc}
      */
     protected function getTokenUrl(): string
     {
-        $meta = $this->request->session()->get('bluesky.meta');
-
-        return Arr::get($meta, 'token_endpoint', 'https://bsky.social/oauth/token');
+        return $this->authServerMeta('token_endpoint', 'https://bsky.social/oauth/token');
     }
 
     /**
@@ -245,7 +173,7 @@ class BlueskyProvider extends AbstractProvider implements ProviderInterface
             'grant_type' => 'authorization_code',
             'code' => $code,
             'client_assertion_type' => 'urn:ietf:params:oauth:client-assertion-type:jwt-bearer',
-            'client_assertion' => $this->getClientAssertion($this->endpoint()),
+            'client_assertion' => $this->getClientAssertion($this->authUrl()),
         ];
 
         if ($this->usesPKCE()) {
@@ -284,11 +212,6 @@ class BlueskyProvider extends AbstractProvider implements ProviderInterface
      */
     protected function getRefreshTokenResponse($refreshToken): array
     {
-        $auth_url = $this->endpoint();
-
-        $meta = $this->getServerMeta($auth_url);
-        $this->request->session()->put('bluesky.meta', $meta);
-
         $token_url = $this->getTokenUrl();
 
         $payload = [
@@ -296,12 +219,15 @@ class BlueskyProvider extends AbstractProvider implements ProviderInterface
             'refresh_token' => $refreshToken,
             'client_id' => $this->clientId,
             'client_assertion_type' => 'urn:ietf:params:oauth:client-assertion-type:jwt-bearer',
-            'client_assertion' => $this->getClientAssertion($this->endpoint()),
+            'client_assertion' => $this->getClientAssertion($this->authUrl()),
         ];
 
         return $this->sendTokenRequest($token_url, $payload);
     }
 
+    /**
+     * Set service/auth server. e.g. "bsky.social"
+     */
     public function service(string $service): self
     {
         $this->service = $service;
@@ -316,32 +242,15 @@ class BlueskyProvider extends AbstractProvider implements ProviderInterface
         return $this;
     }
 
-    public function getOAuthSession(): OAuthSession
+    protected function authUrl(): string
     {
-        if (is_null($this->session)) {
-            $this->session = new OAuthSession();
-        }
-
-        return $this->session;
-    }
-
-    public function setOAuthSession(?OAuthSession $session = null): self
-    {
-        $this->session = $session;
-
-        return $this;
-    }
-
-    protected function endpoint(string $path = ''): string
-    {
-        return "https://$this->service$path";
+        return 'https://'.$this->service;
     }
 
     protected function clearSession(): void
     {
         $this->request->session()->forget([
             'code_verifier',
-            'bluesky.meta',
         ]);
     }
 }

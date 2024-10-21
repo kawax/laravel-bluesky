@@ -38,7 +38,7 @@ class OAuthAgent implements Agent
             ->withRequestMiddleware(function (RequestInterface $request) {
                 $dpop_proof = DPoP::apiProof(
                     jwk: DPoP::load(),
-                    iss: $this->session('iss'),
+                    iss: $this->session('iss', Bluesky::entryway()),
                     url: $request->getUri(),
                     token: $this->token(),
                     nonce: $this->session(DPoP::API_NONCE, ''),
@@ -62,7 +62,7 @@ class OAuthAgent implements Agent
         /** @var Token $token */
         $token = Socialite::driver('bluesky')
             ->setOAuthSession($this->session)
-            ->refreshToken($this->refresh());
+            ->refreshToken($this->session->refresh());
 
         $this->session = Socialite::driver('bluesky')->getOAuthSession();
         $this->session->put('access_token', $token->token);
@@ -104,11 +104,6 @@ class OAuthAgent implements Agent
     public function token(): string
     {
         return $this->session->token();
-    }
-
-    public function refresh(): string
-    {
-        return $this->session->refresh();
     }
 
     public function isValid(): bool
