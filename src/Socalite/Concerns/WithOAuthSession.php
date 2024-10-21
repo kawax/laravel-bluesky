@@ -4,7 +4,7 @@ namespace Revolution\Bluesky\Socalite\Concerns;
 
 use Illuminate\Support\Arr;
 use Revolution\Bluesky\Session\OAuthSession;
-use RuntimeException;
+use InvalidArgumentException;
 
 trait WithOAuthSession
 {
@@ -20,7 +20,7 @@ trait WithOAuthSession
         if ($this->hasInvalidDID($did)) {
             info('invalid did', Arr::wrap($did));
 
-            throw new RuntimeException('Invalid DID.');
+            throw new InvalidArgumentException('Invalid DID.');
         }
 
         $user = $this->getUserByToken($did);
@@ -28,7 +28,7 @@ trait WithOAuthSession
         if ($this->hasInvalidUser($user)) {
             info('invalid user', Arr::wrap($user));
 
-            throw new RuntimeException('Invalid User.');
+            throw new InvalidArgumentException('Invalid User.');
         }
 
         $session = $this->getOAuthSession()

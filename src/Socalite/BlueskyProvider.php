@@ -17,7 +17,7 @@ use Revolution\Bluesky\Socalite\Concerns\WithPAR;
 use Revolution\Bluesky\Socalite\Concerns\WithPDS;
 use Revolution\Bluesky\Socalite\Concerns\WithTokenRequest;
 use Revolution\Bluesky\Support\Identity;
-use RuntimeException;
+use InvalidArgumentException;
 
 class BlueskyProvider extends AbstractProvider implements ProviderInterface
 {
@@ -66,7 +66,7 @@ class BlueskyProvider extends AbstractProvider implements ProviderInterface
         }
 
         if (! $this->usesPKCE()) {
-            throw new RuntimeException('Bluesky requires PKCE.');
+            throw new InvalidArgumentException('Bluesky requires PKCE.');
         }
 
         if (Str::startsWith($this->login_hint, 'https://') && $this->isSafeUrl($this->login_hint)) {
@@ -100,7 +100,7 @@ class BlueskyProvider extends AbstractProvider implements ProviderInterface
         }
 
         if ($this->hasInvalidIssuer()) {
-            throw new RuntimeException('Invalid Issuer.');
+            throw new InvalidArgumentException('Invalid Issuer.');
         }
 
         $response = $this->getAccessTokenResponse($this->getCode());

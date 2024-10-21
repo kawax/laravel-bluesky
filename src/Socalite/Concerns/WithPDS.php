@@ -5,7 +5,7 @@ namespace Revolution\Bluesky\Socalite\Concerns;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rule;
 use Revolution\Bluesky\Facades\Bluesky;
-use RuntimeException;
+use InvalidArgumentException;
 
 trait WithPDS
 {
@@ -18,7 +18,7 @@ trait WithPDS
                 ->resource($pds_url);
 
             if (data_get($this->pds_protected_resource_meta, 'resource') !== $pds_url) {
-                throw new RuntimeException('Invalid PDS url.');
+                throw new InvalidArgumentException('Invalid PDS url.');
             }
         }
 

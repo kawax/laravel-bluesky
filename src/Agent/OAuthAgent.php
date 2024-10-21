@@ -18,7 +18,7 @@ use Revolution\Bluesky\Facades\Bluesky;
 use Revolution\Bluesky\Session\OAuthSession;
 use Revolution\Bluesky\Socalite\DPoP;
 use Revolution\Bluesky\Support\Identity;
-use RuntimeException;
+use InvalidArgumentException;
 
 /**
  * OAuth based agent.
@@ -72,7 +72,7 @@ class OAuthAgent implements Agent
     public function refreshToken(): self
     {
         if (empty($refresh = $this->session->refresh())) {
-            throw new RuntimeException('Missing refresh token.');
+            throw new InvalidArgumentException('Missing refresh token.');
         }
 
         /** @var Token $token */
