@@ -91,7 +91,7 @@ You can also see these routes on localhost.
 ```php
 use App\Http\Controllers\SocialiteController;
 
-Route::get('login', [SocialiteController::class, 'login']);
+Route::get('login', [SocialiteController::class, 'login'])->name('login');
 Route::post('redirect', [SocialiteController::class, 'redirect']);
 Route::get('callback', [SocialiteController::class, 'callback'])->name('bluesky.oauth.redirect');
 ```
@@ -265,3 +265,29 @@ class OAuthSessionListener
 ```
 
 OAuthSession value may be null or empty.
+
+## Unauthenticated
+
+If the `OAuthSession` is null or does not contain a refresh_token, an `Unauthenticated` exception will be raised and you will be redirected to the `login` route, just like in normal Laravel behavior.
+
+```php
+use Revolution\Bluesky\Facades\Bluesky;
+use Revolution\Bluesky\Session\OAuthSession;
+
+/** @var OAuthSession $session */
+$session = session('bluesky_session');
+
+Bluesky::withToken(null);
+
+// redirect to "login" route
+```
+
+You can change this behavior in `bootstrap/app.php`.
+
+```php
+use Illuminate\Foundation\Configuration\Middleware;
+
+->withMiddleware(function (Middleware $middleware) {
+    $middleware->redirectGuestsTo('/bluesky/login');
+})
+```
