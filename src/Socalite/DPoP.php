@@ -22,7 +22,7 @@ class DPoP
     }
 
     /**
-     * Proof for OAuth.
+     * Proof for OAuth and token request.
      */
     public static function authProof(
         JsonWebKey $jwk,
