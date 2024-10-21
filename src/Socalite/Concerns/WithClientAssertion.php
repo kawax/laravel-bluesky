@@ -3,9 +3,9 @@
 namespace Revolution\Bluesky\Socalite\Concerns;
 
 use Illuminate\Support\Str;
-use Revolution\Bluesky\Socalite\BlueskyKey;
-use Revolution\Bluesky\Socalite\JsonWebKey;
-use Revolution\Bluesky\Socalite\JsonWebToken;
+use Revolution\Bluesky\Socalite\Key\BlueskyKey;
+use Revolution\Bluesky\Socalite\Key\JsonWebKey;
+use Revolution\Bluesky\Socalite\Key\JsonWebToken;
 
 trait WithClientAssertion
 {

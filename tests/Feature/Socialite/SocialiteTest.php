@@ -5,15 +5,15 @@ namespace Tests\Feature\Socialite;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
 use Laravel\Socialite\Facades\Socialite;
+use Mockery as m;
 use Revolution\Bluesky\Facades\Bluesky;
 use Revolution\Bluesky\Session\OAuthSession;
-use Revolution\Bluesky\Socalite\BlueskyKey;
 use Revolution\Bluesky\Socalite\BlueskyProvider;
-use Revolution\Bluesky\Socalite\JsonWebKey;
-use Revolution\Bluesky\Socalite\JsonWebKeySet;
+use Revolution\Bluesky\Socalite\Key\BlueskyKey;
+use Revolution\Bluesky\Socalite\Key\JsonWebKey;
+use Revolution\Bluesky\Socalite\Key\JsonWebKeySet;
 use Revolution\Bluesky\Socalite\OAuthConfig;
 use Tests\TestCase;
-use Mockery as m;
 
 class SocialiteTest extends TestCase
 {

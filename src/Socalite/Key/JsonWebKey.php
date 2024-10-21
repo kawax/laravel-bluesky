@@ -1,6 +1,6 @@
 <?php
 
-namespace Revolution\Bluesky\Socalite;
+namespace Revolution\Bluesky\Socalite\Key;
 
 use Illuminate\Contracts\Support\Arrayable;
 use Illuminate\Contracts\Support\Jsonable;

@@ -7,6 +7,7 @@ use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Traits\Conditionable;
 use Illuminate\Support\Traits\Macroable;
+use InvalidArgumentException;
 use Laravel\Socialite\Facades\Socialite;
 use Laravel\Socialite\Two\Token;
 use Psr\Http\Message\RequestInterface;
@@ -16,9 +17,8 @@ use Revolution\Bluesky\Enums\AtProto;
 use Revolution\Bluesky\Events\OAuthSessionUpdated;
 use Revolution\Bluesky\Facades\Bluesky;
 use Revolution\Bluesky\Session\OAuthSession;
-use Revolution\Bluesky\Socalite\DPoP;
+use Revolution\Bluesky\Socalite\Key\DPoP;
 use Revolution\Bluesky\Support\Identity;
-use InvalidArgumentException;
 
 /**
  * OAuth based agent.

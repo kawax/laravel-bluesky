@@ -1,6 +1,6 @@
 <?php
 
-namespace Revolution\Bluesky\Socalite;
+namespace Revolution\Bluesky\Socalite\Key;
 
 use Firebase\JWT\JWT;
 use Illuminate\Support\Str;

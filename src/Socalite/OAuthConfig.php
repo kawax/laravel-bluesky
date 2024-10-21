@@ -4,6 +4,7 @@ namespace Revolution\Bluesky\Socalite;
 
 use Closure;
 use Illuminate\Support\Facades\Route;
+use Revolution\Bluesky\Socalite\Key\JsonWebKeySet;
 
 class OAuthConfig
 {

@@ -6,7 +6,7 @@ namespace Revolution\Bluesky\Console;
 
 use Firebase\JWT\JWT;
 use Illuminate\Console\Command;
-use Revolution\Bluesky\Socalite\BlueskyKey;
+use Revolution\Bluesky\Socalite\Key\BlueskyKey;
 
 class NewPrivateKeyCommand extends Command
 {

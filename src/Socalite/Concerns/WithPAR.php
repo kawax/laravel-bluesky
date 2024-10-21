@@ -6,7 +6,7 @@ use Illuminate\Http\Client\Response;
 use Illuminate\Support\Facades\Http;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
-use Revolution\Bluesky\Socalite\DPoP;
+use Revolution\Bluesky\Socalite\Key\DPoP;
 
 trait WithPAR
 {

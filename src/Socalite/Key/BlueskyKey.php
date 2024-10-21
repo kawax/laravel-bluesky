@@ -1,13 +1,13 @@
 <?php
 
-namespace Revolution\Bluesky\Socalite;
+namespace Revolution\Bluesky\Socalite\Key;
 
 use Firebase\JWT\JWT;
 use InvalidArgumentException;
-use phpseclib3\Crypt\EC\PrivateKey;
 use phpseclib3\Crypt\Common\PrivateKey as CommonPrivateKey;
-use phpseclib3\Crypt\EC\PublicKey;
 use phpseclib3\Crypt\EC;
+use phpseclib3\Crypt\EC\PrivateKey;
+use phpseclib3\Crypt\EC\PublicKey;
 
 class BlueskyKey
 {
