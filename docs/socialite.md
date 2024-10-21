@@ -90,9 +90,10 @@ You can also see these routes on localhost.
 
 ```php
 use App\Http\Controllers\SocialiteController;
+use Illuminate\Support\Facades\Route;
 
 Route::get('login', [SocialiteController::class, 'login'])->name('login');
-Route::post('redirect', [SocialiteController::class, 'redirect']);
+Route::match(['get', 'post'],'redirect', [SocialiteController::class, 'redirect']);
 Route::get('callback', [SocialiteController::class, 'callback'])->name('bluesky.oauth.redirect');
 ```
 
@@ -111,6 +112,7 @@ class SocialiteController extends Controller
 {
     public function login(Request $request)
     {
+        // A form page to submit a login hint.
         return view('login');
     }
 
