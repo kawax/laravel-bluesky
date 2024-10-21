@@ -120,7 +120,7 @@ class OAuthAgentTest extends TestCase
             'service' => [['serviceEndpoint' => 'https://pds']],
         ]));
         Bluesky::shouldReceive('withAgent->profile->collect')->once()->andReturn([]);
-        Bluesky::shouldReceive('pds->protectedResource')->once()->andReturn([
+        Bluesky::shouldReceive('pds->resource')->once()->andReturn([
             'authorization_servers' => ['https://iss'],
         ]);
 

@@ -15,7 +15,7 @@ trait WithPDS
     {
         if (empty($this->pds_resource_meta)) {
             $this->pds_protected_resource_meta = Bluesky::pds()
-                ->protectedResource($pds_url);
+                ->resource($pds_url);
 
             if (data_get($this->pds_protected_resource_meta, 'resource') !== $pds_url) {
                 throw new RuntimeException('Invalid PDS url.');
