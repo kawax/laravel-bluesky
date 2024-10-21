@@ -8,7 +8,7 @@ trait WithAuthServer
 {
     protected ?array $auth_server_meta = [];
 
-    protected function authServerMeta(string $key = '', ?string $default = null): array|string|null
+    protected function authServerMeta(?string $key = null, ?string $default = null): array|string|null
     {
         $auth_url = $this->authUrl();
 
