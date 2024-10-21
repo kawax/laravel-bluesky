@@ -41,7 +41,7 @@ class OAuthAgentTest extends TestCase
 
     public function test_agent()
     {
-        $agent = Bluesky::withToken(OAuthSession::create())->agent();
+        $agent = Bluesky::withToken(OAuthSession::create(['refresh_token' => 'test']))->agent();
 
         $this->assertInstanceOf(OAuthAgent::class, $agent);
     }
@@ -67,6 +67,7 @@ class OAuthAgentTest extends TestCase
         $session = OAuthSession::create([
             'iss' => 'iss',
             'access_token' => 'access_token',
+            'refresh_token' => 'refresh_token',
             'token_created_at' => now()->toISOString(),
             'expires_in' => 3600,
         ]);
