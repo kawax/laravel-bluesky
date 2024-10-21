@@ -3,6 +3,7 @@
 namespace Revolution\Bluesky\Socalite;
 
 use Illuminate\Support\Arr;
+use Illuminate\Support\Str;
 use Laravel\Socialite\Two\AbstractProvider;
 use Laravel\Socialite\Two\InvalidStateException;
 use Laravel\Socialite\Two\ProviderInterface;
@@ -68,7 +69,12 @@ class BlueskyProvider extends AbstractProvider implements ProviderInterface
             throw new RuntimeException('Bluesky requires PKCE.');
         }
 
-        $par_request_uri = $this->getParRequestUrl(state: $state);
+        if (Str::startsWith($this->login_hint, 'https://') && $this->isSafeUrl($this->login_hint)) {
+            $auth_url = $this->pdsProtectedResourceMeta($this->login_hint, 'authorization_servers.0', Bluesky::entryway());
+            $this->service = Str::of($auth_url)->chopStart('https://')->toString();
+        }
+
+        $par_request_uri = $this->getParRequestUrl($state);
 
         $authorize_url = $this->authServerMeta('authorization_endpoint', 'https://bsky.social/oauth/authorize');
 

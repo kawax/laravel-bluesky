@@ -12,15 +12,13 @@ trait WithPAR
 {
     protected function getParRequestUrl(string $state): string
     {
-        $response = $this->sendParRequest(state: $state);
+        $response = $this->sendParRequest($state);
 
         return $response->json('request_uri', '');
     }
 
     protected function sendParRequest(string $state): Response
     {
-        $auth_url = $this->authUrl();
-
         $par_url = $this->authServerMeta('pushed_authorization_request_endpoint', 'https://bsky.social/oauth/par');
 
         $par_body = [
@@ -32,7 +30,7 @@ trait WithPAR
             'redirect_uri' => $this->redirectUrl,
             'scope' => $this->formatScopes($this->getScopes(), $this->scopeSeparator),
             'client_assertion_type' => 'urn:ietf:params:oauth:client-assertion-type:jwt-bearer',
-            'client_assertion' => $this->getClientAssertion($auth_url),
+            'client_assertion' => $this->getClientAssertion($this->authUrl()),
             'login_hint' => $this->login_hint,
         ];
 

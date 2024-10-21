@@ -14,7 +14,8 @@ trait WithAuthServer
         $auth_url = $this->authUrl();
 
         if (empty($this->auth_server_meta)) {
-            $this->auth_server_meta = Http::get($auth_url.'/.well-known/oauth-authorization-server')
+            $this->auth_server_meta = Http::baseUrl($auth_url)
+                ->get('/.well-known/oauth-authorization-server')
                 ->json();
         }
 

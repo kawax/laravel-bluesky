@@ -106,9 +106,9 @@ class OAuthAgent implements Agent
         return $this->session->token();
     }
 
-    public function isValid(): bool
+    public function hasInvalidSession(): bool
     {
-        return $this->session->collect()->has(['did', 'iss', 'access_token', 'refresh_token']);
+        return ! $this->session->collect()->has(['did', 'iss', 'access_token', 'refresh_token']);
     }
 
     public function baseUrl(bool $auth = true): string
