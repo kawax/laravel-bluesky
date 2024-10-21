@@ -9,7 +9,7 @@ use Illuminate\Support\Facades\Http;
  */
 class PDS
 {
-    public function protectedResource($pds_url): array
+    public function protectedResource(string $pds_url): array
     {
         return Http::baseUrl($pds_url)
             ->get('/.well-known/oauth-protected-resource')

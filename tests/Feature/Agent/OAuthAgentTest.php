@@ -50,6 +50,8 @@ class OAuthAgentTest extends TestCase
     {
         $session = new OAuthSession([
             'iss' => 'iss',
+            'token_created_at' => now()->toISOString(),
+            'expires_in' => 3600,
         ]);
         $agent = new OAuthAgent($session);
 
@@ -65,6 +67,8 @@ class OAuthAgentTest extends TestCase
         $session = OAuthSession::create([
             'iss' => 'iss',
             'access_token' => 'access_token',
+            'token_created_at' => now()->toISOString(),
+            'expires_in' => 3600,
         ]);
 
         Http::fakeSequence()
@@ -109,9 +113,12 @@ class OAuthAgentTest extends TestCase
         ]);
 
         Socialite::shouldReceive('driver->refreshToken')->andReturn(new Token('access_token', 'refresh_token', 1, []));
-        Socialite::shouldReceive('driver->getOAuthSession')->andReturn(new OAuthSession([]));
+        Socialite::shouldReceive('driver->getOAuthSession')->andReturn(new OAuthSession(['did' => 'did:plc:test']));
 
-        Bluesky::shouldReceive('identity->resolveDID->collect')->andReturn(collect(['handle' => 'handle']));
+        Bluesky::shouldReceive('identity->resolveDID->collect')->andReturn(collect([
+            'handle' => 'handle',
+            'service' => [['serviceEndpoint' => 'https://pds']],
+        ]));
         Bluesky::shouldReceive('withAgent->profile->collect')->once()->andReturn([]);
         Bluesky::shouldReceive('pds->protectedResource')->once()->andReturn([
             'authorization_servers' => ['https://iss'],
@@ -126,5 +133,31 @@ class OAuthAgentTest extends TestCase
         $this->assertSame('https://iss', $agent->session('iss'));
 
         Event::assertDispatched(OAuthSessionUpdated::class);
+    }
+
+    public function test_token_expired()
+    {
+        $session = OAuthSession::create([
+            'token_created_at' => now()->toISOString(),
+            'expires_in' => 3600,
+        ]);
+
+        $agent = OAuthAgent::create($session);
+
+        $this->travel(100)->seconds();
+
+        $this->assertFalse($agent->tokenExpired());
+
+        $this->travelBack();
+
+        $this->travel(3700)->seconds();
+
+        $this->assertTrue($agent->tokenExpired());
+
+        $this->travelBack();
+
+        $agent = OAuthAgent::create(OAuthSession::create());
+
+        $this->assertTrue($agent->tokenExpired());
     }
 }

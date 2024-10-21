@@ -3,7 +3,10 @@
 namespace Revolution\Bluesky\Agent;
 
 use Illuminate\Http\Client\PendingRequest;
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Traits\Conditionable;
+use Illuminate\Support\Traits\Macroable;
 use Laravel\Socialite\Facades\Socialite;
 use Laravel\Socialite\Two\Token;
 use Psr\Http\Message\RequestInterface;
@@ -14,6 +17,7 @@ use Revolution\Bluesky\Events\OAuthSessionUpdated;
 use Revolution\Bluesky\Facades\Bluesky;
 use Revolution\Bluesky\Session\OAuthSession;
 use Revolution\Bluesky\Socalite\DPoP;
+use Revolution\Bluesky\Support\Identity;
 use RuntimeException;
 
 /**
@@ -21,6 +25,9 @@ use RuntimeException;
  */
 class OAuthAgent implements Agent
 {
+    use Macroable;
+    use Conditionable;
+
     public function __construct(
         #[\SensitiveParameter]
         protected OAuthSession $session,
@@ -34,6 +41,10 @@ class OAuthAgent implements Agent
 
     public function http(bool $auth = true): PendingRequest
     {
+        if ($auth && $this->tokenExpired()) {
+            $this->refreshToken();
+        }
+
         return Http::baseUrl($this->baseUrl($auth))
             ->withToken($this->token(), 'DPoP')
             ->withRequestMiddleware(function (RequestInterface $request) {
@@ -82,6 +93,10 @@ class OAuthAgent implements Agent
 
     public function refreshProfile(string $did): self
     {
+        if (empty($did) || ! Identity::isDID($did)) {
+            return $this;
+        }
+
         $this->session->merge(Bluesky::identity()->resolveDID($did)->collect());
 
         $this->session->merge(Bluesky::withAgent($this)->profile($did)->collect());
@@ -111,6 +126,21 @@ class OAuthAgent implements Agent
     public function token(): string
     {
         return $this->session->token();
+    }
+
+    public function tokenExpired(): bool
+    {
+        $token_created_at = $this->session->get('token_created_at');
+        $expires_in = $this->session->get('expires_in');
+
+        if (empty($token_created_at) || empty($expires_in)) {
+            return true;
+        }
+
+        $date = Carbon::parse($token_created_at, 'UTC')
+            ->addSeconds($expires_in);
+
+        return $date->lessThan(now());
     }
 
     public function pdsUrl(?string $default = null): ?string

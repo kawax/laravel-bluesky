@@ -110,7 +110,9 @@ class SocialiteTest extends TestCase
 
         Bluesky::partialMock();
 
-        Bluesky::shouldReceive('identity->resolveIdentity->collect')->andReturn(collect(['service' => [['serviceEndpoint' => 'https://pds',]],]));
+        Bluesky::shouldReceive('identity->resolveIdentity->collect')->andReturn(collect([
+            'service' => [['serviceEndpoint' => 'https://pds']],
+        ]));
 
         Bluesky::shouldReceive('profile->json')->andReturn(collect([
             'did' => 'did',
