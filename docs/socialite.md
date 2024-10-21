@@ -93,7 +93,7 @@ use App\Http\Controllers\SocialiteController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('login', [SocialiteController::class, 'login'])->name('login');
-Route::match(['get', 'post'],'redirect', [SocialiteController::class, 'redirect']);
+Route::match(['get', 'post'], 'redirect', [SocialiteController::class, 'redirect']);
 Route::get('callback', [SocialiteController::class, 'callback'])->name('bluesky.oauth.redirect');
 ```
 
