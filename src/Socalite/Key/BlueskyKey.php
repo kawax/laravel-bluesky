@@ -11,7 +11,7 @@ use phpseclib3\Crypt\EC\PublicKey;
 
 class BlueskyKey
 {
-    public const CURVE = 'secp256r1';
+    protected const CURVE = 'secp256r1';
 
     public const TYPE = 'PKCS8';
 
