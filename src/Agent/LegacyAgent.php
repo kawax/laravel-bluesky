@@ -5,15 +5,20 @@ namespace Revolution\Bluesky\Agent;
 use Illuminate\Http\Client\ConnectionException;
 use Illuminate\Http\Client\PendingRequest;
 use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Traits\Conditionable;
+use Illuminate\Support\Traits\Macroable;
 use Revolution\Bluesky\Contracts\Agent;
 use Revolution\Bluesky\Enums\AtProto;
 use Revolution\Bluesky\Session\LegacySession;
 
 /**
- * App password based agent (deprecated).
+ * App password based agent.
  */
 class LegacyAgent implements Agent
 {
+    use Macroable;
+    use Conditionable;
+
     public function __construct(
         protected LegacySession $session,
     ) {
