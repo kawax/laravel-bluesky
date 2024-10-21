@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Revolution\Bluesky;
 
+use Illuminate\Auth\AuthenticationException;
 use Illuminate\Container\Container;
 use Illuminate\Http\Client\ConnectionException;
 use Illuminate\Http\Client\PendingRequest;
@@ -33,9 +34,15 @@ class BlueskyClient implements Factory
 
     /**
      * OAuth based authentication.
+     *
+     * @throws AuthenticationException
      */
-    public function withToken(#[\SensitiveParameter] OAuthSession $token): self
+    public function withToken(#[\SensitiveParameter] ?OAuthSession $token): self
     {
+        if (empty($token) || empty($token->refresh())) {
+            throw new AuthenticationException();
+        }
+
         $this->agent = OAuthAgent::create($token);
 
         return $this;
