@@ -7,7 +7,7 @@ use Illuminate\Support\Facades\Http;
 
 trait WithPDS
 {
-    protected array $pds_protected_resource_meta = [];
+    protected ?array $pds_protected_resource_meta = [];
 
     protected function pdsProtectedResourceMeta(string $pds_url, string $key = '', ?string $default = null): array|string|null
     {

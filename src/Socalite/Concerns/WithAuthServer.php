@@ -7,7 +7,7 @@ use Illuminate\Support\Facades\Http;
 
 trait WithAuthServer
 {
-    protected array $auth_server_meta = [];
+    protected ?array $auth_server_meta = [];
 
     protected function authServerMeta(string $key = '', ?string $default = null): array|string|null
     {
