@@ -47,12 +47,14 @@ trait WithPDS
             return false;
         }
 
+        info('url', $url);
+
         return Validator::make($url, [
             'scheme' => ['required', Rule::in(['https'])],
             'hostname' => ['required', 'string', Rule::notIn(['localhost'])],
-            'port' => 'prohibited',
-            'username' => 'prohibited',
-            'password' => 'prohibited',
+            'port' => 'missing',
+            'username' => 'missing',
+            'password' => 'missing',
         ])->passes();
     }
 }
