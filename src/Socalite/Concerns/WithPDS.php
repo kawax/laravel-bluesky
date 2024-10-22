@@ -31,6 +31,8 @@ trait WithPDS
             if (data_get($this->pds_protected_resource_meta, 'resource') !== $pds_url) {
                 throw new InvalidArgumentException('Invalid PDS url.');
             }
+
+            $this->getOAuthSession()->put('pds', $this->pds_protected_resource_meta);
         }
 
         if (empty($key)) {
