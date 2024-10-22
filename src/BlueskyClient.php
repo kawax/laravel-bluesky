@@ -4,66 +4,181 @@ declare(strict_types=1);
 
 namespace Revolution\Bluesky;
 
-use Illuminate\Container\Attributes\Config;
+use Illuminate\Auth\AuthenticationException;
+use Illuminate\Container\Container;
 use Illuminate\Http\Client\ConnectionException;
-use Illuminate\Http\Client\RequestException;
+use Illuminate\Http\Client\PendingRequest;
 use Illuminate\Http\Client\Response;
-use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Traits\Conditionable;
 use Illuminate\Support\Traits\Macroable;
 use InvalidArgumentException;
+use Revolution\Bluesky\Agent\LegacyAgent;
+use Revolution\Bluesky\Agent\OAuthAgent;
+use Revolution\Bluesky\Contracts\Agent;
 use Revolution\Bluesky\Contracts\Factory;
 use Revolution\Bluesky\Enums\AtProto;
 use Revolution\Bluesky\Notifications\BlueskyMessage;
+use Revolution\Bluesky\Session\LegacySession;
+use Revolution\Bluesky\Session\OAuthSession;
 use Revolution\Bluesky\Support\Identity;
+use Revolution\Bluesky\Support\PDS;
 
 class BlueskyClient implements Factory
 {
     use Macroable;
     use Conditionable;
 
-    protected ?Collection $session = null;
+    protected ?Agent $agent = null;
 
-    public function __construct(
-        #[Config('bluesky.service', 'https://bsky.social')]
-        protected string $service = 'https://bsky.social',
-    ) {
-        //
-    }
-
-    public function service(string $service): static
+    /**
+     * OAuth authentication.
+     *
+     * @throws AuthenticationException
+     */
+    public function withToken(#[\SensitiveParameter] ?OAuthSession $token): self
     {
-        $this->service = $service;
+        if (empty($token?->refresh())) {
+            throw new AuthenticationException();
+        }
 
-        return $this;
-    }
-
-    public function session(string $key = null): mixed
-    {
-        return empty($key) ? $this->session : $this->session?->get($key);
-    }
-
-    public function withSession(array|Collection $session): static
-    {
-        $this->session = Collection::wrap($session);
+        $this->agent = OAuthAgent::create($token);
 
         return $this;
     }
 
     /**
-     * @throws RequestException
-     * @throws ConnectionException
+     * App password authentication.
      */
-    public function login(string $identifier, #[\SensitiveParameter] string $password): static
+    public function login(string $identifier, #[\SensitiveParameter] string $password): self
     {
-        $response = Http::baseUrl($this->baseUrl())
+        $response = Http::baseUrl($this->entryway().'/xrpc/')
             ->post(AtProto::createSession->value, [
                 'identifier' => $identifier,
                 'password' => $password,
-            ])->throw();
+            ]);
 
-        $this->session = $response->collect();
+        $session = LegacySession::create($response->collect());
+        $this->agent = LegacyAgent::create($session);
+
+        return $this;
+    }
+
+    public function agent(): ?Agent
+    {
+        return $this->agent;
+    }
+
+    public function withAgent(?Agent $agent): self
+    {
+        $this->agent = $agent;
+
+        return $this;
+    }
+
+    public function http(bool $auth = true): PendingRequest
+    {
+        if (! $this->check()) {
+            return Http::baseUrl(AtProto::PublicEndpoint->value);
+        }
+
+        return $this->agent()->http($auth);
+    }
+
+    /**
+     * @param  string|null  $actor  DID or handle.
+     *
+     * @throws ConnectionException
+     */
+    public function profile(?string $actor = null): Response
+    {
+        return $this->http()
+            ->get(AtProto::getProfile->value, [
+                'actor' => $actor ?? $this->agent()?->did() ?? '',
+            ]);
+    }
+
+    /**
+     * getAuthorFeed.
+     *
+     * @param  string|null  $actor  DID or handle.
+     *
+     * @throws ConnectionException
+     */
+    public function feed(?string $actor = null, int $limit = 50, string $cursor = '', string $filter = 'posts_with_replies'): Response
+    {
+        return $this->http()
+            ->get(AtProto::getAuthorFeed->value, [
+                'actor' => $actor ?? $this->agent()?->did() ?? '',
+                'limit' => $limit,
+                'cursor' => $cursor,
+                'filter' => $filter,
+            ]);
+    }
+
+    /**
+     * My timeline.
+     *
+     * @throws ConnectionException
+     */
+    public function timeline(int $limit = 50, string $cursor = ''): Response
+    {
+        return $this->http()
+            ->get(AtProto::getTimeline->value, [
+                'limit' => $limit,
+                'cursor' => $cursor,
+            ]);
+    }
+
+    /**
+     * @throws ConnectionException
+     */
+    public function createRecord(string $repo, string $collection, array $record): Response
+    {
+        return $this->http()
+            ->post(AtProto::createRecord->value, [
+                'repo' => $repo,
+                'collection' => $collection,
+                'record' => $record,
+            ]);
+    }
+
+    /**
+     * Create new post.
+     *
+     * @throws ConnectionException
+     */
+    public function post(string|BlueskyMessage $text): Response
+    {
+        $message = $text instanceof BlueskyMessage ? $text : BlueskyMessage::create($text);
+
+        $record = collect($message->toArray())
+            ->put('createdAt', now()->toISOString())
+            ->reject(fn ($item) => blank($item))
+            ->toArray();
+
+        return $this->createRecord(
+            repo: $this->agent()->did(),
+            collection: 'app.bsky.feed.post',
+            record: $record,
+        );
+    }
+
+    /**
+     * Upload blob.
+     *
+     * @throws ConnectionException
+     */
+    public function uploadBlob(mixed $data, string $type = 'image/png'): Response
+    {
+        return $this->http()
+            ->withBody($data, $type)
+            ->post(AtProto::uploadBlob->value);
+    }
+
+    public function refreshSession(): static
+    {
+        $this->agent()->refreshSession();
 
         return $this;
     }
@@ -79,106 +194,36 @@ class BlueskyClient implements Factory
             throw new InvalidArgumentException("The handle '$handle' is not a valid handle.");
         }
 
-        return Http::baseUrl($this->baseUrl())
-            ->withToken($this->session('accessJwt'))
+        return $this->http()
             ->get(AtProto::resolveHandle->value, [
                 'handle' => $handle,
             ]);
     }
 
-    /**
-     * My feed.
-     * @throws ConnectionException
-     */
-    public function feed(int $limit = 50, string $cursor = '', string $filter = 'posts_with_replies'): Response
+    public function identity(): Identity
     {
-        return Http::baseUrl($this->baseUrl())
-            ->withToken($this->session('accessJwt'))
-            ->get(AtProto::getAuthorFeed->value, [
-                'actor' => $this->session('did'),
-                'limit' => $limit,
-                'cursor' => $cursor,
-                'filter' => $filter,
-            ]);
+        return Container::getInstance()->make(Identity::class);
     }
 
-    /**
-     * My timeline.
-     * @throws ConnectionException
-     */
-    public function timeline(int $limit = 50, string $cursor = ''): Response
+    public function pds(): PDS
     {
-        return Http::baseUrl($this->baseUrl())
-            ->withToken($this->session('accessJwt'))
-            ->get(AtProto::getTimeline->value, [
-                'limit' => $limit,
-                'cursor' => $cursor,
-            ]);
-    }
-
-    /**
-     * Create new post.
-     * @throws ConnectionException
-     */
-    public function post(string|BlueskyMessage $text): Response
-    {
-        $message = $text instanceof BlueskyMessage ? $text : BlueskyMessage::create($text);
-
-        $record = collect($message->toArray())
-            ->put('createdAt', now()->toISOString())
-            ->reject(fn ($item) => blank($item))
-            ->toArray();
-
-        return Http::baseUrl($this->baseUrl())
-            ->withToken($this->session('accessJwt'))
-            ->post(AtProto::createRecord->value, [
-                'repo' => $this->session('did'),
-                'collection' => 'app.bsky.feed.post',
-                'record' => $record,
-            ]);
-    }
-
-    /**
-     * Upload blob.
-     *
-     * @throws ConnectionException
-     */
-    public function uploadBlob(mixed $data, string $type = 'image/png'): Response
-    {
-        return Http::baseUrl($this->baseUrl())
-            ->withToken($this->session('accessJwt'))
-            ->withBody($data, $type)
-            ->post(AtProto::uploadBlob->value);
-    }
-
-    /**
-     * @throws ConnectionException
-     */
-    public function refreshSession(): static
-    {
-        $response = Http::baseUrl($this->baseUrl())
-            ->withToken($this->session('refreshJwt'))
-            ->post(AtProto::refreshSession->value);
-
-        $this->session = $response->collect();
-
-        return $this;
+        return Container::getInstance()->make(PDS::class);
     }
 
     public function check(): bool
     {
-        return ! empty($this->session['accessJwt']);
+        return ! empty($this->agent()?->token());
     }
 
     public function logout(): static
     {
-        $this->session = null;
+        $this->agent = null;
 
         return $this;
     }
 
-    private function baseUrl(): string
+    public function entryway(): string
     {
-        return $this->service.'/xrpc/';
+        return 'https://'.AtProto::Entryway->value;
     }
 }

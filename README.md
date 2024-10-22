@@ -13,12 +13,6 @@ Laravel Bluesky(AT Protocol)
 composer require revolution/laravel-bluesky
 ```
 
-### .env
-```
-BLUESKY_IDENTIFIER=
-BLUESKY_APP_PASSWORD=
-```
-
 ### Uninstall
 ```shell
 composer remove revolution/laravel-bluesky
@@ -27,6 +21,7 @@ composer remove revolution/laravel-bluesky
 ## Usage
 - [BlueskyClient](./docs/bluesky-client.md)
 - [Laravel Notifications](./docs/notification.md)
+- [Socialite](./docs/socialite.md)
 
 ## LICENCE
 MIT

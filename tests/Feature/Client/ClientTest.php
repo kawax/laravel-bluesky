@@ -8,40 +8,44 @@ use Illuminate\Http\Client\Request;
 use Illuminate\Support\Facades\Http;
 use InvalidArgumentException;
 use Mockery\MockInterface;
+use Revolution\Bluesky\Agent\OAuthAgent;
 use Revolution\Bluesky\BlueskyClient;
 use Revolution\Bluesky\Facades\Bluesky;
 use Revolution\Bluesky\Notifications\BlueskyMessage;
+use Revolution\Bluesky\Session\LegacySession;
+use Revolution\Bluesky\Session\OAuthSession;
 use Revolution\Bluesky\Support\DNS;
 use Revolution\Bluesky\Support\Identity;
 use Tests\TestCase;
+use Mockery as m;
 
 class ClientTest extends TestCase
 {
+    protected array $session = ['accessJwt' => 'test', 'refreshJwt' => 'test', 'did' => 'test', 'handle' => 'handle'];
+
     public function test_login()
     {
-        Http::fake(fn () => ['accessJwt' => 'test', 'did' => 'test']);
+        Http::fake(fn () => $this->session);
 
         $client = new BlueskyClient();
 
-        $client->service('https://bsky.social')
-            ->login(identifier: 'identifier', password: 'password');
+        $client->login(identifier: 'identifier', password: 'password');
 
         Http::assertSent(function (Request $request) {
             return $request['identifier'] === 'identifier';
         });
 
-        $this->assertSame('test', $client->session('accessJwt'));
+        $this->assertSame('test', $client->agent()->session('accessJwt'));
         $this->assertTrue($client->check());
     }
 
     public function test_logout()
     {
-        Http::fake(fn () => ['accessJwt' => 'test', 'did' => 'test']);
+        Http::fake(fn () => $this->session);
 
         $client = new BlueskyClient();
 
-        $client->service('https://bsky.social')
-            ->login(identifier: 'identifier', password: 'password');
+        $client->login(identifier: 'identifier', password: 'password');
 
         Http::assertSent(function (Request $request) {
             return $request['identifier'] === 'identifier';
@@ -49,27 +53,26 @@ class ClientTest extends TestCase
 
         $client->logout();
 
-        $this->assertNull($client->session());
+        $this->assertNull($client->agent());
         $this->assertFalse($client->check());
     }
 
     public function test_session()
     {
-        Http::fake(fn () => ['accessJwt' => 'test', 'did' => 'test']);
+        Http::fake(fn () => $this->session);
 
         $client = new BlueskyClient();
 
-        $client->service('https://bsky.social')
-            ->login(identifier: 'identifier', password: 'password');
+        $client->login(identifier: 'identifier', password: 'password');
 
-        $this->assertSame(['accessJwt' => 'test', 'did' => 'test'], $client->session()->toArray());
-        $this->assertSame('test', $client->session('accessJwt'));
+        $this->assertIsArray($client->agent()->session());
+        $this->assertSame('test', $client->agent()->session('accessJwt'));
     }
 
     public function test_feed()
     {
         Http::fakeSequence()
-            ->push(['accessJwt' => 'test', 'did' => 'test'])
+            ->push($this->session)
             ->push(['feed' => ['post' => []]]);
 
         $response = Bluesky::login(identifier: 'identifier', password: 'password')
@@ -83,7 +86,7 @@ class ClientTest extends TestCase
     public function test_timeline()
     {
         Http::fakeSequence()
-            ->push(['accessJwt' => 'test', 'did' => 'test'])
+            ->push($this->session)
             ->push(['feed' => ['post' => []]]);
 
         $response = Bluesky::unless(Bluesky::check(), fn () => Bluesky::login(identifier: 'identifier', password: 'password'))
@@ -95,7 +98,7 @@ class ClientTest extends TestCase
     public function test_post()
     {
         Http::fakeSequence()
-            ->push(['accessJwt' => 'test', 'did' => 'test'])
+            ->push($this->session)
             ->push(['uri' => 'at']);
 
         $response = Bluesky::login(identifier: 'identifier', password: 'password')
@@ -107,7 +110,7 @@ class ClientTest extends TestCase
     public function test_post_message()
     {
         Http::fakeSequence()
-            ->push(['accessJwt' => 'test', 'did' => 'test'])
+            ->push($this->session)
             ->push(['uri' => 'at']);
 
         $m = BlueskyMessage::create('text');
@@ -121,7 +124,7 @@ class ClientTest extends TestCase
     public function test_upload_blob()
     {
         Http::fakeSequence()
-            ->push(['accessJwt' => 'test', 'did' => 'test'])
+            ->push($this->session)
             ->push(['blob' => '...']);
 
         $response = Bluesky::login(identifier: 'identifier', password: 'password')
@@ -133,7 +136,7 @@ class ClientTest extends TestCase
     public function test_resolve_handle()
     {
         Http::fakeSequence()
-            ->push(['accessJwt' => 'test', 'did' => 'test'])
+            ->push($this->session)
             ->push(['did' => 'test']);
 
         $response = Bluesky::login(identifier: 'identifier', password: 'password')
@@ -143,23 +146,17 @@ class ClientTest extends TestCase
         $this->assertSame('test', $response->json('did'));
     }
 
-    public function test_refresh_session()
+    public function test_get_profile()
     {
         Http::fakeSequence()
-            ->push(['accessJwt' => 'test', 'refreshJwt' => 'test', 'did' => 'test'])
-            ->push(['accessJwt' => 'test', 'refreshJwt' => 'test', 'did' => 'test']);
+            ->push($this->session)
+            ->push(['did' => 'test']);
 
-        Bluesky::login(identifier: 'identifier', password: 'password')
-            ->refreshSession();
+        $response = Bluesky::login(identifier: 'identifier', password: 'password')
+            ->profile(actor: 'test');
 
-        $this->assertSame('test', Bluesky::session('refreshJwt'));
-    }
-
-    public function test_with_session()
-    {
-        Bluesky::withSession(['accessJwt' => 'test', 'refreshJwt' => 'test', 'did' => 'test']);
-
-        $this->assertSame('test', Bluesky::session('did'));
+        $this->assertTrue($response->collect()->has('did'));
+        $this->assertSame('test', $response->json('did'));
     }
 
     public function test_resolve_did_plc()
@@ -182,7 +179,7 @@ class ClientTest extends TestCase
         Http::fakeSequence()
             ->push(['id' => 'did:web:localhost']);
 
-        $response = (new Identity())->resolveDID(did: 'did:web:localhost');
+        $response = Bluesky::identity()->resolveDID(did: 'did:web:localhost');
 
         $this->assertTrue($response->collect()->has('id'));
         $this->assertSame('did:web:localhost', $response->json('id'));
@@ -198,7 +195,7 @@ class ClientTest extends TestCase
 
         Http::fake();
 
-        $response = (new Identity())->resolveDID(did: 'did:test:test');
+        $response = Bluesky::identity()->resolveDID(did: 'did:test:test');
 
         Http::assertNothingSent();
     }
@@ -220,7 +217,7 @@ class ClientTest extends TestCase
 
         Http::fake();
 
-        $response = (new Identity())->resolveDID(did: 'did:test');
+        $response = Bluesky::identity()->resolveDID(did: 'did:test');
 
         Http::assertNothingSent();
     }
@@ -235,7 +232,7 @@ class ClientTest extends TestCase
             ]);
         });
 
-        $did = (new Identity())->resolveHandle('example.com');
+        $did = Bluesky::identity()->resolveHandle('example.com');
 
         $this->assertSame('did:plc:1234', $did);
     }
@@ -249,7 +246,7 @@ class ClientTest extends TestCase
         Http::fakeSequence()
             ->push('did:plc:1234');
 
-        $did = (new Identity())->resolveHandle('example.com');
+        $did = Bluesky::identity()->resolveHandle('example.com');
 
         $this->assertSame('did:plc:1234', $did);
     }
@@ -267,7 +264,7 @@ class ClientTest extends TestCase
         Http::fakeSequence()
             ->push(['id' => 'did:web:example.com']);
 
-        $response = (new Identity())->resolveIdentity('example.com');
+        $response = Bluesky::identity()->resolveIdentity('example.com');
 
         $this->assertTrue($response->collect()->has('id'));
         $this->assertSame('did:web:example.com', $response->json('id'));
@@ -282,7 +279,7 @@ class ClientTest extends TestCase
         Http::fakeSequence()
             ->push(['id' => 'did:web:example.com']);
 
-        $response = (new Identity())->resolveIdentity('did:web:example.com');
+        $response = Bluesky::identity()->resolveIdentity('did:web:example.com');
 
         $this->assertTrue($response->collect()->has('id'));
         $this->assertSame('did:web:example.com', $response->json('id'));
@@ -290,5 +287,58 @@ class ClientTest extends TestCase
         Http::assertSent(function (Request $request) {
             return $request->url() === 'https://example.com/.well-known/did.json';
         });
+    }
+
+    public function test_with_agent()
+    {
+        $agent = Bluesky::withAgent(OAuthAgent::create(OAuthSession::create()))
+            ->agent();
+
+        $this->assertInstanceOf(OAuthAgent::class, $agent);
+    }
+
+    public function test_client_identity()
+    {
+        $this->assertInstanceOf(Identity::class, Bluesky::identity());
+    }
+
+    public function test_legacy_session()
+    {
+        $session = new LegacySession($this->session);
+
+        $this->assertArrayHasKey('accessJwt', $session->toArray());
+        $this->assertSame('test', $session->toArray()['accessJwt']);
+    }
+
+    public function test_oauth_session()
+    {
+        $oauth = [
+            'access_token' => 'test',
+            'refresh_token' => 'test',
+            'did' => 'test',
+            'handle' => 'handle',
+        ];
+
+        $session = new OAuthSession($oauth);
+
+        $this->assertArrayHasKey('access_token', $session->toArray());
+        $this->assertSame('test', $session->toArray()['access_token']);
+    }
+
+    public function test_with_oauth()
+    {
+        $oauth = [
+            'access_token' => 'test',
+            'refresh_token' => 'test',
+            'did' => 'did:plc:test',
+            'handle' => 'handle',
+        ];
+
+        $session = OAuthSession::create($oauth);
+
+        $client = Bluesky::withToken($session);
+
+        $this->assertInstanceOf(OAuthAgent::class, $client->agent());
+        $this->assertSame('did:plc:test', $client->agent()->did());
     }
 }

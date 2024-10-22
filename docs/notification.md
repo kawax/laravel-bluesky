@@ -34,8 +34,20 @@ https://docs.bsky.app/docs/advanced-guides/post-richtext
 ```php
 use Illuminate\Support\Facades\Notification;
 use Revolution\Bluesky\Notifications\BlueskyRoute;
+use Revolution\Bluesky\Session\OAuthSession;
+use App\Models\User;
 
+// App password
 Notification::route('bluesky', BlueskyRoute::to(identifier: config('bluesky.identifier'), password: config('bluesky.password')))
+            ->notify(new TestNotification());
+
+// OAuth
+$user = User::find(1);
+$session = OAuthSession::create([
+    'iss' => $user->iss,
+    'refresh_token' => $user->refresh_token,
+]);
+Notification::route('bluesky', BlueskyRoute::to(oauth: $session))
             ->notify(new TestNotification());
 ```
 
@@ -43,6 +55,7 @@ Notification::route('bluesky', BlueskyRoute::to(identifier: config('bluesky.iden
 ```php
 use Illuminate\Notifications\Notifiable;
 use Revolution\Bluesky\Notifications\BlueskyRoute;
+use Revolution\Bluesky\Session\OAuthSession;
 
 class User
 {
@@ -50,11 +63,38 @@ class User
 
     public function routeNotificationForBluesky($notification): BlueskyRoute
     {
+        // App password
         return BlueskyRoute::to(identifier: $this->bluesky_identifier, password: $this->bluesky_password);
+        
+        // OAuth
+        $session = OAuthSession::create([
+            'iss' => $this->iss,
+            'refresh_token' => $this->refresh_token,
+        ]);
+        return BlueskyRoute::to(oauth: $session);
     }
 }
 ```
 
 ```php
 $user->notify(new TestNotification());
+```
+
+## BlueskyRoute
+
+The method of specification differs depending on the authentication method, either "App password" or "OAuth". It is recommended to always use named arguments.
+
+```php
+use Revolution\Bluesky\Notifications\BlueskyRoute;
+use Revolution\Bluesky\Session\OAuthSession;
+
+// App password
+BlueskyRoute::to(identifier: 'identifier', password: 'password')
+
+// OAuth
+$session = OAuthSession::create([
+    'iss' => '...',
+    'refresh_token' => '...',
+]);
+BlueskyRoute::to(oauth: $session);
 ```
