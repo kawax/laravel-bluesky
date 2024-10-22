@@ -179,6 +179,19 @@ $profile = Bluesky::withToken($session)
 dump($profile);
 ```
 
+## OAuthSession values
+To see all the values in an OAuthSession, convert it to an array.
+You don't need to use all of them, as some values are not required for authentication.
+
+```php
+use Revolution\Bluesky\Session\OAuthSession;
+
+/** @var OAuthSession $session */
+$session = session('bluesky_session');
+
+dump($session->toArray());
+```
+
 ## Minimal OAuthSession
 If you have an account created with `bsky.social`, you can refresh the OAuthSession with just the `refresh_token`. `iss` will automatically be set to `bsky.social`.
 
@@ -191,7 +204,7 @@ $session = OAuthSession::create([
 ]);
 
 $profile = Bluesky::withToken($session)
-                  ->refreshToken()
+                  ->refreshSession()
                   ->profile()
                   ->json();
 
@@ -210,7 +223,7 @@ $session = OAuthSession::create([
 ]);
 
 $profile = Bluesky::withToken($session)
-                  ->refreshToken()
+                  ->refreshSession()
                   ->profile()
                   ->json();
 
