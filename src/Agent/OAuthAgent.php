@@ -18,6 +18,7 @@ use Revolution\Bluesky\Events\OAuthSessionUpdated;
 use Revolution\Bluesky\Facades\Bluesky;
 use Revolution\Bluesky\Session\OAuthSession;
 use Revolution\Bluesky\Socalite\Key\DPoP;
+use Revolution\Bluesky\Support\DidDocument;
 use Revolution\Bluesky\Support\Identity;
 
 /**
@@ -148,7 +149,7 @@ class OAuthAgent implements Agent
 
     public function pdsUrl(?string $default = null): ?string
     {
-        return Bluesky::pds()->endpoint($this->session(), $default);
+        return DidDocument::create($this->session())->pdsEndpoint($default);
     }
 
     public function baseUrl(bool $auth = true): string

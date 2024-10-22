@@ -6,6 +6,7 @@ use Illuminate\Support\Arr;
 use Revolution\Bluesky\Facades\Bluesky;
 use Revolution\Bluesky\Session\OAuthSession;
 use InvalidArgumentException;
+use Revolution\Bluesky\Support\DidDocument;
 use Revolution\Bluesky\Support\Identity;
 
 trait WithOAuthSession
@@ -71,7 +72,10 @@ trait WithOAuthSession
 
     protected function hasInvalidDidDoc(array $didDoc): bool
     {
-        $pds_url = Bluesky::pds()->endpoint($didDoc);
+        $pds_url = DidDocument::create($didDoc)->pdsEndpoint();
+        if (empty($pds_url)) {
+            return true;
+        }
 
         $auth_url = $this->pdsProtectedResourceMeta($pds_url, 'authorization_servers.{first}');
 

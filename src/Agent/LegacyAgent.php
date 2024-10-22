@@ -11,6 +11,7 @@ use Revolution\Bluesky\Contracts\Agent;
 use Revolution\Bluesky\Enums\AtProto;
 use Revolution\Bluesky\Facades\Bluesky;
 use Revolution\Bluesky\Session\LegacySession;
+use Revolution\Bluesky\Support\DidDocument;
 
 /**
  * App password based agent.
@@ -76,7 +77,7 @@ class LegacyAgent implements Agent
     {
         $didDoc = $this->session('didDoc');
 
-        return Bluesky::pds()->endpoint($didDoc, $default);
+        return DidDocument::create($didDoc)->pdsEndpoint($default);
     }
 
     public function baseUrl(bool $auth = true): string
