@@ -19,9 +19,9 @@ class PDS
             ->json();
     }
 
-    public function endpoint(?array $meta, ?string $default = null): ?string
+    public function endpoint(?array $didDoc, ?string $default = null): ?string
     {
-        return collect($meta['service'] ?? [])
+        return collect($didDoc['service'] ?? [])
             ->firstWhere('id', '#atproto_pds')['serviceEndpoint'] ?? $default;
     }
 }

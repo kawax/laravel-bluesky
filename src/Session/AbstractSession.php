@@ -55,7 +55,7 @@ abstract class AbstractSession implements Arrayable
 
     public function handle(): ?string
     {
-        return $this->get('profile.handle');
+        return $this->get('handle');
     }
 
     public function issuer(?string $default = null): string

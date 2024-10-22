@@ -38,8 +38,8 @@ trait WithOAuthSession
         $user = array_merge($didDoc, $profile);
 
         $session = $this->getOAuthSession()
-            ->put('didDoc', $didDoc)
-            ->put('profile', $profile)
+            ->merge($didDoc)
+            ->merge($profile)
             ->merge($response)
             ->merge([
                 'iss' => $this->request->input('iss'),
