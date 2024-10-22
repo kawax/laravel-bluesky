@@ -8,7 +8,6 @@ use Illuminate\Auth\AuthenticationException;
 use Illuminate\Container\Container;
 use Illuminate\Http\Client\ConnectionException;
 use Illuminate\Http\Client\PendingRequest;
-use Illuminate\Http\Client\RequestException;
 use Illuminate\Http\Client\Response;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Traits\Conditionable;
@@ -119,6 +118,7 @@ class BlueskyClient implements Factory
 
     /**
      * My timeline.
+     *
      * @throws ConnectionException
      */
     public function timeline(int $limit = 50, string $cursor = ''): Response
@@ -131,7 +131,21 @@ class BlueskyClient implements Factory
     }
 
     /**
+     * @throws ConnectionException
+     */
+    public function createRecord(string $repo, string $collection, array $record): Response
+    {
+        return $this->http()
+            ->post(AtProto::createRecord->value, [
+                'repo' => $repo,
+                'collection' => $collection,
+                'record' => $record,
+            ]);
+    }
+
+    /**
      * Create new post.
+     *
      * @throws ConnectionException
      */
     public function post(string|BlueskyMessage $text): Response
@@ -143,12 +157,11 @@ class BlueskyClient implements Factory
             ->reject(fn ($item) => blank($item))
             ->toArray();
 
-        return $this->http()
-            ->post(AtProto::createRecord->value, [
-                'repo' => $this->agent()->did(),
-                'collection' => 'app.bsky.feed.post',
-                'record' => $record,
-            ]);
+        return $this->createRecord(
+            repo: $this->agent()->did(),
+            collection: 'app.bsky.feed.post',
+            record: $record,
+        );
     }
 
     /**
