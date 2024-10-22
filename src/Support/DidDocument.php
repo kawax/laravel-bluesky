@@ -26,7 +26,7 @@ final class DidDocument
 
     public static function create(array|Collection|null $didDoc = null): self
     {
-        return new self(Collection::wrap($didDoc));
+        return new self($didDoc);
     }
 
     public function fetch(?string $did = null): self

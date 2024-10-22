@@ -19,7 +19,7 @@ abstract class AbstractSession implements Arrayable
 
     public static function create(array|Collection|null $session = null): static
     {
-        return new static(Collection::wrap($session));
+        return new static($session);
     }
 
     public function get(string $key, $default = null): mixed
