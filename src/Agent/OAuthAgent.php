@@ -77,7 +77,7 @@ class OAuthAgent implements Agent
 
         /** @var Token $token */
         $token = Socialite::driver('bluesky')
-            ->service($this->session->issuer(default: AtProto::Entryway->value))
+            ->issuer($this->session->issuer(default: AtProto::Entryway->value))
             ->refreshToken($refresh);
 
         $this->session = Socialite::driver('bluesky')->getOAuthSession();
