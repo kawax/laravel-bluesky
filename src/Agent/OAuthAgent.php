@@ -155,7 +155,7 @@ class OAuthAgent implements Agent
 
     public function pdsUrl(?string $default = null): ?string
     {
-        return DidDocument::create($this->session('didDoc', $this->session()))->endpoint($default);
+        return $this->session->didDoc()->endpoint($default);
     }
 
     public function baseUrl(bool $auth = true): string

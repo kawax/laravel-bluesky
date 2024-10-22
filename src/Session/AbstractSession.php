@@ -56,7 +56,7 @@ abstract class AbstractSession implements Arrayable
 
     public function didDoc(): DidDocument
     {
-        return DidDocument::create($this->get('didDoc'));
+        return DidDocument::create($this->get('didDoc', $this->session));
     }
 
     public function handle(): ?string
@@ -64,9 +64,15 @@ abstract class AbstractSession implements Arrayable
         return $this->get('handle');
     }
 
-    public function issuer(?string $default = null): string
+    public function issuer(?string $default = null): ?string
     {
-        return $this->session->only(['iss', 'issuer'])->first(default: $default);
+        $iss = $this->session->only(['iss', 'issuer'])->first();
+
+        if (! empty($iss)) {
+            return $iss;
+        }
+
+        return $this->get('pds.authorization_servers.{first}', $default);
     }
 
     public function collect(): Collection
