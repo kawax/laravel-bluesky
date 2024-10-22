@@ -20,6 +20,16 @@ class OAuthSession extends AbstractSession
         return $this->get('profile.handle', $this->get('handle'));
     }
 
+    public function displayName(): ?string
+    {
+        return $this->get('profile.displayName', $this->get('displayName'));
+    }
+
+    public function avatar(): ?string
+    {
+        return $this->get('profile.avatar', $this->get('avatar'));
+    }
+
     public function token(): ?string
     {
         return $this->get('access_token');
