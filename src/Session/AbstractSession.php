@@ -7,6 +7,9 @@ use Illuminate\Support\Collection;
 use Illuminate\Support\Traits\ForwardsCalls;
 use Revolution\Bluesky\Support\DidDocument;
 
+/**
+ * @mixin Collection
+ */
 abstract class AbstractSession implements Arrayable
 {
     use ForwardsCalls;
@@ -26,27 +29,6 @@ abstract class AbstractSession implements Arrayable
     public function get(string $key, $default = null): mixed
     {
         return data_get($this->session, $key, $default);
-    }
-
-    public function put(string $key, $value): static
-    {
-        $this->session = $this->session->put($key, $value);
-
-        return $this;
-    }
-
-    public function merge($items): static
-    {
-        $this->session = $this->session->merge($items);
-
-        return $this;
-    }
-
-    public function except($keys): static
-    {
-        $this->session = $this->session->except($keys);
-
-        return $this;
     }
 
     public function did(): ?string
@@ -87,6 +69,6 @@ abstract class AbstractSession implements Arrayable
 
     public function __call(string $name, array $arguments): mixed
     {
-        return $this->forwardCallTo($this->session, $name, $arguments);
+        return $this->forwardDecoratedCallTo($this->session, $name, $arguments);
     }
 }

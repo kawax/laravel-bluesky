@@ -18,7 +18,6 @@ use Revolution\Bluesky\Events\OAuthSessionUpdated;
 use Revolution\Bluesky\Facades\Bluesky;
 use Revolution\Bluesky\Session\OAuthSession;
 use Revolution\Bluesky\Socalite\Key\DPoP;
-use Revolution\Bluesky\Support\DidDocument;
 use Revolution\Bluesky\Support\Identity;
 
 /**
@@ -99,16 +98,10 @@ class OAuthAgent implements Agent
             return $this;
         }
 
-        $didDoc = Bluesky::identity()->resolveDID($did)->json();
-        //$this->session->merge($didDoc);
-        $this->session->put('didDoc', $didDoc);
+        $this->session->put('didDoc', Bluesky::identity()->resolveDID($did)->json());
+        $this->session->put('profile', Bluesky::withAgent($this)->profile($did)->json());
 
-        $profile = Bluesky::withAgent($this)->profile($did)->json();
-        //$this->session->merge($profile);
-        $this->session->put('profile', $profile);
-
-        $pds_url = $this->pdsUrl();
-        if (! $this->session->has('iss') && ! empty($pds_url)) {
+        if (! $this->session->has('iss') && ! empty($pds_url = $this->pdsUrl())) {
             $pds = Bluesky::pds()->resource($pds_url);
 
             $this->session->put('pds', $pds);
