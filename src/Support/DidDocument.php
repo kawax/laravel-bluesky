@@ -2,11 +2,12 @@
 
 namespace Revolution\Bluesky\Support;
 
+use Illuminate\Contracts\Support\Arrayable;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Str;
 
-final class DidDocument
+final class DidDocument implements Arrayable
 {
     protected const BASE_URL = 'https://plc.directory';
 
@@ -67,5 +68,10 @@ final class DidDocument
     public function get(string $key, ?string $default = null): mixed
     {
         return data_get($this->didDoc, $key, $default);
+    }
+
+    public function toArray(): array
+    {
+        return $this->didDoc->toArray();
     }
 }

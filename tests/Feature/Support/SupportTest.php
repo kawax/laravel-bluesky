@@ -39,6 +39,7 @@ class SupportTest extends TestCase
             ],
         ]);
 
+        $this->assertSame('did:plc:test', $didDoc->toArray()['id']);
         $this->assertSame('did:plc:test', $didDoc->id());
         $this->assertSame('alice.test', $didDoc->handle());
         $this->assertSame('https://pds', $didDoc->pdsEndpoint());
