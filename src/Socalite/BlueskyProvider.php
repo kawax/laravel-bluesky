@@ -132,11 +132,11 @@ class BlueskyProvider extends AbstractProvider implements ProviderInterface
     }
 
     /**
-     * Set service/auth server. e.g. "bsky.social"
+     * Set service/auth server/issuer. e.g. "bsky.social"
      */
     public function service(string $service): self
     {
-        $this->service = Str::ltrim($service, 'https://');
+        $this->service = Str::chopStart($service, ['https://', 'http://']);
 
         return $this;
     }

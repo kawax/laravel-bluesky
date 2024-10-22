@@ -16,7 +16,7 @@ trait WithPDS
     {
         if (Str::startsWith($this->login_hint, 'https://') && $this->isSafeUrl($this->login_hint)) {
             $auth_url = $this->pdsProtectedResourceMeta($this->login_hint, 'authorization_servers.{first}', Bluesky::entryway());
-            $this->service = Str::of($auth_url)->chopStart('https://')->toString();
+            $this->service = Str::chopStart($auth_url, ['https://', 'http://']);
 
             $this->login_hint = null;
         }
