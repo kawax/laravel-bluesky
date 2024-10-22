@@ -6,7 +6,7 @@ class OAuthSession extends AbstractSession
 {
     public function did(): string
     {
-        return $this->get('did', $this->get('sub', ''));
+        return $this->session->only(['did', 'sub', 'id'])->first();
     }
 
     public function token(): string

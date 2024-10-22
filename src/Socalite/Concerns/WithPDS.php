@@ -12,7 +12,7 @@ trait WithPDS
 {
     protected ?array $pds_protected_resource_meta = [];
 
-    public function updateServiceWithHint(): void
+    protected function updateServiceWithHint(): void
     {
         if (Str::startsWith($this->login_hint, 'https://') && $this->isSafeUrl($this->login_hint)) {
             $auth_url = $this->pdsProtectedResourceMeta($this->login_hint, 'authorization_servers.{first}', Bluesky::entryway());
