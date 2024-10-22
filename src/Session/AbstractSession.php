@@ -4,16 +4,10 @@ namespace Revolution\Bluesky\Session;
 
 use Illuminate\Contracts\Support\Arrayable;
 use Illuminate\Support\Collection;
-use Illuminate\Support\Traits\ForwardsCalls;
 use Revolution\Bluesky\Support\DidDocument;
 
-/**
- * @mixin Collection
- */
 abstract class AbstractSession implements Arrayable
 {
-    use ForwardsCalls;
-
     protected Collection $session;
 
     public function __construct(array|Collection|null $session = null)
@@ -29,6 +23,32 @@ abstract class AbstractSession implements Arrayable
     public function get(string $key, $default = null): mixed
     {
         return data_get($this->session, $key, $default);
+    }
+
+    public function put(string $key, $value): static
+    {
+        $this->session = $this->session->put($key, $value);
+
+        return $this;
+    }
+
+    public function has($key): bool
+    {
+        return $this->session->has($key);
+    }
+
+    public function merge($items): static
+    {
+        $this->session = $this->session->merge($items);
+
+        return $this;
+    }
+
+    public function except($keys): static
+    {
+        $this->session = $this->session->except($keys);
+
+        return $this;
     }
 
     public function did(): ?string
@@ -54,10 +74,5 @@ abstract class AbstractSession implements Arrayable
     public function toArray(): array
     {
         return $this->session->toArray();
-    }
-
-    public function __call(string $name, array $arguments): mixed
-    {
-        return $this->forwardDecoratedCallTo($this->session, $name, $arguments);
     }
 }
