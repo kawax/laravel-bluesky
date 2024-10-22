@@ -110,14 +110,13 @@ class SocialiteTest extends TestCase
 
         Bluesky::partialMock();
 
-        Bluesky::shouldReceive('identity->resolveIdentity->collect')->andReturn(collect([
+        Bluesky::shouldReceive('identity->resolveDID->json')->andReturn([
             'service' => [['id' => '#atproto_pds', 'serviceEndpoint' => 'https://pds']],
-        ]));
-
-        Bluesky::shouldReceive('profile->json')->andReturn(collect([
+        ]);
+        Bluesky::shouldReceive('profile->json')->andReturn([
             'did' => 'did',
             'handle' => 'handle',
-        ]));
+        ]);
 
         Http::fake([
             'localhost/.well-known/oauth-authorization-server' => Http::response([

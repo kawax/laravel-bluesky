@@ -35,6 +35,8 @@ trait WithOAuthSession
             throw new InvalidArgumentException('Invalid DID Doc.');
         }
 
+        $user = array_merge($didDoc, $profile);
+
         $session = $this->getOAuthSession()
             ->put('didDoc', $didDoc)
             ->put('profile', $profile)
