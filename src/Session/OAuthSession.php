@@ -20,6 +20,17 @@ class OAuthSession extends AbstractSession
         return $this->get('profile.handle', $this->get('handle'));
     }
 
+    public function issuer(?string $default = null): ?string
+    {
+        $iss = $this->session->only(['iss', 'issuer'])->first();
+
+        if (! empty($iss)) {
+            return $iss;
+        }
+
+        return $this->get('pds.authorization_servers.{first}', $default);
+    }
+
     public function displayName(): ?string
     {
         return $this->get('profile.displayName', $this->get('displayName'));

@@ -46,17 +46,6 @@ abstract class AbstractSession implements Arrayable
         return $this->get('handle');
     }
 
-    public function issuer(?string $default = null): ?string
-    {
-        $iss = $this->session->only(['iss', 'issuer'])->first();
-
-        if (! empty($iss)) {
-            return $iss;
-        }
-
-        return $this->get('pds.authorization_servers.{first}', $default);
-    }
-
     public function collect(): Collection
     {
         return $this->session;
