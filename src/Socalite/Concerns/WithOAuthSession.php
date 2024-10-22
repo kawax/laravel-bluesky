@@ -39,14 +39,11 @@ trait WithOAuthSession
         $user = array_merge($didDoc, $profile);
 
         $session = $this->getOAuthSession()
-            ->merge($didDoc)
-            ->merge($profile)
+            ->put('didDoc', $didDoc)
+            ->put('profile', $profile)
             ->merge($response)
             ->merge([
                 'iss' => $this->request->input('iss'),
-            ])
-            ->except([
-                '@context',
             ]);
 
         $user['session'] = $session;
