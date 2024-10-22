@@ -25,16 +25,19 @@ trait WithOAuthSession
             throw new InvalidArgumentException('Invalid DID.');
         }
 
-        $user = $this->getUserByToken($did);
+        $profile = $this->getUserByToken($did);
 
-        if ($this->hasInvalidUser($user)) {
-            info('invalid user', Arr::wrap($user));
+        $didDoc = $this->getDidDoc($did);
 
-            throw new InvalidArgumentException('Invalid User.');
+        if ($this->hasInvalidDidDoc($didDoc)) {
+            info('invalid DID Doc', Arr::wrap($didDoc));
+
+            throw new InvalidArgumentException('Invalid DID Doc.');
         }
 
         $session = $this->getOAuthSession()
-            ->merge($user)
+            ->put('didDoc', $didDoc)
+            ->put('profile', $profile)
             ->merge($response)
             ->merge([
                 'iss' => $this->request->input('iss'),
@@ -64,9 +67,9 @@ trait WithOAuthSession
         return $this;
     }
 
-    protected function hasInvalidUser(array $user): bool
+    protected function hasInvalidDidDoc(array $didDoc): bool
     {
-        $pds_url = Bluesky::pds()->endpoint($user);
+        $pds_url = Bluesky::pds()->endpoint($didDoc);
 
         $auth_url = $this->pdsProtectedResourceMeta($pds_url, 'authorization_servers.{first}');
 

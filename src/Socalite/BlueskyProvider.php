@@ -107,9 +107,12 @@ class BlueskyProvider extends AbstractProvider implements ProviderInterface
 
     protected function getUserByToken($token): array
     {
-        $user = Bluesky::identity()->resolveIdentity($token)->collect();
+        return Bluesky::profile($token)->json();
+    }
 
-        return $user->merge(Bluesky::profile($token)->json())->toArray();
+    protected function getDidDoc($did): array
+    {
+        return Bluesky::identity()->resolveDID($did)->json();
     }
 
     /**
