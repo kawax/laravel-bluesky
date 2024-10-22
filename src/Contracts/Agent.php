@@ -12,11 +12,11 @@ interface Agent
 
     public function session(?string $key = null, $default = null): mixed;
 
-    public function did(): string;
+    public function did(): ?string;
 
-    public function handle(): string;
+    public function handle(): ?string;
 
-    public function token(): string;
+    public function token(): ?string;
 
     public function baseUrl(bool $auth = true): string;
 }

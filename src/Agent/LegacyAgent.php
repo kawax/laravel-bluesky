@@ -57,17 +57,17 @@ class LegacyAgent implements Agent
         return empty($key) ? $this->session->toArray() : $this->session->get($key, $default);
     }
 
-    public function did(): string
+    public function did(): ?string
     {
         return $this->session->did();
     }
 
-    public function handle(): string
+    public function handle(): ?string
     {
         return $this->session->handle();
     }
 
-    public function token(): string
+    public function token(): ?string
     {
         return $this->session->token();
     }

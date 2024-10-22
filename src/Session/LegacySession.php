@@ -4,13 +4,13 @@ namespace Revolution\Bluesky\Session;
 
 class LegacySession extends AbstractSession
 {
-    public function token(): string
+    public function token(): ?string
     {
-        return $this->get('accessJwt', '');
+        return $this->get('accessJwt');
     }
 
-    public function refresh(): string
+    public function refresh(): ?string
     {
-        return $this->get('refreshJwt', '');
+        return $this->get('refreshJwt');
     }
 }

@@ -77,7 +77,7 @@ class OAuthAgent implements Agent
 
         /** @var Token $token */
         $token = Socialite::driver('bluesky')
-            ->service($this->session->issuer() ?? $this->pdsUrl(Bluesky::entryway()))
+            ->service($this->session->issuer(default: AtProto::Entryway->value))
             ->refreshToken($refresh);
 
         $this->session = Socialite::driver('bluesky')->getOAuthSession();
@@ -114,17 +114,17 @@ class OAuthAgent implements Agent
         return empty($key) ? $this->session->toArray() : $this->session->get($key, $default);
     }
 
-    public function did(): string
+    public function did(): ?string
     {
         return $this->session->did();
     }
 
-    public function handle(): string
+    public function handle(): ?string
     {
         return $this->session->handle();
     }
 
-    public function token(): string
+    public function token(): ?string
     {
         return $this->session->token();
     }
