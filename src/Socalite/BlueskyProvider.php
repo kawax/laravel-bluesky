@@ -141,6 +141,14 @@ class BlueskyProvider extends AbstractProvider implements ProviderInterface
         return $this;
     }
 
+    /**
+     * Set service/auth server/issuer. e.g. "bsky.social"
+     */
+    public function issuer(string $iss): self
+    {
+        return $this->service($iss);
+    }
+
     public function hint(?string $login = null): self
     {
         $this->login_hint = $login;

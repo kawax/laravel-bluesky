@@ -173,7 +173,7 @@ class SocialiteTest extends TestCase
         ]);
 
         $provider = new BlueskyProvider($request, 'client_id', 'client_secret', 'redirect');
-        $provider->service('localhost')
+        $provider->issuer(iss: 'localhost')
             ->setOAuthSession(OAuthSession::create());
 
         $token = $provider->refreshToken('refresh_token');
