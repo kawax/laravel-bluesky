@@ -77,7 +77,7 @@ class LegacyAgent implements Agent
     {
         $didDoc = $this->session('didDoc');
 
-        return DidDocument::create($didDoc)->pdsEndpoint($default);
+        return DidDocument::create($didDoc)->endpoint($default);
     }
 
     public function baseUrl(bool $auth = true): string

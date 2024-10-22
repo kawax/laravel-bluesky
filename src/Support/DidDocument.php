@@ -60,7 +60,7 @@ final class DidDocument implements Arrayable
         return Str::chopStart($handle, 'at://');
     }
 
-    public function pdsEndpoint(?string $default = null): ?string
+    public function endpoint(?string $default = null): ?string
     {
         $service = collect($this->didDoc->get('service', []))
             ->firstWhere('id', '#atproto_pds');
@@ -71,6 +71,16 @@ final class DidDocument implements Arrayable
     public function get(string $key, ?string $default = null): mixed
     {
         return data_get($this->didDoc, $key, $default);
+    }
+
+    public function __get(string $key)
+    {
+        return data_get($this->didDoc, $key);
+    }
+
+    public function __set($name, $value)
+    {
+        $this->didDoc->put($name, $value);
     }
 
     public function toArray(): array
