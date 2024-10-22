@@ -60,7 +60,7 @@ abstract class AbstractSession implements Arrayable
 
     public function issuer(): string
     {
-        return $this->get('iss', '');
+        return $this->session->only(['iss', 'issuer'])->first(default: '');
     }
 
     public function collect(): Collection
