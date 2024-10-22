@@ -26,6 +26,7 @@ use Revolution\Bluesky\Support\PDS;
  * @method static bool check()
  * @method static Response feed(?string $actor = null, int $limit = 50, string $cursor = '', string $filter = 'posts_with_replies')
  * @method static Response timeline(int $limit = 50, string $cursor = '')
+ * @method static Response createRecord(string $repo, string $collection, array $record)
  * @method static Response post(string|BlueskyMessage $text)
  * @method static Response uploadBlob(mixed $data, string $type = 'image/png')
  * @method static static refreshSession()
