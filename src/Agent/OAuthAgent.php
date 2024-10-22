@@ -77,6 +77,7 @@ class OAuthAgent implements Agent
 
         /** @var Token $token */
         $token = Socialite::driver('bluesky')
+            ->service($this->pdsUrl(Bluesky::entryway()))
             ->refreshToken($refresh);
 
         $this->session = Socialite::driver('bluesky')->getOAuthSession();
