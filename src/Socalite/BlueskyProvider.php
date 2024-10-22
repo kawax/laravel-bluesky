@@ -2,8 +2,6 @@
 
 namespace Revolution\Bluesky\Socalite;
 
-use Illuminate\Support\Arr;
-use Illuminate\Support\Str;
 use Laravel\Socialite\Two\AbstractProvider;
 use Laravel\Socialite\Two\InvalidStateException;
 use Laravel\Socialite\Two\ProviderInterface;
@@ -16,7 +14,6 @@ use Revolution\Bluesky\Socalite\Concerns\WithOAuthSession;
 use Revolution\Bluesky\Socalite\Concerns\WithPAR;
 use Revolution\Bluesky\Socalite\Concerns\WithPDS;
 use Revolution\Bluesky\Socalite\Concerns\WithTokenRequest;
-use Revolution\Bluesky\Support\Identity;
 use InvalidArgumentException;
 
 class BlueskyProvider extends AbstractProvider implements ProviderInterface
@@ -81,16 +78,6 @@ class BlueskyProvider extends AbstractProvider implements ProviderInterface
             ]);
     }
 
-    public function updateServiceWithHint(): void
-    {
-        if (Str::startsWith($this->login_hint, 'https://') && $this->isSafeUrl($this->login_hint)) {
-            $auth_url = $this->pdsProtectedResourceMeta($this->login_hint, 'authorization_servers.0', Bluesky::entryway());
-            $this->service = Str::of($auth_url)->chopStart('https://')->toString();
-
-            $this->login_hint = null;
-        }
-    }
-
     /**
      * {@inheritdoc}
      */
@@ -117,85 +104,6 @@ class BlueskyProvider extends AbstractProvider implements ProviderInterface
         return $this->userInstance($response, $user);
     }
 
-    protected function hasInvalidIssuer(): bool
-    {
-        return $this->authServerMeta('issuer') !== $this->request->input('iss');
-    }
-
-    protected function hasInvalidDID(?string $did): bool
-    {
-        if (! Identity::isDID($did)) {
-            return true;
-        }
-
-        if (! empty($this->login_hint)) {
-            if (Identity::isDID($this->login_hint)) {
-                return $this->login_hint !== $did;
-            }
-            if (Identity::isHandle($this->login_hint)) {
-                return Bluesky::identity()->resolveHandle($this->login_hint) !== $did;
-            }
-        }
-
-        return false;
-    }
-
-    protected function hasInvalidUser(array $user): bool
-    {
-        $pds_url = data_get($user, 'service.{first}.serviceEndpoint');
-
-        $auth_url = $this->pdsProtectedResourceMeta($pds_url, 'authorization_servers.{first}');
-
-        return $this->authUrl() !== $auth_url;
-    }
-
-    /**
-     * Get the access token response for the given code.
-     *
-     * @param  string  $code
-     * @return array
-     */
-    public function getAccessTokenResponse($code): array
-    {
-        $token_url = $this->getTokenUrl();
-
-        $payload = $this->getTokenFields($code);
-
-        return $this->sendTokenRequest($token_url, $payload);
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    protected function getTokenUrl(): string
-    {
-        return $this->authServerMeta('token_endpoint', 'https://bsky.social/oauth/token');
-    }
-
-    /**
-     * Get the POST fields for the token request.
-     *
-     * @param  string  $code
-     * @return array
-     */
-    protected function getTokenFields($code): array
-    {
-        $fields = [
-            'client_id' => $this->clientId,
-            'redirect_uri' => $this->redirectUrl,
-            'grant_type' => 'authorization_code',
-            'code' => $code,
-            'client_assertion_type' => 'urn:ietf:params:oauth:client-assertion-type:jwt-bearer',
-            'client_assertion' => $this->getClientAssertion($this->authUrl()),
-        ];
-
-        if ($this->usesPKCE()) {
-            $fields['code_verifier'] = $this->request->session()->get('code_verifier');
-        }
-
-        return array_merge($fields, $this->parameters);
-    }
-
     protected function getUserByToken($token): array
     {
         $user = Bluesky::identity()->resolveIdentity($token)->collect();
@@ -209,33 +117,17 @@ class BlueskyProvider extends AbstractProvider implements ProviderInterface
     protected function mapUserToObject(array $user): User
     {
         return (new User())->setRaw($user)->map([
-            'id' => Arr::get($user, 'did'),
-            'nickname' => Arr::get($user, 'handle'),
-            'name' => Arr::get($user, 'displayName'),
-            'avatar' => Arr::get($user, 'avatar'),
-            'session' => Arr::get($user, 'session'),
+            'id' => data_get($user, 'did'),
+            'nickname' => data_get($user, 'handle'),
+            'name' => data_get($user, 'displayName'),
+            'avatar' => data_get($user, 'avatar'),
+            'session' => data_get($user, 'session'),
         ]);
     }
 
-    /**
-     * Get the refresh token response for the given refresh token.
-     *
-     * @param  string  $refreshToken
-     * @return array
-     */
-    protected function getRefreshTokenResponse($refreshToken): array
+    protected function hasInvalidIssuer(): bool
     {
-        $token_url = $this->getTokenUrl();
-
-        $payload = [
-            'grant_type' => 'refresh_token',
-            'refresh_token' => $refreshToken,
-            'client_id' => $this->clientId,
-            'client_assertion_type' => 'urn:ietf:params:oauth:client-assertion-type:jwt-bearer',
-            'client_assertion' => $this->getClientAssertion($this->authUrl()),
-        ];
-
-        return $this->sendTokenRequest($token_url, $payload);
+        return $this->authServerMeta('issuer') !== $this->request->input('iss');
     }
 
     /**

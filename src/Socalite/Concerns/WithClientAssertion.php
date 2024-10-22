@@ -9,6 +9,8 @@ use Revolution\Bluesky\Socalite\Key\JsonWebToken;
 
 trait WithClientAssertion
 {
+    protected const CLIENT_ASSERTION_TYPE = 'urn:ietf:params:oauth:client-assertion-type:jwt-bearer';
+
     protected function getClientAssertion(string $auth_url): string
     {
         $client_secret_jwk = BlueskyKey::load()->toJWK();

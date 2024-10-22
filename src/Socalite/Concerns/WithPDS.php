@@ -3,6 +3,7 @@
 namespace Revolution\Bluesky\Socalite\Concerns;
 
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Str;
 use Illuminate\Validation\Rule;
 use Revolution\Bluesky\Facades\Bluesky;
 use InvalidArgumentException;
@@ -10,6 +11,16 @@ use InvalidArgumentException;
 trait WithPDS
 {
     protected ?array $pds_protected_resource_meta = [];
+
+    public function updateServiceWithHint(): void
+    {
+        if (Str::startsWith($this->login_hint, 'https://') && $this->isSafeUrl($this->login_hint)) {
+            $auth_url = $this->pdsProtectedResourceMeta($this->login_hint, 'authorization_servers.{first}', Bluesky::entryway());
+            $this->service = Str::of($auth_url)->chopStart('https://')->toString();
+
+            $this->login_hint = null;
+        }
+    }
 
     protected function pdsProtectedResourceMeta(string $pds_url, string $key = '', ?string $default = null): array|string|null
     {

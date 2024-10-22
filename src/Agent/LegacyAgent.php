@@ -9,6 +9,7 @@ use Illuminate\Support\Traits\Conditionable;
 use Illuminate\Support\Traits\Macroable;
 use Revolution\Bluesky\Contracts\Agent;
 use Revolution\Bluesky\Enums\AtProto;
+use Revolution\Bluesky\Facades\Bluesky;
 use Revolution\Bluesky\Session\LegacySession;
 
 /**
@@ -73,7 +74,9 @@ class LegacyAgent implements Agent
 
     public function pdsUrl(?string $default = null): ?string
     {
-        return data_get($this->session->toArray(), 'didDoc.service.{first}.serviceEndpoint', $default);
+        $didDoc = $this->session('didDoc');
+
+        return Bluesky::pds()->endpoint($didDoc, $default);
     }
 
     public function baseUrl(bool $auth = true): string

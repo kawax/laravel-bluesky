@@ -3,8 +3,10 @@
 namespace Revolution\Bluesky\Socalite\Concerns;
 
 use Illuminate\Support\Arr;
+use Revolution\Bluesky\Facades\Bluesky;
 use Revolution\Bluesky\Session\OAuthSession;
 use InvalidArgumentException;
+use Revolution\Bluesky\Support\Identity;
 
 trait WithOAuthSession
 {
@@ -60,5 +62,32 @@ trait WithOAuthSession
         $this->session = $session;
 
         return $this;
+    }
+
+    protected function hasInvalidUser(array $user): bool
+    {
+        $pds_url = Bluesky::pds()->endpoint($user);
+
+        $auth_url = $this->pdsProtectedResourceMeta($pds_url, 'authorization_servers.{first}');
+
+        return $this->authUrl() !== $auth_url;
+    }
+
+    protected function hasInvalidDID(?string $did): bool
+    {
+        if (! Identity::isDID($did)) {
+            return true;
+        }
+
+        if (! empty($this->login_hint)) {
+            if (Identity::isDID($this->login_hint)) {
+                return $this->login_hint !== $did;
+            }
+            if (Identity::isHandle($this->login_hint)) {
+                return Bluesky::identity()->resolveHandle($this->login_hint) !== $did;
+            }
+        }
+
+        return false;
     }
 }

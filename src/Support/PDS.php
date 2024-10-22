@@ -18,4 +18,10 @@ class PDS
             ->get('/.well-known/oauth-protected-resource')
             ->json();
     }
+
+    public function endpoint(?array $meta, ?string $default = null): ?string
+    {
+        return collect($meta['service'] ?? [])
+            ->firstWhere('id', '#atproto_pds')['serviceEndpoint'] ?? $default;
+    }
 }

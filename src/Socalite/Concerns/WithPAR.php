@@ -29,7 +29,7 @@ trait WithPAR
             'state' => $state,
             'redirect_uri' => $this->redirectUrl,
             'scope' => $this->formatScopes($this->getScopes(), $this->scopeSeparator),
-            'client_assertion_type' => 'urn:ietf:params:oauth:client-assertion-type:jwt-bearer',
+            'client_assertion_type' => self::CLIENT_ASSERTION_TYPE,
             'client_assertion' => $this->getClientAssertion($this->authUrl()),
             'login_hint' => $this->login_hint,
         ];

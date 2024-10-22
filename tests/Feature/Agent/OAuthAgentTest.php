@@ -118,12 +118,13 @@ class OAuthAgentTest extends TestCase
 
         Bluesky::shouldReceive('identity->resolveDID->collect')->andReturn(collect([
             'handle' => 'handle',
-            'service' => [['serviceEndpoint' => 'https://pds']],
+            'service' => [['id' => '#atproto_pds', 'serviceEndpoint' => 'https://pds']],
         ]));
         Bluesky::shouldReceive('withAgent->profile->collect')->once()->andReturn([]);
         Bluesky::shouldReceive('pds->resource')->once()->andReturn([
             'authorization_servers' => ['https://iss'],
         ]);
+        Bluesky::shouldReceive('pds->endpoint')->once()->andReturn('https://pds');
 
         $agent = new OAuthAgent($session);
         $agent->refreshToken();

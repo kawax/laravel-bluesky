@@ -145,7 +145,7 @@ class OAuthAgent implements Agent
 
     public function pdsUrl(?string $default = null): ?string
     {
-        return data_get($this->session->toArray(), 'service.{first}.serviceEndpoint', $default);
+        return Bluesky::pds()->endpoint($this->session->toArray(), $default);
     }
 
     public function baseUrl(bool $auth = true): string
