@@ -4,13 +4,11 @@ namespace Revolution\Bluesky\Support;
 
 use Illuminate\Contracts\Support\Arrayable;
 use Illuminate\Support\Collection;
-use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Str;
+use Revolution\Bluesky\Facades\Bluesky;
 
 final class DidDocument implements Arrayable
 {
-    protected const BASE_URL = 'https://plc.directory';
-
     protected Collection $didDoc;
 
     public function __construct(array|Collection|null $didDoc = null)
@@ -38,8 +36,7 @@ final class DidDocument implements Arrayable
             return $this;
         }
 
-        $response = Http::baseUrl(self::BASE_URL)
-            ->get($did);
+        $response = Bluesky::identity()->resolveDID($did);
 
         if ($response->successful()) {
             $this->didDoc = $response->collect();
