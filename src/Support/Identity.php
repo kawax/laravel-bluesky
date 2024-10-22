@@ -28,21 +28,21 @@ class Identity
     }
 
     /**
-     * @param  string  $id  handle or DID.  e.g. "alice.test" "did:plc:1234..." "did:web:alice.test"
+     * @param  string|null  $id  handle or DID.  e.g. "alice.test" "did:plc:1234..." "did:web:alice.test"
      */
-    public function resolveIdentity(string $id): Response
+    public function resolveIdentity(?string $id): Response
     {
         return match (true) {
             self::isHandle($id) => $this->resolveDid($this->resolveHandle($id)),
             self::isDID($id) => $this->resolveDid($id),
-            default => throw new InvalidArgumentException("Invalid ID provided."),
+            default => throw new InvalidArgumentException('Invalid ID provided.'),
         };
     }
 
     /**
-     * @param  string  $handle  e.g. "alice.test"
+     * @param  string|null  $handle  e.g. "alice.test"
      */
-    public function resolveHandle(string $handle): ?string
+    public function resolveHandle(?string $handle): ?string
     {
         if (! self::isHandle($handle)) {
             throw new InvalidArgumentException("The handle '$handle' is not a valid handle."); // @codeCoverageIgnore
@@ -73,9 +73,9 @@ class Identity
     }
 
     /**
-     * @param  string  $did  e.g. "did:plc:1234..." "did:web:alice.test"
+     * @param  string|null  $did  e.g. "did:plc:1234..." "did:web:alice.test"
      */
-    public function resolveDID(string $did): Response
+    public function resolveDID(?string $did): Response
     {
         if (! self::isDID($did)) {
             throw new InvalidArgumentException("The did '$did' is not a valid DID.");
