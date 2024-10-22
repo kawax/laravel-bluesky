@@ -103,7 +103,10 @@ class OAuthAgent implements Agent
         $this->session->merge(Bluesky::withAgent($this)->profile($did)->collect());
 
         if (! $this->session->has('iss')) {
-            $this->session->put('iss', data_get(Bluesky::pds()->resource($this->pdsUrl()), 'authorization_servers.{first}'));
+            $pds = Bluesky::pds()->resource($this->pdsUrl());
+            $this->session->put('pds', $pds);
+
+            $this->session->put('iss', data_get($pds, 'authorization_servers.{first}'));
         }
 
         return $this;
