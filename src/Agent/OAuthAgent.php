@@ -101,6 +101,7 @@ class OAuthAgent implements Agent
         $this->session->put('didDoc', Bluesky::identity()->resolveDID($did)->json());
 
         $this->session->put('profile', Bluesky::withAgent($this)->profile($did)->json());
+        info('refresh', $this->session->toArray());
 
         if (! $this->session->has('iss')) {
             $pds = Bluesky::pds()->resource($this->pdsUrl());
@@ -149,9 +150,7 @@ class OAuthAgent implements Agent
 
     public function pdsUrl(?string $default = null): ?string
     {
-        $didDoc = $this->session('didDoc');
-
-        return Bluesky::pds()->endpoint($didDoc, $default);
+        return Bluesky::pds()->endpoint($this->session('didDoc'), $default);
     }
 
     public function baseUrl(bool $auth = true): string
