@@ -2,6 +2,7 @@
 
 namespace Revolution\Bluesky\Socalite;
 
+use Illuminate\Support\Str;
 use Laravel\Socialite\Two\AbstractProvider;
 use Laravel\Socialite\Two\InvalidStateException;
 use Laravel\Socialite\Two\ProviderInterface;
@@ -135,7 +136,7 @@ class BlueskyProvider extends AbstractProvider implements ProviderInterface
      */
     public function service(string $service): self
     {
-        $this->service = $service;
+        $this->service = Str::ltrim($service, 'https://');
 
         return $this;
     }
