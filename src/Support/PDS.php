@@ -21,6 +21,8 @@ class PDS
 
     public function endpoint(?array $meta, ?string $default = null): ?string
     {
+        info('pds', $meta);
+
         return collect($meta['service'] ?? [])
             ->firstWhere('id', '#atproto_pds')['serviceEndpoint'] ?? $default;
     }
