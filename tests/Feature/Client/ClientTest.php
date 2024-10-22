@@ -330,7 +330,7 @@ class ClientTest extends TestCase
         $oauth = [
             'access_token' => 'test',
             'refresh_token' => 'test',
-            'did' => 'test',
+            'did' => 'did:plc:test',
             'handle' => 'handle',
         ];
 
@@ -339,6 +339,6 @@ class ClientTest extends TestCase
         $client = Bluesky::withToken($session);
 
         $this->assertInstanceOf(OAuthAgent::class, $client->agent());
-        $this->assertSame('test', $client->agent()->did());
+        $this->assertSame('did:plc:test', $client->agent()->did());
     }
 }

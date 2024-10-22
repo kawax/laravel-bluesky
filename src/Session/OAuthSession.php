@@ -6,7 +6,13 @@ class OAuthSession extends AbstractSession
 {
     public function did(): ?string
     {
-        return $this->session->only(['did', 'sub', 'id'])->first();
+        $did = $this->session->only(['did', 'sub', 'id'])->first();
+
+        if (! empty($did)) {
+            return $did;
+        }
+
+        return $this->get('didDoc.id', $this->get('profile.did'));
     }
 
     public function handle(): ?string

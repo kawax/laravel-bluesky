@@ -5,6 +5,7 @@ namespace Revolution\Bluesky\Session;
 use Illuminate\Contracts\Support\Arrayable;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Traits\ForwardsCalls;
+use Revolution\Bluesky\Support\DidDocument;
 
 abstract class AbstractSession implements Arrayable
 {
@@ -51,6 +52,11 @@ abstract class AbstractSession implements Arrayable
     public function did(): ?string
     {
         return $this->get('did');
+    }
+
+    public function didDoc(): DidDocument
+    {
+        return DidDocument::create($this->get('didDoc'));
     }
 
     public function handle(): ?string

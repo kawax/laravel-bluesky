@@ -13,4 +13,19 @@ class LegacySession extends AbstractSession
     {
         return $this->get('refreshJwt');
     }
+
+    public function email(): ?string
+    {
+        return $this->get('email');
+    }
+
+    public function emailConfirmed(): bool
+    {
+        return (bool) $this->get('emailConfirmed');
+    }
+
+    public function active(): bool
+    {
+        return (bool) $this->get('active');
+    }
 }
