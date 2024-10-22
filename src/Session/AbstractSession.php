@@ -29,7 +29,7 @@ abstract class AbstractSession implements Arrayable
 
     public function put(string $key, $value): static
     {
-        $this->session->put($key, $value);
+        $this->session = $this->session->put($key, $value);
 
         return $this;
     }

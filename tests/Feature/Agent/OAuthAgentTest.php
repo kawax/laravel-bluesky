@@ -119,7 +119,7 @@ class OAuthAgentTest extends TestCase
         Bluesky::shouldReceive('identity->resolveDID->json')->andReturn([
             'service' => [['id' => '#atproto_pds', 'serviceEndpoint' => 'https://pds']],
         ]);
-        Bluesky::shouldReceive('withAgent->profile->json')->once()->andReturn([
+        Bluesky::shouldReceive('profile->json')->once()->andReturn([
             'handle' => 'handle',
         ]);
         Bluesky::shouldReceive('pds->resource')->once()->andReturn([
