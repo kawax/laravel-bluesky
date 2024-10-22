@@ -32,7 +32,8 @@ final class DidDocument implements Arrayable
 
     public function fetch(?string $did = null): self
     {
-        $did = $did ?? $this->didDoc->get('id');
+        $did = $did ?? $this->id();
+
         if (empty($did)) {
             return $this;
         }
@@ -61,8 +62,10 @@ final class DidDocument implements Arrayable
 
     public function pdsEndpoint(?string $default = null): ?string
     {
-        return collect($this->didDoc['service'] ?? [])
-            ->firstWhere('id', '#atproto_pds')['serviceEndpoint'] ?? $default;
+        $service = collect($this->didDoc->get('service', []))
+            ->firstWhere('id', '#atproto_pds');
+
+        return data_get($service, 'serviceEndpoint', $default);
     }
 
     public function get(string $key, ?string $default = null): mixed
