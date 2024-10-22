@@ -9,17 +9,34 @@ use Illuminate\Http\Client\RequestException;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Notification;
+use Mockery;
 use Revolution\Bluesky\Embed\External;
 use Revolution\Bluesky\Embed\Images;
 use Revolution\Bluesky\Enums\AtProto;
+use Revolution\Bluesky\Facades\Bluesky;
 use Revolution\Bluesky\Notifications\BlueskyChannel;
 use Revolution\Bluesky\Notifications\BlueskyMessage;
 use Revolution\Bluesky\Notifications\BlueskyRoute;
+use Revolution\Bluesky\Session\OAuthSession;
 use Tests\TestCase;
 
 class NotificationTest extends TestCase
 {
     protected array $session = ['accessJwt' => 'test', 'refreshJwt' => 'test', 'did' => 'test', 'handle' => 'handle'];
+
+    protected function setUp(): void
+    {
+        parent::setUp();
+
+        Http::preventStrayRequests();
+    }
+
+    protected function tearDown(): void
+    {
+        Mockery::close();
+
+        parent::tearDown();
+    }
 
     public function test_notification()
     {
@@ -177,6 +194,31 @@ class NotificationTest extends TestCase
 
         Http::assertSentCount(2);
     }
+
+    public function test_route_oauth()
+    {
+        $session = OAuthSession::create([
+            'refresh_token' => 'refresh_token',
+            'iss' => 'iss',
+        ]);
+
+        $route = new BlueskyRoute(oauth: $session);
+
+        $this->assertSame('iss', $route->oauth->issuer());
+    }
+
+    public function test_user_notify_oauth()
+    {
+        Bluesky::shouldReceive('withToken')->once()->andReturnSelf();
+        Bluesky::shouldReceive('refreshSession')->once()->andReturnSelf();
+        Bluesky::shouldReceive('post')->once();
+
+        $user = new TestUserOAuth();
+
+        $user->notify(new TestNotification(text: 'test'));
+
+        Http::assertSentCount(0);
+    }
 }
 
 class TestNotification extends \Illuminate\Notifications\Notification
@@ -204,5 +246,20 @@ class TestUser extends Model
     public function routeNotificationForBluesky($notification): BlueskyRoute
     {
         return BlueskyRoute::to(identifier: 'identifier', password: 'password');
+    }
+}
+
+class TestUserOAuth extends Model
+{
+    use Notifiable;
+
+    public function routeNotificationForBluesky($notification): BlueskyRoute
+    {
+        $session = OAuthSession::create([
+            'refresh_token' => 'refresh_token',
+            'iss' => 'iss',
+        ]);
+
+        return BlueskyRoute::to(oauth: $session);
     }
 }

@@ -28,7 +28,7 @@ use Revolution\Bluesky\Support\PDS;
  * @method static Response timeline(int $limit = 50, string $cursor = '')
  * @method static Response post(string|BlueskyMessage $text)
  * @method static Response uploadBlob(mixed $data, string $type = 'image/png')
- * @method static static refreshToken()
+ * @method static static refreshSession()
  * @method static Identity identity()
  * @method static PDS pds()
  * @method static string entryway()

@@ -9,7 +9,6 @@ use Illuminate\Support\Traits\Conditionable;
 use Illuminate\Support\Traits\Macroable;
 use Revolution\Bluesky\Contracts\Agent;
 use Revolution\Bluesky\Enums\AtProto;
-use Revolution\Bluesky\Facades\Bluesky;
 use Revolution\Bluesky\Session\LegacySession;
 use Revolution\Bluesky\Support\DidDocument;
 
@@ -42,13 +41,13 @@ class LegacyAgent implements Agent
     /**
      * @throws ConnectionException
      */
-    public function refreshToken(): self
+    public function refreshSession(): self
     {
         $response = Http::baseUrl($this->baseUrl())
             ->withToken(token: $this->session->refresh())
             ->post(AtProto::refreshSession->value);
 
-        $this->session = LegacySession::create($response->collect());
+        $this->session->merge($response->collect());
 
         return $this;
     }

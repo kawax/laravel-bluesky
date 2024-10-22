@@ -176,9 +176,9 @@ class BlueskyClient implements Factory
             ->post(AtProto::uploadBlob->value);
     }
 
-    public function refreshToken(): static
+    public function refreshSession(): static
     {
-        $this->agent()->refreshToken();
+        $this->agent()->refreshSession();
 
         return $this;
     }

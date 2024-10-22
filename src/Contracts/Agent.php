@@ -8,7 +8,7 @@ interface Agent
 {
     public function http(bool $auth = true): PendingRequest;
 
-    public function refreshToken(): self;
+    public function refreshSession(): self;
 
     public function session(?string $key = null, $default = null): mixed;
 

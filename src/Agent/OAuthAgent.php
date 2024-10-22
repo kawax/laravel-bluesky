@@ -42,7 +42,7 @@ class OAuthAgent implements Agent
     public function http(bool $auth = true): PendingRequest
     {
         if ($auth && $this->tokenExpired()) {
-            $this->refreshToken();
+            $this->refreshSession();
         }
 
         return Http::baseUrl($this->baseUrl($auth))
@@ -69,7 +69,7 @@ class OAuthAgent implements Agent
             })->retry(times: 2, throw: false);
     }
 
-    public function refreshToken(): self
+    public function refreshSession(): self
     {
         if (empty($refresh = $this->session->refresh())) {
             throw new InvalidArgumentException('Missing refresh token.');

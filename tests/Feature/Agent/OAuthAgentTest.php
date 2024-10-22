@@ -105,7 +105,7 @@ class OAuthAgentTest extends TestCase
         Event::assertDispatched(OAuthSessionUpdated::class);
     }
 
-    public function test_refresh_token()
+    public function test_refresh_session()
     {
         Event::fake();
 
@@ -127,7 +127,7 @@ class OAuthAgentTest extends TestCase
         ]);
 
         $agent = new OAuthAgent($session);
-        $agent->refreshToken();
+        $agent->refreshSession();
 
         $this->assertSame('access_token', $agent->token());
         $this->assertSame('refresh_token', $agent->session('refresh_token'));

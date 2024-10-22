@@ -6,7 +6,6 @@ namespace Revolution\Bluesky\Notifications;
 
 use Illuminate\Http\Client\RequestException;
 use Illuminate\Notifications\Notification;
-use Revolution\Bluesky\BlueskyClient;
 use Revolution\Bluesky\Facades\Bluesky;
 
 class BlueskyChannel
@@ -33,11 +32,16 @@ class BlueskyChannel
             return; // @codeCoverageIgnore
         }
 
-        Bluesky::unless(
-            is_null($route->oauth),
-            fn (BlueskyClient $client) => $client->withToken($route->oauth)->refreshToken(),
-            fn (BlueskyClient $client) => $client->login($route->identifier, $route->password),
-        )->post($message)
+        if (! is_null($route->oauth)) {
+            Bluesky::withToken($route->oauth)
+                ->refreshSession()
+                ->post($message);
+
+            return;
+        }
+
+        Bluesky::login($route->identifier, $route->password)
+            ->post($message)
             ->throw();
     }
 }
