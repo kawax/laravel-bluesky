@@ -9,6 +9,11 @@ class OAuthSession extends AbstractSession
         return $this->session->only(['did', 'sub', 'id'])->first();
     }
 
+    public function handle(): ?string
+    {
+        return $this->get('profile.handle', $this->get('handle'));
+    }
+
     public function token(): ?string
     {
         return $this->get('access_token');
