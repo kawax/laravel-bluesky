@@ -119,8 +119,11 @@ class SocialiteController extends Controller
     public function redirect(Request $request)
     {
         // You can specify the handle, DID, or PDS URL as a login hint. It can be empty.
+        $hint = $request->input('login_hint');
+        $request->session()->put('hint', $hint);
+
         return Socialite::driver('bluesky')
-                        ->hint($request->input('username'))
+                        ->hint($hint)
                         ->redirect();
 
         // If you don’t need a hint you can skip this step and just redirect straight away like with other providers.
@@ -132,10 +135,14 @@ class SocialiteController extends Controller
             dd($request);
         }
 
+        $hint = $request->session()->pull('hint');
+
         /**
         * @var \Laravel\Socialite\Two\User
         */
-        $user = Socialite::driver('bluesky')->user();
+        $user = Socialite::driver('bluesky')
+                         ->hint($hint)
+                         ->user();
 
         /** @var OAuthSession $session */
         $session = $user->session;
