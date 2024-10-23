@@ -9,6 +9,8 @@ use Illuminate\Support\Str;
 use Illuminate\Validation\Rule;
 use Revolution\Bluesky\Facades\Bluesky;
 use InvalidArgumentException;
+use Revolution\Bluesky\Support\DidDocument;
+use Revolution\Bluesky\Support\Identity;
 use Revolution\Bluesky\Support\ProtectedResource;
 
 trait WithPDS
@@ -20,9 +22,19 @@ trait WithPDS
         if (Str::startsWith($this->login_hint, 'https://') && $this->isSafeUrl($this->login_hint)) {
             $auth_url = $this->pdsProtectedResource($this->login_hint)
                 ->authServer(Bluesky::entryway());
+
             $this->service = Str::chopStart($auth_url, ['https://', 'http://']);
 
             $this->login_hint = null;
+        }
+
+        if (Identity::isDID($this->login_hint) || Identity::isHandle($this->login_hint)) {
+            $didDoc = DidDocument::create(Bluesky::identity()->resolveIdentity($this->login_hint)->collect());
+
+            $auth_url = $this->pdsProtectedResource($didDoc->pdsUrl())
+                ->authServer(Bluesky::entryway());
+
+            $this->service = Str::chopStart($auth_url, ['https://', 'http://']);
         }
     }
 

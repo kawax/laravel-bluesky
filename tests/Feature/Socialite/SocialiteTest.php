@@ -136,7 +136,60 @@ class SocialiteTest extends TestCase
         ]);
 
         $provider = new BlueskyProvider($request, 'client_id', 'client_secret', 'redirect');
-        $provider->service('localhost');
+        $provider->issuer('localhost');
+
+        $user = $provider->user();
+
+        $this->assertSame('did', $user->id);
+        $this->assertSame('handle', $user->nickname);
+        $this->assertSame('access_token', $user->token);
+    }
+
+    public function test_user_login_hint()
+    {
+        $session = app('Illuminate\Contracts\Session\Session');
+        $session->put('state', 'state');
+
+        $request = Request::create(uri: 'callback', parameters: [
+            'code' => 'code',
+            'state' => 'state',
+            'iss' => 'https://iss',
+        ]);
+        $request->setLaravelSession($session);
+
+        Bluesky::partialMock();
+
+        Bluesky::shouldReceive('identity->resolveIdentity->collect')->andReturn(collect([
+            'service' => [['id' => '#atproto_pds', 'serviceEndpoint' => 'https://pds']],
+        ]));
+
+        Bluesky::shouldReceive('identity->resolveDID->json')->andReturn([
+            'service' => [['id' => '#atproto_pds', 'serviceEndpoint' => 'https://pds']],
+        ]);
+        Bluesky::shouldReceive('profile->json')->andReturn([
+            'did' => 'did',
+            'handle' => 'handle',
+        ]);
+
+        Http::fake([
+            'localhost/.well-known/oauth-authorization-server' => Http::response([
+                'issuer' => 'https://iss',
+                'token_endpoint' => 'https://token/oauth/token',
+            ]),
+            'token/*' => Http::response([
+                'sub' => 'did:plc:test',
+                'handle' => 'handle',
+                'access_token' => 'access_token',
+                'refresh_token' => 'refresh_token',
+            ]),
+            'pds/*' => Http::response([
+                'resource' => 'https://pds',
+                'authorization_servers' => ['https://localhost'],
+            ]),
+        ]);
+
+        $provider = new BlueskyProvider($request, 'client_id', 'client_secret', 'redirect');
+        $provider->hint('did:plc:test');
 
         $user = $provider->user();
 

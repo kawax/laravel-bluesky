@@ -59,7 +59,7 @@ final class DidDocument implements Arrayable
         return Str::chopStart($handle, 'at://');
     }
 
-    public function endpoint(?string $default = null): ?string
+    public function pdsUrl(?string $default = null): ?string
     {
         $service = collect($this->didDoc->get('service', []))
             ->firstWhere('id', '#atproto_pds');

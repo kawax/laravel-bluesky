@@ -42,7 +42,7 @@ class SupportTest extends TestCase
         $this->assertSame('did:plc:test', $didDoc->toArray()['id']);
         $this->assertSame('did:plc:test', $didDoc->id());
         $this->assertSame('alice.test', $didDoc->handle());
-        $this->assertSame('https://pds', $didDoc->endpoint());
+        $this->assertSame('https://pds', $didDoc->pdsUrl());
         $this->assertSame([], $didDoc->get('verificationMethod'));
     }
 
@@ -75,7 +75,7 @@ class SupportTest extends TestCase
 
         $this->assertSame('did:plc:test', $didDoc->id());
         $this->assertSame('alice.test', $didDoc->handle());
-        $this->assertSame('https://pds', $didDoc->endpoint());
+        $this->assertSame('https://pds', $didDoc->pdsUrl());
         $this->assertSame([], $didDoc->get('verificationMethod'));
     }
 }

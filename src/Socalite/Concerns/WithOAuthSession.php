@@ -53,6 +53,16 @@ trait WithOAuthSession
         return $user;
     }
 
+    protected function getUserByToken($token): array
+    {
+        return Bluesky::profile($token)->json();
+    }
+
+    protected function getDidDoc($did): array
+    {
+        return Bluesky::identity()->resolveDID($did)->json();
+    }
+
     public function getOAuthSession(): OAuthSession
     {
         if (is_null($this->session)) {
@@ -71,7 +81,7 @@ trait WithOAuthSession
 
     protected function hasInvalidDidDoc(array $didDoc): bool
     {
-        $pds_url = DidDocument::create($didDoc)->endpoint();
+        $pds_url = DidDocument::create($didDoc)->pdsUrl();
 
         if (empty($pds_url)) {
             return true;

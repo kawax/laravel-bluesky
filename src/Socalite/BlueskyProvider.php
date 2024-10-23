@@ -94,6 +94,8 @@ class BlueskyProvider extends AbstractProvider implements ProviderInterface
             throw new InvalidStateException;
         }
 
+        $this->updateServiceWithHint();
+
         if ($this->hasInvalidIssuer()) {
             throw new InvalidArgumentException('Invalid Issuer.');
         }
@@ -105,16 +107,6 @@ class BlueskyProvider extends AbstractProvider implements ProviderInterface
         $this->clearSession();
 
         return $this->userInstance($response, $user);
-    }
-
-    protected function getUserByToken($token): array
-    {
-        return Bluesky::profile($token)->json();
-    }
-
-    protected function getDidDoc($did): array
-    {
-        return Bluesky::identity()->resolveDID($did)->json();
     }
 
     /**
