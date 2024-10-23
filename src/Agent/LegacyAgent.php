@@ -54,9 +54,12 @@ final class LegacyAgent implements Agent
         return $this;
     }
 
+    /**
+     * @return ($key is non-empty-string ? mixed : LegacySession)
+     */
     public function session(?string $key = null, $default = null): mixed
     {
-        return empty($key) ? $this->session->toArray() : $this->session->get($key, $default);
+        return empty($key) ? $this->session : $this->session->get($key, $default);
     }
 
     public function did(): ?string

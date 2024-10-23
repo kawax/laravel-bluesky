@@ -9,39 +9,40 @@ use Illuminate\Support\Str;
 use Illuminate\Validation\Rule;
 use Revolution\Bluesky\Facades\Bluesky;
 use InvalidArgumentException;
+use Revolution\Bluesky\Support\ProtectedResource;
 
 trait WithPDS
 {
-    protected ?array $pds_protected_resource_meta = [];
+    protected ?ProtectedResource $pds_resource = null;
 
     protected function updateServiceWithHint(): void
     {
         if (Str::startsWith($this->login_hint, 'https://') && $this->isSafeUrl($this->login_hint)) {
-            $auth_url = $this->pdsProtectedResourceMeta($this->login_hint, 'authorization_servers.{first}', Bluesky::entryway());
+            $auth_url = $this->pdsProtectedResource($this->login_hint)
+                ->authServer(Bluesky::entryway());
             $this->service = Str::chopStart($auth_url, ['https://', 'http://']);
 
             $this->login_hint = null;
         }
     }
 
-    protected function pdsProtectedResourceMeta(string $pds_url, string $key = '', ?string $default = null): array|string|null
+    protected function pdsProtectedResource(string $pds_url, string $key = '', ?string $default = null): ProtectedResource|array|string|null
     {
-        if (empty($this->pds_resource_meta)) {
-            $this->pds_protected_resource_meta = Bluesky::pds()
-                ->resource($pds_url);
+        if (empty($this->pds_resource)) {
+            $this->pds_resource = Bluesky::pds()->resource($pds_url);
 
-            if (data_get($this->pds_protected_resource_meta, 'resource') !== $pds_url) {
+            if ($this->pds_resource->resource() !== $pds_url) {
                 throw new InvalidArgumentException('Invalid PDS url.');
             }
 
-            $this->getOAuthSession()->put('pds', $this->pds_protected_resource_meta);
+            $this->getOAuthSession()->put('pds', $this->pds_resource->toArray());
         }
 
         if (empty($key)) {
-            return $this->pds_protected_resource_meta;
+            return $this->pds_resource;
         }
 
-        return data_get($this->pds_protected_resource_meta, $key, $default);
+        return $this->pds_resource->get($key, $default);
     }
 
     protected function isSafeUrl(string $url): bool

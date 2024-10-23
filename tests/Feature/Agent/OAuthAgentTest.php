@@ -13,6 +13,7 @@ use Revolution\Bluesky\Agent\OAuthAgent;
 use Revolution\Bluesky\Events\OAuthSessionUpdated;
 use Revolution\Bluesky\Facades\Bluesky;
 use Revolution\Bluesky\Session\OAuthSession;
+use Revolution\Bluesky\Support\ProtectedResource;
 use Tests\TestCase;
 
 class OAuthAgentTest extends TestCase
@@ -122,9 +123,9 @@ class OAuthAgentTest extends TestCase
         Bluesky::shouldReceive('withAgent->profile->json')->once()->andReturn([
             'handle' => 'handle',
         ]);
-        Bluesky::shouldReceive('pds->resource')->once()->andReturn([
+        Bluesky::shouldReceive('pds->resource')->once()->andReturn(ProtectedResource::create([
             'authorization_servers' => ['https://iss'],
-        ]);
+        ]));
 
         $agent = new OAuthAgent($session);
         $agent->refreshSession();

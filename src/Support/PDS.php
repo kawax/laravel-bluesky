@@ -14,10 +14,12 @@ class PDS
     /**
      * Get PDS OAuth protected resource.
      */
-    public function resource(string $pds_url): array
+    public function resource(string $pds_url): ProtectedResource
     {
-        return Http::baseUrl($pds_url)
-            ->get('/.well-known/oauth-protected-resource')
-            ->json();
+        return ProtectedResource::create(
+            Http::baseUrl($pds_url)
+                ->get('/.well-known/oauth-protected-resource')
+                ->json(),
+        );
     }
 }

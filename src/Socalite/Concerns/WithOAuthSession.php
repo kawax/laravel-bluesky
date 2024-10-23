@@ -72,11 +72,12 @@ trait WithOAuthSession
     protected function hasInvalidDidDoc(array $didDoc): bool
     {
         $pds_url = DidDocument::create($didDoc)->endpoint();
+
         if (empty($pds_url)) {
             return true;
         }
 
-        $auth_url = $this->pdsProtectedResourceMeta($pds_url, 'authorization_servers.{first}');
+        $auth_url = $this->pdsProtectedResource($pds_url)->authServer();
 
         return $this->authUrl() !== $auth_url;
     }

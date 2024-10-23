@@ -79,7 +79,7 @@ class ClientTest extends TestCase
 
         $client->login(identifier: 'identifier', password: 'password');
 
-        $this->assertIsArray($client->agent()->session());
+        $this->assertIsArray($client->agent()->session()->toArray());
         $this->assertSame('test', $client->agent()->session('accessJwt'));
     }
 

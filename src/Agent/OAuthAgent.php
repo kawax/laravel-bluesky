@@ -57,7 +57,7 @@ final class OAuthAgent implements Agent
     {
         $dpop_proof = DPoP::apiProof(
             jwk: DPoP::load(),
-            iss: $this->session('iss', Bluesky::entryway()),
+            iss: $this->session()->issuer(default: Bluesky::entryway()),
             url: (string) $request->getUri(),
             token: $this->token(),
             nonce: $this->session(DPoP::API_NONCE, ''),
@@ -80,13 +80,13 @@ final class OAuthAgent implements Agent
 
     public function refreshSession(): self
     {
-        if (empty($refresh = $this->session->refresh())) {
+        if (empty($refresh = $this->session()->refresh())) {
             throw new InvalidArgumentException('Missing refresh token.');
         }
 
         /** @var Token $token */
         $token = Socialite::driver('bluesky')
-            ->issuer($this->session->issuer(default: AtProto::Entryway->value))
+            ->issuer($this->session()->issuer(default: AtProto::Entryway->value))
             ->refreshToken($refresh);
 
         $this->session = Socialite::driver('bluesky')->getOAuthSession();
@@ -113,16 +113,19 @@ final class OAuthAgent implements Agent
         if (! $this->session->has('iss') && ! empty($pds_url = $this->pdsUrl())) {
             $pds = Bluesky::pds()->resource($pds_url);
 
-            $this->session->put('pds', $pds);
-            $this->session->put('iss', data_get($pds, 'authorization_servers.{first}'));
+            $this->session->put('pds', $pds->toArray());
+            $this->session->put('iss', $pds->authServer());
         }
 
         return $this;
     }
 
+    /**
+     * @return ($key is non-empty-string ? mixed : OAuthSession)
+     */
     public function session(?string $key = null, $default = null): mixed
     {
-        return empty($key) ? $this->session->toArray() : $this->session->get($key, $default);
+        return empty($key) ? $this->session : $this->session->get($key, $default);
     }
 
     public function did(): ?string
@@ -142,8 +145,8 @@ final class OAuthAgent implements Agent
 
     public function tokenExpired(): bool
     {
-        $token_created_at = $this->session->get('token_created_at');
-        $expires_in = $this->session->get('expires_in');
+        $token_created_at = $this->session('token_created_at');
+        $expires_in = $this->session('expires_in');
 
         if (empty($token_created_at) || empty($expires_in)) {
             return true;

@@ -72,16 +72,6 @@ final class DidDocument implements Arrayable
         return data_get($this->didDoc, $key, $default);
     }
 
-    public function __get(string $key)
-    {
-        return data_get($this->didDoc, $key);
-    }
-
-    public function __set($name, $value)
-    {
-        $this->didDoc->put($name, $value);
-    }
-
     public function toArray(): array
     {
         return $this->didDoc->toArray();

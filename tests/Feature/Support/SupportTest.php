@@ -44,9 +44,6 @@ class SupportTest extends TestCase
         $this->assertSame('alice.test', $didDoc->handle());
         $this->assertSame('https://pds', $didDoc->endpoint());
         $this->assertSame([], $didDoc->get('verificationMethod'));
-
-        $didDoc->id = 'did:plc:test2';
-        $this->assertSame('did:plc:test2', $didDoc->id);
     }
 
     public function test_did_document_fetch()
