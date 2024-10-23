@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Revolution\Bluesky\Support;
 
 use Illuminate\Http\Client\Response;
@@ -19,12 +21,12 @@ class Identity
 
     public static function isHandle(?string $handle): bool
     {
-        return preg_match(self::HANDLE_REGEX, $handle) === 1;
+        return preg_match(self::HANDLE_REGEX, $handle ?? '') === 1;
     }
 
     public static function isDID(?string $did): bool
     {
-        return preg_match(self::DID_REGEX, $did) === 1;
+        return preg_match(self::DID_REGEX, $did ?? '') === 1;
     }
 
     /**

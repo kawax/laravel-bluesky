@@ -1,11 +1,13 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Revolution\Bluesky\Socalite\Key;
 
 use Firebase\JWT\JWT;
 use phpseclib3\Crypt\EC\PrivateKey;
 
-class JsonWebToken
+final class JsonWebToken
 {
     public static function encode(
         array $head,

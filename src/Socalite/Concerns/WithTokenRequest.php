@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Revolution\Bluesky\Socalite\Concerns;
 
 use Illuminate\Http\Client\Response;
@@ -12,36 +14,41 @@ trait WithTokenRequest
 {
     protected function sendTokenRequest(string $token_url, array $payload): array
     {
-        return Http::withRequestMiddleware(
-            function (RequestInterface $request) use ($token_url) {
-                $dpop_nonce = $this->getOAuthSession()->get(DPoP::AUTH_NONCE, '');
-
-                $dpop_proof = DPop::authProof(
-                    jwk: DPoP::load(),
-                    url: $token_url,
-                    nonce: $dpop_nonce,
-                );
-
-                return $request->withHeader('DPoP', $dpop_proof);
-            })->withResponseMiddleware(
-            function (ResponseInterface $response) {
-                $dpop_nonce = collect($response->getHeader('DPoP-Nonce'))->first();
-
-                $this->getOAuthSession()->put(DPoP::AUTH_NONCE, $dpop_nonce);
-
-                $sub = (new Response($response))->json('sub');
-                if (! empty($sub)) {
-                    $this->getOAuthSession()->put('sub', $sub);
-                }
-
-                $this->getOAuthSession()->put('token_created_at', now()->toISOString());
-
-                return $response;
-            })
-            ->retry(times: 2, throw: false)
+        return Http::retry(times: 2, throw: false)
+            ->withRequestMiddleware($this->tokenRequestMiddleware(...))
+            ->withResponseMiddleware($this->tokenResponseMiddleware(...))
             ->throw()
             ->post($token_url, $payload)
             ->json();
+    }
+
+    protected function tokenRequestMiddleware(RequestInterface $request): RequestInterface
+    {
+        $dpop_nonce = $this->getOAuthSession()->get(DPoP::AUTH_NONCE, '');
+
+        $dpop_proof = DPop::authProof(
+            jwk: DPoP::load(),
+            url: (string) $request->getUri(),
+            nonce: $dpop_nonce,
+        );
+
+        return $request->withHeader('DPoP', $dpop_proof);
+    }
+
+    protected function tokenResponseMiddleware(ResponseInterface $response): ResponseInterface
+    {
+        $dpop_nonce = collect($response->getHeader('DPoP-Nonce'))->first();
+
+        $this->getOAuthSession()->put(DPoP::AUTH_NONCE, $dpop_nonce);
+
+        $sub = (new Response($response))->json('sub');
+        if (! empty($sub)) {
+            $this->getOAuthSession()->put('sub', $sub);
+        }
+
+        $this->getOAuthSession()->put('token_created_at', now()->toISOString());
+
+        return $response;
     }
 
     /**

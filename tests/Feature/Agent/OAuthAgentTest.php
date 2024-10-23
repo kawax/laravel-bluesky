@@ -162,4 +162,23 @@ class OAuthAgentTest extends TestCase
 
         $this->assertTrue($agent->tokenExpired());
     }
+
+    public function test_pds_url()
+    {
+        $session = OAuthSession::create([
+            'didDoc' => [
+                'service' => [
+                    [
+                        'id' => '#atproto_pds',
+                        'serviceEndpoint' => 'https://pds',
+                    ],
+                ],
+            ],
+        ]);
+
+        $agent = OAuthAgent::create($session);
+
+        $this->assertSame('https://pds', $agent->pdsUrl());
+        $this->assertSame('https://pds/xrpc/', $agent->baseUrl());
+    }
 }

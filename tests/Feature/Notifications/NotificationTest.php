@@ -209,9 +209,9 @@ class NotificationTest extends TestCase
 
     public function test_user_notify_oauth()
     {
-        Bluesky::shouldReceive('withToken')->once()->andReturnSelf();
-        Bluesky::shouldReceive('refreshSession')->once()->andReturnSelf();
-        Bluesky::shouldReceive('post')->once();
+        Http::fake();
+
+        Bluesky::shouldReceive('withToken->refreshSession->post->throw')->once();
 
         $user = new TestUserOAuth();
 

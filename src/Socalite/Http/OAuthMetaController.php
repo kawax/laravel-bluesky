@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Revolution\Bluesky\Socalite\Http;
 
 use Revolution\Bluesky\Socalite\OAuthConfig;

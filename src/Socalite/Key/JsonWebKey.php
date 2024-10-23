@@ -1,15 +1,20 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Revolution\Bluesky\Socalite\Key;
 
 use Illuminate\Contracts\Support\Arrayable;
 use Illuminate\Contracts\Support\Jsonable;
+use Illuminate\Support\Traits\Tappable;
 use phpseclib3\Crypt\EC\PrivateKey;
 use phpseclib3\Crypt\EC\PublicKey;
 use Stringable;
 
-class JsonWebKey implements Arrayable, Jsonable, Stringable
+final class JsonWebKey implements Arrayable, Jsonable, Stringable
 {
+    use Tappable;
+
     public const ALG = 'ES256';
 
     protected string $kid = 'illuminate';
@@ -29,14 +34,14 @@ class JsonWebKey implements Arrayable, Jsonable, Stringable
         return $this->kid;
     }
 
-    public function withKid(string $kid): static
+    public function withKid(string $kid): self
     {
         $this->kid = $kid;
 
         return $this;
     }
 
-    public function asPublic(): static
+    public function asPublic(): self
     {
         if ($this->key instanceof PublicKey) {
             return $this;

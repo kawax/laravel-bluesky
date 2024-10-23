@@ -1,25 +1,27 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Revolution\Bluesky\Socalite\Key;
 
 use Illuminate\Contracts\Support\Arrayable;
 use Illuminate\Contracts\Support\Jsonable;
 use Stringable;
 
-class JsonWebKeySet implements Arrayable, Jsonable, Stringable
+final class JsonWebKeySet implements Arrayable, Jsonable, Stringable
 {
     protected array $keys = [];
 
-    public static function load(): static
+    public static function load(): self
     {
-        $self = new static();
+        $self = new self();
 
         $key = BlueskyKey::load()->toJWK()->asPublic();
 
         return $self->addKey($key);
     }
 
-    public function addKey(JsonWebKey $key): static
+    public function addKey(JsonWebKey $key): self
     {
         $this->keys[] = $key;
 

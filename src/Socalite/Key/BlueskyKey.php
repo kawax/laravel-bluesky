@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Revolution\Bluesky\Socalite\Key;
 
 use Firebase\JWT\JWT;
@@ -9,7 +11,7 @@ use phpseclib3\Crypt\EC;
 use phpseclib3\Crypt\EC\PrivateKey;
 use phpseclib3\Crypt\EC\PublicKey;
 
-class BlueskyKey
+final class BlueskyKey
 {
     protected const CURVE = 'secp256r1';
 
@@ -20,7 +22,7 @@ class BlueskyKey
     /**
      * @param  string|null  $key  url-safe base64 encoded private key
      */
-    public static function load(?string $key = null): static
+    public static function load(?string $key = null): self
     {
         if (empty($key)) {
             $key = config('bluesky.oauth.private_key');
@@ -30,16 +32,16 @@ class BlueskyKey
             throw new InvalidArgumentException('Private key not configured');
         }
 
-        $self = new static();
+        $self = new self();
 
         $self->pk = EC::loadPrivateKey(JWT::urlsafeB64Decode($key));
 
         return $self;
     }
 
-    public static function create(): static
+    public static function create(): self
     {
-        $self = new static();
+        $self = new self();
 
         $self->pk = EC::createKey(self::CURVE);
 
@@ -54,6 +56,11 @@ class BlueskyKey
     public function privatePEM(): string
     {
         return $this->pk->toString(self::TYPE);
+    }
+
+    public function privateB64(): string
+    {
+        return JWT::urlsafeB64Encode($this->privatePEM());
     }
 
     public function publicPEM(): string

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Revolution\Bluesky\Agent;
 
 use Illuminate\Http\Client\PendingRequest;
@@ -23,7 +25,7 @@ use Revolution\Bluesky\Support\Identity;
 /**
  * OAuth based agent.
  */
-class OAuthAgent implements Agent
+final class OAuthAgent implements Agent
 {
     use Macroable;
     use Conditionable;
@@ -47,26 +49,33 @@ class OAuthAgent implements Agent
 
         return Http::baseUrl($this->baseUrl($auth))
             ->withToken($this->token(), 'DPoP')
-            ->withRequestMiddleware(function (RequestInterface $request) {
-                $dpop_proof = DPoP::apiProof(
-                    jwk: DPoP::load(),
-                    iss: $this->session('iss', Bluesky::entryway()),
-                    url: $request->getUri(),
-                    token: $this->token(),
-                    nonce: $this->session(DPoP::API_NONCE, ''),
-                    method: $request->getMethod(),
-                );
+            ->withRequestMiddleware($this->apiRequestMiddleware(...))->withResponseMiddleware($this->apiResponseMiddleware(...))
+            ->retry(times: 2, throw: false);
+    }
 
-                return $request->withHeader('DPoP', $dpop_proof);
-            })->withResponseMiddleware(function (ResponseInterface $response) {
-                $dpop_nonce = collect($response->getHeader('DPoP-Nonce'))->first();
+    protected function apiRequestMiddleware(RequestInterface $request): RequestInterface
+    {
+        $dpop_proof = DPoP::apiProof(
+            jwk: DPoP::load(),
+            iss: $this->session('iss', Bluesky::entryway()),
+            url: (string) $request->getUri(),
+            token: $this->token(),
+            nonce: $this->session(DPoP::API_NONCE, ''),
+            method: $request->getMethod(),
+        );
 
-                $this->session->put(DPoP::API_NONCE, $dpop_nonce);
+        return $request->withHeader('DPoP', $dpop_proof);
+    }
 
-                OAuthSessionUpdated::dispatch($this->session);
+    protected function apiResponseMiddleware(ResponseInterface $response): ResponseInterface
+    {
+        $dpop_nonce = collect($response->getHeader('DPoP-Nonce'))->first();
 
-                return $response;
-            })->retry(times: 2, throw: false);
+        $this->session->put(DPoP::API_NONCE, $dpop_nonce);
+
+        OAuthSessionUpdated::dispatch($this->session);
+
+        return $response;
     }
 
     public function refreshSession(): self

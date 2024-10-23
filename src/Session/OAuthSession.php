@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Revolution\Bluesky\Session;
 
 class OAuthSession extends AbstractSession
@@ -9,7 +11,7 @@ class OAuthSession extends AbstractSession
         $did = $this->session->only(['did', 'sub', 'id'])->first();
 
         if (! empty($did)) {
-            return $did;
+            return (string) $did;
         }
 
         return $this->get('didDoc.id', $this->get('profile.did'));
@@ -25,7 +27,7 @@ class OAuthSession extends AbstractSession
         $iss = $this->session->only(['iss', 'issuer'])->first();
 
         if (! empty($iss)) {
-            return $iss;
+            return (string) $iss;
         }
 
         return $this->get('pds.authorization_servers.{first}', $default);

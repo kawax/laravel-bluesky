@@ -35,7 +35,8 @@ class BlueskyChannel
         if (! is_null($route->oauth)) {
             Bluesky::withToken($route->oauth)
                 ->refreshSession()
-                ->post($message);
+                ->post($message)
+                ->throw();
 
             return;
         }

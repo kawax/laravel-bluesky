@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Revolution\Bluesky\Socalite\Concerns;
 
 use Illuminate\Http\Client\Response;
@@ -8,20 +10,34 @@ use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
 use Revolution\Bluesky\Socalite\Key\DPoP;
 
+/**
+ * Pushed Authentication Request
+ */
 trait WithPAR
 {
     protected function getParRequestUrl(string $state): string
     {
-        $response = $this->sendParRequest($state);
+        $par_data = $this->parRequestFields($state);
 
-        return $response->json('request_uri', '');
+        return $this->sendParRequest($par_data)
+            ->json('request_uri', '');
     }
 
-    protected function sendParRequest(string $state): Response
+    protected function sendParRequest(array $par_data): Response
     {
         $par_url = $this->authServerMeta('pushed_authorization_request_endpoint', 'https://bsky.social/oauth/par');
 
-        $par_body = [
+        return Http::asForm()
+            ->withRequestMiddleware($this->parRequestMiddleware(...))
+            ->withResponseMiddleware($this->parResponseMiddleware(...))
+            ->retry(times: 2, throw: false)
+            ->throw()
+            ->post($par_url, $par_data);
+    }
+
+    protected function parRequestFields($state): array
+    {
+        return [
             'response_type' => 'code',
             'code_challenge' => $this->getCodeChallenge(),
             'code_challenge_method' => $this->getCodeChallengeMethod(),
@@ -33,28 +49,27 @@ trait WithPAR
             'client_assertion' => $this->getClientAssertion($this->authUrl()),
             'login_hint' => $this->login_hint,
         ];
+    }
 
-        return Http::asForm()
-            ->withRequestMiddleware(function (RequestInterface $request) use ($par_url) {
-                $dpop_nonce = $this->request->session()->get(DPoP::AUTH_NONCE, '');
+    protected function parRequestMiddleware(RequestInterface $request): RequestInterface
+    {
+        $dpop_nonce = $this->getOAuthSession()->get(DPoP::AUTH_NONCE, '');
 
-                $dpop_proof = DPoP::authProof(
-                    jwk: DPoP::load(),
-                    url: $par_url,
-                    nonce: $dpop_nonce,
-                );
+        $dpop_proof = DPoP::authProof(
+            jwk: DPoP::load(),
+            url: (string) $request->getUri(),
+            nonce: $dpop_nonce,
+        );
 
-                return $request->withHeader('DPoP', $dpop_proof);
-            })
-            ->withResponseMiddleware(function (ResponseInterface $response) {
-                $dpop_nonce = collect($response->getHeader('DPoP-Nonce'))->first();
+        return $request->withHeader('DPoP', $dpop_proof);
+    }
 
-                $this->request->session()->put(DPoP::AUTH_NONCE, $dpop_nonce);
+    protected function parResponseMiddleware(ResponseInterface $response): ResponseInterface
+    {
+        $dpop_nonce = collect($response->getHeader('DPoP-Nonce'))->first();
 
-                return $response;
-            })
-            ->retry(times: 2, throw: false)
-            ->throw()
-            ->post($par_url, $par_body);
+        $this->getOAuthSession()->put(DPoP::AUTH_NONCE, $dpop_nonce);
+
+        return $response;
     }
 }

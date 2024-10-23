@@ -1,24 +1,34 @@
 <?php
+declare(strict_types=1);
 
 namespace Revolution\Bluesky\Socalite\Key;
 
 use Firebase\JWT\JWT;
 use Illuminate\Support\Str;
 
-class DPoP
+final class DPoP
 {
     public const AUTH_NONCE = 'dpop_auth_nonce';
 
     public const API_NONCE = 'dpop_api_nonce';
 
+    public const SESSION_KEY = 'bluesky_dpop_key';
+
     protected const TYP = 'dpop+jwt';
 
     /**
-     * @param  string|null  $key  url-safe base64 encoded private key
+     * Generate new private key for DPoP.
+     *
+     * @return string url-safe base64 encoded private key
      */
-    public static function load(?string $key = null): JsonWebKey
+    public static function generate(): string
     {
-        return BlueskyKey::load($key)->toJWK();
+        return BlueskyKey::create()->privateB64();
+    }
+
+    public static function load(): JsonWebKey
+    {
+        return BlueskyKey::load(session(DPoP::SESSION_KEY, self::generate()))->toJWK();
     }
 
     /**

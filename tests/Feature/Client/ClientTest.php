@@ -7,6 +7,7 @@ namespace Tests\Feature\Client;
 use Illuminate\Http\Client\Request;
 use Illuminate\Support\Facades\Http;
 use InvalidArgumentException;
+use Mockery;
 use Mockery\MockInterface;
 use Revolution\Bluesky\Agent\OAuthAgent;
 use Revolution\Bluesky\BlueskyClient;
@@ -17,11 +18,24 @@ use Revolution\Bluesky\Session\OAuthSession;
 use Revolution\Bluesky\Support\DNS;
 use Revolution\Bluesky\Support\Identity;
 use Tests\TestCase;
-use Mockery as m;
 
 class ClientTest extends TestCase
 {
     protected array $session = ['accessJwt' => 'test', 'refreshJwt' => 'test', 'did' => 'test', 'handle' => 'handle'];
+
+    protected function setUp(): void
+    {
+        parent::setUp();
+
+        Http::preventStrayRequests();
+    }
+
+    protected function tearDown(): void
+    {
+        Mockery::close();
+
+        parent::tearDown();
+    }
 
     public function test_login()
     {
@@ -316,7 +330,6 @@ class ClientTest extends TestCase
             'access_token' => 'test',
             'refresh_token' => 'test',
             'did' => 'test',
-            'handle' => 'handle',
         ];
 
         $session = new OAuthSession($oauth);
@@ -328,10 +341,8 @@ class ClientTest extends TestCase
     public function test_with_oauth()
     {
         $oauth = [
-            'access_token' => 'test',
             'refresh_token' => 'test',
             'did' => 'did:plc:test',
-            'handle' => 'handle',
         ];
 
         $session = OAuthSession::create($oauth);

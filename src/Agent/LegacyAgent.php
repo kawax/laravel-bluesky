@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Revolution\Bluesky\Agent;
 
 use Illuminate\Http\Client\ConnectionException;
@@ -15,7 +17,7 @@ use Revolution\Bluesky\Support\DidDocument;
 /**
  * App password based agent.
  */
-class LegacyAgent implements Agent
+final class LegacyAgent implements Agent
 {
     use Macroable;
     use Conditionable;
