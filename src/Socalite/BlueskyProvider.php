@@ -18,6 +18,7 @@ use Revolution\Bluesky\Socalite\Concerns\WithPAR;
 use Revolution\Bluesky\Socalite\Concerns\WithPDS;
 use Revolution\Bluesky\Socalite\Concerns\WithTokenRequest;
 use InvalidArgumentException;
+use Revolution\Bluesky\Socalite\Key\DPoP;
 
 class BlueskyProvider extends AbstractProvider implements ProviderInterface
 {
@@ -68,6 +69,9 @@ class BlueskyProvider extends AbstractProvider implements ProviderInterface
         if (! $this->usesPKCE()) {
             throw new InvalidArgumentException('Bluesky requires PKCE.');
         }
+
+        // Generate a new secret key for DPoP when starting a new authentication.
+        session()->put(DPoP::SESSION_KEY, DPoP::generate());
 
         $this->updateServiceWithHint();
 

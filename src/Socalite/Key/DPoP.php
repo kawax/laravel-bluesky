@@ -28,7 +28,7 @@ final class DPoP
 
     public static function load(): JsonWebKey
     {
-        return BlueskyKey::load(session(DPoP::SESSION_KEY, self::generate()))->toJWK();
+        return BlueskyKey::load(session()->remember(self::SESSION_KEY, fn () => self::generate()))->toJWK();
     }
 
     /**
