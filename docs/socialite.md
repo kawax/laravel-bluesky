@@ -187,6 +187,7 @@ dump($profile);
 ```
 
 ## OAuthSession values
+
 To see all the values in an OAuthSession, convert it to an array.
 You don't need to use all of them, as some values are not required for authentication.
 
@@ -200,6 +201,7 @@ dump($session->toArray());
 ```
 
 ## Minimal OAuthSession
+
 If you have an account created with `bsky.social`, you can refresh the OAuthSession with just the `refresh_token`. `iss` will automatically be set to `bsky.social`.
 
 ```php
@@ -290,7 +292,7 @@ OAuthSession value may be null or empty.
 
 ## Unauthenticated
 
-If the `OAuthSession` is null or does not contain a refresh_token, an `Unauthenticated` exception will be raised and you will be redirected to the `login` route, just like in normal Laravel behavior.
+If the `OAuthSession` is null or does not contain a refresh_token, an `Unauthenticated` exception will be raised, and you will be redirected to the `login` route, just like in normal Laravel behavior.
 
 ```php
 use Revolution\Bluesky\Facades\Bluesky;
@@ -312,4 +314,39 @@ use Illuminate\Foundation\Configuration\Middleware;
 ->withMiddleware(function (Middleware $middleware) {
     $middleware->redirectGuestsTo('/bluesky/login');
 })
+```
+
+## WithBluesky trait
+
+Add `WithBluesky` to User, and implement the `tokenForBluesky()` method, you will get an authenticated Bluesky client via `$user->bluesky()`.
+
+```php
+namespace App\Models;
+
+use Illuminate\Foundation\Auth\User as Authenticatable;
+use Revolution\Bluesky\Session\OAuthSession;
+use Revolution\Bluesky\Traits\WithBluesky;
+
+class User extends Authenticatable
+{
+    use WithBluesky;
+
+    protected function tokenForBluesky(): OAuthSession
+    {
+        return OAuthSession::create([
+            'refresh_token' => $this->bluesky_refresh_token,
+            'iss' => $this->bluesky_iss,
+        ]);
+    }
+}
+```
+
+```php
+$profile = auth()->user()
+                 ->bluesky()
+                 ->refreshSession()
+                 ->profile()
+                 ->json();
+
+dump($profile);
 ```

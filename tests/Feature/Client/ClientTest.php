@@ -17,6 +17,7 @@ use Revolution\Bluesky\Session\LegacySession;
 use Revolution\Bluesky\Session\OAuthSession;
 use Revolution\Bluesky\Support\DNS;
 use Revolution\Bluesky\Support\Identity;
+use Revolution\Bluesky\Traits\WithBluesky;
 use Tests\TestCase;
 
 class ClientTest extends TestCase
@@ -351,5 +352,36 @@ class ClientTest extends TestCase
 
         $this->assertInstanceOf(OAuthAgent::class, $client->agent());
         $this->assertSame('did:plc:test', $client->agent()->did());
+    }
+
+    public function test_public_endpoint()
+    {
+        Http::fake();
+
+        Bluesky::profile();
+
+        Http::assertSentCount(1);
+    }
+
+    public function test_refresh_session()
+    {
+        $this->assertInstanceOf(BlueskyClient::class, Bluesky::refreshSession());
+    }
+
+    public function test_with_bluesky_trait()
+    {
+        $user = new class {
+            use WithBluesky;
+
+            protected function tokenForBluesky(): OAuthSession
+            {
+                return OAuthSession::create([
+                    'refresh_token' => 'test',
+                    'iss' => 'https://iss',
+                ]);
+            }
+        };
+
+        $this->assertInstanceOf(BlueskyClient::class, $user->bluesky());
     }
 }
