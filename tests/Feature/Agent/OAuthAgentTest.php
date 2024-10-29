@@ -130,10 +130,10 @@ class OAuthAgentTest extends TestCase
         $agent = new OAuthAgent($session);
         $agent->refreshSession();
 
-        $this->assertSame('access_token', $agent->token());
-        $this->assertSame('refresh_token', $agent->session('refresh_token'));
-        $this->assertSame('handle', $agent->handle());
-        $this->assertSame('https://iss', $agent->session('iss'));
+        $this->assertSame('access_token', $agent->session()->token());
+        $this->assertSame('refresh_token', $agent->session()->refresh());
+        $this->assertSame('handle', $agent->session()->handle());
+        $this->assertSame('https://iss', $agent->session()->issuer());
 
         Event::assertDispatched(OAuthSessionUpdated::class);
     }

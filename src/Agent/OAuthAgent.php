@@ -128,19 +128,14 @@ final class OAuthAgent implements Agent
         return empty($key) ? $this->session : $this->session->get($key, $default);
     }
 
-    public function did(): ?string
+    public function did(string $default = ''): string
     {
-        return $this->session->did();
+        return $this->session->did($default);
     }
 
-    public function handle(): ?string
+    public function token(string $default = ''): string
     {
-        return $this->session->handle();
-    }
-
-    public function token(): ?string
-    {
-        return $this->session->token();
+        return $this->session->token($default);
     }
 
     public function tokenExpired(): bool

@@ -6,19 +6,19 @@ namespace Revolution\Bluesky\Session;
 
 class LegacySession extends AbstractSession
 {
-    public function token(): ?string
+    public function token(string $default = ''): string
     {
-        return $this->get('accessJwt');
+        return $this->get('accessJwt', $default);
     }
 
-    public function refresh(): ?string
+    public function refresh(string $default = ''): string
     {
-        return $this->get('refreshJwt');
+        return $this->get('refreshJwt', $default);
     }
 
-    public function email(): ?string
+    public function email(string $default = ''): string
     {
-        return $this->get('email');
+        return $this->get('email', $default);
     }
 
     public function emailConfirmed(): bool

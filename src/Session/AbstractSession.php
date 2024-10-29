@@ -53,9 +53,9 @@ abstract class AbstractSession implements Arrayable
         return $this;
     }
 
-    public function did(): ?string
+    public function did(string $default = ''): string
     {
-        return $this->get('did');
+        return $this->get('did', $default);
     }
 
     public function didDoc(): DidDocument
@@ -63,9 +63,9 @@ abstract class AbstractSession implements Arrayable
         return DidDocument::create($this->get('didDoc', $this->session));
     }
 
-    public function handle(): ?string
+    public function handle(string $default = ''): string
     {
-        return $this->get('handle');
+        return $this->get('handle', $default);
     }
 
     public function collect(): Collection
