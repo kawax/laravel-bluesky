@@ -148,7 +148,7 @@ class SocialiteController extends Controller
         $session = $user->session;
 
         // Since $user has an OAuthSession, it is saved in Laravel's session.
-        $request->session()->put('bluesky_session', $session);
+        $request->session()->put('bluesky_session', $session->toArray());
 
         $loginUser = User::updateOrCreate([
             'bluesky_did' => $user->id, // Bluesky DID (did:plc:...)
@@ -176,8 +176,7 @@ When calling an API using a token, be sure to specify the OAuthSession using `wi
 use Revolution\Bluesky\Facades\Bluesky;
 use Revolution\Bluesky\Session\OAuthSession;
 
-/** @var OAuthSession $session */
-$session = session('bluesky_session');
+$session = OAuthSession::create(session('bluesky_session'));
 
 $profile = Bluesky::withToken($session)
                   ->profile()
@@ -195,8 +194,6 @@ You don't need to use all of them, as some values are not required for authentic
 use Revolution\Bluesky\Session\OAuthSession;
 
 /** @var OAuthSession $session */
-$session = session('bluesky_session');
-
 dump($session->toArray());
 ```
 
@@ -272,7 +269,7 @@ class OAuthSessionListener
      */
     public function handle(OAuthSessionUpdated $event): void
     {
-        session()->put('bluesky_session', $event->session);
+        session()->put('bluesky_session', $event->session->toArray());
 
         $user = User::updateOrCreate([
             'bluesky_did' => $event->session->did(), // Bluesky DID (did:plc:...)
@@ -298,10 +295,9 @@ If the `OAuthSession` is null or does not contain a refresh_token, an `Unauthent
 use Revolution\Bluesky\Facades\Bluesky;
 use Revolution\Bluesky\Session\OAuthSession;
 
-/** @var OAuthSession $session */
-$session = session('bluesky_session');
+$session = OAuthSession::create(['refresh_token' => null]);
 
-Bluesky::withToken(null);
+Bluesky::withToken($session);
 
 // redirect to "login" route
 ```
