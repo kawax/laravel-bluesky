@@ -31,8 +31,7 @@ Specify the `OAuthSession` containing the token obtained from Socialite.
 use Revolution\Bluesky\Facades\Bluesky;
 use Revolution\Bluesky\Session\OAuthSession;
 
-/** @var OAuthSession $session */
-$session = session('bluesky_session');
+$session = OAuthSession::create(session('bluesky_session'));
 
 $profile = Bluesky::withToken($session)->profile()->json();
 ```
