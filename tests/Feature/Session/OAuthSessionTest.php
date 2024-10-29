@@ -18,6 +18,8 @@ class OAuthSessionTest extends TestCase
             'test' => '',
         ])->except('test');
 
+        $session = OAuthSession::create($session);
+
         $this->assertSame('test', $session->did());
         $this->assertSame('name', $session->displayName());
         $this->assertSame('https://', $session->avatar());
