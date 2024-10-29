@@ -12,12 +12,12 @@ abstract class AbstractSession implements Arrayable
 {
     protected Collection $session;
 
-    public function __construct(array|Collection|null $session = null)
+    public function __construct(array|Collection|AbstractSession|null $session = null)
     {
-        $this->session = Collection::wrap($session);
+        $this->session = $session instanceof AbstractSession ? $session->collect() : Collection::wrap($session);
     }
 
-    public static function create(array|Collection|null $session = null): static
+    public static function create(array|Collection|AbstractSession|null $session = null): static
     {
         return new static($session);
     }
