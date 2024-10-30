@@ -5,18 +5,16 @@ declare(strict_types=1);
 namespace Revolution\Bluesky\Session;
 
 use Illuminate\Support\Carbon;
+use Revolution\Bluesky\Support\Identity;
 
 class OAuthSession extends AbstractSession
 {
     public function did(string $default = ''): string
     {
-        $did = $this->session->only(['did', 'sub', 'id'])->first();
-
-        if (! empty($did)) {
-            return (string) $did;
-        }
-
-        return $this->get('didDoc.id', $this->get('profile.did', $default));
+        return (string) $this->session
+            ->dot()
+            ->only(['did', 'sub', 'id', 'didDoc.id', 'profile.did'])
+            ->first(fn ($did) => Identity::isDID($did), $default);
     }
 
     public function handle(string $default = ''): string
