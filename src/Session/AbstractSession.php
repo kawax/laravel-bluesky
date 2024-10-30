@@ -6,10 +6,17 @@ namespace Revolution\Bluesky\Session;
 
 use Illuminate\Contracts\Support\Arrayable;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Traits\Conditionable;
+use Illuminate\Support\Traits\Macroable;
+use Illuminate\Support\Traits\Tappable;
 use Revolution\Bluesky\Support\DidDocument;
 
 abstract class AbstractSession implements Arrayable
 {
+    use Tappable;
+    use Macroable;
+    use Conditionable;
+
     protected Collection $session;
 
     public function __construct(array|Collection|AbstractSession|null $session = null)
