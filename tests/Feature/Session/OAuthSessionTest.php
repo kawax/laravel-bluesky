@@ -11,16 +11,19 @@ class OAuthSessionTest extends TestCase
     public function test_oauth_session()
     {
         $session = OAuthSession::create([
-            'did' => 'test',
-            'displayName' => 'name',
-            'avatar' => 'https://',
+            'did' => 'did:plc:test',
+            'profile' => [
+                'did' => 'did:plc:profile',
+                'displayName' => 'name',
+                'avatar' => 'https://',
+            ],
 
             'test' => '',
         ])->except('test');
 
         $session = OAuthSession::create($session);
 
-        $this->assertSame('test', $session->did());
+        $this->assertSame('did:plc:test', $session->did());
         $this->assertSame('name', $session->displayName());
         $this->assertSame('https://', $session->avatar());
         $this->assertFalse($session->has('test'));
