@@ -26,4 +26,25 @@ class OAuthSessionTest extends TestCase
         $this->assertFalse($session->has('test'));
         $this->assertInstanceOf(Collection::class, $session->collect());
     }
+
+    public function test_merge()
+    {
+        $session = OAuthSession::create([
+            'did' => 'test',
+        ])->merge(['test' => 'test']);
+
+        $this->assertSame('test', $session->get('test'));
+        $this->assertTrue($session->has('test'));
+    }
+
+    public function test_forget()
+    {
+        $session = OAuthSession::create([
+            'did' => 'test',
+            'test' => 'test',
+        ])->forget('test');
+
+        $this->assertSame(null, $session->get('test'));
+        $this->assertFalse($session->has('test'));
+    }
 }

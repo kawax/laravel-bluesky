@@ -84,6 +84,10 @@ final class OAuthAgent implements Agent
             throw new InvalidArgumentException('Missing refresh token.');
         }
 
+        // Since refresh_token can only be used once, delete it here.
+        $this->session->forget('refresh_token');
+        OAuthSessionUpdated::dispatch($this->session);
+
         /** @var Token $token */
         $token = Socialite::driver('bluesky')
             ->issuer($this->session()->issuer(default: AtProto::Entryway->value))

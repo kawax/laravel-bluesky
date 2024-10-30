@@ -36,7 +36,14 @@ abstract class AbstractSession implements Arrayable
 
     public function put(string $key, $value): static
     {
-        $this->session = $this->session->put($key, $value);
+        $this->session->put($key, $value);
+
+        return $this;
+    }
+
+    public function forget($keys): static
+    {
+        $this->session->forget($keys);
 
         return $this;
     }
