@@ -85,6 +85,8 @@ final class OAuthAgent implements Agent
         }
 
         // Since refresh_token can only be used once, delete it here.
+        // If an error occurs while refreshing the token, you will
+        // need to re-authenticate and re-obtain the token.
         $this->session->forget('refresh_token');
         OAuthSessionUpdated::dispatch($this->session);
 
@@ -93,6 +95,7 @@ final class OAuthAgent implements Agent
             ->issuer($this->session()->issuer(default: AtProto::Entryway->value))
             ->refreshToken($refresh);
 
+        // If the refresh is successful, you can get a new refresh_token here.
         $this->session = Socialite::driver('bluesky')->getOAuthSession();
         $this->session->put('access_token', $token->token);
         $this->session->put('refresh_token', $token->refreshToken);
