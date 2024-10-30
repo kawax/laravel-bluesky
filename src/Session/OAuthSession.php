@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Revolution\Bluesky\Session;
 
 use Illuminate\Support\Carbon;
+use Illuminate\Support\Str;
 use Revolution\Bluesky\Support\Identity;
 
 class OAuthSession extends AbstractSession
@@ -24,13 +25,10 @@ class OAuthSession extends AbstractSession
 
     public function issuer(string $default = ''): string
     {
-        $iss = $this->session->only(['iss', 'issuer'])->first();
-
-        if (! empty($iss)) {
-            return (string) $iss;
-        }
-
-        return $this->get('pds.authorization_servers.{first}', $default);
+        return (string) $this->session
+            ->dot()
+            ->only(['iss', 'issuer', 'pds.authorization_servers.0'])
+            ->first(fn ($iss) => Str::startsWith($iss, 'https://'), $default);
     }
 
     public function displayName(string $default = ''): string
