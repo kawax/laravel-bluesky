@@ -115,7 +115,7 @@ final class OAuthAgent implements Agent
         }
 
         $this->session->put('didDoc', Bluesky::identity()->resolveDID($did)->json());
-        $this->session->put('profile', Bluesky::withAgent($this)->profile($did)->json());
+        $this->session->put('profile', Bluesky::withToken($this->session)->profile($did)->json());
 
         if (! $this->session->has('iss') && ! empty($pds_url = $this->pdsUrl())) {
             $pds = Bluesky::pds()->resource($pds_url);
