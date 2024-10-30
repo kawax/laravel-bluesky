@@ -72,6 +72,11 @@ final class LegacyAgent implements Agent
         return $this->session->token($default);
     }
 
+    public function refresh(string $default = ''): string
+    {
+        return $this->session->refresh($default);
+    }
+
     public function pdsUrl(?string $default = null): ?string
     {
         $didDoc = $this->session('didDoc');

@@ -145,6 +145,11 @@ final class OAuthAgent implements Agent
         return $this->session->token($default);
     }
 
+    public function refresh(string $default = ''): string
+    {
+        return $this->session->refresh($default);
+    }
+
     public function tokenExpired(): bool
     {
         return $this->session()->tokenExpired();

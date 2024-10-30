@@ -178,7 +178,7 @@ class BlueskyClient implements Factory
 
     public function refreshSession(): self
     {
-        $this->agent()?->refreshSession();
+        $this->agent = $this->agent()?->refreshSession();
 
         return $this;
     }
@@ -212,7 +212,7 @@ class BlueskyClient implements Factory
 
     public function check(): bool
     {
-        return ! empty($this->agent()?->token());
+        return ! empty($this->agent()?->refresh());
     }
 
     public function logout(): self
