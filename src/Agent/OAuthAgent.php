@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Revolution\Bluesky\Agent;
 
 use Illuminate\Http\Client\PendingRequest;
-use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Traits\Conditionable;
 use Illuminate\Support\Traits\Macroable;
