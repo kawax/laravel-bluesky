@@ -147,17 +147,7 @@ final class OAuthAgent implements Agent
 
     public function tokenExpired(): bool
     {
-        $token_created_at = $this->session('token_created_at');
-        $expires_in = $this->session('expires_in');
-
-        if (empty($token_created_at) || empty($expires_in)) {
-            return true;
-        }
-
-        $date = Carbon::parse($token_created_at, 'UTC')
-            ->addSeconds($expires_in);
-
-        return $date->lessThan(now());
+        return $this->session()->tokenExpired();
     }
 
     public function pdsUrl(?string $default = null): ?string

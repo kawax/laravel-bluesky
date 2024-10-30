@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Revolution\Bluesky\Session;
 
+use Illuminate\Support\Carbon;
+
 class OAuthSession extends AbstractSession
 {
     public function did(string $default = ''): string
@@ -51,5 +53,20 @@ class OAuthSession extends AbstractSession
     public function refresh(string $default = ''): string
     {
         return $this->get('refresh_token', $default);
+    }
+
+    public function tokenExpired(): bool
+    {
+        $token_created_at = $this->get('token_created_at');
+        $expires_in = $this->get('expires_in');
+
+        if (empty($token_created_at) || empty($expires_in)) {
+            return true;
+        }
+
+        $date = Carbon::parse($token_created_at, 'UTC')
+            ->addSeconds($expires_in);
+
+        return $date->lessThan(now());
     }
 }
