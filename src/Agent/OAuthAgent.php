@@ -48,7 +48,8 @@ final class OAuthAgent implements Agent
 
         return Http::baseUrl($this->baseUrl($auth))
             ->withToken($this->token(), 'DPoP')
-            ->withRequestMiddleware($this->apiRequestMiddleware(...))->withResponseMiddleware($this->apiResponseMiddleware(...))
+            ->withRequestMiddleware($this->apiRequestMiddleware(...))
+            ->withResponseMiddleware($this->apiResponseMiddleware(...))
             ->retry(times: 2, throw: false);
     }
 
