@@ -12,7 +12,7 @@ use Illuminate\Support\Facades\Notification;
 use Mockery;
 use Revolution\Bluesky\Embed\External;
 use Revolution\Bluesky\Embed\Images;
-use Revolution\Bluesky\Enums\AtProto;
+use Revolution\Bluesky\Enums\Bsky;
 use Revolution\Bluesky\Facades\Bluesky;
 use Revolution\Bluesky\Notifications\BlueskyChannel;
 use Revolution\Bluesky\Notifications\BlueskyMessage;
@@ -139,7 +139,7 @@ class NotificationTest extends TestCase
         $this->assertIsArray($m->toArray()['embed']);
         $this->assertSame('test', $m->toArray()['embed']['external']['title']);
         $this->assertSame('http://', $m->toArray()['embed']['external']['uri']);
-        $this->assertSame(AtProto::External->value, $m->toArray()['embed']['$type']);
+        $this->assertSame(Bsky::External->value, $m->toArray()['embed']['$type']);
     }
 
     public function test_message_embed_images()
@@ -155,7 +155,7 @@ class NotificationTest extends TestCase
         $this->assertSame('alt', $m->toArray()['embed']['images'][0]['alt']);
         $this->assertSame('alt2', $m->toArray()['embed']['images'][1]['alt']);
         $this->assertSame(['blob2'], $m->toArray()['embed']['images'][1]['image']);
-        $this->assertSame(AtProto::Images->value, $m->toArray()['embed']['$type']);
+        $this->assertSame(Bsky::Images->value, $m->toArray()['embed']['$type']);
     }
 
     public function test_message_langs()

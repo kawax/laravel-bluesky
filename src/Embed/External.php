@@ -6,6 +6,7 @@ namespace Revolution\Bluesky\Embed;
 
 use Illuminate\Contracts\Support\Arrayable;
 use Revolution\Bluesky\Enums\AtProto;
+use Revolution\Bluesky\Enums\Bsky;
 
 final readonly class External implements Arrayable
 {
@@ -25,7 +26,7 @@ final readonly class External implements Arrayable
     public function toArray(): array
     {
         return [
-            '$type' => AtProto::External->value,
+            '$type' => Bsky::External->value,
             'external' => collect([
                 'uri' => $this->uri,
                 'title' => $this->title,

@@ -14,7 +14,7 @@ use Laravel\Socialite\Two\Token;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
 use Revolution\Bluesky\Contracts\Agent;
-use Revolution\Bluesky\Enums\AtProto;
+use Revolution\Bluesky\Enums\Bsky;
 use Revolution\Bluesky\Events\OAuthSessionUpdated;
 use Revolution\Bluesky\Facades\Bluesky;
 use Revolution\Bluesky\Session\OAuthSession;
@@ -92,7 +92,7 @@ final class OAuthAgent implements Agent
 
         /** @var Token $token */
         $token = Socialite::driver('bluesky')
-            ->issuer($this->session()->issuer(default: AtProto::Entryway->value))
+            ->issuer($this->session()->issuer(default: Bsky::Entryway->value))
             ->refreshToken($refresh);
 
         // If the refresh is successful, you can get a new refresh_token here.
@@ -169,7 +169,7 @@ final class OAuthAgent implements Agent
                 logger()->warning('If you get an error on the public endpoint, please authenticate.');
             }
 
-            $base = AtProto::PublicEndpoint->value;
+            $base = Bsky::PublicEndpoint->value;
         } else {
             $base .= '/xrpc/';
         }

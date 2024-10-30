@@ -18,6 +18,7 @@ use Revolution\Bluesky\Agent\OAuthAgent;
 use Revolution\Bluesky\Contracts\Agent;
 use Revolution\Bluesky\Contracts\Factory;
 use Revolution\Bluesky\Enums\AtProto;
+use Revolution\Bluesky\Enums\Bsky;
 use Revolution\Bluesky\Notifications\BlueskyMessage;
 use Revolution\Bluesky\Session\LegacySession;
 use Revolution\Bluesky\Session\OAuthSession;
@@ -79,7 +80,7 @@ class BlueskyClient implements Factory
     public function http(bool $auth = true): PendingRequest
     {
         if (! $this->check()) {
-            return Http::baseUrl(AtProto::PublicEndpoint->value);
+            return Http::baseUrl(Bsky::PublicEndpoint->value);
         }
 
         return $this->agent()->http($auth);
@@ -93,7 +94,7 @@ class BlueskyClient implements Factory
     public function profile(?string $actor = null): Response
     {
         return $this->http()
-            ->get(AtProto::getProfile->value, [
+            ->get(Bsky::getProfile->value, [
                 'actor' => $actor ?? $this->agent()?->did() ?? '',
             ]);
     }
@@ -108,7 +109,7 @@ class BlueskyClient implements Factory
     public function feed(?string $actor = null, int $limit = 50, string $cursor = '', string $filter = 'posts_with_replies'): Response
     {
         return $this->http()
-            ->get(AtProto::getAuthorFeed->value, [
+            ->get(Bsky::getAuthorFeed->value, [
                 'actor' => $actor ?? $this->agent()?->did() ?? '',
                 'limit' => $limit,
                 'cursor' => $cursor,
@@ -124,7 +125,7 @@ class BlueskyClient implements Factory
     public function timeline(int $limit = 50, string $cursor = ''): Response
     {
         return $this->http()
-            ->get(AtProto::getTimeline->value, [
+            ->get(Bsky::getTimeline->value, [
                 'limit' => $limit,
                 'cursor' => $cursor,
             ]);
@@ -224,6 +225,6 @@ class BlueskyClient implements Factory
 
     public function entryway(): string
     {
-        return 'https://'.AtProto::Entryway->value;
+        return 'https://'.Bsky::Entryway->value;
     }
 }

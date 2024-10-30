@@ -11,6 +11,7 @@ use Illuminate\Support\Traits\Conditionable;
 use Illuminate\Support\Traits\Macroable;
 use Revolution\Bluesky\Contracts\Agent;
 use Revolution\Bluesky\Enums\AtProto;
+use Revolution\Bluesky\Enums\Bsky;
 use Revolution\Bluesky\Session\LegacySession;
 use Revolution\Bluesky\Support\DidDocument;
 
@@ -93,9 +94,9 @@ final class LegacyAgent implements Agent
         }
 
         if ($auth) {
-            return 'https://'.AtProto::Entryway->value.'/xrpc/';
+            return 'https://'.Bsky::Entryway->value.'/xrpc/';
         } else {
-            return AtProto::PublicEndpoint->value;
+            return Bsky::PublicEndpoint->value;
         }
     }
 }
