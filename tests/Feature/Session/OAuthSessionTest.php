@@ -47,4 +47,12 @@ class OAuthSessionTest extends TestCase
         $this->assertSame(null, $session->get('test'));
         $this->assertFalse($session->has('test'));
     }
+
+    public function test_put()
+    {
+        $session = OAuthSession::create()->put('test', 'test');
+
+        $this->assertSame('test', $session->get('test'));
+        $this->assertTrue($session->has('test'));
+    }
 }
