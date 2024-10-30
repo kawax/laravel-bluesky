@@ -199,12 +199,12 @@ class NotificationTest extends TestCase
     {
         $session = OAuthSession::create([
             'refresh_token' => 'refresh_token',
-            'iss' => 'iss',
+            'iss' => 'https://iss',
         ]);
 
         $route = new BlueskyRoute(oauth: $session);
 
-        $this->assertSame('iss', $route->oauth->issuer());
+        $this->assertSame('https://iss', $route->oauth->issuer());
     }
 
     public function test_user_notify_oauth()
