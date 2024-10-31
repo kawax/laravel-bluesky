@@ -33,7 +33,7 @@ use Revolution\Bluesky\Session\OAuthSession;
 
 $session = OAuthSession::create(session('bluesky_session'));
 
-$profile = Bluesky::withToken($session)->profile()->json();
+$timeline = Bluesky::withToken($session)->timeline()->json();
 ```
 
 The following document uses App password as an example, but it is almost the same for OAuth.

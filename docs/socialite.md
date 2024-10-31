@@ -151,14 +151,14 @@ class SocialiteController extends Controller
         $request->session()->put('bluesky_session', $session->toArray());
 
         $loginUser = User::updateOrCreate([
-            'bluesky_did' => $user->id, // Bluesky DID (did:plc:...)
+            'did' => $session->did(), // Bluesky DID (did:plc:...)
         ], [
             'iss' => $session->issuer(), // Bluesky iss (https://bsky.social)
-            'handle' => $user->nickname, // Bluesky handle (alice.test)
-            'name' => $user->name, // Bluesky displayName (Alice)
-            'avatar' => $user->avatar,
-            'access_token' => $user->token,
-            'refresh_token' => $user->refreshToken,
+            'handle' => $session->handle(), // Bluesky handle (alice.test)
+            'name' => $session->displayName(), // Bluesky displayName (Alice)
+            'avatar' => $session->avatar(),
+            'access_token' => $session->token(),
+            'refresh_token' => $session->refresh(),
         ]);
 
         auth()->login($loginUser, true);
@@ -178,11 +178,11 @@ use Revolution\Bluesky\Session\OAuthSession;
 
 $session = OAuthSession::create(session('bluesky_session'));
 
-$profile = Bluesky::withToken($session)
-                  ->profile()
+$timeline = Bluesky::withToken($session)
+                  ->timeline()
                   ->json();
 
-dump($profile);
+dump($timeline);
 ```
 
 ## OAuthSession values
@@ -199,22 +199,23 @@ dump($session->toArray());
 
 ## Minimal OAuthSession
 
-If you have an account created with `bsky.social`, you can refresh the OAuthSession with just the `refresh_token`. `iss` will automatically be set to `bsky.social`.
+If you have an account created with `bsky.social`, you can refresh the OAuthSession with just the `refresh_token`. It would be better to include `did` as well. `iss` will automatically be set to `https://bsky.social`.
 
 ```php
 use Revolution\Bluesky\Facades\Bluesky;
 use Revolution\Bluesky\Session\OAuthSession;
 
 $session = OAuthSession::create([
+    'did' => $user->did,
     'refresh_token' => $user->refresh_token,
 ]);
 
-$profile = Bluesky::withToken($session)
-                  ->refreshSession()
-                  ->profile()
-                  ->json();
+$timeline = Bluesky::withToken($session)
+                   ->refreshSession()
+                   ->timeline()
+                   ->json();
 
-dump($profile);
+dump($timeline);
 ```
 
 If you created your account outside of `bsky.social`, please also specify `iss`.
@@ -224,16 +225,17 @@ use Revolution\Bluesky\Facades\Bluesky;
 use Revolution\Bluesky\Session\OAuthSession;
 
 $session = OAuthSession::create([
+    'did' => $user->did,
     'refresh_token' => $user->refresh_token,
     'iss' => $user->iss,
 ]);
 
-$profile = Bluesky::withToken($session)
-                  ->refreshSession()
-                  ->profile()
-                  ->json();
+$timeline = Bluesky::withToken($session)
+                   ->refreshSession()
+                   ->timeline()
+                   ->json();
 
-dump($profile);
+dump($timeline);
 ```
 
 Even if you want to use it in a Console or Job where Laravel sessions cannot be used, you can create an OAuthSession and call the API in this way.
@@ -269,10 +271,14 @@ class OAuthSessionListener
      */
     public function handle(OAuthSessionUpdated $event): void
     {
+        if(empty($event->session->did())) {
+            return;
+        }
+
         session()->put('bluesky_session', $event->session->toArray());
 
         $user = User::updateOrCreate([
-            'bluesky_did' => $event->session->did(), // Bluesky DID (did:plc:...)
+            'did' => $event->session->did(), // Bluesky DID (did:plc:...)
         ], [
             'iss' => $event->session->issuer(), // Bluesky iss (https://bsky.social)
             'handle' => $event->session->handle(), // Bluesky handle (alice.test)
@@ -287,6 +293,24 @@ class OAuthSessionListener
 
 OAuthSession value may be null or empty.
 
+## OAuthSessionRefreshing Event
+Similarly, when an OAuthSession refresh starts, the `OAuthSessionRefreshing` event is fired. During this event, `$event->session->refresh()` is empty. Since the refresh_token can only be used once, delete the refresh_token from the database here.
+
+```php
+    public function handle(OAuthSessionRefreshing $event): void
+    {
+        if(empty($event->session->did())) {
+            return;
+        }
+
+        $user = User::updateOrCreate([
+            'did' => $event->session->did(),
+        ], [
+            'refresh_token' => $event->session->refresh(),
+        ]);
+    }
+```
+
 ## Unauthenticated
 
 If the `OAuthSession` is null or does not contain a refresh_token, an `Unauthenticated` exception will be raised, and you will be redirected to the `login` route, just like in normal Laravel behavior.
@@ -297,7 +321,7 @@ use Revolution\Bluesky\Session\OAuthSession;
 
 $session = OAuthSession::create(['refresh_token' => null]);
 
-Bluesky::withToken($session);
+$timeline = Bluesky::withToken($session)->timeline()->json();
 
 // redirect to "login" route
 ```
@@ -330,6 +354,7 @@ class User extends Authenticatable
     protected function tokenForBluesky(): OAuthSession
     {
         return OAuthSession::create([
+            'did' => $this->bluesky_did,
             'refresh_token' => $this->bluesky_refresh_token,
             'iss' => $this->bluesky_iss,
         ]);

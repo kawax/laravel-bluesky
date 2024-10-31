@@ -44,6 +44,7 @@ Notification::route('bluesky', BlueskyRoute::to(identifier: config('bluesky.iden
 // OAuth
 $user = User::find(1);
 $session = OAuthSession::create([
+    'did' => $user->did,
     'iss' => $user->iss,
     'refresh_token' => $user->refresh_token,
 ]);
@@ -65,9 +66,10 @@ class User
     {
         // App password
         return BlueskyRoute::to(identifier: $this->bluesky_identifier, password: $this->bluesky_password);
-        
+
         // OAuth
         $session = OAuthSession::create([
+            'did' => $this->did,
             'iss' => $this->iss,
             'refresh_token' => $this->refresh_token,
         ]);
@@ -93,6 +95,7 @@ BlueskyRoute::to(identifier: 'identifier', password: 'password')
 
 // OAuth
 $session = OAuthSession::create([
+    'did' => '...',
     'iss' => '...',
     'refresh_token' => '...',
 ]);
