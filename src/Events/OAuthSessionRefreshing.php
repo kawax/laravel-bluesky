@@ -7,6 +7,9 @@ namespace Revolution\Bluesky\Events;
 use Illuminate\Foundation\Events\Dispatchable;
 use Revolution\Bluesky\Session\OAuthSession;
 
+/**
+ * When an OAuthSession refresh is starting. refresh_token is empty.
+ */
 class OAuthSessionRefreshing
 {
     use Dispatchable;
@@ -14,6 +17,6 @@ class OAuthSessionRefreshing
     public function __construct(
         public OAuthSession $session,
     ) {
-        // When an OAuthSession refresh is starting. refresh_token is empty.
+        //
     }
 }
