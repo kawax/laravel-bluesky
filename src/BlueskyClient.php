@@ -73,7 +73,7 @@ class BlueskyClient implements Factory
 
     public function http(bool $auth = true): PendingRequest
     {
-        if (! $this->check()) {
+        if (! $auth || ! $this->check()) {
             return Http::baseUrl(Bsky::PublicEndpoint->value);
         }
 
@@ -87,7 +87,7 @@ class BlueskyClient implements Factory
      */
     public function profile(?string $actor = null): Response
     {
-        return $this->http()
+        return $this->http(auth: false)
             ->get(Bsky::getProfile->value, [
                 'actor' => $actor ?? $this->agent()?->did() ?? '',
             ]);
