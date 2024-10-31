@@ -63,26 +63,7 @@ class OAuthAgentTest extends TestCase
 
     public function test_profile()
     {
-        Event::fake();
-
-        $session = OAuthSession::create([
-            'iss' => 'iss',
-            'access_token' => 'access_token',
-            'refresh_token' => 'refresh_token',
-            'token_created_at' => now()->toISOString(),
-            'expires_in' => 3600,
-        ]);
-
         Http::fakeSequence()
-            ->push(
-                body: [
-                    'error' => 'error',
-                ],
-                status: 401,
-                headers: [
-                    'DPoP-Nonce' => 'nonce',
-                ],
-            )
             ->push(
                 body: [
                     'did' => 'did',
@@ -93,18 +74,9 @@ class OAuthAgentTest extends TestCase
                 ],
             );
 
-        $response = Bluesky::withToken($session)
-            ->profile();
+        $response = Bluesky::profile();
 
-        $this->assertTrue($response->successful());
-        $this->assertSame('nonce', $response->header('DPoP-Nonce'));
-
-        Http::assertSent(function (Request $request) {
-            return $request->hasHeader('DPoP');
-        });
-
-        Event::assertDispatched(OAuthSessionUpdated::class);
-    }
+        $this->assertTrue($response->successful());}
 
     public function test_refresh_session()
     {
@@ -120,7 +92,7 @@ class OAuthAgentTest extends TestCase
         Bluesky::shouldReceive('identity->resolveDID->json')->andReturn([
             'service' => [['id' => '#atproto_pds', 'serviceEndpoint' => 'https://pds']],
         ]);
-        Bluesky::shouldReceive('withToken->profile->json')->once()->andReturn([
+        Bluesky::shouldReceive('profile->json')->once()->andReturn([
             'handle' => 'handle',
         ]);
         Bluesky::shouldReceive('pds->resource')->once()->andReturn(ProtectedResource::create([
