@@ -102,7 +102,7 @@ class BlueskyClient implements Factory
      */
     public function feed(?string $actor = null, int $limit = 50, string $cursor = '', string $filter = 'posts_with_replies'): Response
     {
-        return $this->http()
+        return $this->http(auth: false)
             ->get(Bsky::getAuthorFeed->value, [
                 'actor' => $actor ?? $this->agent()?->did() ?? '',
                 'limit' => $limit,
@@ -189,7 +189,7 @@ class BlueskyClient implements Factory
             throw new InvalidArgumentException("The handle '$handle' is not a valid handle.");
         }
 
-        return $this->http()
+        return $this->http(auth: false)
             ->get(AtProto::resolveHandle->value, [
                 'handle' => $handle,
             ]);
