@@ -4,6 +4,9 @@ declare(strict_types=1);
 
 namespace Revolution\Bluesky\Socalite\Concerns;
 
+use Illuminate\Auth\AuthenticationException;
+use Illuminate\Http\Client\ConnectionException;
+use Illuminate\Http\Client\RequestException;
 use Illuminate\Http\Client\Response;
 use Illuminate\Support\Facades\Http;
 use Psr\Http\Message\RequestInterface;
@@ -12,14 +15,26 @@ use Revolution\Bluesky\Socalite\Key\DPoP;
 
 trait WithTokenRequest
 {
+    /**
+     * @throws RequestException
+     * @throws ConnectionException
+     * @throws AuthenticationException
+     */
     protected function sendTokenRequest(string $token_url, array $payload): array
     {
-        return Http::retry(times: 2, throw: false)
+        $response = Http::retry(times: 2, throw: false)
             ->withRequestMiddleware($this->tokenRequestMiddleware(...))
             ->withResponseMiddleware($this->tokenResponseMiddleware(...))
-            ->throw()
-            ->post($token_url, $payload)
-            ->json();
+            ->post($token_url, $payload);
+
+        // refresh_token replayed error
+        if ($response->clientError()) {
+            throw new AuthenticationException();
+        }
+
+        $response->throwIf($response->serverError());
+
+        return $response->json();
     }
 
     protected function tokenRequestMiddleware(RequestInterface $request): RequestInterface
@@ -56,6 +71,9 @@ trait WithTokenRequest
      *
      * @param  string  $code
      * @return array
+     * @throws RequestException
+     * @throws ConnectionException
+     * @throws AuthenticationException
      */
     public function getAccessTokenResponse($code): array
     {
@@ -103,6 +121,9 @@ trait WithTokenRequest
      *
      * @param  string  $refreshToken
      * @return array
+     * @throws RequestException
+     * @throws ConnectionException
+     * @throws AuthenticationException
      */
     protected function getRefreshTokenResponse($refreshToken): array
     {

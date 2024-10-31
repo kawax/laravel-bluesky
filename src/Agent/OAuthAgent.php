@@ -6,6 +6,7 @@ namespace Revolution\Bluesky\Agent;
 
 use Illuminate\Auth\AuthenticationException;
 use Illuminate\Http\Client\PendingRequest;
+use Illuminate\Http\Client\RequestException;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Traits\Conditionable;
 use Illuminate\Support\Traits\Macroable;
@@ -16,6 +17,7 @@ use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
 use Revolution\Bluesky\Contracts\Agent;
 use Revolution\Bluesky\Enums\Bsky;
+use Revolution\Bluesky\Events\OAuthSessionRefreshing;
 use Revolution\Bluesky\Events\OAuthSessionUpdated;
 use Revolution\Bluesky\Facades\Bluesky;
 use Revolution\Bluesky\Session\OAuthSession;
@@ -91,11 +93,18 @@ final class OAuthAgent implements Agent
             throw new AuthenticationException();
         }
 
+        // Since refresh_token can only be used once, delete it here.
+        // If an error occurs while refreshing the token, you will
+        // need to re-authenticate and re-obtain refresh_token.
+        $this->session->forget('refresh_token');
+        OAuthSessionRefreshing::dispatch($this->session);
+
         /** @var Token $token */
         $token = Socialite::driver('bluesky')
             ->issuer($this->session()->issuer(default: Bsky::Entryway->value))
             ->refreshToken($refresh);
 
+        // When refresh is successful, new refresh_token here.
         $this->session = Socialite::driver('bluesky')->getOAuthSession();
         $this->session->put('access_token', $token->token);
         $this->session->put('refresh_token', $token->refreshToken);
