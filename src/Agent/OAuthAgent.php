@@ -6,11 +6,9 @@ namespace Revolution\Bluesky\Agent;
 
 use Illuminate\Auth\AuthenticationException;
 use Illuminate\Http\Client\PendingRequest;
-use Illuminate\Http\Client\RequestException;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Traits\Conditionable;
 use Illuminate\Support\Traits\Macroable;
-use InvalidArgumentException;
 use Laravel\Socialite\Facades\Socialite;
 use Laravel\Socialite\Two\Token;
 use Psr\Http\Message\RequestInterface;
