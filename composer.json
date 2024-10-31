@@ -4,7 +4,9 @@
   "keywords": [
     "laravel",
     "bluesky",
-    "atproto"
+    "atproto",
+    "socialite",
+    "notifications"
   ],
   "type": "library",
   "license": "MIT",
