@@ -2,6 +2,7 @@
 
 namespace Tests\Feature\Agent;
 
+use Illuminate\Auth\AuthenticationException;
 use Illuminate\Http\Client\PendingRequest;
 use Illuminate\Http\Client\Request;
 use Illuminate\Support\Facades\Event;
@@ -11,6 +12,7 @@ use Mockery as m;
 use Illuminate\Support\Facades\Http;
 use Revolution\Bluesky\Agent\OAuthAgent;
 use Revolution\Bluesky\Events\OAuthSessionUpdated;
+use Revolution\Bluesky\Events\RefreshTokenReplayed;
 use Revolution\Bluesky\Facades\Bluesky;
 use Revolution\Bluesky\Session\OAuthSession;
 use Revolution\Bluesky\Support\ProtectedResource;
@@ -76,7 +78,8 @@ class OAuthAgentTest extends TestCase
 
         $response = Bluesky::profile();
 
-        $this->assertTrue($response->successful());}
+        $this->assertTrue($response->successful());
+    }
 
     public function test_refresh_session()
     {
@@ -108,6 +111,28 @@ class OAuthAgentTest extends TestCase
         $this->assertSame('https://iss', $agent->session()->issuer());
 
         Event::assertDispatched(OAuthSessionUpdated::class);
+    }
+
+    public function test_refresh_session_replayed()
+    {
+        Event::fake();
+
+        $this->expectException(AuthenticationException::class);
+
+        $session = OAuthSession::create([
+            'refresh_token' => 'refresh_token',
+        ]);
+
+        Http::fake(Http::response([
+            'error' => 'invalid_grant',
+            'error_description' => 'refresh token replayed',
+        ], 400));
+
+        $agent = new OAuthAgent($session);
+        $agent->refreshSession();
+
+        Event::assertDispatched(RefreshTokenReplayed::class);
+        Event::assertNotDispatched(OAuthSessionUpdated::class);
     }
 
     public function test_token_expired()

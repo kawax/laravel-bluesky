@@ -11,6 +11,7 @@ use Illuminate\Http\Client\Response;
 use Illuminate\Support\Facades\Http;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
+use Revolution\Bluesky\Events\RefreshTokenReplayed;
 use Revolution\Bluesky\Socalite\Key\DPoP;
 
 trait WithTokenRequest
@@ -27,8 +28,20 @@ trait WithTokenRequest
             ->withResponseMiddleware($this->tokenResponseMiddleware(...))
             ->post($token_url, $payload);
 
-        // refresh_token replayed error
+        // "refresh token replayed" error
         if ($response->clientError()) {
+            $error = $response->json('error');
+            $error_description = $response->json('error_description');
+
+            if ($response->status() === 400 && $error === 'invalid_grant') {
+                RefreshTokenReplayed::dispatch(
+                    $error,
+                    $error_description,
+                    $this->getOAuthSession(),
+                    $response,
+                );
+            }
+
             throw new AuthenticationException();
         }
 
