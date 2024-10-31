@@ -34,15 +34,9 @@ class BlueskyClient implements Factory
 
     /**
      * OAuth authentication.
-     *
-     * @throws AuthenticationException
      */
     public function withToken(#[\SensitiveParameter] ?OAuthSession $token): self
     {
-        if (empty($token?->refresh())) {
-            throw new AuthenticationException();
-        }
-
         $this->agent = OAuthAgent::create($token);
 
         return $this;
