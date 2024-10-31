@@ -8,7 +8,7 @@ use Illuminate\Foundation\Events\Dispatchable;
 use Revolution\Bluesky\Session\OAuthSession;
 
 /**
- * When an OAuth2Session is refreshed.
+ * When an OAuth2Session is updated.
  */
 class OAuthSessionUpdated
 {
