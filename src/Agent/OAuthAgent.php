@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Revolution\Bluesky\Agent;
 
+use Illuminate\Auth\AuthenticationException;
 use Illuminate\Http\Client\PendingRequest;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Traits\Conditionable;
@@ -40,6 +41,9 @@ final class OAuthAgent implements Agent
         return new self($session);
     }
 
+    /**
+     * @throws AuthenticationException
+     */
     public function http(bool $auth = true): PendingRequest
     {
         if ($auth && $this->tokenExpired()) {
@@ -78,10 +82,13 @@ final class OAuthAgent implements Agent
         return $response;
     }
 
+    /**
+     * @throws AuthenticationException
+     */
     public function refreshSession(): self
     {
         if (empty($refresh = $this->session()->refresh())) {
-            throw new InvalidArgumentException('Missing refresh token.');
+            throw new AuthenticationException();
         }
 
         // Since refresh_token can only be used once, delete it here.
