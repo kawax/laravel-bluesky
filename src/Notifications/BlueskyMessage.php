@@ -152,6 +152,8 @@ final class BlueskyMessage implements Arrayable
      */
     public function toArray(): array
     {
-        return get_object_vars($this);
+        return collect(get_object_vars($this))
+            ->reject(fn ($item) => is_null($item))
+            ->toArray();
     }
 }
