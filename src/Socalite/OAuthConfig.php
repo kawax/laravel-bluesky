@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Revolution\Bluesky\Socalite;
 
 use Closure;
-use Illuminate\Support\Facades\Route;
 use Revolution\Bluesky\Socalite\Key\JsonWebKeySet;
 
 class OAuthConfig
@@ -25,16 +24,15 @@ class OAuthConfig
             return call_user_func(static::$metadataUsing);
         }
 
-        $redirect = Route::has('bluesky.oauth.redirect') ? route('bluesky.oauth.redirect') : url('bluesky/callback');
-
         return collect(config('bluesky.oauth.metadata'))
             ->merge(
                 [
                     'client_id' => route('bluesky.oauth.client-metadata'),
                     'jwks_uri' => route('bluesky.oauth.jwks'),
-                    'redirect_uris' => [$redirect],
+                    'redirect_uris' => [url(config('bluesky.socialite.redirect', 'http://127.0.0.1:8000/'))],
                 ],
-            )->reject(fn ($item) => is_null($item))->toArray();
+            )->reject(fn ($item) => is_null($item))
+            ->toArray();
     }
 
     public static function jwksUsing(?Closure $callback): void
