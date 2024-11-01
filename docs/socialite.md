@@ -32,6 +32,15 @@ Copy and paste into .env
 BLUESKY_OAUTH_PRIVATE_KEY="..."
 ```
 
+### config/services.php
+
+```php
+    'bluesky' => [
+        'client_id' => env('BLUESKY_CLIENT_ID', 'http://localhost'),
+        'redirect' => env('BLUESKY_REDIRECT', 'http://127.0.0.1:8000/'),
+    ],
+```
+
 ## Create callback route
 
 The recommended route name is `bluesky.oauth.redirect`.
