@@ -65,7 +65,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function (Request $request) {
-    if($request->has('iss')) {
+    if(app()->isLocal() && $request->has('iss')) {
         return to_route('bluesky.oauth.redirect', $request->query());
     }
 
