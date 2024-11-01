@@ -29,18 +29,6 @@ trait WithTokenRequest
             ->withResponseMiddleware($this->tokenResponseMiddleware(...))
             ->post($token_url, $payload);
 
-        // "refresh token replayed" error
-        if ($response->clientError()) {
-            if ($response->status() === 400 && $response->json('error') === 'invalid_grant') {
-                RefreshTokenReplayed::dispatch(
-                    $this->getOAuthSession(),
-                    $response,
-                );
-
-                throw new AuthenticationException();
-            }
-        }
-
         $response->throwIf($response->serverError());
 
         return $response->json();
@@ -59,18 +47,34 @@ trait WithTokenRequest
         return $request->withHeader('DPoP', $dpop_proof);
     }
 
+    /**
+     * @throws AuthenticationException
+     */
     protected function tokenResponseMiddleware(ResponseInterface $response): ResponseInterface
     {
+        $res = new Response($response);
+
+        // "refresh token replayed" error
+        if ($res->clientError()) {
+            if ($res->status() === 400 && $res->json('error') === 'invalid_grant') {
+                RefreshTokenReplayed::dispatch(
+                    $this->getOAuthSession(),
+                    $res,
+                );
+
+                throw new AuthenticationException();
+            }
+        }
+
         $dpop_nonce = (string) collect($response->getHeader('DPoP-Nonce'))->first();
 
         $this->getOAuthSession()->put(DPoP::AUTH_NONCE, $dpop_nonce);
 
-        $sub = (new Response($response))->json('sub');
+        $sub = $res->json('sub');
         if (filled($sub)) {
             $this->getOAuthSession()->put('sub', $sub);
+            $this->getOAuthSession()->put('token_created_at', now()->toISOString());
         }
-
-        $this->getOAuthSession()->put('token_created_at', now()->toISOString());
 
         DPoPNonceReceived::dispatch($dpop_nonce, $this->getOAuthSession());
 
