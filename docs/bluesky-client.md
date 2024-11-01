@@ -158,3 +158,42 @@ Bluesky::logout();
 dump(Bluesky::check());
 // false
 ```
+
+## Public API
+
+In fact, many of Bluesky's APIs can be used without authentication.
+
+```php
+use Revolution\Bluesky\Facades\Bluesky;
+
+$profile = Bluesky::profile(actor: 'did')->json();
+
+$feed = Bluesky::feed(actor: 'did')->json('feed');
+```
+
+## Macroable
+
+This package only has the minimum functionality of the notification and Socialite features that I use frequently, so if you want other features, please add them using macros.
+
+```php
+// AppServiceProvider
+
+use Revolution\Bluesky\Facades\Bluesky;
+
+    public function boot(): void
+    {
+        Bluesky::macro('searchPosts', function (string $q) {
+            /** @var BlueskyClient $this */
+            return $this->http(auth: false)
+                ->get('app.bsky.feed.searchPosts', [
+                    'q' => $q,
+                ]);
+        });
+    }
+```
+
+```php
+use Revolution\Bluesky\Facades\Bluesky;
+
+$posts = Bluesky::searchPosts('q')->json('posts');
+```
