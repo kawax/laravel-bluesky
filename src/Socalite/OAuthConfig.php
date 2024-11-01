@@ -29,7 +29,7 @@ class OAuthConfig
                 [
                     'client_id' => route('bluesky.oauth.client-metadata'),
                     'jwks_uri' => route('bluesky.oauth.jwks'),
-                    'redirect_uris' => [url(config('bluesky.socialite.redirect', 'http://127.0.0.1:8000/'))],
+                    'redirect_uris' => [url(config('bluesky.oauth.socialite.redirect', 'http://127.0.0.1:8000/'))],
                 ],
             )->reject(fn ($item) => is_null($item))
             ->toArray();
