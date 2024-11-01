@@ -24,14 +24,12 @@ trait WithTokenRequest
      */
     protected function sendTokenRequest(string $token_url, array $payload): array
     {
-        $response = Http::retry(times: 2, throw: false)
+        return Http::retry(times: 2, throw: false)
             ->withRequestMiddleware($this->tokenRequestMiddleware(...))
             ->withResponseMiddleware($this->tokenResponseMiddleware(...))
-            ->post($token_url, $payload);
-
-        $response->throwIf($response->serverError());
-
-        return $response->json();
+            ->post($token_url, $payload)
+            ->throwIf(fn (Response $response) => $response->serverError())
+            ->json();
     }
 
     protected function tokenRequestMiddleware(RequestInterface $request): RequestInterface
@@ -66,7 +64,7 @@ trait WithTokenRequest
             }
         }
 
-        $dpop_nonce = (string) collect($response->getHeader('DPoP-Nonce'))->first();
+        $dpop_nonce = $res->header('DPoP-Nonce');
 
         $this->getOAuthSession()->put(DPoP::AUTH_NONCE, $dpop_nonce);
 
