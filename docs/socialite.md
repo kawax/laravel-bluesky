@@ -32,18 +32,7 @@ Copy and paste into .env
 BLUESKY_OAUTH_PRIVATE_KEY="..."
 ```
 
-### config/services.php
-
-```php
-    'bluesky' => [
-        'client_id' => env('BLUESKY_CLIENT_ID', 'http://localhost'),
-        'redirect' => env('BLUESKY_REDIRECT', 'http://127.0.0.1:8000/'),
-    ],
-```
-
 ## Create callback route
-
-The recommended route name is `bluesky.oauth.redirect`.
 
 ```php
 // routes/web.php
@@ -55,9 +44,46 @@ Route::get('bluesky/callback', [SocialiteController::class, 'callback'])
      ->name('bluesky.oauth.redirect');
 ```
 
-### Customize route name
+## client_id and redirect
 
-If you want to use a different route name, you will need to customize it using `OAuthConfig`.
+Bluesky uses `client-metadata.json` URL as client_id.
+
+When developing locally, you can check the operation on the real Bluesky server by setting client_id to `http://localhost` and redirect to `http://127.0.0.1:8000/`. Scope is only `atproto`, so what you can do is limited. Only basic login functions are available, and APIs that require authentication cannot be used.
+
+On the production server, specify `BLUESKY_CLIENT_ID` and `BLUESKY_REDIRECT` in .env.
+```
+BLUESKY_CLIENT_ID=/bluesky/oauth/client-metadata.json
+BLUESKY_REDIRECT=/bluesky/callback
+```
+
+### Callback route in dev
+
+During development, the returned URL is fixed to `http://127.0.0.1:8000/`, so it is a good idea to check the request and redirect it to the original URL.
+
+```php
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Route;
+
+Route::get('/', function (Request $request) {
+    if($request->has('iss')) {
+        return to_route('bluesky.oauth.redirect', $request->query());
+    }
+
+    //...
+});
+```
+
+## Customize client-metadata
+
+`bluesky.oauth.client-metadata` and `bluesky.oauth.jwks` routes are defined within the package, so you are free to
+modify them here as well. However, they usually do not need to be changed.
+
+You can also see these routes on localhost.
+
+- http://127.0.0.1:8000/bluesky/oauth/client-metadata.json
+- http://127.0.0.1:8000/bluesky/oauth/jwks.json
+
+`client-metadata` can be customized using `OAuthConfig`.
 
 ```php
 // AppServiceProvider
@@ -79,19 +105,12 @@ class AppServiceProvider extends ServiceProvider
                         'jwks_uri' => route('bluesky.oauth.jwks'),
                         'redirect_uris' => [url('bluesky/callback')],
                     ],
-                )->reject(fn ($item) => is_null($item))->toArray();
+                )->reject(fn ($item) => is_null($item))
+                ->toArray();
         });
     }
 }
 ```
-
-The `bluesky.oauth.client-metadata` and `bluesky.oauth.jwks` routes are defined within the package, so you are free to
-modify them here as well. However, they usually do not need to be changed.
-
-You can also see these routes on localhost.
-
-- http://localhost/bluesky/oauth/client-metadata.json
-- http://localhost/bluesky/oauth/jwks.json
 
 ## Usage
 
