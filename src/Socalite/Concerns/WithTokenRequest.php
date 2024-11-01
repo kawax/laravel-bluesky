@@ -31,19 +31,14 @@ trait WithTokenRequest
 
         // "refresh token replayed" error
         if ($response->clientError()) {
-            $error = $response->json('error');
-            $error_description = $response->json('error_description');
-
-            if ($response->status() === 400 && $error === 'invalid_grant') {
+            if ($response->status() === 400 && $response->json('error') === 'invalid_grant') {
                 RefreshTokenReplayed::dispatch(
-                    $error,
-                    $error_description,
                     $this->getOAuthSession(),
                     $response,
                 );
-            }
 
-            throw new AuthenticationException();
+                throw new AuthenticationException();
+            }
         }
 
         $response->throwIf($response->serverError());
@@ -143,6 +138,8 @@ trait WithTokenRequest
      */
     protected function getRefreshTokenResponse($refreshToken): array
     {
+        $this->getOAuthSession()->put('old_refresh_token', $refreshToken);
+
         $token_url = $this->getTokenUrl();
 
         $payload = [
