@@ -39,6 +39,11 @@ trait WithPAR
 
     protected function parRequestFields($state): array
     {
+        // Special exception for development only.
+        if ($this->clientId === 'http://localhost') {
+            $this->scopes = ['atproto'];
+        }
+
         return [
             'response_type' => 'code',
             'code_challenge' => $this->getCodeChallenge(),
