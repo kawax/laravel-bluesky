@@ -72,8 +72,6 @@ trait WithPAR
 
         $this->getOAuthSession()->put(DPoP::AUTH_NONCE, $dpop_nonce);
 
-        DPoPNonceReceived::dispatch($dpop_nonce, $this->getOAuthSession());
-
         return $response;
     }
 }
