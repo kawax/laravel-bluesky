@@ -43,8 +43,14 @@ class BlueskyServiceProvider extends ServiceProvider
         }
 
         Socialite::extend('bluesky', function ($app) {
+            if ($app->isProduction()) {
+                $client_id = route('bluesky.oauth.client-metadata');
+            } else {
+                $client_id = 'http://localhost';
+            }
+
             return Socialite::buildProvider(BlueskyProvider::class, [
-                'client_id' => url(config('bluesky.oauth.socialite.client_id', 'http://localhost')),
+                'client_id' => url(config('bluesky.oauth.socialite.client_id', $client_id)),
                 'client_secret' => '',
                 'redirect' => url(config('bluesky.oauth.socialite.redirect', 'http://127.0.0.1:8000/')),
             ]);
