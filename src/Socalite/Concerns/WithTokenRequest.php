@@ -55,7 +55,7 @@ trait WithTokenRequest
     {
         $dpop_nonce = $this->getOAuthSession()->get(DPoP::AUTH_NONCE, '');
 
-        $dpop_proof = DPop::authProof(
+        $dpop_proof = DPoP::authProof(
             jwk: DPoP::load(),
             url: (string) $request->getUri(),
             nonce: $dpop_nonce,
