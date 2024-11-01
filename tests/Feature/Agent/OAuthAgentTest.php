@@ -4,7 +4,6 @@ namespace Tests\Feature\Agent;
 
 use Illuminate\Auth\AuthenticationException;
 use Illuminate\Http\Client\PendingRequest;
-use Illuminate\Http\Client\Request;
 use Illuminate\Support\Facades\Event;
 use Laravel\Socialite\Facades\Socialite;
 use Laravel\Socialite\Two\Token;

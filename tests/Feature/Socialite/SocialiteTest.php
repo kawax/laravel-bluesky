@@ -3,9 +3,11 @@
 namespace Tests\Feature\Socialite;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Facades\Http;
 use Laravel\Socialite\Facades\Socialite;
 use Mockery as m;
+use Revolution\Bluesky\Events\DPoPNonceReceived;
 use Revolution\Bluesky\Facades\Bluesky;
 use Revolution\Bluesky\Session\OAuthSession;
 use Revolution\Bluesky\Socalite\BlueskyProvider;
@@ -205,6 +207,8 @@ class SocialiteTest extends TestCase
         $request = Request::create(uri: 'refresh');
         $request->setLaravelSession($session);
 
+        Event::fake();
+
         Http::fake([
             'localhost/.well-known/oauth-authorization-server' => Http::response([
                 'issuer' => 'https://iss',
@@ -233,6 +237,8 @@ class SocialiteTest extends TestCase
         $this->assertSame('access_token', $token->token);
         $this->assertSame('refresh_token', $token->refreshToken);
         $this->assertSame('refresh_token', $token->refreshToken);
+
+        Event::assertDispatched(DPoPNonceReceived::class);
     }
 
     public function test_jwk_private()

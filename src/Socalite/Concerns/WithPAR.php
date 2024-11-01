@@ -6,8 +6,10 @@ namespace Revolution\Bluesky\Socalite\Concerns;
 
 use Illuminate\Http\Client\Response;
 use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Str;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
+use Revolution\Bluesky\Events\DPoPNonceReceived;
 use Revolution\Bluesky\Socalite\Key\DPoP;
 
 /**
@@ -66,9 +68,11 @@ trait WithPAR
 
     protected function parResponseMiddleware(ResponseInterface $response): ResponseInterface
     {
-        $dpop_nonce = collect($response->getHeader('DPoP-Nonce'))->first();
+        $dpop_nonce = (string) collect($response->getHeader('DPoP-Nonce'))->first();
 
         $this->getOAuthSession()->put(DPoP::AUTH_NONCE, $dpop_nonce);
+
+        DPoPNonceReceived::dispatch($dpop_nonce, $this->getOAuthSession());
 
         return $response;
     }

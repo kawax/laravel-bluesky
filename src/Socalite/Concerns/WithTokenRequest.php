@@ -11,6 +11,7 @@ use Illuminate\Http\Client\Response;
 use Illuminate\Support\Facades\Http;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
+use Revolution\Bluesky\Events\DPoPNonceReceived;
 use Revolution\Bluesky\Events\RefreshTokenReplayed;
 use Revolution\Bluesky\Socalite\Key\DPoP;
 
@@ -65,16 +66,18 @@ trait WithTokenRequest
 
     protected function tokenResponseMiddleware(ResponseInterface $response): ResponseInterface
     {
-        $dpop_nonce = collect($response->getHeader('DPoP-Nonce'))->first();
+        $dpop_nonce = (string) collect($response->getHeader('DPoP-Nonce'))->first();
 
         $this->getOAuthSession()->put(DPoP::AUTH_NONCE, $dpop_nonce);
 
         $sub = (new Response($response))->json('sub');
-        if (! empty($sub)) {
+        if (filled($sub)) {
             $this->getOAuthSession()->put('sub', $sub);
         }
 
         $this->getOAuthSession()->put('token_created_at', now()->toISOString());
+
+        DPoPNonceReceived::dispatch($dpop_nonce, $this->getOAuthSession());
 
         return $response;
     }
