@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Revolution\Bluesky\Embed;
 
 use Illuminate\Contracts\Support\Arrayable;
-use Revolution\Bluesky\Enums\AtProto;
 use Revolution\Bluesky\Enums\Bsky;
 
 final readonly class External implements Arrayable

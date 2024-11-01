@@ -37,12 +37,10 @@ class BlueskyChannel
                 ->refreshSession()
                 ->post($message)
                 ->throw();
-
-            return;
+        } else {
+            Bluesky::login($route->identifier, $route->password)
+                ->post($message)
+                ->throw();
         }
-
-        Bluesky::login($route->identifier, $route->password)
-            ->post($message)
-            ->throw();
     }
 }
