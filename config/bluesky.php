@@ -32,8 +32,8 @@ return [
 
         // Socialite
         'socialite' => [
-            'client_id' => env('BLUESKY_CLIENT_ID', 'http://localhost'),
-            'redirect' => env('BLUESKY_REDIRECT', 'http://127.0.0.1:8000/'),
+            'client_id' => env('BLUESKY_CLIENT_ID'),
+            'redirect' => env('BLUESKY_REDIRECT'),
         ],
 
         // Private key(base64 encoded)
