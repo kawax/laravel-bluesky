@@ -30,6 +30,12 @@ return [
             'policy_uri' => env('BLUESKY_OAUTH_PRIVACY'),
         ],
 
+        // Socialite
+        'socialite' => [
+            'client_id' => env('BLUESKY_CLIENT_ID', 'http://localhost'),
+            'redirect' => env('BLUESKY_REDIRECT', 'http://127.0.0.1:8000/'),
+        ],
+
         // Private key(base64 encoded)
         'private_key' => env('BLUESKY_OAUTH_PRIVATE_KEY'),
 
