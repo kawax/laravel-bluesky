@@ -15,6 +15,7 @@ use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
 use Revolution\Bluesky\Contracts\Agent;
 use Revolution\Bluesky\Enums\Bsky;
+use Revolution\Bluesky\Events\DPoPNonceReceived;
 use Revolution\Bluesky\Events\OAuthSessionRefreshing;
 use Revolution\Bluesky\Events\OAuthSessionUpdated;
 use Revolution\Bluesky\Facades\Bluesky;
@@ -73,9 +74,11 @@ final class OAuthAgent implements Agent
 
     protected function apiResponseMiddleware(ResponseInterface $response): ResponseInterface
     {
-        $dpop_nonce = collect($response->getHeader('DPoP-Nonce'))->first();
+        $dpop_nonce = (string) collect($response->getHeader('DPoP-Nonce'))->first();
 
         $this->session->put(DPoP::API_NONCE, $dpop_nonce);
+
+        DPoPNonceReceived::dispatch($dpop_nonce, $this->session);
 
         OAuthSessionUpdated::dispatch($this->session);
 
