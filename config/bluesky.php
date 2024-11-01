@@ -31,10 +31,8 @@ return [
         ],
 
         // Socialite
-        'socialite' => [
-            'client_id' => env('BLUESKY_CLIENT_ID'),
-            'redirect' => env('BLUESKY_REDIRECT'),
-        ],
+        'client_id' => env('BLUESKY_CLIENT_ID'),
+        'redirect' => env('BLUESKY_REDIRECT'),
 
         // Private key(base64 encoded)
         'private_key' => env('BLUESKY_OAUTH_PRIVATE_KEY'),
