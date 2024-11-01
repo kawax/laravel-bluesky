@@ -46,7 +46,7 @@ class BlueskyServiceProvider extends ServiceProvider
             return Socialite::buildProvider(BlueskyProvider::class, [
                 'client_id' => url(config('bluesky.oauth.socialite.client_id', 'http://localhost')),
                 'client_secret' => '',
-                'redirect' => config('bluesky.oauth.socialite.redirect', 'http://127.0.0.1:8000/'),
+                'redirect' => url(config('bluesky.oauth.socialite.redirect', 'http://127.0.0.1:8000/')),
             ]);
         });
 
