@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Revolution\Bluesky;
 
-use Illuminate\Auth\AuthenticationException;
 use Illuminate\Container\Container;
 use Illuminate\Http\Client\ConnectionException;
 use Illuminate\Http\Client\PendingRequest;
