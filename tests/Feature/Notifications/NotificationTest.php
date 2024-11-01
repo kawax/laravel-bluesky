@@ -87,6 +87,9 @@ class NotificationTest extends TestCase
         $this->assertIsArray($m->toArray());
         $this->assertSame('test', $m->toArray()['text']);
         $this->assertSame('test', $m2->toArray()['text']);
+        $this->assertArrayNotHasKey('facets', $m->toArray());
+        $this->assertArrayNotHasKey('embed', $m->toArray());
+        $this->assertArrayNotHasKey('langs', $m->toArray());
     }
 
     public function test_message_facets()
