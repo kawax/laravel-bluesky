@@ -14,8 +14,6 @@ class RefreshTokenReplayed
     use Dispatchable;
 
     public function __construct(
-        public string $error,
-        public string $error_description,
         public OAuthSession $session,
         public Response $response,
     ) {
