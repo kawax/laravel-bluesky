@@ -52,7 +52,7 @@ class BlueskyServiceProvider extends ServiceProvider
             if ($app->isProduction() && Route::has('bluesky.oauth.redirect')) {
                 $redirect = route('bluesky.oauth.redirect');
             } else {
-                $redirect = 'http://localhost';
+                $redirect = 'http://127.0.0.1:8000/';
             }
 
             return Socialite::buildProvider(BlueskyProvider::class, [
