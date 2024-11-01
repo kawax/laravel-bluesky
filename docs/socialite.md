@@ -4,10 +4,6 @@ Bluesky's OAuth is more difficult than other providers. Please read the document
 
 https://docs.bsky.app/docs/advanced-guides/oauth-client
 
-## Notice
-
-Bluesky OAuth probably won't work on localhost, please deploy it to a public server and test it.
-
 ## Configuration
 
 ### Create new private key
@@ -34,6 +30,8 @@ BLUESKY_OAUTH_PRIVATE_KEY="..."
 
 ## Create callback route
 
+The recommended route name is `bluesky.oauth.redirect`.
+
 ```php
 // routes/web.php
 
@@ -46,17 +44,25 @@ Route::get('bluesky/callback', [SocialiteController::class, 'callback'])
 
 ## client_id and redirect
 
-Bluesky uses `client-metadata.json` URL as client_id.
+Bluesky uses `client-metadata.json` url as client_id.
 
 When developing locally, you can check the operation on the real Bluesky server by setting client_id to `http://localhost` and redirect to `http://127.0.0.1:8000/`. Scope is only `atproto`, so what you can do is limited. Only basic login functions are available, and APIs that require authentication cannot be used.
 
-On the production server, specify `BLUESKY_CLIENT_ID` and `BLUESKY_REDIRECT` in .env.
+### local
+By default, `http://localhost` and `http://127.0.0.1:8000/` are set, so there is no need to configure it in .env.
+
 ```
-BLUESKY_CLIENT_ID=/bluesky/oauth/client-metadata.json
-BLUESKY_REDIRECT=/bluesky/callback
+BLUESKY_CLIENT_ID=
+BLUESKY_REDIRECT=
 ```
 
-### Callback route in dev
+If you are using a different port, configure it.
+```
+BLUESKY_CLIENT_ID=
+BLUESKY_REDIRECT=http://127.0.0.1:8080/
+```
+
+### Callback route in local
 
 During development, the returned URL is fixed to `http://127.0.0.1:8000/`, so it is a good idea to check the request and redirect it to the original URL.
 
@@ -71,6 +77,16 @@ Route::get('/', function (Request $request) {
 
     //...
 });
+```
+
+### production
+
+If the route name `bluesky.oauth.redirect` exists, there is no need to configure it in .env.
+
+If you have changed the default route `bluesky.oauth.redirect`, set it in .env along with the client-metadata below.
+
+```
+BLUESKY_REDIRECT=/bluesky/callback
 ```
 
 ## Customize client-metadata
