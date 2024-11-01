@@ -53,15 +53,13 @@ trait WithTokenRequest
         $res = new Response($response);
 
         // "refresh token replayed" error
-        if ($res->clientError()) {
-            if ($res->status() === 400 && $res->json('error') === 'invalid_grant') {
-                RefreshTokenReplayed::dispatch(
-                    $this->getOAuthSession(),
-                    $res,
-                );
+        if ($res->status() === 400 && $res->json('error') === 'invalid_grant') {
+            RefreshTokenReplayed::dispatch(
+                $this->getOAuthSession(),
+                $res,
+            );
 
-                throw new AuthenticationException();
-            }
+            throw new AuthenticationException();
         }
 
         $dpop_nonce = $res->header('DPoP-Nonce');
