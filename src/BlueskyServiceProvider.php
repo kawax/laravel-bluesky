@@ -62,7 +62,7 @@ class BlueskyServiceProvider extends ServiceProvider
             ]);
         });
 
-        Route::prefix(config('bluesky.oauth.prefix', '/bluesky/oauth/'))
+        Route::prefix(config('bluesky.oauth.prefix') ?? '/bluesky/oauth/')
             ->group(function () {
                 Route::get('client-metadata.json', [OAuthMetaController::class, 'clientMetadata'])
                     ->name('bluesky.oauth.client-metadata');
