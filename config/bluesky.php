@@ -1,6 +1,15 @@
 <?php
 
 return [
+    // service / PDS url
+    'service' => env('BLUESKY_SERVICE', 'https://bsky.social'),
+
+    // PLC
+    'plc' => env('BLUESKY_PLC', 'https://plc.directory'),
+
+    // Public endpoint
+    'public_endpoint' => env('BLUESKY_PUBLIC_ENDPOINT', 'https://public.api.bsky.app'),
+
     // App password
     'identifier' => env('BLUESKY_IDENTIFIER'),
     'password' => env('BLUESKY_APP_PASSWORD'),
