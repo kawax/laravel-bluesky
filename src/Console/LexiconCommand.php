@@ -76,7 +76,7 @@ class LexiconCommand extends Command
     protected function action(string $path, string $name): void
     {
         $enum = collect($this->files)
-            ->filter(fn (string $file) => Str::contains($file, $path))
+            ->filter(fn (string $file) => Str::contains($file, $path) && Str::doesntContain($file, '/com/atproto/sync/'))
             ->mapWithKeys(fn (string $file) => [Str::of($file)->basename()->chopEnd('.json')->toString() => $file])
             ->map(function (string $file) {
                 $json = File::json($file);
