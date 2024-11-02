@@ -184,11 +184,15 @@ use Revolution\Bluesky\Lexicon\Bsky;
     public function boot(): void
     {
         Bluesky::macro('searchPosts', function (string $q) {
-            /** @var BlueskyClient $this */
-            return $this->http(auth: false)
-                ->get(Bsky::searchPosts->value, [
-                    'q' => $q,
-                ]);
+            /** @var Bluesky $this */
+            return $this->send(
+                        api: Bsky::searchPosts, 
+                        method: 'get',
+                        auth: false, 
+                        params: [
+                            'q' => $q,
+                        ]
+                   );
         });
     }
 ```

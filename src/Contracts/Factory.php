@@ -6,6 +6,8 @@ namespace Revolution\Bluesky\Contracts;
 
 use Illuminate\Http\Client\PendingRequest;
 use Illuminate\Http\Client\Response;
+use Revolution\Bluesky\Lexicon\AtProto;
+use Revolution\Bluesky\Lexicon\Bsky;
 use Revolution\Bluesky\Notifications\BlueskyMessage;
 use Revolution\Bluesky\Session\LegacySession;
 use Revolution\Bluesky\Session\OAuthSession;
@@ -21,6 +23,8 @@ interface Factory
     public function withAgent(?Agent $agent): self;
 
     public function http(bool $auth = true): PendingRequest;
+
+    public function send(AtProto|Bsky|string $api, string $method = 'get', bool $auth = true, ?array $params = null): Response;
 
     public function resolveHandle(string $handle): Response;
 

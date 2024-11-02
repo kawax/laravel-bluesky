@@ -25,6 +25,8 @@ use Revolution\Bluesky\Session\OAuthSession;
 use Revolution\Bluesky\Support\Identity;
 use Revolution\Bluesky\Support\PDS;
 
+use function Illuminate\Support\enum_value;
+
 class BlueskyClient implements Factory
 {
     use Macroable;
@@ -81,67 +83,80 @@ class BlueskyClient implements Factory
     }
 
     /**
-     * @param  string|null  $actor  DID or handle.
+     * Send any API request.
      *
-     * @throws ConnectionException
+     * @param  AtProto|Bsky|string  $api  e.g. "app.bsky.actor.getProfile"
+     * @param  string  $method  get or post.
+     * @param  bool  $auth  Requires auth.
+     * @param  ?array  $params  get query or post data.
+     */
+    public function send(AtProto|Bsky|string $api, string $method = 'get', bool $auth = true, ?array $params = null): Response
+    {
+        return $this->http($auth)->$method(enum_value($api), $params);
+    }
+
+    /**
+     * @param  string|null  $actor  DID or handle.
      */
     public function profile(?string $actor = null): Response
     {
-        return $this->http(auth: false)
-            ->get(Bsky::getProfile->value, [
+        return $this->send(
+            api: Bsky::getProfile,
+            auth: false,
+            params: [
                 'actor' => $actor ?? $this->agent()?->did() ?? '',
-            ]);
+            ],
+        );
     }
 
     /**
      * getAuthorFeed.
      *
      * @param  string|null  $actor  DID or handle.
-     *
-     * @throws ConnectionException
      */
     public function feed(?string $actor = null, int $limit = 50, string $cursor = '', string $filter = 'posts_with_replies'): Response
     {
-        return $this->http(auth: false)
-            ->get(Bsky::getAuthorFeed->value, [
+        return $this->send(
+            api: Bsky::getAuthorFeed,
+            auth: false,
+            params: [
                 'actor' => $actor ?? $this->agent()?->did() ?? '',
                 'limit' => $limit,
                 'cursor' => $cursor,
                 'filter' => $filter,
-            ]);
+            ],
+        );
     }
 
     /**
      * My timeline.
-     *
-     * @throws ConnectionException
      */
     public function timeline(int $limit = 50, string $cursor = ''): Response
     {
-        return $this->http()
-            ->get(Bsky::getTimeline->value, [
+        return $this->send(
+            api: Bsky::getTimeline,
+            params: [
                 'limit' => $limit,
                 'cursor' => $cursor,
-            ]);
+            ],
+        );
     }
 
-    /**
-     * @throws ConnectionException
-     */
     public function createRecord(string $repo, string $collection, array $record): Response
     {
-        return $this->http()
-            ->post(AtProto::createRecord->value, [
+        return $this->send(
+            api: AtProto::createRecord,
+            method: 'post',
+            params: [
                 'repo' => $repo,
                 'collection' => $collection,
                 'record' => $record,
-            ]);
+            ],
+        );
     }
 
     /**
      * Create new post.
-     *
-     * @throws ConnectionException
      */
     public function post(string|BlueskyMessage $text): Response
     {
@@ -180,8 +195,6 @@ class BlueskyClient implements Factory
 
     /**
      * @param  string  $handle  e.g. "alice.test"
-     *
-     * @throws ConnectionException
      */
     public function resolveHandle(string $handle): Response
     {
@@ -189,10 +202,13 @@ class BlueskyClient implements Factory
             throw new InvalidArgumentException("The handle '$handle' is not a valid handle.");
         }
 
-        return $this->http(auth: false)
-            ->get(AtProto::resolveHandle->value, [
+        return $this->send(
+            api: AtProto::resolveHandle,
+            auth: false,
+            params: [
                 'handle' => $handle,
-            ]);
+            ],
+        );
     }
 
     public function identity(): Identity
