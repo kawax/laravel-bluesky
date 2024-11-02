@@ -2,6 +2,8 @@ name: lexicon update
 
 on:
   push:
+  schedule:
+    - cron: '30 6 * * *' #UTC
 
 jobs:
   lexicon:
