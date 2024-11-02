@@ -80,16 +80,6 @@ class BlueskyClient implements Factory
         return $this->agent()->http($auth);
     }
 
-    public function createAccount(string $handle, ?string $email = null, ?string $password
-    = null): Response {
-        return $this->http(auth: false)
-            ->post(AtProto::createAccount->value, [
-                'handle' => $handle,
-                'email' => $email,
-                'password' => $password,
-            ]);
-    }
-
     /**
      * @param  string|null  $actor  DID or handle.
      *
