@@ -57,8 +57,8 @@ class LexiconCommand extends Command
 
         $this->bsky();
         $this->atproto();
-        $this->embed(path: '/app/bsky/embed', name: 'Embed');
-        $this->facet(path: '/app/bsky/richtext', name: 'Facet');
+        $this->embed();
+        $this->facet();
 
         return 0;
     }
@@ -76,14 +76,10 @@ class LexiconCommand extends Command
     protected function action(string $path, string $name): void
     {
         $enum = collect($this->files)
-            ->filter(function (string $file) use ($path) {
-                return Str::contains($file, $path);
-            })
-            ->mapWithKeys(function (string $file) {
-                return [Str::of($file)->basename()->chopEnd('.json')->toString() => $file];
-            })
+            ->filter(fn (string $file) => Str::contains($file, $path))
+            ->mapWithKeys(fn (string $file) => [Str::of($file)->basename()->chopEnd('.json')->toString() => $file])
             ->map(function (string $file) {
-                $json = json_decode(File::get($file), true);
+                $json = File::json($file);
 
                 $type = Arr::get($json, 'defs.main.type');
                 if (in_array($type, ['query', 'procedure'], true)) {
@@ -92,24 +88,18 @@ class LexiconCommand extends Command
             })
             ->reject(fn ($file) => is_null($file))
             ->dump()
-            ->implode(function (string $file, string $name) {
-                return "    case $name = '$file';";
-            }, PHP_EOL);
+            ->implode(fn (string $file, string $name) => "    case $name = '$file';", PHP_EOL);
 
         $this->save($enum, $name);
     }
 
-    protected function embed(string $path, string $name): void
+    protected function embed(): void
     {
         $enum = collect($this->files)
-            ->filter(function (string $file) use ($path) {
-                return Str::contains($file, $path);
-            })
-            ->mapWithKeys(function (string $file) {
-                return [Str::of($file)->basename()->chopEnd('.json')->studly()->toString() => $file];
-            })
+            ->filter(fn (string $file) => Str::contains($file, '/app/bsky/embed'))
+            ->mapWithKeys(fn (string $file) => [Str::of($file)->basename()->chopEnd('.json')->studly()->toString() => $file])
             ->map(function (string $file) {
-                $json = json_decode(File::get($file), true);
+                $json = File::json($file);
 
                 $type = Arr::get($json, 'defs.main.type');
                 if ($type === 'object') {
@@ -118,35 +108,28 @@ class LexiconCommand extends Command
             })
             ->reject(fn ($file) => is_null($file))
             ->dump()
-            ->implode(function (string $file, string $name) {
-                return "    case $name = '$file';";
-            }, PHP_EOL);
+            ->implode(fn (string $file, string $name) => "    case $name = '$file';", PHP_EOL);
 
-        $this->save($enum, $name);
+        $this->save($enum, 'Embed');
     }
 
-    protected function facet(string $path, string $name): void
+    protected function facet(): void
     {
         $file = collect($this->files)
-            ->filter(function (string $file) use ($path) {
-                return Str::contains($file, $path);
-            })->first();
+            ->filter(fn (string $file) => Str::contains($file, '/app/bsky/richtext'))
+            ->first();
 
-        $json = json_decode(File::get($file), true);
+        $json = File::json($file);
 
         $id = Arr::get($json, 'id');
         $facets = Arr::get($json, 'defs.main.properties.features.items.refs');
 
         $enum = collect($facets)
-            ->mapWithKeys(function (string $facet) use ($id) {
-                return [Str::of($facet)->remove('#')->studly()->toString() => $id.$facet];
-            })
+            ->mapWithKeys(fn (string $facet) => [Str::of($facet)->remove('#')->studly()->toString() => $id.$facet])
             ->dump()
-            ->implode(function (string $file, string $name) {
-                return "    case $name = '$file';";
-            }, PHP_EOL);
+            ->implode(fn (string $file, string $name) => "    case $name = '$file';", PHP_EOL);
 
-        $this->save($enum, $name);
+        $this->save($enum, 'Facet');
     }
 
     protected function save(string $enum, string $name): void
