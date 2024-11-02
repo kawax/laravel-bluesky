@@ -91,6 +91,7 @@ class OAuthAgentTest extends TestCase
         Socialite::shouldReceive('driver->issuer->refreshToken')->andReturn(new Token('access_token', 'refresh_token', 1, []));
         Socialite::shouldReceive('driver->getOAuthSession')->andReturn(new OAuthSession(['did' => 'did:plc:test']));
 
+        Bluesky::shouldReceive('entryway')->andReturn('https://iss');
         Bluesky::shouldReceive('identity->resolveDID->json')->andReturn([
             'service' => [['id' => '#atproto_pds', 'serviceEndpoint' => 'https://pds']],
         ]);
