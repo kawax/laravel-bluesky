@@ -179,13 +179,14 @@ This package only has the minimum functionality of the notification and Socialit
 // AppServiceProvider
 
 use Revolution\Bluesky\Facades\Bluesky;
+use Revolution\Bluesky\Lexicon\Bsky;
 
     public function boot(): void
     {
         Bluesky::macro('searchPosts', function (string $q) {
             /** @var BlueskyClient $this */
             return $this->http(auth: false)
-                ->get('app.bsky.feed.searchPosts', [
+                ->get(Bsky::searchPosts->value, [
                     'q' => $q,
                 ]);
         });
