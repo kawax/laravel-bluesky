@@ -15,6 +15,11 @@ use Illuminate\Support\Str;
  * ```
  * vendor/bin/testbench bluesky:lexicon
  * ```
+ *
+ * update lexicon
+ * ```
+ * git submodule update --remote
+ * ```
  */
 class LexiconCommand extends Command
 {
