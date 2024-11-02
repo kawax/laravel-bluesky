@@ -1,0 +1,33 @@
+name: lexicon update
+
+on:
+  push:
+
+jobs:
+  lexicon:
+    name: lexicon update
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Setup PHP, with composer and extensions
+        uses: shivammathur/setup-php@v2 #https://github.com/shivammathur/setup-php
+        with:
+          php-version: '8.3'
+          extensions: 'mbstring'
+          coverage: none
+      - name: Install Composer dependencies
+        run: composer install -q
+      - name: submodule update
+        run: git submodule update --remote
+      - name: lexicon update
+        run: vendor/bin/testbench bluesky:lexicon
+      - name: Create Pull Request
+        uses: peter-evans/create-pull-request@v7 #https://github.com/peter-evans/create-pull-request
+        with:
+          branch: 'lexicon'
+          commit-message: 'lexicon update'
+          title: 'lexicon update'
+          body: 'lexicon update'
+          add-paths: |
+            src/Lexicon/*.php
