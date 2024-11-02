@@ -102,7 +102,7 @@ final class OAuthAgent implements Agent
 
         /** @var Token $token */
         $token = Socialite::driver('bluesky')
-            ->issuer($this->session()->issuer(default: config('bluesky.service')))
+            ->issuer($this->session()->issuer(default: Bluesky::entryway()))
             ->refreshToken($refresh);
 
         // When refresh is successful, new refresh_token here.
