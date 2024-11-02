@@ -179,7 +179,7 @@ final class OAuthAgent implements Agent
                 logger()->warning('If you get an error on the public endpoint, please authenticate.');
             }
 
-            $base = Bsky::PublicEndpoint->value;
+            $base = config('bluesky.public_endpoint') ?? Bsky::PublicEndpoint->value;
         }
 
         $base .= '/xrpc/';

@@ -155,7 +155,7 @@ class ClientTest extends TestCase
             ->push(['did' => 'test']);
 
         $response = Bluesky::login(identifier: 'identifier', password: 'password')
-            ->resolveHandle(handle: 'alice.test');
+            ->resolveHandle(handle: 'alice.localhost');
 
         $this->assertTrue($response->collect()->has('did'));
         $this->assertSame('test', $response->json('did'));

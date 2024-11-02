@@ -23,8 +23,6 @@ trait WithOAuthSession
         $did = data_get($response, 'did', data_get($response, 'sub'));
 
         if ($this->hasInvalidDID($did)) {
-            info('invalid did', Arr::wrap($did));
-
             throw new InvalidArgumentException('Invalid DID.');
         }
 
@@ -33,8 +31,6 @@ trait WithOAuthSession
         $didDoc = $this->getDidDoc($did);
 
         if ($this->hasInvalidDidDoc($didDoc)) {
-            info('invalid DID Doc', Arr::wrap($didDoc));
-
             throw new InvalidArgumentException('Invalid DID Doc.');
         }
 

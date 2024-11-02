@@ -94,9 +94,11 @@ final class LegacyAgent implements Agent
         }
 
         if ($auth) {
-            return Bsky::Entryway->value.'/xrpc/';
+            $base = config('bluesky.service') ?? Bsky::Entryway->value;
         } else {
-            return Bsky::PublicEndpoint->value.'/xrpc/';
+            $base = config('bluesky.public_endpoint') ?? Bsky::PublicEndpoint->value;
         }
+
+        return $base.'/xrpc/';
     }
 }
