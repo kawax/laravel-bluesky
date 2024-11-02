@@ -32,7 +32,7 @@ enum AtProto: string
     case createRecord = 'com.atproto.repo.createRecord';
     case deleteRecord = 'com.atproto.repo.deleteRecord';
     case describeRepo = 'com.atproto.repo.describeRepo';
-    case getRecord = 'com.atproto.sync.getRecord';
+    case getRecord = 'com.atproto.repo.getRecord';
     case importRepo = 'com.atproto.repo.importRepo';
     case listMissingBlobs = 'com.atproto.repo.listMissingBlobs';
     case listRecords = 'com.atproto.repo.listRecords';
@@ -62,17 +62,6 @@ enum AtProto: string
     case resetPassword = 'com.atproto.server.resetPassword';
     case revokeAppPassword = 'com.atproto.server.revokeAppPassword';
     case updateEmail = 'com.atproto.server.updateEmail';
-    case getBlob = 'com.atproto.sync.getBlob';
-    case getBlocks = 'com.atproto.sync.getBlocks';
-    case getCheckout = 'com.atproto.sync.getCheckout';
-    case getHead = 'com.atproto.sync.getHead';
-    case getLatestCommit = 'com.atproto.sync.getLatestCommit';
-    case getRepo = 'com.atproto.sync.getRepo';
-    case getRepoStatus = 'com.atproto.sync.getRepoStatus';
-    case listBlobs = 'com.atproto.sync.listBlobs';
-    case listRepos = 'com.atproto.sync.listRepos';
-    case notifyOfUpdate = 'com.atproto.sync.notifyOfUpdate';
-    case requestCrawl = 'com.atproto.sync.requestCrawl';
     case checkSignupQueue = 'com.atproto.temp.checkSignupQueue';
     case fetchLabels = 'com.atproto.temp.fetchLabels';
     case requestPhoneVerification = 'com.atproto.temp.requestPhoneVerification';
