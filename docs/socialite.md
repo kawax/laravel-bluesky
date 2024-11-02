@@ -48,7 +48,7 @@ Bluesky uses `client-metadata.json` url as client_id.
 
 When developing locally, you can check the operation on the real Bluesky server by setting client_id to `http://localhost` and redirect to `http://127.0.0.1:8000/`. Scope is only `atproto`, so what you can do is limited. Only basic login functions are available, and APIs that require authentication cannot be used.
 
-### local
+### local development with real Bluesky server
 By default, `http://localhost` and `http://127.0.0.1:8000/` are set, so there is no need to configure it in .env.
 
 ```
@@ -61,6 +61,25 @@ If you are using a different port, configure it.
 BLUESKY_CLIENT_ID=
 BLUESKY_REDIRECT=http://127.0.0.1:8080/
 ```
+
+### local development with atproto dev-env
+
+https://github.com/bluesky-social/atproto
+
+If you are running a local server using this repository, you can enable OAuth authentication offline by setting .env as follows:
+
+```
+BLUESKY_PLC=http://localhost:2582
+BLUESKY_SERVICE=http://localhost:2583
+BLUESKY_PUBLIC_ENDPOINT=http://localhost:2584
+```
+
+Several fake users have been created so you can authenticate with this handle and password.
+
+- handle : `alice.test`
+- password : `hunter2`
+
+https://github.com/bluesky-social/atproto/blob/main/packages/dev-env/src/mock/index.ts
 
 ### Callback route in local
 
