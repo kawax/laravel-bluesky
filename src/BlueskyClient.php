@@ -234,6 +234,6 @@ class BlueskyClient implements Factory
 
     public function entryway(): string
     {
-        return Bsky::Entryway->value;
+        return config('bluesky.service') ?? Bsky::Entryway->value;
     }
 }

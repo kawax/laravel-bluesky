@@ -28,7 +28,7 @@ class BlueskyProvider extends AbstractProvider implements ProviderInterface
     use WithTokenRequest;
     use WithOAuthSession;
 
-    protected string $service = Bsky::Entryway->value;
+    protected ?string $service = null;
 
     protected ?string $login_hint = null;
 
@@ -162,7 +162,7 @@ class BlueskyProvider extends AbstractProvider implements ProviderInterface
 
     protected function authUrl(): string
     {
-        return $this->service;
+        return $this->service ?? config('bluesky.service') ?? Bsky::Entryway->value;
     }
 
     protected function clearSession(): void
