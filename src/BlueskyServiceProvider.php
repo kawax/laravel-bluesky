@@ -7,6 +7,7 @@ namespace Revolution\Bluesky;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\ServiceProvider;
 use Laravel\Socialite\Facades\Socialite;
+use Revolution\Bluesky\Console\LexiconCommand;
 use Revolution\Bluesky\Console\NewPrivateKeyCommand;
 use Revolution\Bluesky\Contracts\Factory;
 use Revolution\Bluesky\Socalite\BlueskyProvider;
@@ -31,6 +32,12 @@ class BlueskyServiceProvider extends ServiceProvider
             $this->commands([
                 NewPrivateKeyCommand::class,
             ]);
+
+            if (class_exists(LexiconCommand::class)) {
+                $this->commands([
+                    LexiconCommand::class,
+                ]);
+            }
         }
 
         $this->socialite();

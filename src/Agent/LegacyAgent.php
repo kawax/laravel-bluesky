@@ -10,8 +10,7 @@ use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Traits\Conditionable;
 use Illuminate\Support\Traits\Macroable;
 use Revolution\Bluesky\Contracts\Agent;
-use Revolution\Bluesky\Enums\AtProto;
-use Revolution\Bluesky\Enums\Bsky;
+use Revolution\Bluesky\Lexicon\AtProto;
 use Revolution\Bluesky\Session\LegacySession;
 use Revolution\Bluesky\Support\DidDocument;
 
@@ -94,9 +93,9 @@ final class LegacyAgent implements Agent
         }
 
         if ($auth) {
-            $base = config('bluesky.service') ?? Bsky::Entryway->value;
+            $base = config('bluesky.service');
         } else {
-            $base = config('bluesky.public_endpoint') ?? Bsky::PublicEndpoint->value;
+            $base = config('bluesky.public_endpoint');
         }
 
         return $base.'/xrpc/';

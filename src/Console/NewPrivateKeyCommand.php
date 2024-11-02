@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Revolution\Bluesky\Console;
 
-use Firebase\JWT\JWT;
 use Illuminate\Console\Command;
 use Revolution\Bluesky\Socalite\Key\BlueskyKey;
 

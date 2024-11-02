@@ -9,7 +9,6 @@ use Laravel\Socialite\Two\AbstractProvider;
 use Laravel\Socialite\Two\InvalidStateException;
 use Laravel\Socialite\Two\ProviderInterface;
 use Laravel\Socialite\Two\User;
-use Revolution\Bluesky\Enums\Bsky;
 use Revolution\Bluesky\Socalite\Concerns\WithAuthServer;
 use Revolution\Bluesky\Socalite\Concerns\WithClientAssertion;
 use Revolution\Bluesky\Socalite\Concerns\WithOAuthSession;
@@ -162,7 +161,7 @@ class BlueskyProvider extends AbstractProvider implements ProviderInterface
 
     protected function authUrl(): string
     {
-        return $this->service ?? config('bluesky.service') ?? Bsky::Entryway->value;
+        return $this->service ?? config('bluesky.service');
     }
 
     protected function clearSession(): void

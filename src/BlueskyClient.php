@@ -17,8 +17,8 @@ use Revolution\Bluesky\Agent\LegacyAgent;
 use Revolution\Bluesky\Agent\OAuthAgent;
 use Revolution\Bluesky\Contracts\Agent;
 use Revolution\Bluesky\Contracts\Factory;
-use Revolution\Bluesky\Enums\AtProto;
-use Revolution\Bluesky\Enums\Bsky;
+use Revolution\Bluesky\Lexicon\AtProto;
+use Revolution\Bluesky\Lexicon\Bsky;
 use Revolution\Bluesky\Notifications\BlueskyMessage;
 use Revolution\Bluesky\Session\LegacySession;
 use Revolution\Bluesky\Session\OAuthSession;
@@ -219,11 +219,11 @@ class BlueskyClient implements Factory
 
     public function publicEndpoint(): string
     {
-        return Str::rtrim(config('bluesky.public_endpoint') ?? Bsky::PublicEndpoint->value, '/').'/xrpc/';
+        return Str::rtrim(config('bluesky.public_endpoint'), '/').'/xrpc/';
     }
 
     public function entryway(): string
     {
-        return config('bluesky.service') ?? Bsky::Entryway->value;
+        return config('bluesky.service') ?? 'https://bsky.social';
     }
 }

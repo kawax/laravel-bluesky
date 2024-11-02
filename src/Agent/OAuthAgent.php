@@ -14,7 +14,6 @@ use Laravel\Socialite\Two\Token;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
 use Revolution\Bluesky\Contracts\Agent;
-use Revolution\Bluesky\Enums\Bsky;
 use Revolution\Bluesky\Events\DPoPNonceReceived;
 use Revolution\Bluesky\Events\OAuthSessionRefreshing;
 use Revolution\Bluesky\Events\OAuthSessionUpdated;
@@ -179,7 +178,7 @@ final class OAuthAgent implements Agent
                 logger()->warning('If you get an error on the public endpoint, please authenticate.');
             }
 
-            $base = config('bluesky.public_endpoint') ?? Bsky::PublicEndpoint->value;
+            $base = config('bluesky.public_endpoint');
         }
 
         $base .= '/xrpc/';

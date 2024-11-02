@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Revolution\Bluesky\Embed;
 
 use Illuminate\Contracts\Support\Arrayable;
-use Revolution\Bluesky\Enums\Bsky;
+use Revolution\Bluesky\Lexicon\Embed;
 
 final class Images implements Arrayable
 {
@@ -33,7 +33,7 @@ final class Images implements Arrayable
     public function toArray(): array
     {
         return [
-            '$type' => Bsky::Images->value,
+            '$type' => Embed::Images->value,
             'images' => collect($this->images)->take(4)->toArray(),
         ];
     }

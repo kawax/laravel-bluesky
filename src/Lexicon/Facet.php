@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Revolution\Bluesky\Enums;
+namespace Revolution\Bluesky\Lexicon;
 
 enum Facet: string
 {
