@@ -100,7 +100,7 @@ trait WithTokenRequest
      */
     protected function getTokenUrl(): string
     {
-        return $this->authServerMeta('token_endpoint', 'https://bsky.social/oauth/token');
+        return $this->authServerMeta('token_endpoint');
     }
 
     /**

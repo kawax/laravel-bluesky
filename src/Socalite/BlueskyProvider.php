@@ -76,7 +76,7 @@ class BlueskyProvider extends AbstractProvider implements ProviderInterface
 
         $par_request_uri = $this->getParRequestUrl($state);
 
-        $authorize_url = $this->authServerMeta('authorization_endpoint', 'https://bsky.social/oauth/authorize');
+        $authorize_url = $this->authServerMeta('authorization_endpoint');
 
         return $authorize_url.'?'.http_build_query([
                 'client_id' => $this->clientId,
@@ -132,17 +132,21 @@ class BlueskyProvider extends AbstractProvider implements ProviderInterface
     }
 
     /**
-     * Set service/auth server/issuer. e.g. "bsky.social"
+     * Set service/auth server/issuer. e.g. "https://bsky.social" "http://localhost:2583"
      */
     public function service(string $service): self
     {
-        $this->service = Str::chopStart($service, ['https://', 'http://']);
+        if (! Str::startsWith($service, 'http')) {
+            $service = 'https://'.$service;
+        }
+
+        $this->service = Str::rtrim($service, '/');
 
         return $this;
     }
 
     /**
-     * Set service/auth server/issuer. e.g. "bsky.social"
+     * Set service/auth server/issuer. e.g. "https://bsky.social" "http://localhost:2583"
      */
     public function issuer(string $iss): self
     {
@@ -158,7 +162,7 @@ class BlueskyProvider extends AbstractProvider implements ProviderInterface
 
     protected function authUrl(): string
     {
-        return 'https://'.$this->service;
+        return $this->service;
     }
 
     protected function clearSession(): void

@@ -180,9 +180,9 @@ final class OAuthAgent implements Agent
             }
 
             $base = Bsky::PublicEndpoint->value;
-        } else {
-            $base .= '/xrpc/';
         }
+
+        $base .= '/xrpc/';
 
         return $base;
     }

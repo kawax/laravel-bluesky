@@ -27,7 +27,7 @@ trait WithPAR
 
     protected function sendParRequest(array $par_data): Response
     {
-        $par_url = $this->authServerMeta('pushed_authorization_request_endpoint', 'https://bsky.social/oauth/par');
+        $par_url = $this->authServerMeta('pushed_authorization_request_endpoint');
 
         return Http::asForm()
             ->withRequestMiddleware($this->parRequestMiddleware(...))

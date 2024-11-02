@@ -122,14 +122,19 @@ class OAuthAgentTest extends TestCase
             'refresh_token' => 'refresh_token',
         ]);
 
-        Http::fake(Http::response([
-            'error' => 'invalid_grant',
-            'error_description' => 'refresh token replayed',
-        ], 400));
+        Http::fakeSequence()
+            ->push([
+                'token_endpoint' => 'http://localhost/oauth/token',
+            ])
+            ->whenEmpty(Http::response([
+                'error' => 'invalid_grant',
+                'error_description' => 'refresh token replayed',
+            ], 400));
 
         $agent = new OAuthAgent($session);
         $agent->refreshSession();
 
+        Http::assertSentCount(2);
         Event::assertDispatched(RefreshTokenReplayed::class);
         Event::assertNotDispatched(OAuthSessionUpdated::class);
     }

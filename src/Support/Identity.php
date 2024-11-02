@@ -17,7 +17,7 @@ class Identity
     // "did:plc:1234..." "did:web:alice.test"
     protected const DID_REGEX = '/^did:[a-z]+:[a-zA-Z0-9._:%-]*[a-zA-Z0-9._-]$/';
 
-    protected const PLC_DIRECTORY = 'https://plc.directory/';
+    protected const PLC_DIRECTORY = 'https://plc.directory';
 
     public static function isHandle(?string $handle): bool
     {
@@ -84,7 +84,7 @@ class Identity
         }
 
         $url = match (true) {
-            Str::startsWith($did, 'did:plc:') => self::PLC_DIRECTORY.$did,
+            Str::startsWith($did, 'did:plc:') => Str::rtrim(config('bluesky.plc') ?? self::PLC_DIRECTORY, '/').'/'.$did,
             Str::startsWith($did, 'did:web:') => 'https://'.Str::remove('did:web:', $did).'/.well-known/did.json',
             default => throw new InvalidArgumentException('Unsupported DID type'),
         };

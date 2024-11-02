@@ -9,6 +9,7 @@ use Illuminate\Http\Client\ConnectionException;
 use Illuminate\Http\Client\PendingRequest;
 use Illuminate\Http\Client\Response;
 use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Str;
 use Illuminate\Support\Traits\Conditionable;
 use Illuminate\Support\Traits\Macroable;
 use InvalidArgumentException;
@@ -73,7 +74,7 @@ class BlueskyClient implements Factory
     public function http(bool $auth = true): PendingRequest
     {
         if (! $auth || ! $this->check()) {
-            return Http::baseUrl(Bsky::PublicEndpoint->value);
+            return Http::baseUrl($this->publicEndpoint());
         }
 
         return $this->agent()->http($auth);
@@ -226,8 +227,13 @@ class BlueskyClient implements Factory
         return $this;
     }
 
+    public function publicEndpoint(): string
+    {
+        return Str::rtrim(config('bluesky.public_endpoint') ?? Bsky::PublicEndpoint->value, '/').'/xrpc/';
+    }
+
     public function entryway(): string
     {
-        return 'https://'.Bsky::Entryway->value;
+        return Bsky::Entryway->value;
     }
 }

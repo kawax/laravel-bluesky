@@ -6,9 +6,9 @@ namespace Revolution\Bluesky\Enums;
 
 enum Bsky: string
 {
-    case Entryway = 'bsky.social';
+    case Entryway = 'https://bsky.social';
 
-    case PublicEndpoint = 'https://public.api.bsky.app/xrpc/';
+    case PublicEndpoint = 'https://public.api.bsky.app';
 
     case getProfile = 'app.bsky.actor.getProfile';
 

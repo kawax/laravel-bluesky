@@ -94,9 +94,9 @@ final class LegacyAgent implements Agent
         }
 
         if ($auth) {
-            return 'https://'.Bsky::Entryway->value.'/xrpc/';
+            return Bsky::Entryway->value.'/xrpc/';
         } else {
-            return Bsky::PublicEndpoint->value;
+            return Bsky::PublicEndpoint->value.'/xrpc/';
         }
     }
 }

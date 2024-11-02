@@ -23,7 +23,7 @@ trait WithPDS
             $auth_url = $this->pdsProtectedResource($this->login_hint)
                 ->authServer(Bluesky::entryway());
 
-            $this->service = Str::chopStart($auth_url, ['https://', 'http://']);
+            $this->service($auth_url);
 
             $this->login_hint = null;
         }
@@ -34,7 +34,7 @@ trait WithPDS
             $auth_url = $this->pdsProtectedResource($didDoc->pdsUrl())
                 ->authServer(Bluesky::entryway());
 
-            $this->service = Str::chopStart($auth_url, ['https://', 'http://']);
+            $this->service($auth_url);
         }
     }
 
@@ -74,7 +74,7 @@ trait WithPDS
         }
 
         return Validator::make($url, [
-            'scheme' => ['required', Rule::in(['https'])],
+            'scheme' => ['required', Rule::in(['https', 'http'])],
             'host' => ['required', 'string', Rule::notIn(['localhost'])],
             'port' => 'missing',
             'user' => 'missing',
