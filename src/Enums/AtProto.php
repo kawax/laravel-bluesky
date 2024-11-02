@@ -6,6 +6,8 @@ namespace Revolution\Bluesky\Enums;
 
 enum AtProto: string
 {
+    case createAccount = 'com.atproto.server.createAccount';
+
     case createSession = 'com.atproto.server.createSession';
     case refreshSession = 'com.atproto.server.refreshSession';
 
