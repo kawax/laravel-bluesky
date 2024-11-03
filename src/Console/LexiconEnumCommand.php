@@ -13,7 +13,7 @@ use Illuminate\Support\Str;
  * Generate php enum from lexicon json.
  *
  * ```
- * vendor/bin/testbench bluesky:lexicon
+ * vendor/bin/testbench bluesky:lexicon-enum
  * ```
  *
  * update lexicon
@@ -21,14 +21,14 @@ use Illuminate\Support\Str;
  * git submodule update --remote
  * ```
  */
-class LexiconCommand extends Command
+class LexiconEnumCommand extends Command
 {
     /**
      * The name and signature of the console command.
      *
      * @var string
      */
-    protected $signature = 'bluesky:lexicon';
+    protected $signature = 'bluesky:lexicon-enum';
 
     /**
      * The console command description.
