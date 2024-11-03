@@ -7,6 +7,7 @@ namespace Revolution\Bluesky;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\ServiceProvider;
 use Laravel\Socialite\Facades\Socialite;
+use Revolution\Bluesky\Console\LexiconContractsCommand;
 use Revolution\Bluesky\Console\LexiconEnumCommand;
 use Revolution\Bluesky\Console\NewPrivateKeyCommand;
 use Revolution\Bluesky\Contracts\Factory;
@@ -36,6 +37,7 @@ class BlueskyServiceProvider extends ServiceProvider
             if (class_exists(LexiconEnumCommand::class)) {
                 $this->commands([
                     LexiconEnumCommand::class,
+                    LexiconContractsCommand::class,
                 ]);
             }
         }
