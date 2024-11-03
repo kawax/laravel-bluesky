@@ -10,7 +10,7 @@
 .gitignore export-ignore
 .styleci.yml export-ignore
 phpunit.xml export-ignore
-/src/Console/LexiconCommand.php export-ignore
+/src/Console/LexiconEnumCommand.php export-ignore
 /src/Console/stubs export-ignore
 /atproto export-ignore
 .gitmodules export-ignore
