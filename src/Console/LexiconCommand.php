@@ -83,12 +83,22 @@ class LexiconCommand extends Command
 
                 $type = Arr::get($json, 'defs.main.type');
                 if (in_array($type, ['query', 'procedure'], true)) {
-                    return Arr::get($json, 'id');
+                    return $json;
                 }
             })
             ->reject(fn ($file) => is_null($file))
             ->dump()
-            ->implode(fn (string $file, string $name) => "    case $name = '$file';", PHP_EOL);
+            ->implode(function (array $json, string $name) {
+                $description = Arr::get($json, 'defs.main.description');
+                $id = Arr::get($json, 'id');
+
+                return collect([
+                    "    /**",
+                    "     * $description",
+                    "     */",
+                    "    case $name = '$id';",
+                ])->implode(PHP_EOL);
+            }, PHP_EOL.PHP_EOL);
 
         $this->save($enum, $name);
     }
@@ -103,12 +113,22 @@ class LexiconCommand extends Command
 
                 $type = Arr::get($json, 'defs.main.type');
                 if ($type === 'object') {
-                    return Arr::get($json, 'id');
+                    return $json;
                 }
             })
             ->reject(fn ($file) => is_null($file))
             ->dump()
-            ->implode(fn (string $file, string $name) => "    case $name = '$file';", PHP_EOL);
+            ->implode(function (array $json, string $name) {
+                $description = Arr::get($json, 'defs.main.description', Arr::get($json, 'description'));
+                $id = Arr::get($json, 'id');
+
+                return collect([
+                    "    /**",
+                    "     * $description",
+                    "     */",
+                    "    case $name = '$id';",
+                ])->implode(PHP_EOL);
+            }, PHP_EOL.PHP_EOL);
 
         $this->save($enum, 'Embed');
     }
@@ -125,9 +145,19 @@ class LexiconCommand extends Command
         $facets = Arr::get($json, 'defs.main.properties.features.items.refs');
 
         $enum = collect($facets)
-            ->mapWithKeys(fn (string $facet) => [Str::of($facet)->remove('#')->studly()->toString() => $id.$facet])
+            ->mapWithKeys(fn (string $facet) => [Str::of($facet)->remove('#')->toString() => $id.$facet])
             ->dump()
-            ->implode(fn (string $file, string $name) => "    case $name = '$file';", PHP_EOL);
+            ->implode(function (string $file, string $name) use ($json) {
+                $description = Arr::get($json, 'defs.'.$name.'.description');
+                $name = Str::studly($name);
+
+                return collect([
+                    "    /**",
+                    "     * $description",
+                    "     */",
+                    "    case $name = '$file';",
+                ])->implode(PHP_EOL);
+            }, PHP_EOL.PHP_EOL);
 
         $this->save($enum, 'Facet');
     }
