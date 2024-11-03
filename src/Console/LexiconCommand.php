@@ -86,15 +86,22 @@ class LexiconCommand extends Command
                     return $json;
                 }
             })
-            ->reject(fn ($file) => is_null($file))
-            ->dump()
+            ->filter(fn ($json) => is_array($json))
+            //->dump()
             ->implode(function (array $json, string $name) {
                 $description = Arr::get($json, 'defs.main.description');
                 $id = Arr::get($json, 'id');
+                $type = match (Arr::get($json, 'defs.main.type')) {
+                    'query' => 'get',
+                    'procedure' => 'post',
+                    default => '',
+                };
 
                 return collect([
                     "    /**",
                     "     * $description",
+                    "     *",
+                    "     * method: $type",
                     "     */",
                     "    case $name = '$id';",
                 ])->implode(PHP_EOL);
@@ -116,8 +123,8 @@ class LexiconCommand extends Command
                     return $json;
                 }
             })
-            ->reject(fn ($file) => is_null($file))
-            ->dump()
+            ->filter(fn ($json) => is_array($json))
+            //->dump()
             ->implode(function (array $json, string $name) {
                 $description = Arr::get($json, 'defs.main.description', Arr::get($json, 'description'));
                 $id = Arr::get($json, 'id');
@@ -146,7 +153,7 @@ class LexiconCommand extends Command
 
         $enum = collect($facets)
             ->mapWithKeys(fn (string $facet) => [Str::of($facet)->remove('#')->toString() => $id.$facet])
-            ->dump()
+            //->dump()
             ->implode(function (string $file, string $name) use ($json) {
                 $description = Arr::get($json, 'defs.'.$name.'.description');
                 $name = Str::studly($name);
