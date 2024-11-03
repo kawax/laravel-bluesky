@@ -27,7 +27,7 @@ jobs:
       - name: submodule update
         run: git submodule update --remote
       - name: lexicon update
-        run: vendor/bin/testbench bluesky:lexicon
+        run: vendor/bin/testbench bluesky:lexicon-enum
       - name: Create Pull Request
         uses: peter-evans/create-pull-request@v7 #https://github.com/peter-evans/create-pull-request
         with:
