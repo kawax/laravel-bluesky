@@ -3,10 +3,11 @@
 namespace Revolution\Bluesky\Client;
 
 use Illuminate\Http\Client\Response;
+use Revolution\Bluesky\Lexicon\Contracts\Com\Atproto\Identity;
 use Revolution\Bluesky\Lexicon\Contracts\Com\Atproto\Repo;
 use Revolution\Bluesky\Lexicon\Enum\AtProto;
 
-class AtpClient extends AbstractClient implements Repo
+class AtpClient extends AbstractClient implements Repo, Identity
 {
     public function applyWrites(string $repo, array $writes, ?bool $validate = null, ?string $swapCommit = null)
     {
@@ -60,5 +61,39 @@ class AtpClient extends AbstractClient implements Repo
     public function uploadBlob()
     {
         // TODO: Implement uploadBlob() method.
+    }
+
+    public function getRecommendedDidCredentials()
+    {
+        // TODO: Implement getRecommendedDidCredentials() method.
+    }
+
+    public function requestPlcOperationSignature()
+    {
+        // TODO: Implement requestPlcOperationSignature() method.
+    }
+
+    public function resolveHandle(string $handle): Response
+    {
+        return $this->call(
+            api: AtProto::resolveHandle,
+            method: self::GET,
+            params: compact($this->params(__METHOD__)),
+        );
+    }
+
+    public function signPlcOperation(?string $token = null, ?array $rotationKeys = null, ?array $alsoKnownAs = null, $verificationMethods = null, $services = null)
+    {
+        // TODO: Implement signPlcOperation() method.
+    }
+
+    public function submitPlcOperation($operation)
+    {
+        // TODO: Implement submitPlcOperation() method.
+    }
+
+    public function updateHandle(string $handle)
+    {
+        // TODO: Implement updateHandle() method.
     }
 }
