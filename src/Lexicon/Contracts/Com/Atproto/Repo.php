@@ -6,6 +6,17 @@ namespace Revolution\Bluesky\Lexicon\Contracts\Com\Atproto;
 
 interface Repo
 {
+    public const applyWrites = 'com.atproto.repo.applyWrites';
+    public const createRecord = 'com.atproto.repo.createRecord';
+    public const deleteRecord = 'com.atproto.repo.deleteRecord';
+    public const describeRepo = 'com.atproto.repo.describeRepo';
+    public const getRecord = 'com.atproto.repo.getRecord';
+    public const importRepo = 'com.atproto.repo.importRepo';
+    public const listMissingBlobs = 'com.atproto.repo.listMissingBlobs';
+    public const listRecords = 'com.atproto.repo.listRecords';
+    public const putRecord = 'com.atproto.repo.putRecord';
+    public const uploadBlob = 'com.atproto.repo.uploadBlob';
+
     /**
      * Apply a batch transaction of repository creates, updates, and deletes. Requires auth, implemented by PDS.
      *

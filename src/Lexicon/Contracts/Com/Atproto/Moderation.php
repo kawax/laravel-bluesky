@@ -6,6 +6,8 @@ namespace Revolution\Bluesky\Lexicon\Contracts\Com\Atproto;
 
 interface Moderation
 {
+    public const createReport = 'com.atproto.moderation.createReport';
+
     /**
      * Submit a moderation report regarding an atproto account or record. Implemented by moderation services (with PDS proxying), and requires auth.
      *

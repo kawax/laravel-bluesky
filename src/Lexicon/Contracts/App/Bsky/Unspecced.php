@@ -6,6 +6,13 @@ namespace Revolution\Bluesky\Lexicon\Contracts\App\Bsky;
 
 interface Unspecced
 {
+    public const getConfig = 'app.bsky.unspecced.getConfig';
+    public const getPopularFeedGenerators = 'app.bsky.unspecced.getPopularFeedGenerators';
+    public const getSuggestionsSkeleton = 'app.bsky.unspecced.getSuggestionsSkeleton';
+    public const getTaggedSuggestions = 'app.bsky.unspecced.getTaggedSuggestions';
+    public const searchActorsSkeleton = 'app.bsky.unspecced.searchActorsSkeleton';
+    public const searchPostsSkeleton = 'app.bsky.unspecced.searchPostsSkeleton';
+
     /**
      * Get miscellaneous runtime configuration.
      *

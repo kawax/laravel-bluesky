@@ -6,6 +6,13 @@ namespace Revolution\Bluesky\Lexicon\Contracts\Com\Atproto;
 
 interface Identity
 {
+    public const getRecommendedDidCredentials = 'com.atproto.identity.getRecommendedDidCredentials';
+    public const requestPlcOperationSignature = 'com.atproto.identity.requestPlcOperationSignature';
+    public const resolveHandle = 'com.atproto.identity.resolveHandle';
+    public const signPlcOperation = 'com.atproto.identity.signPlcOperation';
+    public const submitPlcOperation = 'com.atproto.identity.submitPlcOperation';
+    public const updateHandle = 'com.atproto.identity.updateHandle';
+
     /**
      * Describe the credentials that should be included in the DID doc of an account that is migrating to this service.
      *

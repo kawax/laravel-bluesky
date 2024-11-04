@@ -6,6 +6,19 @@ namespace Revolution\Bluesky\Lexicon\Contracts\Chat\Bsky;
 
 interface Convo
 {
+    public const deleteMessageForSelf = 'chat.bsky.convo.deleteMessageForSelf';
+    public const getConvo = 'chat.bsky.convo.getConvo';
+    public const getConvoForMembers = 'chat.bsky.convo.getConvoForMembers';
+    public const getLog = 'chat.bsky.convo.getLog';
+    public const getMessages = 'chat.bsky.convo.getMessages';
+    public const leaveConvo = 'chat.bsky.convo.leaveConvo';
+    public const listConvos = 'chat.bsky.convo.listConvos';
+    public const muteConvo = 'chat.bsky.convo.muteConvo';
+    public const sendMessage = 'chat.bsky.convo.sendMessage';
+    public const sendMessageBatch = 'chat.bsky.convo.sendMessageBatch';
+    public const unmuteConvo = 'chat.bsky.convo.unmuteConvo';
+    public const updateRead = 'chat.bsky.convo.updateRead';
+
     /**
      * chat.bsky.convo.deleteMessageForSelf
      *

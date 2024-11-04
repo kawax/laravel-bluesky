@@ -6,6 +6,27 @@ namespace Revolution\Bluesky\Lexicon\Contracts\App\Bsky;
 
 interface Graph
 {
+    public const getActorStarterPacks = 'app.bsky.graph.getActorStarterPacks';
+    public const getBlocks = 'app.bsky.graph.getBlocks';
+    public const getFollowers = 'app.bsky.graph.getFollowers';
+    public const getFollows = 'app.bsky.graph.getFollows';
+    public const getKnownFollowers = 'app.bsky.graph.getKnownFollowers';
+    public const getList = 'app.bsky.graph.getList';
+    public const getListBlocks = 'app.bsky.graph.getListBlocks';
+    public const getListMutes = 'app.bsky.graph.getListMutes';
+    public const getLists = 'app.bsky.graph.getLists';
+    public const getMutes = 'app.bsky.graph.getMutes';
+    public const getRelationships = 'app.bsky.graph.getRelationships';
+    public const getStarterPack = 'app.bsky.graph.getStarterPack';
+    public const getStarterPacks = 'app.bsky.graph.getStarterPacks';
+    public const getSuggestedFollowsByActor = 'app.bsky.graph.getSuggestedFollowsByActor';
+    public const muteActor = 'app.bsky.graph.muteActor';
+    public const muteActorList = 'app.bsky.graph.muteActorList';
+    public const muteThread = 'app.bsky.graph.muteThread';
+    public const unmuteActor = 'app.bsky.graph.unmuteActor';
+    public const unmuteActorList = 'app.bsky.graph.unmuteActorList';
+    public const unmuteThread = 'app.bsky.graph.unmuteThread';
+
     /**
      * Get a list of starter packs created by the actor.
      *

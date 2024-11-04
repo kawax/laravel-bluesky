@@ -6,6 +6,10 @@ namespace Revolution\Bluesky\Lexicon\Contracts\Com\Atproto;
 
 interface Temp
 {
+    public const checkSignupQueue = 'com.atproto.temp.checkSignupQueue';
+    public const fetchLabels = 'com.atproto.temp.fetchLabels';
+    public const requestPhoneVerification = 'com.atproto.temp.requestPhoneVerification';
+
     /**
      * Check accounts location in signup queue.
      *

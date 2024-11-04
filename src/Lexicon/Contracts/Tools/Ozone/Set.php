@@ -6,6 +6,13 @@ namespace Revolution\Bluesky\Lexicon\Contracts\Tools\Ozone;
 
 interface Set
 {
+    public const addValues = 'tools.ozone.set.addValues';
+    public const deleteSet = 'tools.ozone.set.deleteSet';
+    public const deleteValues = 'tools.ozone.set.deleteValues';
+    public const getValues = 'tools.ozone.set.getValues';
+    public const querySets = 'tools.ozone.set.querySets';
+    public const upsertSet = 'tools.ozone.set.upsertSet';
+
     /**
      * Add values to a specific set. Attempting to add values to a set that does not exist will result in an error.
      *

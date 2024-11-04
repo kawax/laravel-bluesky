@@ -57,61 +57,10 @@ class LexiconEnumCommand extends Command
 
         $this->files = File::allFiles($this->json_path);
 
-        $this->bsky();
-        $this->atproto();
         $this->embed();
         $this->facet();
 
         return 0;
-    }
-
-    protected function bsky(): void
-    {
-        $this->action(path: '/app/bsky', name: 'Bsky');
-    }
-
-    protected function atproto(): void
-    {
-        $this->action(path: '/com/atproto', name: 'AtProto');
-        $this->action(path: '/com/atproto/sync/', name: 'AtProtoSync', sync: true);
-    }
-
-    protected function action(string $path, string $name, bool $sync = false): void
-    {
-        $enum = collect($this->files)
-            ->filter(fn (string $file) => Str::contains($file, $path))
-            ->reject(fn (string $file) => ! $sync && Str::contains($file, '/com/atproto/sync/'))
-            ->mapWithKeys(fn (string $file) => [Str::of($file)->basename()->chopEnd('.json')->toString() => $file])
-            ->map(function (string $file) {
-                $json = File::json($file);
-
-                $type = Arr::get($json, 'defs.main.type');
-                if (in_array($type, ['query', 'procedure'], true)) {
-                    return $json;
-                }
-            })
-            ->filter(fn ($json) => is_array($json))
-            //->dump()
-            ->implode(function (array $json, string $name) {
-                $description = Arr::get($json, 'defs.main.description');
-                $id = Arr::get($json, 'id');
-                $type = match (Arr::get($json, 'defs.main.type')) {
-                    'query' => 'get',
-                    'procedure' => 'post',
-                    default => '',
-                };
-
-                return collect([
-                    "    /**",
-                    "     * $description",
-                    "     *",
-                    "     * method: $type",
-                    "     */",
-                    "    case $name = '$id';",
-                ])->implode(PHP_EOL);
-            }, PHP_EOL.PHP_EOL);
-
-        $this->save($enum, $name);
     }
 
     protected function embed(): void

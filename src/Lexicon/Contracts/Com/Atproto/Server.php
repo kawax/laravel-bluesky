@@ -6,6 +6,32 @@ namespace Revolution\Bluesky\Lexicon\Contracts\Com\Atproto;
 
 interface Server
 {
+    public const activateAccount = 'com.atproto.server.activateAccount';
+    public const checkAccountStatus = 'com.atproto.server.checkAccountStatus';
+    public const confirmEmail = 'com.atproto.server.confirmEmail';
+    public const createAccount = 'com.atproto.server.createAccount';
+    public const createAppPassword = 'com.atproto.server.createAppPassword';
+    public const createInviteCode = 'com.atproto.server.createInviteCode';
+    public const createInviteCodes = 'com.atproto.server.createInviteCodes';
+    public const createSession = 'com.atproto.server.createSession';
+    public const deactivateAccount = 'com.atproto.server.deactivateAccount';
+    public const deleteAccount = 'com.atproto.server.deleteAccount';
+    public const deleteSession = 'com.atproto.server.deleteSession';
+    public const describeServer = 'com.atproto.server.describeServer';
+    public const getAccountInviteCodes = 'com.atproto.server.getAccountInviteCodes';
+    public const getServiceAuth = 'com.atproto.server.getServiceAuth';
+    public const getSession = 'com.atproto.server.getSession';
+    public const listAppPasswords = 'com.atproto.server.listAppPasswords';
+    public const refreshSession = 'com.atproto.server.refreshSession';
+    public const requestAccountDelete = 'com.atproto.server.requestAccountDelete';
+    public const requestEmailConfirmation = 'com.atproto.server.requestEmailConfirmation';
+    public const requestEmailUpdate = 'com.atproto.server.requestEmailUpdate';
+    public const requestPasswordReset = 'com.atproto.server.requestPasswordReset';
+    public const reserveSigningKey = 'com.atproto.server.reserveSigningKey';
+    public const resetPassword = 'com.atproto.server.resetPassword';
+    public const revokeAppPassword = 'com.atproto.server.revokeAppPassword';
+    public const updateEmail = 'com.atproto.server.updateEmail';
+
     /**
      * Activates a currently deactivated account. Used to finalize account migration after the account's repo is imported and identity is setup.
      *

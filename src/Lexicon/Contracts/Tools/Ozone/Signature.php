@@ -6,6 +6,10 @@ namespace Revolution\Bluesky\Lexicon\Contracts\Tools\Ozone;
 
 interface Signature
 {
+    public const findCorrelation = 'tools.ozone.signature.findCorrelation';
+    public const findRelatedAccounts = 'tools.ozone.signature.findRelatedAccounts';
+    public const searchAccounts = 'tools.ozone.signature.searchAccounts';
+
     /**
      * Find all correlated threat signatures between 2 or more accounts.
      *

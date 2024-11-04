@@ -6,6 +6,8 @@ namespace Revolution\Bluesky\Lexicon\Contracts\App\Bsky;
 
 interface Labeler
 {
+    public const getServices = 'app.bsky.labeler.getServices';
+
     /**
      * Get information about a list of labeler services.
      *

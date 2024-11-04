@@ -6,6 +6,10 @@ namespace Revolution\Bluesky\Lexicon\Contracts\Chat\Bsky;
 
 interface Moderation
 {
+    public const getActorMetadata = 'chat.bsky.moderation.getActorMetadata';
+    public const getMessageContext = 'chat.bsky.moderation.getMessageContext';
+    public const updateActorAccess = 'chat.bsky.moderation.updateActorAccess';
+
     /**
      * chat.bsky.moderation.getActorMetadata
      *

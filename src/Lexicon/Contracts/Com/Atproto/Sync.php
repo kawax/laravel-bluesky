@@ -6,6 +6,19 @@ namespace Revolution\Bluesky\Lexicon\Contracts\Com\Atproto;
 
 interface Sync
 {
+    public const getBlob = 'com.atproto.sync.getBlob';
+    public const getBlocks = 'com.atproto.sync.getBlocks';
+    public const getCheckout = 'com.atproto.sync.getCheckout';
+    public const getHead = 'com.atproto.sync.getHead';
+    public const getLatestCommit = 'com.atproto.sync.getLatestCommit';
+    public const getRecord = 'com.atproto.sync.getRecord';
+    public const getRepo = 'com.atproto.sync.getRepo';
+    public const getRepoStatus = 'com.atproto.sync.getRepoStatus';
+    public const listBlobs = 'com.atproto.sync.listBlobs';
+    public const listRepos = 'com.atproto.sync.listRepos';
+    public const notifyOfUpdate = 'com.atproto.sync.notifyOfUpdate';
+    public const requestCrawl = 'com.atproto.sync.requestCrawl';
+
     /**
      * Get a blob associated with a given account. Returns the full blob as originally uploaded. Does not require auth; implemented by PDS.
      *

@@ -6,6 +6,21 @@ namespace Revolution\Bluesky\Lexicon\Contracts\Com\Atproto;
 
 interface Admin
 {
+    public const deleteAccount = 'com.atproto.admin.deleteAccount';
+    public const disableAccountInvites = 'com.atproto.admin.disableAccountInvites';
+    public const disableInviteCodes = 'com.atproto.admin.disableInviteCodes';
+    public const enableAccountInvites = 'com.atproto.admin.enableAccountInvites';
+    public const getAccountInfo = 'com.atproto.admin.getAccountInfo';
+    public const getAccountInfos = 'com.atproto.admin.getAccountInfos';
+    public const getInviteCodes = 'com.atproto.admin.getInviteCodes';
+    public const getSubjectStatus = 'com.atproto.admin.getSubjectStatus';
+    public const searchAccounts = 'com.atproto.admin.searchAccounts';
+    public const sendEmail = 'com.atproto.admin.sendEmail';
+    public const updateAccountEmail = 'com.atproto.admin.updateAccountEmail';
+    public const updateAccountHandle = 'com.atproto.admin.updateAccountHandle';
+    public const updateAccountPassword = 'com.atproto.admin.updateAccountPassword';
+    public const updateSubjectStatus = 'com.atproto.admin.updateSubjectStatus';
+
     /**
      * Delete a user account as an administrator.
      *

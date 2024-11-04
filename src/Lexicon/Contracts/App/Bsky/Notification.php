@@ -6,6 +6,12 @@ namespace Revolution\Bluesky\Lexicon\Contracts\App\Bsky;
 
 interface Notification
 {
+    public const getUnreadCount = 'app.bsky.notification.getUnreadCount';
+    public const listNotifications = 'app.bsky.notification.listNotifications';
+    public const putPreferences = 'app.bsky.notification.putPreferences';
+    public const registerPush = 'app.bsky.notification.registerPush';
+    public const updateSeen = 'app.bsky.notification.updateSeen';
+
     /**
      * Count the number of unread notifications for the requesting account. Requires auth.
      *

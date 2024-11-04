@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Revolution\Bluesky;
 
+use BackedEnum;
 use Illuminate\Container\Container;
 use Illuminate\Http\Client\ConnectionException;
 use Illuminate\Http\Client\PendingRequest;
@@ -19,8 +20,9 @@ use Revolution\Bluesky\Client\AtpClient;
 use Revolution\Bluesky\Client\BskyClient;
 use Revolution\Bluesky\Contracts\Agent;
 use Revolution\Bluesky\Contracts\Factory;
-use Revolution\Bluesky\Lexicon\Enum\AtProto;
-use Revolution\Bluesky\Lexicon\Enum\Bsky;
+use Revolution\Bluesky\Lexicon\Contracts\App\Bsky\Video;
+use Revolution\Bluesky\Lexicon\Contracts\Com\Atproto\Repo;
+use Revolution\Bluesky\Lexicon\Contracts\Com\Atproto\Server;
 use Revolution\Bluesky\Notifications\BlueskyMessage;
 use Revolution\Bluesky\Session\LegacySession;
 use Revolution\Bluesky\Session\OAuthSession;
@@ -52,7 +54,7 @@ class BlueskyClient implements Factory
     public function login(string $identifier, #[\SensitiveParameter] string $password): self
     {
         $response = Http::baseUrl($this->entryway().'/xrpc/')
-            ->post(AtProto::createSession->value, [
+            ->post(Server::createSession, [
                 'identifier' => $identifier,
                 'password' => $password,
             ]);
@@ -87,12 +89,12 @@ class BlueskyClient implements Factory
     /**
      * Send any API request.
      *
-     * @param  AtProto|Bsky|string  $api  e.g. "app.bsky.actor.getProfile"
+     * @param  BackedEnum|string  $api  e.g. "app.bsky.actor.getProfile"
      * @param  string  $method  get or post.
      * @param  bool  $auth  Requires auth.
      * @param  ?array  $params  get query or post data.
      */
-    public function send(AtProto|Bsky|string $api, string $method = 'get', bool $auth = true, ?array $params = null): Response
+    public function send(BackedEnum|string $api, string $method = 'get', bool $auth = true, ?array $params = null): Response
     {
         return $this->http($auth)->$method(enum_value($api), $params);
     }
@@ -180,7 +182,7 @@ class BlueskyClient implements Factory
     {
         return $this->http()
             ->withBody($data, $type)
-            ->post(AtProto::uploadBlob->value);
+            ->post(Repo::uploadBlob);
     }
 
     /**
@@ -192,7 +194,7 @@ class BlueskyClient implements Factory
     {
         return $this->http()
             ->withBody($data, $type)
-            ->post(Bsky::uploadVideo->value);
+            ->post(Video::uploadVideo);
     }
 
     public function refreshSession(): self

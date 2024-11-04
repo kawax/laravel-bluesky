@@ -6,6 +6,25 @@ namespace Revolution\Bluesky\Lexicon\Contracts\App\Bsky;
 
 interface Feed
 {
+    public const describeFeedGenerator = 'app.bsky.feed.describeFeedGenerator';
+    public const getActorFeeds = 'app.bsky.feed.getActorFeeds';
+    public const getActorLikes = 'app.bsky.feed.getActorLikes';
+    public const getAuthorFeed = 'app.bsky.feed.getAuthorFeed';
+    public const getFeed = 'app.bsky.feed.getFeed';
+    public const getFeedGenerator = 'app.bsky.feed.getFeedGenerator';
+    public const getFeedGenerators = 'app.bsky.feed.getFeedGenerators';
+    public const getFeedSkeleton = 'app.bsky.feed.getFeedSkeleton';
+    public const getLikes = 'app.bsky.feed.getLikes';
+    public const getListFeed = 'app.bsky.feed.getListFeed';
+    public const getPostThread = 'app.bsky.feed.getPostThread';
+    public const getPosts = 'app.bsky.feed.getPosts';
+    public const getQuotes = 'app.bsky.feed.getQuotes';
+    public const getRepostedBy = 'app.bsky.feed.getRepostedBy';
+    public const getSuggestedFeeds = 'app.bsky.feed.getSuggestedFeeds';
+    public const getTimeline = 'app.bsky.feed.getTimeline';
+    public const searchPosts = 'app.bsky.feed.searchPosts';
+    public const sendInteractions = 'app.bsky.feed.sendInteractions';
+
     /**
      * Get information about a feed generator, including policies and offered feed URIs. Does not require auth; implemented by Feed Generator services (not App View).
      *

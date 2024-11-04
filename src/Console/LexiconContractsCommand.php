@@ -9,6 +9,7 @@ use Illuminate\Support\Arr;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Str;
+use RuntimeException;
 
 /**
  * Generate php interface from lexicon json.
@@ -85,8 +86,11 @@ class LexiconContractsCommand extends Command
             ->filter(fn ($json) => is_array($json))
             //->dump()
             ->mapToGroups(function (array $json, string $id) {
+                // [app, bsky, actor, getProfile]
                 $path = Str::of($id)->explode('.');
+                // "getProfile"
                 $name = $path->last();
+                // "app/bsky/actor"
                 $class = $path->take(3)->implode('/');
 
                 $description = Arr::get($json, 'defs.main.description', $id);
@@ -104,21 +108,26 @@ class LexiconContractsCommand extends Command
                 $type = match (Arr::get($json, 'defs.main.type')) {
                     'query' => 'get',
                     'procedure' => 'post',
-                    default => '',
+                    default => throw new RuntimeException(),
                 };
 
-                return [$class => collect([
-                    "    /**",
-                    "     * $description",
-                    "     *",
-                    "     * method: $type",
-                    "     */",
-                    "    public function $name($params);",
-                ])->implode(PHP_EOL)];
+                return [
+                    $class => collect([
+                        'const' => ['name' => $name, 'id' => $id],
+                        'method' => collect([
+                            "    /**",
+                            "     * $description",
+                            "     *",
+                            "     * method: $type",
+                            "     */",
+                            "    public function $name($params);",
+                        ])->implode(PHP_EOL),
+                    ]),
+                ];
             })
             //->dump()
-            ->each(function (Collection $methods, string $class) {
-                $this->save($methods->implode(PHP_EOL.PHP_EOL), $class);
+            ->each(function (Collection $contracts, string $class) {
+                $this->save($contracts, $class);
             });
     }
 
@@ -189,21 +198,32 @@ class LexiconContractsCommand extends Command
             }, ', ');
     }
 
-    protected function save(string $contracts, string $class): void
+    protected function save(Collection $contracts, string $class): void
     {
-        $path = Str::of($class)->explode('/');
-        $path = $path->map(fn ($item) => Str::studly($item));
+        // ["App", "Bsky, "Actor"]
+        $path = Str::of($class)->explode('/')->map(fn ($item) => Str::studly($item));
 
+        // "App/Bsky/Actor"
         $file_path = $path->take(3)->implode("/");
+        // "Actor"
         $name = $path->last();
+        // "App/Bsky/"
         $namespace = $path->take(2)->implode("\\");
+
+        $method = $contracts->implode('method', PHP_EOL.PHP_EOL);
+
+        $const = $contracts->pluck('const')
+            ->implode(function (array $const) {
+                return sprintf("    public const %s = '%s';", $const['name'], $const['id']);
+            }, PHP_EOL);
 
         $tmp = File::get(realpath(__DIR__.'/stubs/lexicon-interface.stub'));
 
         $tmp = Str::of($tmp)
             ->replace('{namespace}', $namespace)
             ->replace('{name}', $name)
-            ->replace('{dummy}', $contracts)
+            ->replace('{const}', $const)
+            ->replace('{method}', $method)
             ->toString();
 
         $file_path = $this->php_path."/$file_path.php";

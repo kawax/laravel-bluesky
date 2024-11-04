@@ -6,6 +6,10 @@ namespace Revolution\Bluesky\Lexicon\Contracts\App\Bsky;
 
 interface Video
 {
+    public const getJobStatus = 'app.bsky.video.getJobStatus';
+    public const getUploadLimits = 'app.bsky.video.getUploadLimits';
+    public const uploadVideo = 'app.bsky.video.uploadVideo';
+
     /**
      * Get status details for a video processing job.
      *

@@ -6,6 +6,11 @@ namespace Revolution\Bluesky\Lexicon\Contracts\Tools\Ozone;
 
 interface Team
 {
+    public const addMember = 'tools.ozone.team.addMember';
+    public const deleteMember = 'tools.ozone.team.deleteMember';
+    public const listMembers = 'tools.ozone.team.listMembers';
+    public const updateMember = 'tools.ozone.team.updateMember';
+
     /**
      * Add a member to the ozone team. Requires admin role.
      *

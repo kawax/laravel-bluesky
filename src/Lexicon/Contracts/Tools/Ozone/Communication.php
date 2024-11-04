@@ -6,6 +6,11 @@ namespace Revolution\Bluesky\Lexicon\Contracts\Tools\Ozone;
 
 interface Communication
 {
+    public const createTemplate = 'tools.ozone.communication.createTemplate';
+    public const deleteTemplate = 'tools.ozone.communication.deleteTemplate';
+    public const listTemplates = 'tools.ozone.communication.listTemplates';
+    public const updateTemplate = 'tools.ozone.communication.updateTemplate';
+
     /**
      * Administrative action to create a new, re-usable communication (email for now) template.
      *

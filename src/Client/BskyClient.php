@@ -5,7 +5,6 @@ namespace Revolution\Bluesky\Client;
 use Illuminate\Http\Client\Response;
 use Revolution\Bluesky\Lexicon\Contracts\App\Bsky\Actor;
 use Revolution\Bluesky\Lexicon\Contracts\App\Bsky\Feed;
-use Revolution\Bluesky\Lexicon\Enum\Bsky;
 
 class BskyClient implements Actor, Feed
 {
@@ -19,7 +18,7 @@ class BskyClient implements Actor, Feed
     public function getProfile(string $actor): Response
     {
         return $this->call(
-            api: Bsky::getProfile,
+            api: self::getProfile,
             method: self::get,
             params: compact($this->params(__METHOD__)),
         );
@@ -68,7 +67,7 @@ class BskyClient implements Actor, Feed
     public function getAuthorFeed(string $actor, ?int $limit = 50, ?string $cursor = null, ?string $filter = 'posts_with_replies', ?bool $includePins = null): Response
     {
         return $this->call(
-            api: Bsky::getAuthorFeed,
+            api: self::getAuthorFeed,
             method: self::get,
             params: compact($this->params(__METHOD__)),
         );
@@ -132,7 +131,7 @@ class BskyClient implements Actor, Feed
     public function getTimeline(?string $algorithm = null, ?int $limit = 50, ?string $cursor = null): Response
     {
         return $this->call(
-            api: Bsky::getTimeline,
+            api: self::getTimeline,
             method: self::get,
             params: compact($this->params(__METHOD__)),
         );

@@ -6,6 +6,9 @@ namespace Revolution\Bluesky\Lexicon\Contracts\Chat\Bsky;
 
 interface Actor
 {
+    public const deleteAccount = 'chat.bsky.actor.deleteAccount';
+    public const exportAccountData = 'chat.bsky.actor.exportAccountData';
+
     /**
      * chat.bsky.actor.deleteAccount
      *

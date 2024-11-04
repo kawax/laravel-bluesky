@@ -6,6 +6,14 @@ namespace Revolution\Bluesky\Lexicon\Contracts\App\Bsky;
 
 interface Actor
 {
+    public const getPreferences = 'app.bsky.actor.getPreferences';
+    public const getProfile = 'app.bsky.actor.getProfile';
+    public const getProfiles = 'app.bsky.actor.getProfiles';
+    public const getSuggestions = 'app.bsky.actor.getSuggestions';
+    public const putPreferences = 'app.bsky.actor.putPreferences';
+    public const searchActors = 'app.bsky.actor.searchActors';
+    public const searchActorsTypeahead = 'app.bsky.actor.searchActorsTypeahead';
+
     /**
      * Get private preferences attached to the current account. Expected use is synchronization between multiple devices, and import/export during account migration. Requires auth.
      *

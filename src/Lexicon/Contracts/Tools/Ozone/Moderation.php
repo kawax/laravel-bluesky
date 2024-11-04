@@ -6,6 +6,16 @@ namespace Revolution\Bluesky\Lexicon\Contracts\Tools\Ozone;
 
 interface Moderation
 {
+    public const emitEvent = 'tools.ozone.moderation.emitEvent';
+    public const getEvent = 'tools.ozone.moderation.getEvent';
+    public const getRecord = 'tools.ozone.moderation.getRecord';
+    public const getRecords = 'tools.ozone.moderation.getRecords';
+    public const getRepo = 'tools.ozone.moderation.getRepo';
+    public const getRepos = 'tools.ozone.moderation.getRepos';
+    public const queryEvents = 'tools.ozone.moderation.queryEvents';
+    public const queryStatuses = 'tools.ozone.moderation.queryStatuses';
+    public const searchRepos = 'tools.ozone.moderation.searchRepos';
+
     /**
      * Take a moderation action on an actor.
      *

@@ -4,10 +4,9 @@ declare(strict_types=1);
 
 namespace Revolution\Bluesky\Contracts;
 
+use BackedEnum;
 use Illuminate\Http\Client\PendingRequest;
 use Illuminate\Http\Client\Response;
-use Revolution\Bluesky\Lexicon\Enum\AtProto;
-use Revolution\Bluesky\Lexicon\Enum\Bsky;
 use Revolution\Bluesky\Notifications\BlueskyMessage;
 use Revolution\Bluesky\Session\OAuthSession;
 
@@ -23,7 +22,7 @@ interface Factory
 
     public function http(bool $auth = true): PendingRequest;
 
-    public function send(AtProto|Bsky|string $api, string $method = 'get', bool $auth = true, ?array $params = null): Response;
+    public function send(BackedEnum|string $api, string $method = 'get', bool $auth = true, ?array $params = null): Response;
 
     public function resolveHandle(string $handle): Response;
 

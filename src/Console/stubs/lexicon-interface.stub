@@ -6,5 +6,7 @@ namespace Revolution\Bluesky\Lexicon\Contracts\{namespace};
 
 interface {name}
 {
-{dummy}
+{const}
+
+{method}
 }

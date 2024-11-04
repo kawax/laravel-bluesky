@@ -5,7 +5,6 @@ namespace Revolution\Bluesky\Client;
 use Illuminate\Http\Client\Response;
 use Revolution\Bluesky\Lexicon\Contracts\Com\Atproto\Identity;
 use Revolution\Bluesky\Lexicon\Contracts\Com\Atproto\Repo;
-use Revolution\Bluesky\Lexicon\Enum\AtProto;
 
 class AtpClient implements Repo, Identity
 {
@@ -19,7 +18,7 @@ class AtpClient implements Repo, Identity
     public function createRecord(string $repo, string $collection, mixed $record, ?string $rkey = null, ?bool $validate = null, ?string $swapCommit = null): Response
     {
         return $this->call(
-            api: AtProto::createRecord,
+            api: self::createRecord,
             method: self::post,
             params: compact($this->params(__METHOD__)),
         );
@@ -78,7 +77,7 @@ class AtpClient implements Repo, Identity
     public function resolveHandle(string $handle): Response
     {
         return $this->call(
-            api: AtProto::resolveHandle,
+            api: self::resolveHandle,
             method: self::get,
             params: compact($this->params(__METHOD__)),
         );

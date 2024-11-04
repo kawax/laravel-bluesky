@@ -2,11 +2,10 @@
 
 namespace Revolution\Bluesky\Client;
 
+use BackedEnum;
 use Illuminate\Http\Client\PendingRequest;
 use Illuminate\Http\Client\Response;
 use ReflectionMethod;
-use Revolution\Bluesky\Lexicon\Enum\AtProto;
-use Revolution\Bluesky\Lexicon\Enum\Bsky;
 
 use function Illuminate\Support\enum_value;
 
@@ -17,7 +16,7 @@ trait HasHttp
 
     protected PendingRequest $http;
 
-    protected function call(AtProto|Bsky|string $api, string $method = 'get', ?array $params = null): Response
+    protected function call(BackedEnum|string $api, string $method = 'get', ?array $params = null): Response
     {
         $params = collect($params)
             ->reject(fn ($param) => is_null($param))

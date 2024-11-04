@@ -12,7 +12,7 @@ use Mockery\MockInterface;
 use Revolution\Bluesky\Agent\OAuthAgent;
 use Revolution\Bluesky\BlueskyClient;
 use Revolution\Bluesky\Facades\Bluesky;
-use Revolution\Bluesky\Lexicon\Enum\Bsky;
+use Revolution\Bluesky\Lexicon\Contracts\App\Bsky\Actor;
 use Revolution\Bluesky\Notifications\BlueskyMessage;
 use Revolution\Bluesky\Session\LegacySession;
 use Revolution\Bluesky\Session\OAuthSession;
@@ -390,7 +390,7 @@ class ClientTest extends TestCase
     {
         Http::fake(fn () => ['did' => 'did']);
 
-        $response = Bluesky::send(api: Bsky::getProfile, method: 'post', auth: false, params: ['actor' => 'test']);
+        $response = Bluesky::send(api: Actor::getProfile, method: 'post', auth: false, params: ['actor' => 'test']);
 
         $this->assertSame('did', $response->json('did'));
     }

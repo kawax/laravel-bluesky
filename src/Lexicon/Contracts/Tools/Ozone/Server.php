@@ -6,6 +6,8 @@ namespace Revolution\Bluesky\Lexicon\Contracts\Tools\Ozone;
 
 interface Server
 {
+    public const getConfig = 'tools.ozone.server.getConfig';
+
     /**
      * Get details about ozone's server configuration.
      *
