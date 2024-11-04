@@ -147,7 +147,7 @@ class LexiconContractsCommand extends Command
                     'integer' => 'int',
                     'boolean' => 'bool',
                     'string' => 'string',
-                    'array', 'object', 'union' => 'array',
+                    'array', 'object', 'union', 'unknown' => 'array',
                     default => '',
                 };
 

@@ -18,7 +18,7 @@ interface Repo
      *
      * method: post
      */
-    public function createRecord(string $repo, string $collection, $record, ?string $rkey = null, ?bool $validate = null, ?string $swapCommit = null);
+    public function createRecord(string $repo, string $collection, array $record, ?string $rkey = null, ?bool $validate = null, ?string $swapCommit = null);
 
     /**
      * Delete a repository record, or ensure it doesn't exist. Requires auth, implemented by PDS.
@@ -67,7 +67,7 @@ interface Repo
      *
      * method: post
      */
-    public function putRecord(string $repo, string $collection, string $rkey, $record, ?bool $validate = null, ?string $swapRecord = null, ?string $swapCommit = null);
+    public function putRecord(string $repo, string $collection, string $rkey, array $record, ?bool $validate = null, ?string $swapRecord = null, ?string $swapCommit = null);
 
     /**
      * Upload a new blob, to be referenced from a repository record. The blob will be deleted if it is not referenced within a time window (eg, minutes). Blob restrictions (mimetype, size, etc) are enforced when the reference is created. Requires auth, implemented by PDS.

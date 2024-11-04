@@ -32,14 +32,14 @@ interface Identity
      *
      * method: post
      */
-    public function signPlcOperation(?string $token = null, ?array $rotationKeys = null, ?array $alsoKnownAs = null, $verificationMethods = null, $services = null);
+    public function signPlcOperation(?string $token = null, ?array $rotationKeys = null, ?array $alsoKnownAs = null, ?array $verificationMethods = null, ?array $services = null);
 
     /**
      * Validates a PLC operation to ensure that it doesn't violate a service's constraints or get the identity into a bad state, then submits it to the PLC registry
      *
      * method: post
      */
-    public function submitPlcOperation($operation);
+    public function submitPlcOperation(array $operation);
 
     /**
      * Updates the current account's handle. Verifies handle validity, and updates did:plc document if necessary. Implemented by PDS, and requires auth.
