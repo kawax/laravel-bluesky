@@ -9,7 +9,6 @@ use Illuminate\Http\Client\Response;
 use Revolution\Bluesky\Lexicon\AtProto;
 use Revolution\Bluesky\Lexicon\Bsky;
 use Revolution\Bluesky\Notifications\BlueskyMessage;
-use Revolution\Bluesky\Session\LegacySession;
 use Revolution\Bluesky\Session\OAuthSession;
 
 interface Factory
