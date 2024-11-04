@@ -2,11 +2,12 @@
 
 declare(strict_types=1);
 
-namespace Revolution\Bluesky;
+namespace Revolution\Bluesky\Providers;
 
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\ServiceProvider;
 use Laravel\Socialite\Facades\Socialite;
+use Revolution\Bluesky\BlueskyClient;
 use Revolution\Bluesky\Console\LexiconContractsCommand;
 use Revolution\Bluesky\Console\LexiconEnumCommand;
 use Revolution\Bluesky\Console\NewPrivateKeyCommand;
@@ -18,7 +19,7 @@ class BlueskyServiceProvider extends ServiceProvider
 {
     public function register(): void
     {
-        $this->mergeConfigFrom(__DIR__.'/../config/bluesky.php', 'bluesky');
+        $this->mergeConfigFrom(__DIR__.'/../../config/bluesky.php', 'bluesky');
 
         $this->app->scoped(Factory::class, BlueskyClient::class);
     }
@@ -27,7 +28,7 @@ class BlueskyServiceProvider extends ServiceProvider
     {
         if ($this->app->runningInConsole()) {
             $this->publishes([
-                __DIR__.'/../config/bluesky.php' => config_path('bluesky.php'),
+                __DIR__.'/../../config/bluesky.php' => config_path('bluesky.php'),
             ], 'bluesky-config');
 
             $this->commands([

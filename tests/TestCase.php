@@ -6,7 +6,7 @@ namespace Tests;
 
 use Illuminate\Foundation\Application;
 use Laravel\Socialite\SocialiteServiceProvider;
-use Revolution\Bluesky\BlueskyServiceProvider;
+use Revolution\Bluesky\Providers\BlueskyServiceProvider;
 
 abstract class TestCase extends \Orchestra\Testbench\TestCase
 {

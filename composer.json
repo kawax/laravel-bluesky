@@ -40,7 +40,7 @@
   "extra": {
     "laravel": {
       "providers": [
-        "Revolution\\Bluesky\\BlueskyServiceProvider"
+        "Revolution\\Bluesky\\Providers\\BlueskyServiceProvider"
       ]
     }
   },
