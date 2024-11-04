@@ -39,7 +39,7 @@ interface Actor
      *
      * method: post
      */
-    public function putPreferences($preferences);
+    public function putPreferences(array $preferences);
 
     /**
      * Find actors (profiles) matching search criteria. Does not require auth.

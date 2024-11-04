@@ -102,5 +102,5 @@ interface Admin
      *
      * method: post
      */
-    public function updateSubjectStatus($subject, $takedown = null, $deactivated = null);
+    public function updateSubjectStatus(array $subject, ?array $takedown = null, ?array $deactivated = null);
 }

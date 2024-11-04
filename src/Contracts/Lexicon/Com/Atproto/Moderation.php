@@ -11,5 +11,5 @@ interface Moderation
      *
      * method: post
      */
-    public function createReport($reasonType, $subject, ?string $reason = null);
+    public function createReport(string $reasonType, array $subject, ?string $reason = null);
 }

@@ -11,7 +11,7 @@ interface Moderation
      *
      * method: post
      */
-    public function emitEvent($event, $subject, string $createdBy, ?array $subjectBlobCids = null);
+    public function emitEvent(array $event, array $subject, string $createdBy, ?array $subjectBlobCids = null);
 
     /**
      * Get details about a moderation event.
