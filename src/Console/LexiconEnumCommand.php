@@ -73,12 +73,14 @@ class LexiconEnumCommand extends Command
     protected function atproto(): void
     {
         $this->action(path: '/com/atproto', name: 'AtProto');
+        $this->action(path: '/com/atproto/sync/', name: 'AtProtoSync', sync: true);
     }
 
-    protected function action(string $path, string $name): void
+    protected function action(string $path, string $name, bool $sync = false): void
     {
         $enum = collect($this->files)
-            ->filter(fn (string $file) => Str::contains($file, $path) && Str::doesntContain($file, '/com/atproto/sync/'))
+            ->filter(fn (string $file) => Str::contains($file, $path))
+            ->reject(fn (string $file) => ! $sync && Str::contains($file, '/com/atproto/sync/'))
             ->mapWithKeys(fn (string $file) => [Str::of($file)->basename()->chopEnd('.json')->toString() => $file])
             ->map(function (string $file) {
                 $json = File::json($file);
