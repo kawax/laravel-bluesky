@@ -97,14 +97,14 @@ class BlueskyClient implements Factory
         return $this->http($auth)->$method(enum_value($api), $params);
     }
 
-    public function bsky(bool $auth = false): BskyClient
+    protected function bsky(bool $auth = false): BskyClient
     {
         return Container::getInstance()
             ->make(BskyClient::class)
             ->withHttp($this->http($auth));
     }
 
-    public function atp(bool $auth = true): AtpClient
+    protected function atp(bool $auth = true): AtpClient
     {
         return Container::getInstance()
             ->make(AtpClient::class)
