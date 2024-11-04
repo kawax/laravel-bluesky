@@ -99,16 +99,12 @@ class BlueskyClient implements Factory
 
     protected function bsky(bool $auth = false): BskyClient
     {
-        return Container::getInstance()
-            ->make(BskyClient::class)
-            ->withHttp($this->http($auth));
+        return app(BskyClient::class)->withHttp($this->http($auth));
     }
 
     protected function atp(bool $auth = true): AtpClient
     {
-        return Container::getInstance()
-            ->make(AtpClient::class)
-            ->withHttp($this->http($auth));
+        return app(AtpClient::class)->withHttp($this->http($auth));
     }
 
     /**
