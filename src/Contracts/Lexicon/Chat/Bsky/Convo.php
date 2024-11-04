@@ -67,7 +67,7 @@ interface Convo
      *
      * method: post
      */
-    public function sendMessage(string $convoId, $message);
+    public function sendMessage(string $convoId, array $message);
 
     /**
      * chat.bsky.convo.sendMessageBatch
