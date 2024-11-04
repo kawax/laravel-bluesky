@@ -44,6 +44,8 @@ class LexiconContractsCommand extends Command
 
     protected array $files;
 
+    protected Collection $jsons;
+
     /**
      * Execute the console command.
      *
@@ -65,13 +67,15 @@ class LexiconContractsCommand extends Command
 
     protected function generate(): void
     {
-        collect($this->files)
+        $this->jsons = collect($this->files)
             ->filter(fn (string $file) => Str::endsWith($file, '.json'))
             ->mapWithKeys(function (string $file) {
                 $json = File::json($file);
 
                 return [Arr::get($json, 'id') => $json];
-            })
+            });
+
+        $this->jsons
             ->filter(function (array $json) {
                 $type = Arr::get($json, 'defs.main.type');
                 if (in_array($type, ['query', 'procedure'], true)) {
@@ -89,12 +93,12 @@ class LexiconContractsCommand extends Command
 
                 // get/query parameters
                 $parameters = Arr::get($json, 'defs.main.parameters');
-                $params = $this->getParameters($parameters);
+                $params = $this->getParameters($id, $parameters);
 
-                // post/procedure input
+                // post/procedure input schema
                 if (blank($params)) {
                     $input = Arr::get($json, 'defs.main.input.schema');
-                    $params = $this->getParameters($input);
+                    $params = $this->getParameters($id, $input);
                 }
 
                 $type = match (Arr::get($json, 'defs.main.type')) {
@@ -118,20 +122,32 @@ class LexiconContractsCommand extends Command
             });
     }
 
-    protected function getParameters(?array $parameters): string
+    protected function getParameters(string $id, ?array $parameters): string
     {
         $required = Arr::get($parameters, 'required', []);
 
         $properties = Arr::get($parameters, 'properties', []);
 
         return collect($properties)
-            ->map(function ($property, $name) use ($required) {
+            ->map(function ($property, $name) use ($id, $required) {
                 $type = Arr::get($property, 'type');
+
+                if ($type === 'ref') {
+                    $ref = Arr::get($property, 'ref');
+                    if (Str::doesntContain($ref, '.')) {
+                        $ref = $id.$ref;
+                    }
+                    $ref_id = Str::before($ref, '#');
+                    $ref_item = Str::after($ref, '#');
+                    $ref_type = $ref_id.'.defs.'.$ref_item.'.type';
+                    $type = $this->jsons->dot()->get($ref_type);
+                }
+
                 $type = match ($type) {
                     'integer' => 'int',
                     'boolean' => 'bool',
                     'string' => 'string',
-                    'array' => 'array',
+                    'array', 'object', 'union' => 'array',
                     default => '',
                 };
 
