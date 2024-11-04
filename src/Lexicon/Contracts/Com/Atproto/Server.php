@@ -32,7 +32,7 @@ interface Server
      *
      * method: post
      */
-    public function createAccount(string $handle, ?string $email = null, ?string $did = null, ?string $inviteCode = null, ?string $verificationCode = null, ?string $verificationPhone = null, ?string $password = null, ?string $recoveryKey = null, ?array $plcOp = null);
+    public function createAccount(string $handle, ?string $email = null, ?string $did = null, ?string $inviteCode = null, ?string $verificationCode = null, ?string $verificationPhone = null, ?string $password = null, ?string $recoveryKey = null, mixed $plcOp = null);
 
     /**
      * Create an App Password.

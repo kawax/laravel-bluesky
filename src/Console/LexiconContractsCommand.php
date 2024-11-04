@@ -147,7 +147,8 @@ class LexiconContractsCommand extends Command
                     'integer' => 'int',
                     'boolean' => 'bool',
                     'string' => 'string',
-                    'array', 'object', 'union', 'unknown' => 'array',
+                    'unknown' => 'mixed',
+                    'array', 'object', 'union' => 'array',
                     default => '',
                 };
 
@@ -175,7 +176,7 @@ class LexiconContractsCommand extends Command
                         };
                     }
 
-                    if (filled($type)) {
+                    if (filled($type) && $type !== 'mixed') {
                         $type = '?'.$type;
                     }
 

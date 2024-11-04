@@ -16,7 +16,7 @@ class AtpClient implements Repo, Identity
         // TODO: Implement applyWrites() method.
     }
 
-    public function createRecord(string $repo, string $collection, $record, ?string $rkey = null, ?bool $validate = null, ?string $swapCommit = null): Response
+    public function createRecord(string $repo, string $collection, mixed $record, ?string $rkey = null, ?bool $validate = null, ?string $swapCommit = null): Response
     {
         return $this->call(
             api: AtProto::createRecord,
@@ -55,7 +55,7 @@ class AtpClient implements Repo, Identity
         // TODO: Implement listRecords() method.
     }
 
-    public function putRecord(string $repo, string $collection, string $rkey, $record, ?bool $validate = null, ?string $swapRecord = null, ?string $swapCommit = null)
+    public function putRecord(string $repo, string $collection, string $rkey, mixed $record, ?bool $validate = null, ?string $swapRecord = null, ?string $swapCommit = null)
     {
         // TODO: Implement putRecord() method.
     }
@@ -84,12 +84,12 @@ class AtpClient implements Repo, Identity
         );
     }
 
-    public function signPlcOperation(?string $token = null, ?array $rotationKeys = null, ?array $alsoKnownAs = null, $verificationMethods = null, $services = null)
+    public function signPlcOperation(?string $token = null, ?array $rotationKeys = null, ?array $alsoKnownAs = null, mixed $verificationMethods = null, mixed $services = null)
     {
         // TODO: Implement signPlcOperation() method.
     }
 
-    public function submitPlcOperation($operation)
+    public function submitPlcOperation(mixed $operation)
     {
         // TODO: Implement submitPlcOperation() method.
     }
