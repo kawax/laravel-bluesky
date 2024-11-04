@@ -5,7 +5,6 @@ namespace Revolution\Bluesky\Client;
 use Illuminate\Http\Client\PendingRequest;
 use Illuminate\Http\Client\Response;
 use ReflectionMethod;
-use ReflectionParameter;
 use Revolution\Bluesky\Lexicon\Enum\AtProto;
 use Revolution\Bluesky\Lexicon\Enum\Bsky;
 
@@ -32,7 +31,8 @@ trait HasHttp
         $ref = new ReflectionMethod($method);
 
         return collect($ref->getParameters())
-            ->map(fn (ReflectionParameter $param) => $param->getName())
+            ->map
+            ->getName()
             ->toArray();
     }
 
