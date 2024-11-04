@@ -215,13 +215,7 @@ class BlueskyClient implements Factory
             throw new InvalidArgumentException("The handle '$handle' is not a valid handle.");
         }
 
-        return $this->send(
-            api: AtProto::resolveHandle,
-            auth: false,
-            params: [
-                'handle' => $handle,
-            ],
-        );
+        return $this->atp(auth: false)->resolveHandle(handle: $handle);
     }
 
     public function identity(): Identity
