@@ -12,7 +12,7 @@ use Mockery\MockInterface;
 use Revolution\Bluesky\Agent\OAuthAgent;
 use Revolution\Bluesky\BlueskyClient;
 use Revolution\Bluesky\Facades\Bluesky;
-use Revolution\Bluesky\Lexicon\Bsky;
+use Revolution\Bluesky\Lexicon\Enum\Bsky;
 use Revolution\Bluesky\Notifications\BlueskyMessage;
 use Revolution\Bluesky\Session\LegacySession;
 use Revolution\Bluesky\Session\OAuthSession;

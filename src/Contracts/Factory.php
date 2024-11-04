@@ -6,8 +6,8 @@ namespace Revolution\Bluesky\Contracts;
 
 use Illuminate\Http\Client\PendingRequest;
 use Illuminate\Http\Client\Response;
-use Revolution\Bluesky\Lexicon\AtProto;
-use Revolution\Bluesky\Lexicon\Bsky;
+use Revolution\Bluesky\Lexicon\Enum\AtProto;
+use Revolution\Bluesky\Lexicon\Enum\Bsky;
 use Revolution\Bluesky\Notifications\BlueskyMessage;
 use Revolution\Bluesky\Session\OAuthSession;
 

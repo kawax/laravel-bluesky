@@ -50,8 +50,10 @@ class LexiconEnumCommand extends Command
      */
     public function handle(): int
     {
-        $this->php_path = realpath(__DIR__.'/../Lexicon/');
+        $this->php_path = realpath(__DIR__.'/../Lexicon/Enum/');
         $this->json_path = realpath(__DIR__.'/../../atproto/lexicons/');
+
+        File::deleteDirectories($this->php_path);
 
         $this->files = File::allFiles($this->json_path);
 

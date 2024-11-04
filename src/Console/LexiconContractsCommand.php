@@ -53,7 +53,7 @@ class LexiconContractsCommand extends Command
      */
     public function handle(): int
     {
-        $this->php_path = realpath(__DIR__.'/../Contracts/Lexicon/');
+        $this->php_path = realpath(__DIR__.'/../Lexicon/Contracts/');
         $this->json_path = realpath(__DIR__.'/../../atproto/lexicons/');
 
         File::deleteDirectories($this->php_path);
