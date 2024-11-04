@@ -15,6 +15,8 @@ use Illuminate\Support\Traits\Macroable;
 use InvalidArgumentException;
 use Revolution\Bluesky\Agent\LegacyAgent;
 use Revolution\Bluesky\Agent\OAuthAgent;
+use Revolution\Bluesky\Client\AtpClient;
+use Revolution\Bluesky\Client\BskyClient;
 use Revolution\Bluesky\Contracts\Agent;
 use Revolution\Bluesky\Contracts\Factory;
 use Revolution\Bluesky\Lexicon\Enum\AtProto;
@@ -95,17 +97,27 @@ class BlueskyClient implements Factory
         return $this->http($auth)->$method(enum_value($api), $params);
     }
 
+    public function bsky(bool $auth = false): BskyClient
+    {
+        return Container::getInstance()
+            ->make(BskyClient::class)
+            ->withHttp($this->http($auth));
+    }
+
+    public function atp(bool $auth = true): AtpClient
+    {
+        return Container::getInstance()
+            ->make(AtpClient::class)
+            ->withHttp($this->http($auth));
+    }
+
     /**
      * @param  string|null  $actor  DID or handle.
      */
     public function profile(?string $actor = null): Response
     {
-        return $this->send(
-            api: Bsky::getProfile,
-            auth: false,
-            params: [
-                'actor' => $actor ?? $this->agent()?->did() ?? '',
-            ],
+        return $this->bsky(auth: false)->getProfile(
+            actor: $actor ?? $this->agent()?->did() ?? '',
         );
     }
 
@@ -116,15 +128,11 @@ class BlueskyClient implements Factory
      */
     public function feed(?string $actor = null, int $limit = 50, string $cursor = '', string $filter = 'posts_with_replies'): Response
     {
-        return $this->send(
-            api: Bsky::getAuthorFeed,
-            auth: false,
-            params: [
-                'actor' => $actor ?? $this->agent()?->did() ?? '',
-                'limit' => $limit,
-                'cursor' => $cursor,
-                'filter' => $filter,
-            ],
+        return $this->bsky(auth: false)->getAuthorFeed(
+            actor: $actor ?? $this->agent()?->did() ?? '',
+            limit: $limit,
+            cursor: $cursor,
+            filter: $filter,
         );
     }
 
@@ -133,25 +141,18 @@ class BlueskyClient implements Factory
      */
     public function timeline(int $limit = 50, string $cursor = ''): Response
     {
-        return $this->send(
-            api: Bsky::getTimeline,
-            params: [
-                'limit' => $limit,
-                'cursor' => $cursor,
-            ],
+        return $this->bsky(auth: true)->getTimeline(
+            limit: $limit,
+            cursor: $cursor,
         );
     }
 
     public function createRecord(string $repo, string $collection, array $record): Response
     {
-        return $this->send(
-            api: AtProto::createRecord,
-            method: 'post',
-            params: [
-                'repo' => $repo,
-                'collection' => $collection,
-                'record' => $record,
-            ],
+        return $this->atp(auth: true)->createRecord(
+            repo: $repo,
+            collection: $collection,
+            record: $record,
         );
     }
 
@@ -184,6 +185,18 @@ class BlueskyClient implements Factory
         return $this->http()
             ->withBody($data, $type)
             ->post(AtProto::uploadBlob->value);
+    }
+
+    /**
+     * Upload video.
+     *
+     * @throws ConnectionException
+     */
+    public function uploadVideo(mixed $data, string $type = 'video/mp4'): Response
+    {
+        return $this->http()
+            ->withBody($data, $type)
+            ->post(Bsky::uploadVideo->value);
     }
 
     public function refreshSession(): self
