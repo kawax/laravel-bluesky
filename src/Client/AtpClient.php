@@ -7,8 +7,10 @@ use Revolution\Bluesky\Lexicon\Contracts\Com\Atproto\Identity;
 use Revolution\Bluesky\Lexicon\Contracts\Com\Atproto\Repo;
 use Revolution\Bluesky\Lexicon\Enum\AtProto;
 
-class AtpClient extends AbstractClient implements Repo, Identity
+class AtpClient implements Repo, Identity
 {
+    use HasHttp;
+
     public function applyWrites(string $repo, array $writes, ?bool $validate = null, ?string $swapCommit = null)
     {
         // TODO: Implement applyWrites() method.
@@ -18,7 +20,7 @@ class AtpClient extends AbstractClient implements Repo, Identity
     {
         return $this->call(
             api: AtProto::createRecord,
-            method: self::POST,
+            method: self::post,
             params: compact($this->params(__METHOD__)),
         );
     }
@@ -77,7 +79,7 @@ class AtpClient extends AbstractClient implements Repo, Identity
     {
         return $this->call(
             api: AtProto::resolveHandle,
-            method: self::GET,
+            method: self::get,
             params: compact($this->params(__METHOD__)),
         );
     }

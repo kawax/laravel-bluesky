@@ -6,6 +6,8 @@ use Revolution\Bluesky\Lexicon\Contracts\Com\Atproto\Sync;
 
 class AtpSyncClient implements Sync
 {
+    use HasHttp;
+
     public function getBlob(string $did, string $cid)
     {
         // TODO: Implement getBlob() method.

@@ -7,8 +7,9 @@ use Revolution\Bluesky\Lexicon\Contracts\App\Bsky\Actor;
 use Revolution\Bluesky\Lexicon\Contracts\App\Bsky\Feed;
 use Revolution\Bluesky\Lexicon\Enum\Bsky;
 
-class BskyClient extends AbstractClient implements Actor, Feed
+class BskyClient implements Actor, Feed
 {
+    use HasHttp;
 
     public function getPreferences()
     {
@@ -19,7 +20,7 @@ class BskyClient extends AbstractClient implements Actor, Feed
     {
         return $this->call(
             api: Bsky::getProfile,
-            method: self::GET,
+            method: self::get,
             params: compact($this->params(__METHOD__)),
         );
     }
@@ -68,7 +69,7 @@ class BskyClient extends AbstractClient implements Actor, Feed
     {
         return $this->call(
             api: Bsky::getAuthorFeed,
-            method: self::GET,
+            method: self::get,
             params: compact($this->params(__METHOD__)),
         );
     }
@@ -132,7 +133,7 @@ class BskyClient extends AbstractClient implements Actor, Feed
     {
         return $this->call(
             api: Bsky::getTimeline,
-            method: self::GET,
+            method: self::get,
             params: compact($this->params(__METHOD__)),
         );
     }
