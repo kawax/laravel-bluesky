@@ -76,15 +76,10 @@ trait HasShortHand
     {
         $message = $text instanceof BlueskyMessage ? $text : BlueskyMessage::create($text);
 
-        $record = collect($message->toArray())
-            ->put('createdAt', now()->toISOString())
-            ->reject(fn ($item) => blank($item))
-            ->toArray();
-
         return $this->createRecord(
             repo: $this->agent()->did(),
             collection: 'app.bsky.feed.post',
-            record: $record,
+            record: $message->toRecord(),
         );
     }
 
