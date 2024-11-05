@@ -156,4 +156,15 @@ final class BlueskyMessage implements Arrayable
             ->reject(fn ($item) => is_null($item))
             ->toArray();
     }
+
+    /**
+     * @return array{text: string, facets?: array, embed?: array, langs?: array, createdAt: string}
+     */
+    public function toRecord(): array
+    {
+        return collect($this->toArray())
+            ->put('createdAt', now()->toISOString())
+            ->reject(fn ($item) => blank($item))
+            ->toArray();
+    }
 }
