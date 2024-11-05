@@ -11,8 +11,8 @@ use function Illuminate\Support\enum_value;
 
 trait HasHttp
 {
-    protected const post = 'post';
-    protected const get = 'get';
+    protected const POST = 'post';
+    protected const GET = 'get';
 
     protected PendingRequest $http;
 
