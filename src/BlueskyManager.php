@@ -47,11 +47,9 @@ class BlueskyManager implements Factory
      */
     public function login(string $identifier, #[\SensitiveParameter] string $password): self
     {
-        $response = Http::baseUrl($this->entryway().'/xrpc/')
-            ->post(Server::createSession, [
-                'identifier' => $identifier,
-                'password' => $password,
-            ]);
+        $response = $this->atp(auth: false)
+            ->withHttp(Http::baseUrl($this->entryway().'/xrpc/'))
+            ->createSession($identifier, $password);
 
         $session = LegacySession::create($response->collect());
         $this->agent = LegacyAgent::create($session);
