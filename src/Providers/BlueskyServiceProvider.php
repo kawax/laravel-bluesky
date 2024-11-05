@@ -7,7 +7,7 @@ namespace Revolution\Bluesky\Providers;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\ServiceProvider;
 use Laravel\Socialite\Facades\Socialite;
-use Revolution\Bluesky\BlueskyClient;
+use Revolution\Bluesky\BlueskyManager;
 use Revolution\Bluesky\Console\NewPrivateKeyCommand;
 use Revolution\Bluesky\Contracts\Factory;
 use Revolution\Bluesky\Socalite\BlueskyProvider;
@@ -19,7 +19,7 @@ class BlueskyServiceProvider extends ServiceProvider
     {
         $this->mergeConfigFrom(__DIR__.'/../../config/bluesky.php', 'bluesky');
 
-        $this->app->scoped(Factory::class, BlueskyClient::class);
+        $this->app->scoped(Factory::class, BlueskyManager::class);
     }
 
     public function boot(): void

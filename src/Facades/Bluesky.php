@@ -39,7 +39,7 @@ use Revolution\Bluesky\Support\PDS;
  * @method static static|mixed when(\Closure|mixed|null $value = null, callable|null $callback = null, callable|null $default = null)
  * @method static static|mixed unless(\Closure|mixed|null $value = null, callable|null $callback = null, callable|null $default = null)
  *
- * @mixin \Revolution\Bluesky\BlueskyClient
+ * @mixin \Revolution\Bluesky\BlueskyManager
  */
 class Bluesky extends Facade
 {

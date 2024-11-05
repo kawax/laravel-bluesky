@@ -24,7 +24,7 @@ use Revolution\Bluesky\Support\PDS;
 
 use function Illuminate\Support\enum_value;
 
-class BlueskyClient implements Factory
+class BlueskyManager implements Factory
 {
     use HasShortHand;
     use Macroable;

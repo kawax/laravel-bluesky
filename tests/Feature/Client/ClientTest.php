@@ -10,7 +10,7 @@ use InvalidArgumentException;
 use Mockery;
 use Mockery\MockInterface;
 use Revolution\Bluesky\Agent\OAuthAgent;
-use Revolution\Bluesky\BlueskyClient;
+use Revolution\Bluesky\BlueskyManager;
 use Revolution\Bluesky\Facades\Bluesky;
 use Revolution\AtProto\Lexicon\Contracts\App\Bsky\Actor;
 use Revolution\Bluesky\Notifications\BlueskyMessage;
@@ -43,7 +43,7 @@ class ClientTest extends TestCase
     {
         Http::fake(fn () => $this->session);
 
-        $client = new BlueskyClient();
+        $client = new BlueskyManager();
 
         $client->login(identifier: 'identifier', password: 'password');
 
@@ -59,7 +59,7 @@ class ClientTest extends TestCase
     {
         Http::fake(fn () => $this->session);
 
-        $client = new BlueskyClient();
+        $client = new BlueskyManager();
 
         $client->login(identifier: 'identifier', password: 'password');
 
@@ -77,7 +77,7 @@ class ClientTest extends TestCase
     {
         Http::fake(fn () => $this->session);
 
-        $client = new BlueskyClient();
+        $client = new BlueskyManager();
 
         $client->login(identifier: 'identifier', password: 'password');
 
@@ -366,7 +366,7 @@ class ClientTest extends TestCase
 
     public function test_refresh_session()
     {
-        $this->assertInstanceOf(BlueskyClient::class, Bluesky::refreshSession());
+        $this->assertInstanceOf(BlueskyManager::class, Bluesky::refreshSession());
     }
 
     public function test_with_bluesky_trait()
@@ -383,7 +383,7 @@ class ClientTest extends TestCase
             }
         };
 
-        $this->assertInstanceOf(BlueskyClient::class, $user->bluesky());
+        $this->assertInstanceOf(BlueskyManager::class, $user->bluesky());
     }
 
     public function test_send()
