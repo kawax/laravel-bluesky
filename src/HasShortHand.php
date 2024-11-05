@@ -5,10 +5,10 @@ namespace Revolution\Bluesky;
 use Illuminate\Http\Client\ConnectionException;
 use Illuminate\Http\Client\Response;
 use InvalidArgumentException;
+use Revolution\AtProto\Lexicon\Contracts\App\Bsky\Video;
+use Revolution\AtProto\Lexicon\Contracts\Com\Atproto\Repo;
 use Revolution\Bluesky\Client\AtpClient;
 use Revolution\Bluesky\Client\BskyClient;
-use Revolution\Bluesky\Lexicon\Contracts\App\Bsky\Video;
-use Revolution\Bluesky\Lexicon\Contracts\Com\Atproto\Repo;
 use Revolution\Bluesky\Notifications\BlueskyMessage;
 use Revolution\Bluesky\Support\Identity;
 

@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Revolution\Bluesky\Embed;
 
 use Illuminate\Contracts\Support\Arrayable;
-use Revolution\Bluesky\Lexicon\Enum\Embed;
+use Revolution\AtProto\Lexicon\Enum\Embed;
 
 final readonly class External implements Arrayable
 {

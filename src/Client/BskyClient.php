@@ -3,8 +3,8 @@
 namespace Revolution\Bluesky\Client;
 
 use Illuminate\Http\Client\Response;
-use Revolution\Bluesky\Lexicon\Contracts\App\Bsky\Actor;
-use Revolution\Bluesky\Lexicon\Contracts\App\Bsky\Feed;
+use Revolution\AtProto\Lexicon\Contracts\App\Bsky\Actor;
+use Revolution\AtProto\Lexicon\Contracts\App\Bsky\Feed;
 
 class BskyClient implements Actor, Feed
 {

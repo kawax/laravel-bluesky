@@ -179,7 +179,7 @@ This package only has the minimum functionality of the notification and Socialit
 // AppServiceProvider
 
 use Revolution\Bluesky\Facades\Bluesky;
-use Revolution\Bluesky\Lexicon\Contracts\App\Bsky\Feed;
+use Revolution\AtProto\Lexicon\Contracts\App\Bsky\Feed;
 use Illuminate\Http\Client\Response;
 
     public function boot(): void

@@ -16,7 +16,8 @@
     "laravel/socialite": "^5.16",
     "guzzlehttp/guzzle": "^7.8",
     "firebase/php-jwt": "^6.10",
-    "phpseclib/phpseclib": "^3.0"
+    "phpseclib/phpseclib": "^3.0",
+    "revolution/atproto-lexicon-contracts": "^1.0"
   },
   "require-dev": {
     "orchestra/testbench": "^9.0"

@@ -3,8 +3,8 @@
 namespace Revolution\Bluesky\Client;
 
 use Illuminate\Http\Client\Response;
-use Revolution\Bluesky\Lexicon\Contracts\Com\Atproto\Identity;
-use Revolution\Bluesky\Lexicon\Contracts\Com\Atproto\Repo;
+use Revolution\AtProto\Lexicon\Contracts\Com\Atproto\Identity;
+use Revolution\AtProto\Lexicon\Contracts\Com\Atproto\Repo;
 
 class AtpClient implements Repo, Identity
 {

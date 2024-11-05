@@ -13,7 +13,7 @@ use Mockery;
 use Revolution\Bluesky\Embed\External;
 use Revolution\Bluesky\Embed\Images;
 use Revolution\Bluesky\Facades\Bluesky;
-use Revolution\Bluesky\Lexicon\Enum\Embed;
+use Revolution\AtProto\Lexicon\Enum\Embed;
 use Revolution\Bluesky\Notifications\BlueskyChannel;
 use Revolution\Bluesky\Notifications\BlueskyMessage;
 use Revolution\Bluesky\Notifications\BlueskyRoute;

@@ -2,7 +2,7 @@
 
 namespace Revolution\Bluesky\Client;
 
-use Revolution\Bluesky\Lexicon\Contracts\Com\Atproto\Sync;
+use Revolution\AtProto\Lexicon\Contracts\Com\Atproto\Sync;
 
 class AtpSyncClient implements Sync
 {
