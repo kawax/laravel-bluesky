@@ -5,8 +5,9 @@ namespace Revolution\Bluesky\Client;
 use Illuminate\Http\Client\Response;
 use Revolution\AtProto\Lexicon\Contracts\Com\Atproto\Identity;
 use Revolution\AtProto\Lexicon\Contracts\Com\Atproto\Repo;
+use Revolution\AtProto\Lexicon\Contracts\Com\Atproto\Server;
 
-class AtpClient implements Repo, Identity
+class AtpClient implements Repo, Identity, Server
 {
     use HasHttp;
 
@@ -19,7 +20,7 @@ class AtpClient implements Repo, Identity
     {
         return $this->call(
             api: self::createRecord,
-            method: self::post,
+            method: self::POST,
             params: compact($this->params(__METHOD__)),
         );
     }
@@ -78,7 +79,7 @@ class AtpClient implements Repo, Identity
     {
         return $this->call(
             api: self::resolveHandle,
-            method: self::get,
+            method: self::GET,
             params: compact($this->params(__METHOD__)),
         );
     }
@@ -96,5 +97,134 @@ class AtpClient implements Repo, Identity
     public function updateHandle(string $handle)
     {
         // TODO: Implement updateHandle() method.
+    }
+
+    public function activateAccount()
+    {
+        // TODO: Implement activateAccount() method.
+    }
+
+    public function checkAccountStatus()
+    {
+        // TODO: Implement checkAccountStatus() method.
+    }
+
+    public function confirmEmail(string $email, string $token)
+    {
+        // TODO: Implement confirmEmail() method.
+    }
+
+    public function createAccount(string $handle, ?string $email = null, ?string $did = null, ?string $inviteCode = null, ?string $verificationCode = null, ?string $verificationPhone = null, ?string $password = null, ?string $recoveryKey = null, mixed $plcOp = null)
+    {
+        // TODO: Implement createAccount() method.
+    }
+
+    public function createAppPassword(string $name, ?bool $privileged = null)
+    {
+        // TODO: Implement createAppPassword() method.
+    }
+
+    public function createInviteCode(int $useCount, ?string $forAccount = null)
+    {
+        // TODO: Implement createInviteCode() method.
+    }
+
+    public function createInviteCodes(int $codeCount, int $useCount, ?array $forAccounts = null)
+    {
+        // TODO: Implement createInviteCodes() method.
+    }
+
+    public function createSession(string $identifier, string $password, ?string $authFactorToken = null): Response
+    {
+        return $this->call(
+            api: self::createSession,
+            method: self::POST,
+            params: compact($this->params(__METHOD__)),
+        );
+    }
+
+    public function deactivateAccount(?string $deleteAfter = null)
+    {
+        // TODO: Implement deactivateAccount() method.
+    }
+
+    public function deleteAccount(string $did, string $password, string $token)
+    {
+        // TODO: Implement deleteAccount() method.
+    }
+
+    public function deleteSession()
+    {
+        // TODO: Implement deleteSession() method.
+    }
+
+    public function describeServer()
+    {
+        // TODO: Implement describeServer() method.
+    }
+
+    public function getAccountInviteCodes(?bool $includeUsed = null, ?bool $createAvailable = null)
+    {
+        // TODO: Implement getAccountInviteCodes() method.
+    }
+
+    public function getServiceAuth(string $aud, ?int $exp = null, ?string $lxm = null)
+    {
+        // TODO: Implement getServiceAuth() method.
+    }
+
+    public function getSession()
+    {
+        // TODO: Implement getSession() method.
+    }
+
+    public function listAppPasswords()
+    {
+        // TODO: Implement listAppPasswords() method.
+    }
+
+    public function refreshSession()
+    {
+        // TODO: Implement refreshSession() method.
+    }
+
+    public function requestAccountDelete()
+    {
+        // TODO: Implement requestAccountDelete() method.
+    }
+
+    public function requestEmailConfirmation()
+    {
+        // TODO: Implement requestEmailConfirmation() method.
+    }
+
+    public function requestEmailUpdate()
+    {
+        // TODO: Implement requestEmailUpdate() method.
+    }
+
+    public function requestPasswordReset(string $email)
+    {
+        // TODO: Implement requestPasswordReset() method.
+    }
+
+    public function reserveSigningKey(?string $did = null)
+    {
+        // TODO: Implement reserveSigningKey() method.
+    }
+
+    public function resetPassword(string $token, string $password)
+    {
+        // TODO: Implement resetPassword() method.
+    }
+
+    public function revokeAppPassword(string $name)
+    {
+        // TODO: Implement revokeAppPassword() method.
+    }
+
+    public function updateEmail(string $email, ?bool $emailAuthFactor = null, ?string $token = null)
+    {
+        // TODO: Implement updateEmail() method.
     }
 }
