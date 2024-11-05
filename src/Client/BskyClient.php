@@ -19,7 +19,7 @@ class BskyClient implements Actor, Feed
     {
         return $this->call(
             api: self::getProfile,
-            method: self::get,
+            method: self::GET,
             params: compact($this->params(__METHOD__)),
         );
     }
@@ -68,7 +68,7 @@ class BskyClient implements Actor, Feed
     {
         return $this->call(
             api: self::getAuthorFeed,
-            method: self::get,
+            method: self::GET,
             params: compact($this->params(__METHOD__)),
         );
     }
@@ -132,7 +132,7 @@ class BskyClient implements Actor, Feed
     {
         return $this->call(
             api: self::getTimeline,
-            method: self::get,
+            method: self::GET,
             params: compact($this->params(__METHOD__)),
         );
     }
