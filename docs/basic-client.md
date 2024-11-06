@@ -37,8 +37,6 @@ $session = OAuthSession::create(session('bluesky_session'));
 $timeline = Bluesky::withToken($session)->timeline()->json();
 ```
 
-The following document uses App password as an example, but it is almost the same for OAuth.
-
 ## Response
 
 The API results are returned as an `Illuminate\Http\Client\Response` object, so you can use it freely just like you would with normal Laravel.
@@ -87,8 +85,7 @@ Only my posts and reposts.
 use Revolution\Bluesky\Facades\Bluesky;
 
 /** @var \Illuminate\Http\Client\Response $response */
-$response = Bluesky::login(identifier: config('bluesky.identifier'), password: config('bluesky.password'))
-       ->feed();
+$response = Bluesky::withToken()->feed();
 
 dump($response->collect('feed'));
 ```
@@ -99,9 +96,7 @@ dump($response->collect('feed'));
 use Revolution\Bluesky\Facades\Bluesky;
 
 /** @var \Illuminate\Http\Client\Response $response */
-$response = Bluesky::login(identifier: config('bluesky.identifier'), password: config('bluesky.password'))
-       ->timeline()
-       ->throw();
+$response = Bluesky::withToken()->timeline();
 
 dump($response->json());
 ```
@@ -112,8 +107,7 @@ dump($response->json());
 use Revolution\Bluesky\Facades\Bluesky;
 
 /** @var \Illuminate\Http\Client\Response $response */
-$response = Bluesky::login(identifier: config('bluesky.identifier'), password: config('bluesky.password'))
-       ->post('test');
+$response = Bluesky::withToken()->post('test');
 
 dump($response->json());
 ```
@@ -133,8 +127,7 @@ $message = BlueskyMessage::create(text: 'test')
                           ->tag(text: '#Laravel', tag: 'Laravel');
 
 /** @var \Illuminate\Http\Client\Response $response */
-$response = Bluesky::login(identifier: config('bluesky.identifier'), password: config('bluesky.password'))
-       ->post($message);
+$response = Bluesky::withToken()->post($message);
 
 dump($response->json());
 ```
@@ -152,8 +145,7 @@ $message = BlueskyMessage::create(text: 'test')
                           ->embed($external);
 
 /** @var \Illuminate\Http\Client\Response $response */
-$response = Bluesky::login(identifier: config('bluesky.identifier'), password: config('bluesky.password'))
-       ->post($message);
+$response = Bluesky::withToken()->post($message);
 
 dump($response->json());
 ```
@@ -168,7 +160,7 @@ use Revolution\Bluesky\Facades\Bluesky;
 use Revolution\Bluesky\Notifications\BlueskyMessage;
 use Revolution\Bluesky\Embed\Images;
 
-Bluesky::login(identifier: config('bluesky.identifier'), password: config('bluesky.password'));
+Bluesky::withToken();
 
 $images = Images::create()
                 ->add(alt: 'ALT TEXT', blob: function (): array {
