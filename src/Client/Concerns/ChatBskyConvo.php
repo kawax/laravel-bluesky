@@ -6,12 +6,9 @@ namespace Revolution\Bluesky\Client\Concerns;
 
 use Illuminate\Http\Client\Response;
 use Revolution\AtProto\Lexicon\Contracts\Chat\Bsky\Convo;
-use Revolution\Bluesky\Client\HasHttp;
 
 trait ChatBskyConvo
 {
-    use HasHttp;
-
     public function deleteMessageForSelf(string $convoId, string $messageId): Response
     {
         return $this->call(

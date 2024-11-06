@@ -6,12 +6,9 @@ namespace Revolution\Bluesky\Client\Concerns;
 
 use Illuminate\Http\Client\Response;
 use Revolution\AtProto\Lexicon\Contracts\Com\Atproto\Temp;
-use Revolution\Bluesky\Client\HasHttp;
 
 trait ComAtprotoTemp
 {
-    use HasHttp;
-
     public function checkSignupQueue(): Response
     {
         return $this->call(

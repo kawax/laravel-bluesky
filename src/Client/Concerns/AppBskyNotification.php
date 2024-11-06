@@ -6,12 +6,9 @@ namespace Revolution\Bluesky\Client\Concerns;
 
 use Illuminate\Http\Client\Response;
 use Revolution\AtProto\Lexicon\Contracts\App\Bsky\Notification;
-use Revolution\Bluesky\Client\HasHttp;
 
 trait AppBskyNotification
 {
-    use HasHttp;
-
     public function getUnreadCount(?bool $priority = null, ?string $seenAt = null): Response
     {
         return $this->call(

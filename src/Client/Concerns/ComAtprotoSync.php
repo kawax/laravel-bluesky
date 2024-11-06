@@ -6,12 +6,9 @@ namespace Revolution\Bluesky\Client\Concerns;
 
 use Illuminate\Http\Client\Response;
 use Revolution\AtProto\Lexicon\Contracts\Com\Atproto\Sync;
-use Revolution\Bluesky\Client\HasHttp;
 
 trait ComAtprotoSync
 {
-    use HasHttp;
-
     public function getBlob(string $did, string $cid): Response
     {
         return $this->call(

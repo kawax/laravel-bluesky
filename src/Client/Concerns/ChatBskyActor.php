@@ -6,12 +6,9 @@ namespace Revolution\Bluesky\Client\Concerns;
 
 use Illuminate\Http\Client\Response;
 use Revolution\AtProto\Lexicon\Contracts\Chat\Bsky\Actor;
-use Revolution\Bluesky\Client\HasHttp;
 
 trait ChatBskyActor
 {
-    use HasHttp;
-
     public function deleteAccount(): Response
     {
         return $this->call(

@@ -6,12 +6,9 @@ namespace Revolution\Bluesky\Client\Concerns;
 
 use Illuminate\Http\Client\Response;
 use Revolution\AtProto\Lexicon\Contracts\Com\Atproto\Admin;
-use Revolution\Bluesky\Client\HasHttp;
 
 trait ComAtprotoAdmin
 {
-    use HasHttp;
-
     public function deleteAccount(string $did): Response
     {
         return $this->call(

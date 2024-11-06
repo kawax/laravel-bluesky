@@ -6,12 +6,9 @@ namespace Revolution\Bluesky\Client\Concerns;
 
 use Illuminate\Http\Client\Response;
 use Revolution\AtProto\Lexicon\Contracts\App\Bsky\Actor;
-use Revolution\Bluesky\Client\HasHttp;
 
 trait AppBskyActor
 {
-    use HasHttp;
-
     public function getPreferences(): Response
     {
         return $this->call(

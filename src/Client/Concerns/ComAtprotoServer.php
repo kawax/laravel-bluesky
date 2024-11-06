@@ -6,12 +6,9 @@ namespace Revolution\Bluesky\Client\Concerns;
 
 use Illuminate\Http\Client\Response;
 use Revolution\AtProto\Lexicon\Contracts\Com\Atproto\Server;
-use Revolution\Bluesky\Client\HasHttp;
 
 trait ComAtprotoServer
 {
-    use HasHttp;
-
     public function activateAccount(): Response
     {
         return $this->call(

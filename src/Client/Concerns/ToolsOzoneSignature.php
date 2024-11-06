@@ -6,12 +6,9 @@ namespace Revolution\Bluesky\Client\Concerns;
 
 use Illuminate\Http\Client\Response;
 use Revolution\AtProto\Lexicon\Contracts\Tools\Ozone\Signature;
-use Revolution\Bluesky\Client\HasHttp;
 
 trait ToolsOzoneSignature
 {
-    use HasHttp;
-
     public function findCorrelation(array $dids): Response
     {
         return $this->call(

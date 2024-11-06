@@ -6,12 +6,9 @@ namespace Revolution\Bluesky\Client\Concerns;
 
 use Illuminate\Http\Client\Response;
 use Revolution\AtProto\Lexicon\Contracts\Tools\Ozone\Set;
-use Revolution\Bluesky\Client\HasHttp;
 
 trait ToolsOzoneSet
 {
-    use HasHttp;
-
     public function addValues(string $name, array $values): Response
     {
         return $this->call(

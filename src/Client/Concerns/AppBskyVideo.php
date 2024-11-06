@@ -6,12 +6,9 @@ namespace Revolution\Bluesky\Client\Concerns;
 
 use Illuminate\Http\Client\Response;
 use Revolution\AtProto\Lexicon\Contracts\App\Bsky\Video;
-use Revolution\Bluesky\Client\HasHttp;
 
 trait AppBskyVideo
 {
-    use HasHttp;
-
     public function getJobStatus(string $jobId): Response
     {
         return $this->call(

@@ -6,12 +6,9 @@ namespace Revolution\Bluesky\Client\Concerns;
 
 use Illuminate\Http\Client\Response;
 use Revolution\AtProto\Lexicon\Contracts\App\Bsky\Graph;
-use Revolution\Bluesky\Client\HasHttp;
 
 trait AppBskyGraph
 {
-    use HasHttp;
-
     public function getActorStarterPacks(string $actor, ?int $limit = 50, ?string $cursor = null): Response
     {
         return $this->call(

@@ -6,12 +6,9 @@ namespace Revolution\Bluesky\Client\Concerns;
 
 use Illuminate\Http\Client\Response;
 use Revolution\AtProto\Lexicon\Contracts\Com\Atproto\Identity;
-use Revolution\Bluesky\Client\HasHttp;
 
 trait ComAtprotoIdentity
 {
-    use HasHttp;
-
     public function getRecommendedDidCredentials(): Response
     {
         return $this->call(

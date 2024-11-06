@@ -6,12 +6,9 @@ namespace Revolution\Bluesky\Client\Concerns;
 
 use Illuminate\Http\Client\Response;
 use Revolution\AtProto\Lexicon\Contracts\App\Bsky\Feed;
-use Revolution\Bluesky\Client\HasHttp;
 
 trait AppBskyFeed
 {
-    use HasHttp;
-
     public function describeFeedGenerator(): Response
     {
         return $this->call(

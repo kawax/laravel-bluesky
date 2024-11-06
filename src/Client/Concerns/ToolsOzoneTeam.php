@@ -6,12 +6,9 @@ namespace Revolution\Bluesky\Client\Concerns;
 
 use Illuminate\Http\Client\Response;
 use Revolution\AtProto\Lexicon\Contracts\Tools\Ozone\Team;
-use Revolution\Bluesky\Client\HasHttp;
 
 trait ToolsOzoneTeam
 {
-    use HasHttp;
-
     public function addMember(string $did, string $role): Response
     {
         return $this->call(

@@ -6,12 +6,9 @@ namespace Revolution\Bluesky\Client\Concerns;
 
 use Illuminate\Http\Client\Response;
 use Revolution\AtProto\Lexicon\Contracts\Tools\Ozone\Communication;
-use Revolution\Bluesky\Client\HasHttp;
 
 trait ToolsOzoneCommunication
 {
-    use HasHttp;
-
     public function createTemplate(string $name, string $contentMarkdown, string $subject, ?string $lang = null, ?string $createdBy = null): Response
     {
         return $this->call(

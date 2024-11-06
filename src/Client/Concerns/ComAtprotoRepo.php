@@ -6,12 +6,9 @@ namespace Revolution\Bluesky\Client\Concerns;
 
 use Illuminate\Http\Client\Response;
 use Revolution\AtProto\Lexicon\Contracts\Com\Atproto\Repo;
-use Revolution\Bluesky\Client\HasHttp;
 
 trait ComAtprotoRepo
 {
-    use HasHttp;
-
     public function applyWrites(string $repo, array $writes, ?bool $validate = null, ?string $swapCommit = null): Response
     {
         return $this->call(

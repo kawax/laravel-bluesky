@@ -6,12 +6,9 @@ namespace Revolution\Bluesky\Client\Concerns;
 
 use Illuminate\Http\Client\Response;
 use Revolution\AtProto\Lexicon\Contracts\App\Bsky\Unspecced;
-use Revolution\Bluesky\Client\HasHttp;
 
 trait AppBskyUnspecced
 {
-    use HasHttp;
-
     public function getConfig(): Response
     {
         return $this->call(

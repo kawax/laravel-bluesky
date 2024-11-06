@@ -6,12 +6,9 @@ namespace Revolution\Bluesky\Client\Concerns;
 
 use Illuminate\Http\Client\Response;
 use Revolution\AtProto\Lexicon\Contracts\Chat\Bsky\Moderation;
-use Revolution\Bluesky\Client\HasHttp;
 
 trait ChatBskyModeration
 {
-    use HasHttp;
-
     public function getActorMetadata(string $actor): Response
     {
         return $this->call(

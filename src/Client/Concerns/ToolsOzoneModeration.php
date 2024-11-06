@@ -6,12 +6,9 @@ namespace Revolution\Bluesky\Client\Concerns;
 
 use Illuminate\Http\Client\Response;
 use Revolution\AtProto\Lexicon\Contracts\Tools\Ozone\Moderation;
-use Revolution\Bluesky\Client\HasHttp;
 
 trait ToolsOzoneModeration
 {
-    use HasHttp;
-
     public function emitEvent(array $event, array $subject, string $createdBy, ?array $subjectBlobCids = null): Response
     {
         return $this->call(
