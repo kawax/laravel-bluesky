@@ -12,7 +12,6 @@ use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Str;
 use Illuminate\Support\Traits\Conditionable;
 use Illuminate\Support\Traits\Macroable;
-use Revolution\AtProto\Lexicon\Contracts\Com\Atproto\Server;
 use Revolution\Bluesky\Agent\LegacyAgent;
 use Revolution\Bluesky\Agent\OAuthAgent;
 use Revolution\Bluesky\Contracts\Agent;
@@ -47,7 +46,7 @@ class BlueskyManager implements Factory
      */
     public function login(string $identifier, #[\SensitiveParameter] string $password): self
     {
-        $response = $this->atp(auth: false)
+        $response = $this->client(auth: false)
             ->withHttp(Http::baseUrl($this->entryway().'/xrpc/'))
             ->createSession($identifier, $password);
 
