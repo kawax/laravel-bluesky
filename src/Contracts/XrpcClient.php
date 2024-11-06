@@ -7,4 +7,6 @@ use Illuminate\Http\Client\PendingRequest;
 interface XrpcClient
 {
     public function withHttp(PendingRequest $http): static;
+
+    public function withBody($content, $contentType = 'application/json'): static;
 }
