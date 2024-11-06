@@ -10,7 +10,6 @@
         </include>
         <exclude>
             <directory>src/Client/Concerns</directory>
-            <file>src/Console/LexiconClientCommand.php</file>
         </exclude>
     </source>
     <coverage>
