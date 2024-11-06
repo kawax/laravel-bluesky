@@ -12,6 +12,7 @@ use Illuminate\Support\Facades\Notification;
 use Mockery;
 use Revolution\Bluesky\Embed\External;
 use Revolution\Bluesky\Embed\Images;
+use Revolution\Bluesky\Embed\Video;
 use Revolution\Bluesky\Facades\Bluesky;
 use Revolution\AtProto\Lexicon\Enum\Embed;
 use Revolution\Bluesky\Notifications\BlueskyChannel;
@@ -159,6 +160,19 @@ class NotificationTest extends TestCase
         $this->assertSame('alt2', $m->toArray()['embed']['images'][1]['alt']);
         $this->assertSame(['blob2'], $m->toArray()['embed']['images'][1]['image']);
         $this->assertSame(Embed::Images->value, $m->toArray()['embed']['$type']);
+    }
+
+    public function test_message_embed_video()
+    {
+        $v = Video::create(video: 'video', alt: 'alt', captions: [], aspectRatio: ['width' => 1, 'height' => 1]);
+
+        $m = BlueskyMessage::create(text: 'test')
+            ->embed($v);
+
+        $this->assertIsArray($m->toArray()['embed']);
+        $this->assertSame('video', $m->toArray()['embed']['video']['video']);
+        $this->assertSame('alt', $m->toArray()['embed']['video']['alt']);
+        $this->assertSame(Embed::Video->value, $m->toArray()['embed']['$type']);
     }
 
     public function test_message_langs()
