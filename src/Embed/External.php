@@ -13,11 +13,11 @@ final readonly class External implements Arrayable
         private string $title,
         private string $description,
         private string $uri,
-        private ?array $thumb = null,
+        private ?string $thumb = null,
     ) {
     }
 
-    public static function create(string $title, string $description, string $uri, ?array $thumb = null): self
+    public static function create(string $title, string $description, string $uri, ?string $thumb = null): self
     {
         return new self(...func_get_args());
     }
