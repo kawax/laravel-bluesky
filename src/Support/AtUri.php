@@ -24,7 +24,7 @@ class AtUri
         return new self($uri);
     }
 
-    public function hostname(): string
+    public function repo(): string
     {
         return $this->host ?? '';
     }
