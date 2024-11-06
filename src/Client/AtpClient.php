@@ -7,8 +7,16 @@ use Illuminate\Support\Traits\Macroable;
 use Revolution\AtProto\Lexicon\Contracts\App\Bsky\Actor;
 use Revolution\AtProto\Lexicon\Contracts\App\Bsky\Feed;
 use Revolution\AtProto\Lexicon\Contracts\App\Bsky\Graph;
+use Revolution\AtProto\Lexicon\Contracts\App\Bsky\Labeler;
+use Revolution\AtProto\Lexicon\Contracts\App\Bsky\Unspecced;
+use Revolution\AtProto\Lexicon\Contracts\App\Bsky\Video;
 use Revolution\AtProto\Lexicon\Contracts\Com\Atproto\Identity;
+use Revolution\AtProto\Lexicon\Contracts\Com\Atproto\Label;
+use Revolution\AtProto\Lexicon\Contracts\Com\Atproto\Moderation;
 use Revolution\AtProto\Lexicon\Contracts\Com\Atproto\Repo;
+use Revolution\AtProto\Lexicon\Contracts\Com\Atproto\Server;
+use Revolution\AtProto\Lexicon\Contracts\Com\Atproto\Sync;
+use Revolution\AtProto\Lexicon\Contracts\Com\Atproto\Temp;
 use Revolution\Bluesky\Client\Concerns\AppBskyActor;
 use Revolution\Bluesky\Client\Concerns\AppBskyFeed;
 use Revolution\Bluesky\Client\Concerns\AppBskyGraph;
@@ -26,7 +34,9 @@ use Revolution\Bluesky\Client\Concerns\ComAtprotoSync;
 use Revolution\Bluesky\Client\Concerns\ComAtprotoTemp;
 use Revolution\Bluesky\Contracts\XrpcClient;
 
-class AtpClient implements XrpcClient, Repo, Identity, Actor, Feed, Graph
+final class AtpClient implements XrpcClient,
+    Actor, Feed, Graph, Labeler, Unspecced, Video,
+    Identity, Label, Moderation, Repo, Server, Temp
 {
     use Macroable;
     use Conditionable;
