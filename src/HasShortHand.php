@@ -4,6 +4,7 @@ namespace Revolution\Bluesky;
 
 use Illuminate\Http\Client\Response;
 use InvalidArgumentException;
+use Revolution\AtProto\Lexicon\Enum\Feed;
 use Revolution\Bluesky\Notifications\BlueskyMessage;
 use Revolution\Bluesky\Support\Identity;
 
@@ -67,7 +68,7 @@ trait HasShortHand
 
         return $this->createRecord(
             repo: $this->agent()->did(),
-            collection: 'app.bsky.feed.post',
+            collection: Feed::Post->value,
             record: $message->toRecord(),
         );
     }
@@ -76,9 +77,9 @@ trait HasShortHand
     {
         return $this->createRecord(
             repo: $this->agent()->did(),
-            collection: 'app.bsky.feed.like',
+            collection: Feed::Like->value,
             record: [
-                '$type' => 'app.bsky.feed.like',
+                '$type' => Feed::Like->value,
                 'subject' => ['uri' => $uri, 'cid' => $cid],
                 'createdAt' => now()->toISOString(),
             ],
@@ -89,9 +90,9 @@ trait HasShortHand
     {
         return $this->createRecord(
             repo: $this->agent()->did(),
-            collection: 'app.bsky.feed.repost',
+            collection: Feed::Repost->value,
             record: [
-                '$type' => 'app.bsky.feed.repost',
+                '$type' => Feed::Repost->value,
                 'subject' => ['uri' => $uri, 'cid' => $cid],
                 'createdAt' => now()->toISOString(),
             ],
