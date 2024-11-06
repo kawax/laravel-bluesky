@@ -163,6 +163,7 @@ final class BlueskyMessage implements Arrayable
     public function toRecord(): array
     {
         return collect($this->toArray())
+            ->put('$type', 'app.bsky.feed.post')
             ->put('createdAt', now()->toISOString())
             ->reject(fn ($item) => blank($item))
             ->toArray();
