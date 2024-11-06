@@ -6,11 +6,8 @@ namespace Revolution\Bluesky\Client\Concerns;
 
 use Illuminate\Http\Client\Response;
 use {contract};
-use Revolution\Bluesky\Client\HasHttp;
 
 trait {name}
 {
-    use HasHttp;
-
 {method}
 }
