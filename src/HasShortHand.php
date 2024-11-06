@@ -140,7 +140,7 @@ trait HasShortHand
     public function getActorLikes(?string $actor = null, ?int $limit = 50, ?string $cursor = null): Response
     {
         return $this->client(auth: true)->getActorLikes(
-            actor: $actor ?? $this->agent()->did() ?? '',
+            actor: $actor ?? $this->agent()->did(),
             limit: $limit,
             cursor: $cursor,
         );
@@ -213,7 +213,7 @@ trait HasShortHand
     public function getFollowers(?string $actor = null, ?int $limit = 50, ?string $cursor = null): Response
     {
         return $this->client(auth: true)->getFollowers(
-            actor: $actor ?? $this->agent()->did() ?? '',
+            actor: $actor ?? $this->agent()->did(),
             limit: $limit,
             cursor: $cursor,
         );
@@ -222,7 +222,7 @@ trait HasShortHand
     public function getFollows(?string $actor = null, ?int $limit = 50, ?string $cursor = null): Response
     {
         return $this->client(auth: true)->getFollows(
-            actor: $actor ?? $this->agent()->did() ?? '',
+            actor: $actor ?? $this->agent()->did(),
             limit: $limit,
             cursor: $cursor,
         );
