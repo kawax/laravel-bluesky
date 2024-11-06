@@ -72,6 +72,32 @@ trait HasShortHand
         );
     }
 
+    public function like(string $uri, string $cid): Response
+    {
+        return $this->createRecord(
+            repo: $this->agent()->did(),
+            collection: 'app.bsky.feed.like',
+            record: [
+                '$type' => 'app.bsky.feed.like',
+                'subject' => ['uri' => $uri, 'cid' => $cid],
+                'createdAt' => now()->toISOString(),
+            ],
+        );
+    }
+
+    public function repost(string $uri, string $cid): Response
+    {
+        return $this->createRecord(
+            repo: $this->agent()->did(),
+            collection: 'app.bsky.feed.repost',
+            record: [
+                '$type' => 'app.bsky.feed.repost',
+                'subject' => ['uri' => $uri, 'cid' => $cid],
+                'createdAt' => now()->toISOString(),
+            ],
+        );
+    }
+
     /**
      * Upload blob.
      */
