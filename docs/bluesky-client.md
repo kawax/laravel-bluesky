@@ -4,9 +4,11 @@ BlueskyClient
 Basic client.
 
 ## Authentication
+
 Bluesky has two authentication methods: "App password" and "OAuth". "OAuth" is recommended from now on, so please also read the [Socialite](./socialite.md) docs.
 
 ### App password(Legacy)
+
 You can easily log in with the identifier and password you set in .env.
 
 ```
@@ -25,6 +27,7 @@ $profile = Bluesky::login(identifier: config('bluesky.identifier'), password: co
 ```
 
 ### OAuth
+
 Specify the `OAuthSession` containing the token obtained from Socialite.
 
 ```php
@@ -38,7 +41,39 @@ $timeline = Bluesky::withToken($session)->timeline()->json();
 
 The following document uses App password as an example, but it is almost the same for OAuth.
 
+## Structure
+
+- Bluesky Facade: Entrance
+- Agent: Authentication
+- Client: Send API request
+
+Basic functions have a "ShortHand", so you can use it in three steps: Facade - Authentication - Send.
+
+```php
+use Revolution\Bluesky\Facades\Bluesky;
+
+$response = Bluesky::withToken()->post();
+```
+
+Functions not in ShortHand can be executed via Client.
+
+```php
+use Revolution\Bluesky\Facades\Bluesky;
+
+$response = Bluesky::withToken()->client(auth: true)->createRecord();
+```
+
+Finally, if you want to use an API not in Client, you can send anything with `send()`.
+
+```php
+use Revolution\Bluesky\Facades\Bluesky;
+use Revolution\AtProto\Lexicon\Contracts\Com\Atproto\Repo;
+
+$response = Bluesky::withToken()->send(api: Repo::createRecord, method: 'post', auth: true, params: []);
+```
+
 ## Viewing my feed
+
 Only my posts and reposts.
 
 ```php
@@ -52,6 +87,7 @@ dump($response->collect('feed'));
 ```
 
 ## Viewing my timeline
+
 ```php
 use Revolution\Bluesky\Facades\Bluesky;
 
@@ -76,6 +112,7 @@ dump($response->json());
 ```
 
 ### TextBuilder
+
 You can use `BlueskyMessage` class from [Notifications](./notification.md) as a text builder.
 
 ```php
@@ -96,6 +133,7 @@ dump($response->json());
 ```
 
 ### Social Card
+
 ```php
 use Revolution\Bluesky\Facades\Bluesky;
 use Revolution\Bluesky\Notifications\BlueskyMessage;
@@ -114,6 +152,7 @@ dump($response->json());
 ```
 
 ### Upload Images
+
 You can upload up to 4 images at a time.
 
 ```php
@@ -140,6 +179,7 @@ dump($response->json());
 ```
 
 ## Login
+
 ```php
 use Revolution\Bluesky\Facades\Bluesky;
 
@@ -150,6 +190,7 @@ dump(Bluesky::check());
 ```
 
 ## Logout
+
 ```php
 use Revolution\Bluesky\Facades\Bluesky;
 
