@@ -66,7 +66,7 @@ trait HasShortHand
     {
         return $this->client(auth: true)
             ->getAuthorFeed(
-                actor: $actor ?? $this->agent()?->did() ?? '',
+                actor: $actor ?? $this->agent()->did(),
                 limit: $limit,
                 cursor: $cursor,
                 filter: $filter,
