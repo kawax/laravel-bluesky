@@ -33,6 +33,8 @@ use Revolution\Bluesky\Support\PDS;
  * @method static Response timeline(int $limit = 50, string $cursor = '')
  * @method static Response createRecord(string $repo, string $collection, array $record)
  * @method static Response post(string|BlueskyMessage $text)
+ * @method static Response like(string $uri, string $cid)
+ * @method static Response repost(string $uri, string $cid)
  * @method static Response uploadBlob(mixed $data, string $type = 'image/png')
  * @method static static refreshSession()
  * @method static Identity identity()
