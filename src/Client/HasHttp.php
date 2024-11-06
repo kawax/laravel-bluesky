@@ -46,4 +46,11 @@ trait HasHttp
 
         return $this;
     }
+
+    public function withBody($content, $contentType = 'image/png'): static
+    {
+        $this->http->withBody($content, $contentType);
+
+        return $this;
+    }
 }
