@@ -10,6 +10,7 @@ use Illuminate\Http\Client\Response;
 use Illuminate\Support\Facades\Facade;
 use Revolution\Bluesky\Contracts\Agent;
 use Revolution\Bluesky\Contracts\Factory;
+use Revolution\Bluesky\Contracts\XrpcClient;
 use Revolution\Bluesky\Notifications\BlueskyMessage;
 use Revolution\Bluesky\Session\OAuthSession;
 use Revolution\Bluesky\Support\Identity;
@@ -22,6 +23,7 @@ use Revolution\Bluesky\Support\PDS;
  * @method static PendingRequest http(bool $auth = true)
  * @method static static login(string $identifier, string $password)
  * @method static Response send(BackedEnum|string $api, string $method = 'get', bool $auth = true, ?array $params = null)
+ * @method static XrpcClient client(bool $auth = false)
  * @method static Response resolveHandle(string $handle)
  * @method static Response profile(?string $actor = null)
  * @method static static logout()
