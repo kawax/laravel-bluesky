@@ -3,6 +3,7 @@
 namespace Revolution\Bluesky\Support;
 
 use Illuminate\Support\Str;
+use InvalidArgumentException;
 
 final class AtUri
 {
@@ -13,7 +14,9 @@ final class AtUri
 
     public function __construct(protected string $uri)
     {
-        preg_match(self::ATP_URI_REGEX, $this->uri, $matches);
+        if (preg_match(self::ATP_URI_REGEX, $this->uri, $matches) === false) {
+            throw new InvalidArgumentException();
+        }
 
         $this->host = $matches[2] ?? null;
         $this->pathname = $matches[3] ?? null;
