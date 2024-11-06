@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Revolution\Bluesky\Console;
 
 use Illuminate\Console\Command;
-use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Str;
 use ReflectionClass;
@@ -31,7 +30,7 @@ class LexiconClientCommand extends Command
      *
      * @var string
      */
-    protected $description = 'Generate client from lexicon interface';
+    protected $description = 'Generate client trait from lexicon interface';
 
     protected string $client_path;
 
