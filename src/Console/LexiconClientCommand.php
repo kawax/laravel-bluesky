@@ -15,6 +15,8 @@ use ReflectionParameter;
  * ```
  * vendor/bin/testbench bluesky:lexicon-client
  * ```
+ *
+ * @codeCoverageIgnore
  */
 class LexiconClientCommand extends Command
 {
