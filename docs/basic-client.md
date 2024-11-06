@@ -185,7 +185,7 @@ $response = Bluesky::post($message);
 dump($response->json());
 ```
 
-## Login
+## Login (Legacy)
 
 ```php
 use Revolution\Bluesky\Facades\Bluesky;
