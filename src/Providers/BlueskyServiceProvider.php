@@ -8,9 +8,11 @@ use Illuminate\Support\Facades\Route;
 use Illuminate\Support\ServiceProvider;
 use Laravel\Socialite\Facades\Socialite;
 use Revolution\Bluesky\BlueskyManager;
+use Revolution\Bluesky\Client\AtpClient;
 use Revolution\Bluesky\Console\LexiconClientCommand;
 use Revolution\Bluesky\Console\NewPrivateKeyCommand;
 use Revolution\Bluesky\Contracts\Factory;
+use Revolution\Bluesky\Contracts\XrpcClient;
 use Revolution\Bluesky\Socalite\BlueskyProvider;
 use Revolution\Bluesky\Socalite\Http\OAuthMetaController;
 
@@ -21,6 +23,7 @@ class BlueskyServiceProvider extends ServiceProvider
         $this->mergeConfigFrom(__DIR__.'/../../config/bluesky.php', 'bluesky');
 
         $this->app->scoped(Factory::class, BlueskyManager::class);
+        $this->app->scoped(XrpcClient::class, AtpClient::class);
     }
 
     public function boot(): void
