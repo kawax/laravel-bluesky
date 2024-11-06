@@ -3,6 +3,7 @@
 namespace Revolution\Bluesky;
 
 use Illuminate\Http\Client\Response;
+use Illuminate\Support\Collection;
 use InvalidArgumentException;
 use Revolution\AtProto\Lexicon\Enum\Feed;
 use Revolution\Bluesky\Notifications\BlueskyMessage;
@@ -19,6 +20,39 @@ trait HasShortHand
             ->getProfile(
                 actor: $actor ?? $this->agent()?->did() ?? '',
             );
+    }
+
+    /**
+     * ```
+     * use Illuminate\Support\Collection;
+     *
+     * Bluesky::upsertProfile(function(Collection $profile) {
+     *     $profile->put('description', 'new description');
+     *
+     *     return $profile;
+     * })
+     * ```
+     */
+    public function upsertProfile(callable $callback): Response
+    {
+        $existing = $this->client(auth: true)->getRecord(
+            repo: $this->agent()->did(),
+            collection: 'app.bsky.actor.profile',
+            rkey: 'self',
+        )->collect('value');
+
+        /** @var Collection $updated */
+        $updated = $callback($existing);
+
+        $updated->put('$type', 'app.bsky.actor.profile');
+
+        return $this->client(auth: true)->putRecord(
+            repo: $this->agent()->did(),
+            collection: 'app.bsky.actor.profile',
+            rkey: 'self',
+            record: $updated->toArray(),
+            swapRecord: $existing['cid'] ?? null,
+        );
     }
 
     /**
