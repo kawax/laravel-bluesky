@@ -14,7 +14,6 @@ use Illuminate\Support\Traits\Conditionable;
 use Illuminate\Support\Traits\Macroable;
 use Revolution\Bluesky\Agent\LegacyAgent;
 use Revolution\Bluesky\Agent\OAuthAgent;
-use Revolution\Bluesky\Client\AtpClient;
 use Revolution\Bluesky\Contracts\Agent;
 use Revolution\Bluesky\Contracts\Factory;
 use Revolution\Bluesky\Contracts\XrpcClient;
@@ -92,9 +91,11 @@ class BlueskyManager implements Factory
         return $this->http($auth)->$method(enum_value($api), $params);
     }
 
-    public function client(bool $auth = false): XrpcClient|AtpClient
+    public function client(bool $auth = false): XrpcClient
     {
-        return app(XrpcClient::class)->withHttp($this->http($auth));
+        return Container::getInstance()
+            ->make(XrpcClient::class)
+            ->withHttp($this->http($auth));
     }
 
     public function refreshSession(): self
