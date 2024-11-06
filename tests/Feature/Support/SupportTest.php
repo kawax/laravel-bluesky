@@ -3,6 +3,7 @@
 namespace Tests\Feature\Support;
 
 use Illuminate\Support\Facades\Http;
+use Revolution\Bluesky\Support\AtUri;
 use Revolution\Bluesky\Support\DidDocument;
 use Tests\TestCase;
 
@@ -77,5 +78,14 @@ class SupportTest extends TestCase
         $this->assertSame('alice.test', $didDoc->handle());
         $this->assertSame('https://pds', $didDoc->pdsUrl());
         $this->assertSame([], $didDoc->get('verificationMethod'));
+    }
+
+    public function test_at_uri()
+    {
+        $at = AtUri::parse('at://did:plc:test/app.bsky.feed.post/abcde');
+
+        $this->assertSame('did:plc:test', $at->hostname());
+        $this->assertSame('app.bsky.feed.post', $at->collection());
+        $this->assertSame('abcde', $at->rkey());
     }
 }
