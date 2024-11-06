@@ -4,18 +4,11 @@ namespace Revolution\Bluesky;
 
 use Illuminate\Http\Client\Response;
 use InvalidArgumentException;
-use Revolution\Bluesky\Client\AtpClient;
-use Revolution\Bluesky\Contracts\XrpcClient;
 use Revolution\Bluesky\Notifications\BlueskyMessage;
 use Revolution\Bluesky\Support\Identity;
 
 trait HasShortHand
 {
-    protected function client(bool $auth = true): XrpcClient|AtpClient
-    {
-        return app(XrpcClient::class)->withHttp($this->http($auth));
-    }
-
     /**
      * @param  string|null  $actor  DID or handle.
      */
