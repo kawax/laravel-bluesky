@@ -38,9 +38,10 @@ final class AtpClient implements XrpcClient,
     Actor, Feed, Graph, Labeler, Unspecced, Video,
     Identity, Label, Moderation, Repo, Server, Temp
 {
-    use HasHttp;
     use Macroable;
     use Conditionable;
+
+    use HasHttp;
 
     use AppBskyActor;
     use AppBskyFeed;
