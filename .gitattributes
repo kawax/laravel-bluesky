@@ -11,3 +11,4 @@
 .styleci.yml export-ignore
 phpunit.xml export-ignore
 /src/Console/LexiconClientCommand.php export-ignore
+/src/Console/stubs export-ignore
