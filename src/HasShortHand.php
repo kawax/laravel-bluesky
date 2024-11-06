@@ -62,7 +62,7 @@ trait HasShortHand
      *
      * @param  string|null  $actor  DID or handle.
      */
-    public function feed(?string $actor = null, int $limit = 50, string $cursor = '', string $filter = 'posts_with_replies'): Response
+    public function feed(?string $actor = null, int $limit = 50, string $cursor = '', string $filter = 'posts_with_replies', ?bool $includePins = null): Response
     {
         return $this->client(auth: true)
             ->getAuthorFeed(
@@ -70,6 +70,7 @@ trait HasShortHand
                 limit: $limit,
                 cursor: $cursor,
                 filter: $filter,
+                includePins: $includePins,
             );
     }
 
