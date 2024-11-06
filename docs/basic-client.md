@@ -177,28 +177,6 @@ $response = Bluesky::post($message);
 dump($response->json());
 ```
 
-## Login (Legacy)
-
-```php
-use Revolution\Bluesky\Facades\Bluesky;
-
-Bluesky::login(identifier: config('bluesky.identifier'), password: config('bluesky.password'));
-
-dump(Bluesky::check());
-// true
-```
-
-## Logout
-
-```php
-use Revolution\Bluesky\Facades\Bluesky;
-
-Bluesky::logout();
-
-dump(Bluesky::check());
-// false
-```
-
 ## Public API
 
 In fact, many of Bluesky's APIs can be used without authentication.
@@ -212,8 +190,6 @@ $feed = Bluesky::feed(actor: 'did')->json('feed');
 ```
 
 ## Macroable
-
-This package only has the minimum functionality of the notification and Socialite features that I use frequently, so if you want other features, please add them using macros.
 
 ```php
 // AppServiceProvider
