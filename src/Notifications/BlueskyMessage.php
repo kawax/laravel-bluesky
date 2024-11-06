@@ -9,6 +9,7 @@ use Illuminate\Support\Str;
 use Illuminate\Support\Traits\Conditionable;
 use Illuminate\Support\Traits\Macroable;
 use Revolution\AtProto\Lexicon\Enum\Facet;
+use Revolution\AtProto\Lexicon\Enum\Feed;
 
 final class BlueskyMessage implements Arrayable
 {
@@ -163,7 +164,7 @@ final class BlueskyMessage implements Arrayable
     public function toRecord(): array
     {
         return collect($this->toArray())
-            ->put('$type', 'app.bsky.feed.post')
+            ->put('$type', Feed::Post->value)
             ->put('createdAt', now()->toISOString())
             ->reject(fn ($item) => blank($item))
             ->toArray();
