@@ -4,7 +4,7 @@ namespace Revolution\Bluesky\Support;
 
 use Illuminate\Support\Str;
 
-class AtUri
+final class AtUri
 {
     private const ATP_URI_REGEX = '/^(at:\/\/)?((?:did:[a-z0-9:%-]+)|(?:[a-z0-9][a-z0-9.:-]*))(\/[^?#\s]*)?(\?[^#\s]+)?(#[^\s]+)?$/i';
 
