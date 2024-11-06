@@ -18,7 +18,7 @@ trait HasShortHand
      */
     public function profile(?string $actor = null): Response
     {
-        return $this->client(auth: true)
+        return $this->client(auth: false)
             ->getProfile(
                 actor: $actor ?? $this->agent()?->did() ?? '',
             );
@@ -119,6 +119,15 @@ trait HasShortHand
         );
     }
 
+    public function getActorLikes(?string $actor = null, ?int $limit = 50, ?string $cursor = null): Response
+    {
+        return $this->client(auth: true)->getActorLikes(
+            actor: $actor ?? $this->agent()->did() ?? '',
+            limit: $limit,
+            cursor: $cursor,
+        );
+    }
+
     public function like(string $uri, string $cid): Response
     {
         return $this->createRecord(
@@ -129,6 +138,26 @@ trait HasShortHand
                 'subject' => ['uri' => $uri, 'cid' => $cid],
                 'createdAt' => now()->toISOString(),
             ],
+        );
+    }
+
+    /**
+     * uri can be obtained using getActorLikes().
+     *
+     * @param  string  $uri  at://did:plc:.../app.bsky.feed.like/{rkey}
+     */
+    public function deleteLike(string $uri): Response
+    {
+        $at = AtUri::parse($uri);
+
+        if ($at->collection() !== Feed::Like->value) {
+            throw new InvalidArgumentException();
+        }
+
+        return $this->deleteRecord(
+            repo: $at->repo(),
+            collection: $at->collection(),
+            rkey: $at->rkey(),
         );
     }
 
@@ -145,9 +174,29 @@ trait HasShortHand
         );
     }
 
-    public function getFollows(string $did): Response
+    /**
+     * @param  string  $uri  at://did:plc:.../app.bsky.feed.repost/{rkey}
+     */
+    public function deleteRepost(string $uri): Response
     {
-        return $this->client(auth: true)->getFollows($did);
+        $at = AtUri::parse($uri);
+
+        if ($at->collection() !== Feed::Repost->value) {
+            throw new InvalidArgumentException();
+        }
+
+        return $this->deleteRecord(
+            repo: $at->repo(),
+            collection: $at->collection(),
+            rkey: $at->rkey(),
+        );
+    }
+
+    public function getFollows(?string $did = null): Response
+    {
+        return $this->client(auth: true)->getFollows(
+            actor: $did ?? $this->agent()->did() ?? '',
+        );
     }
 
     public function follow(string $did): Response
@@ -166,11 +215,15 @@ trait HasShortHand
     /**
      * uri can be obtained using getFollows().
      *
-     * @param  string  $uri  at://did:plc:.../app.bsky.graph.follow/...
+     * @param  string  $uri  at://did:plc:.../app.bsky.graph.follow/{rkey}
      */
     public function deleteFollow(string $uri): Response
     {
         $at = AtUri::parse($uri);
+
+        if ($at->collection() !== Graph::Follow->value) {
+            throw new InvalidArgumentException();
+        }
 
         return $this->deleteRecord(
             repo: $at->repo(),
