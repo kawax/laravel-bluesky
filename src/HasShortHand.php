@@ -2,26 +2,18 @@
 
 namespace Revolution\Bluesky;
 
-use Illuminate\Http\Client\ConnectionException;
 use Illuminate\Http\Client\Response;
 use InvalidArgumentException;
-use Revolution\AtProto\Lexicon\Contracts\App\Bsky\Video;
-use Revolution\AtProto\Lexicon\Contracts\Com\Atproto\Repo;
 use Revolution\Bluesky\Client\AtpClient;
-use Revolution\Bluesky\Client\BskyClient;
+use Revolution\Bluesky\Contracts\XrpcClient;
 use Revolution\Bluesky\Notifications\BlueskyMessage;
 use Revolution\Bluesky\Support\Identity;
 
 trait HasShortHand
 {
-    protected function bsky(bool $auth = false): BskyClient
+    protected function client(bool $auth = true): XrpcClient|AtpClient
     {
-        return app(BskyClient::class)->withHttp($this->http($auth));
-    }
-
-    protected function atp(bool $auth = true): AtpClient
-    {
-        return app(AtpClient::class)->withHttp($this->http($auth));
+        return app(XrpcClient::class)->withHttp($this->http($auth));
     }
 
     /**
@@ -29,9 +21,10 @@ trait HasShortHand
      */
     public function profile(?string $actor = null): Response
     {
-        return $this->bsky(auth: false)->getProfile(
-            actor: $actor ?? $this->agent()?->did() ?? '',
-        );
+        return $this->client(auth: false)
+            ->getProfile(
+                actor: $actor ?? $this->agent()?->did() ?? '',
+            );
     }
 
     /**
@@ -41,12 +34,13 @@ trait HasShortHand
      */
     public function feed(?string $actor = null, int $limit = 50, string $cursor = '', string $filter = 'posts_with_replies'): Response
     {
-        return $this->bsky(auth: false)->getAuthorFeed(
-            actor: $actor ?? $this->agent()?->did() ?? '',
-            limit: $limit,
-            cursor: $cursor,
-            filter: $filter,
-        );
+        return $this->client(auth: false)
+            ->getAuthorFeed(
+                actor: $actor ?? $this->agent()?->did() ?? '',
+                limit: $limit,
+                cursor: $cursor,
+                filter: $filter,
+            );
     }
 
     /**
@@ -54,19 +48,21 @@ trait HasShortHand
      */
     public function timeline(int $limit = 50, string $cursor = ''): Response
     {
-        return $this->bsky(auth: true)->getTimeline(
-            limit: $limit,
-            cursor: $cursor,
-        );
+        return $this->client(auth: true)
+            ->getTimeline(
+                limit: $limit,
+                cursor: $cursor,
+            );
     }
 
     public function createRecord(string $repo, string $collection, array $record): Response
     {
-        return $this->atp(auth: true)->createRecord(
-            repo: $repo,
-            collection: $collection,
-            record: $record,
-        );
+        return $this->client(auth: true)
+            ->createRecord(
+                repo: $repo,
+                collection: $collection,
+                record: $record,
+            );
     }
 
     /**
@@ -85,26 +81,22 @@ trait HasShortHand
 
     /**
      * Upload blob.
-     *
-     * @throws ConnectionException
      */
     public function uploadBlob(mixed $data, string $type = 'image/png'): Response
     {
-        return $this->http()
+        return $this->client(auth: true)
             ->withBody($data, $type)
-            ->post(Repo::uploadBlob);
+            ->uploadBlob();
     }
 
     /**
      * Upload video.
-     *
-     * @throws ConnectionException
      */
     public function uploadVideo(mixed $data, string $type = 'video/mp4'): Response
     {
-        return $this->http()
+        return $this->client(auth: true)
             ->withBody($data, $type)
-            ->post(Video::uploadVideo);
+            ->uploadVideo();
     }
 
     /**
@@ -116,6 +108,6 @@ trait HasShortHand
             throw new InvalidArgumentException("The handle '$handle' is not a valid handle.");
         }
 
-        return $this->atp(auth: false)->resolveHandle(handle: $handle);
+        return $this->client(auth: false)->resolveHandle(handle: $handle);
     }
 }
