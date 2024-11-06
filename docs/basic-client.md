@@ -1,7 +1,5 @@
-BlueskyClient
+Basic Client
 ====
-
-Basic client.
 
 ## Authentication
 
@@ -40,6 +38,16 @@ $timeline = Bluesky::withToken($session)->timeline()->json();
 ```
 
 The following document uses App password as an example, but it is almost the same for OAuth.
+
+## Response
+
+The API results are returned as an `Illuminate\Http\Client\Response` object, so you can use it freely just like you would with normal Laravel.
+
+```php
+/** @var \Illuminate\Http\Client\Response $response */
+$response->json();
+$response->collect();
+```
 
 ## Structure
 

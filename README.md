@@ -19,7 +19,7 @@ composer remove revolution/laravel-bluesky
 ```
 
 ## Usage
-- [BlueskyClient](./docs/bluesky-client.md)
+- [Basic Client](./docs/basic-client.md)
 - [Laravel Notifications](./docs/notification.md)
 - [Socialite](./docs/socialite.md)
 
