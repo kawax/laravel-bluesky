@@ -119,6 +119,24 @@ trait HasShortHand
         );
     }
 
+    /**
+     * @param  string  $uri  at://did:plc:.../app.bsky.feed.post/{rkey}
+     */
+    public function deletePost(string $uri): Response
+    {
+        $at = AtUri::parse($uri);
+
+        if ($at->collection() !== Feed::Post->value) {
+            throw new InvalidArgumentException();
+        }
+
+        return $this->deleteRecord(
+            repo: $at->repo(),
+            collection: $at->collection(),
+            rkey: $at->rkey(),
+        );
+    }
+
     public function getActorLikes(?string $actor = null, ?int $limit = 50, ?string $cursor = null): Response
     {
         return $this->client(auth: true)->getActorLikes(
