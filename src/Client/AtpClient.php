@@ -15,7 +15,6 @@ use Revolution\AtProto\Lexicon\Contracts\Com\Atproto\Label;
 use Revolution\AtProto\Lexicon\Contracts\Com\Atproto\Moderation;
 use Revolution\AtProto\Lexicon\Contracts\Com\Atproto\Repo;
 use Revolution\AtProto\Lexicon\Contracts\Com\Atproto\Server;
-use Revolution\AtProto\Lexicon\Contracts\Com\Atproto\Sync;
 use Revolution\AtProto\Lexicon\Contracts\Com\Atproto\Temp;
 use Revolution\Bluesky\Client\Concerns\AppBskyActor;
 use Revolution\Bluesky\Client\Concerns\AppBskyFeed;
