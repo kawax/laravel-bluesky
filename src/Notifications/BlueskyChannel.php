@@ -32,15 +32,14 @@ class BlueskyChannel
             return; // @codeCoverageIgnore
         }
 
-        if (! is_null($route->oauth)) {
-            Bluesky::withToken($route->oauth)
+        match (true) {
+            $route->isOAuth() => Bluesky::withToken($route->oauth)
                 ->refreshSession()
                 ->post($message)
-                ->throw();
-        } else {
-            Bluesky::login($route->identifier, $route->password)
+                ->throw(),
+            $route->isLegacy() => Bluesky::login($route->identifier, $route->password)
                 ->post($message)
-                ->throw();
-        }
+                ->throw(),
+        };
     }
 }
