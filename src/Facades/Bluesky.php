@@ -12,31 +12,21 @@ use Revolution\Bluesky\Client\AtpClient;
 use Revolution\Bluesky\Contracts\Agent;
 use Revolution\Bluesky\Contracts\Factory;
 use Revolution\Bluesky\Contracts\XrpcClient;
-use Revolution\Bluesky\Notifications\BlueskyMessage;
+use Revolution\Bluesky\HasShortHand;
 use Revolution\Bluesky\Session\OAuthSession;
 use Revolution\Bluesky\Support\Identity;
 use Revolution\Bluesky\Support\PDS;
 
 /**
- * @method static Agent agent()
- * @method static static withToken(OAuthSession $token)
- * @method static static withAgent(?Agent $agent)
+ * @method static static withToken(?OAuthSession $token)
  * @method static PendingRequest http(bool $auth = true)
- * @method static static login(string $identifier, string $password)
+ * @method static XrpcClient|AtpClient client(bool $auth = true)
  * @method static Response send(BackedEnum|string $api, string $method = 'get', bool $auth = true, ?array $params = null)
- * @method static XrpcClient|AtpClient client(bool $auth = false)
- * @method static Response resolveHandle(string $handle)
- * @method static Response profile(?string $actor = null)
+ * @method static Agent agent()
+ * @method static static withAgent(?Agent $agent)
+ * @method static static login(string $identifier, string $password)
  * @method static static logout()
  * @method static bool check()
- * @method static Response feed(?string $actor = null, int $limit = 50, string $cursor = '', string $filter = 'posts_with_replies')
- * @method static Response timeline(int $limit = 50, string $cursor = '')
- * @method static Response createRecord(string $repo, string $collection, array $record)
- * @method static Response post(string|BlueskyMessage $text)
- * @method static Response like(string $uri, string $cid)
- * @method static Response repost(string $uri, string $cid)
- * @method static Response uploadBlob(mixed $data, string $type = 'image/png')
- * @method static static refreshSession()
  * @method static Identity identity()
  * @method static PDS pds()
  * @method static string entryway()
@@ -45,6 +35,7 @@ use Revolution\Bluesky\Support\PDS;
  * @method static static|mixed unless(\Closure|mixed|null $value = null, callable|null $callback = null, callable|null $default = null)
  *
  * @mixin \Revolution\Bluesky\BlueskyManager
+ * @mixin HasShortHand
  */
 class Bluesky extends Facade
 {
