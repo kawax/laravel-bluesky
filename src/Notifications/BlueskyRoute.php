@@ -22,4 +22,14 @@ final readonly class BlueskyRoute
     ): self {
         return new self(...func_get_args());
     }
+
+    public function isOAuth(): bool
+    {
+        return filled($this->oauth);
+    }
+
+    public function isLegacy(): bool
+    {
+        return filled($this->identifier) && filled($this->password);
+    }
 }
