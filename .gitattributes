@@ -10,3 +10,4 @@
 .gitignore export-ignore
 .styleci.yml export-ignore
 phpunit.xml export-ignore
+/src/Console/LexiconClientCommand.php export-ignore
