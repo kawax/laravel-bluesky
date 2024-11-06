@@ -210,10 +210,21 @@ trait HasShortHand
         );
     }
 
-    public function getFollows(?string $did = null): Response
+    public function getFollowers(?string $actor = null, ?int $limit = 50, ?string $cursor = null): Response
+    {
+        return $this->client(auth: true)->getFollowers(
+            actor: $actor ?? $this->agent()->did() ?? '',
+            limit: $limit,
+            cursor: $cursor,
+        );
+    }
+
+    public function getFollows(?string $actor = null, ?int $limit = 50, ?string $cursor = null): Response
     {
         return $this->client(auth: true)->getFollows(
-            actor: $did ?? $this->agent()->did() ?? '',
+            actor: $actor ?? $this->agent()->did() ?? '',
+            limit: $limit,
+            cursor: $cursor,
         );
     }
 
