@@ -6,7 +6,9 @@ use Illuminate\Http\Client\Response;
 use Illuminate\Support\Collection;
 use InvalidArgumentException;
 use Revolution\AtProto\Lexicon\Enum\Feed;
+use Revolution\AtProto\Lexicon\Enum\Graph;
 use Revolution\Bluesky\Notifications\BlueskyMessage;
+use Revolution\Bluesky\Support\AtUri;
 use Revolution\Bluesky\Support\Identity;
 
 trait HasShortHand
@@ -16,7 +18,7 @@ trait HasShortHand
      */
     public function profile(?string $actor = null): Response
     {
-        return $this->client(auth: false)
+        return $this->client(auth: true)
             ->getProfile(
                 actor: $actor ?? $this->agent()?->did() ?? '',
             );
@@ -62,7 +64,7 @@ trait HasShortHand
      */
     public function feed(?string $actor = null, int $limit = 50, string $cursor = '', string $filter = 'posts_with_replies'): Response
     {
-        return $this->client(auth: false)
+        return $this->client(auth: true)
             ->getAuthorFeed(
                 actor: $actor ?? $this->agent()?->did() ?? '',
                 limit: $limit,
@@ -90,6 +92,16 @@ trait HasShortHand
                 repo: $repo,
                 collection: $collection,
                 record: $record,
+            );
+    }
+
+    public function deleteRecord(string $repo, string $collection, string $rkey): Response
+    {
+        return $this->client(auth: true)
+            ->deleteRecord(
+                repo: $repo,
+                collection: $collection,
+                rkey: $rkey,
             );
     }
 
@@ -130,6 +142,40 @@ trait HasShortHand
                 'subject' => ['uri' => $uri, 'cid' => $cid],
                 'createdAt' => now()->toISOString(),
             ],
+        );
+    }
+
+    public function getFollows(string $did): Response
+    {
+        return $this->client(auth: true)->getFollows($did);
+    }
+
+    public function follow(string $did): Response
+    {
+        return $this->createRecord(
+            repo: $this->agent()->did(),
+            collection: Graph::Follow->value,
+            record: [
+                '$type' => Graph::Follow->value,
+                'subject' => $did,
+                'createdAt' => now()->toISOString(),
+            ],
+        );
+    }
+
+    /**
+     * uri can be obtained using getFollows().
+     *
+     * @param  string  $uri  at://did:plc:.../app.bsky.graph.follow/...
+     */
+    public function deleteFollow(string $uri): Response
+    {
+        $at = AtUri::parse($uri);
+
+        return $this->deleteRecord(
+            repo: $at->repo(),
+            collection: $at->collection(),
+            rkey: $at->rkey(),
         );
     }
 
