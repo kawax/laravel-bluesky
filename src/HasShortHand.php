@@ -62,6 +62,17 @@ trait HasShortHand
     }
 
     /**
+     * @param  array<string>  $actors
+     */
+    public function getProfiles(array $actors): Response
+    {
+        return $this->client(auth: false)
+            ->getProfiles(
+                actors: $actors,
+            );
+    }
+
+    /**
      * ```
      * use Illuminate\Support\Collection;
      *
