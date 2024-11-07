@@ -490,7 +490,6 @@ trait HasShortHand
         );
     }
 
-
     /**
      * @param  string  $handle  e.g. "alice.test"
      */
