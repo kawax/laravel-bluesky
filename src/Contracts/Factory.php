@@ -7,7 +7,7 @@ namespace Revolution\Bluesky\Contracts;
 use BackedEnum;
 use Illuminate\Http\Client\PendingRequest;
 use Illuminate\Http\Client\Response;
-use Revolution\Bluesky\Notifications\BlueskyMessage;
+use Revolution\Bluesky\Client\AtpClient;
 use Revolution\Bluesky\Session\OAuthSession;
 
 interface Factory
@@ -24,13 +24,5 @@ interface Factory
 
     public function send(BackedEnum|string $api, string $method = 'get', bool $auth = true, ?array $params = null): Response;
 
-    public function resolveHandle(string $handle): Response;
-
-    public function feed(?string $actor = null, int $limit = 50, string $cursor = '', string $filter = 'posts_with_replies'): Response;
-
-    public function timeline(int $limit = 50, string $cursor = ''): Response;
-
-    public function post(string|BlueskyMessage $text): Response;
-
-    public function uploadBlob(mixed $data, string $type = 'image/png'): Response;
+    public function client(bool $auth = true): XrpcClient|AtpClient;
 }
