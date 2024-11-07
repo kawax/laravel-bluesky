@@ -390,6 +390,18 @@ trait HasShortHand
         return $this->client(auth: false)->resolveHandle(handle: $handle);
     }
 
+    public function updateHandle(string $handle): Response
+    {
+        if (! Identity::isHandle($handle)) {
+            throw new InvalidArgumentException("The handle '$handle' is not a valid handle.");
+        }
+
+        return $this->client(auth: true)
+            ->updateHandle(
+                handle: $handle,
+            );
+    }
+
     public function listNotifications(?int $limit = 50, ?bool $priority = null, ?string $cursor = null, ?string $seenAt = null): Response
     {
         return $this->client(auth: true)
