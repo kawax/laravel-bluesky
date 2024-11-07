@@ -409,4 +409,12 @@ trait HasShortHand
                 seenAt: $seenAt,
             );
     }
+
+    public function updateSeenNotifications(string $seenAt): Response
+    {
+        return $this->client(auth: true)
+            ->updateSeen(
+                seenAt: $seenAt,
+            );
+    }
 }
