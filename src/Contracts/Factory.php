@@ -22,7 +22,7 @@ interface Factory
 
     public function http(bool $auth = true): PendingRequest;
 
-    public function send(BackedEnum|string $api, string $method = 'get', bool $auth = true, ?array $params = null): Response;
+    public function send(BackedEnum|string $api, string $method = 'get', bool $auth = true, ?array $params = null, ?callable $callback = null): Response;
 
     public function client(bool $auth = true): XrpcClient|AtpClient;
 }
