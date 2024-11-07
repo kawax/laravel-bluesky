@@ -183,6 +183,16 @@ trait HasShortHand
     }
 
     /**
+     * @param  array<string>  $uris  AT-URI
+     */
+    public function getPosts(array $uris): Response
+    {
+        return $this->client(auth: true)->getPosts(
+            uris: $uris,
+        );
+    }
+
+    /**
      * @param  string|null  $actor  DID or handle.
      */
     public function getActorLikes(?string $actor = null, ?int $limit = 50, ?string $cursor = null): Response
