@@ -16,7 +16,7 @@ trait HasShortHand
     /**
      * @param  string|null  $actor  DID or handle.
      */
-    public function profile(?string $actor = null): Response
+    public function getProfile(?string $actor = null): Response
     {
         return $this->client(auth: false)
             ->getProfile(
@@ -59,11 +59,9 @@ trait HasShortHand
     }
 
     /**
-     * getAuthorFeed.
-     *
      * @param  string|null  $actor  DID or handle.
      */
-    public function feed(?string $actor = null, int $limit = 50, string $cursor = '', string $filter = 'posts_with_replies', ?bool $includePins = null): Response
+    public function getAuthorFeed(?string $actor = null, int $limit = 50, string $cursor = '', string $filter = 'posts_with_replies', ?bool $includePins = null): Response
     {
         return $this->client(auth: true)
             ->getAuthorFeed(
@@ -75,10 +73,7 @@ trait HasShortHand
             );
     }
 
-    /**
-     * My timeline.
-     */
-    public function timeline(int $limit = 50, string $cursor = ''): Response
+    public function getTimeline(int $limit = 50, string $cursor = ''): Response
     {
         return $this->client(auth: true)
             ->getTimeline(
@@ -144,6 +139,9 @@ trait HasShortHand
         );
     }
 
+    /**
+     * @param  string|null  $actor  DID or handle.
+     */
     public function getActorLikes(?string $actor = null, ?int $limit = 50, ?string $cursor = null): Response
     {
         return $this->client(auth: true)->getActorLikes(
@@ -217,6 +215,9 @@ trait HasShortHand
         );
     }
 
+    /**
+     * @param  string|null  $actor  DID or handle.
+     */
     public function getFollowers(?string $actor = null, ?int $limit = 50, ?string $cursor = null): Response
     {
         return $this->client(auth: true)->getFollowers(
@@ -226,6 +227,9 @@ trait HasShortHand
         );
     }
 
+    /**
+     * @param  string|null  $actor  DID or handle.
+     */
     public function getFollows(?string $actor = null, ?int $limit = 50, ?string $cursor = null): Response
     {
         return $this->client(auth: true)->getFollows(
