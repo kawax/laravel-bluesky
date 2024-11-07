@@ -4,6 +4,7 @@ namespace Revolution\Bluesky;
 
 use Illuminate\Http\Client\Response;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Http;
 use InvalidArgumentException;
 use Revolution\AtProto\Lexicon\Enum\Feed;
 use Revolution\AtProto\Lexicon\Enum\Graph;
@@ -449,6 +450,46 @@ trait HasShortHand
                 list: $list,
             );
     }
+
+    /**
+     * @param  string  $list  AT-URI
+     */
+    public function blockModList(string $list): Response
+    {
+        return $this->createRecord(
+            repo: $this->agent()->did(),
+            collection: Graph::Listblock->value,
+            record: [
+                '$type' => Graph::Listblock->value,
+                'subject' => $list,
+                'createdAt' => now()->toISOString(),
+            ],
+        );
+    }
+
+    /**
+     * @param  string  $list  AT-URI
+     */
+    public function unblockModList(string $list): Response
+    {
+        $blocked = $this->client(auth: true)->getList(
+            list: $list,
+            limit: 1,
+        )->json('list.viewer.blocked');
+
+        if (empty($blocked)) {
+            return new Response(Http::response([], 404)->wait());
+        }
+
+        $at = AtUri::parse($blocked);
+
+        return $this->deleteRecord(
+            repo: $this->agent()->did(),
+            collection: $at->collection(),
+            rkey: $at->rkey(),
+        );
+    }
+
 
     /**
      * @param  string  $handle  e.g. "alice.test"
