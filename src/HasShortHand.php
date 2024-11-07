@@ -369,6 +369,15 @@ trait HasShortHand
             ->uploadVideo();
     }
 
+    public function getSuggestions(?int $limit = 50, ?string $cursor = null): Response
+    {
+        return $this->client(auth: true)
+            ->getSuggestions(
+                limit: $limit,
+                cursor: $cursor,
+            );
+    }
+
     /**
      * @param  string  $handle  e.g. "alice.test"
      */
