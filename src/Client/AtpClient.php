@@ -42,6 +42,7 @@ final class AtpClient implements XrpcClient,
 
     use HasHttp;
 
+    // app.bsky
     use AppBskyActor;
     use AppBskyFeed;
     use AppBskyGraph {
@@ -56,6 +57,7 @@ final class AtpClient implements XrpcClient,
     use AppBskyUnspecced;
     use AppBskyVideo;
 
+    // com.atproto
     use ComAtprotoAdmin {
         ComAtprotoServer::deleteAccount insteadof ComAtprotoAdmin;
         ComAtprotoAdmin::deleteAccount as deleteAccountAdmin;
