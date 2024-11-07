@@ -389,4 +389,15 @@ trait HasShortHand
 
         return $this->client(auth: false)->resolveHandle(handle: $handle);
     }
+
+    public function listNotifications(?int $limit = 50, ?bool $priority = null, ?string $cursor = null, ?string $seenAt = null): Response
+    {
+        return $this->client(auth: true)
+            ->listNotifications(
+                limit: $limit,
+                priority: $priority,
+                cursor: $cursor,
+                seenAt: $seenAt,
+            );
+    }
 }
