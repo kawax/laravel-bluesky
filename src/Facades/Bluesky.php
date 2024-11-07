@@ -8,6 +8,8 @@ use BackedEnum;
 use Illuminate\Http\Client\PendingRequest;
 use Illuminate\Http\Client\Response;
 use Illuminate\Support\Facades\Facade;
+use Illuminate\Support\Traits\Conditionable;
+use Illuminate\Support\Traits\Macroable;
 use Revolution\Bluesky\Client\AtpClient;
 use Revolution\Bluesky\Contracts\Agent;
 use Revolution\Bluesky\Contracts\Factory;
@@ -30,12 +32,11 @@ use Revolution\Bluesky\Support\PDS;
  * @method static Identity identity()
  * @method static PDS pds()
  * @method static string entryway()
- * @method static void macro(string $name, object|callable $macro)
- * @method static static|mixed when(\Closure|mixed|null $value = null, callable|null $callback = null, callable|null $default = null)
- * @method static static|mixed unless(\Closure|mixed|null $value = null, callable|null $callback = null, callable|null $default = null)
  *
  * @mixin \Revolution\Bluesky\BlueskyManager
  * @mixin HasShortHand
+ * @mixin Conditionable
+ * @mixin Macroable
  */
 class Bluesky extends Facade
 {
