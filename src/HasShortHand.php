@@ -34,6 +34,8 @@ trait HasShortHand
      *     return $profile;
      * })
      * ```
+     *
+     * @param  callable(Collection $profile): Collection  $callback
      */
     public function upsertProfile(callable $callback): Response
     {
@@ -43,7 +45,6 @@ trait HasShortHand
             rkey: 'self',
         )->collect('value');
 
-        /** @var Collection $updated */
         $updated = $callback($existing);
 
         $updated->put('$type', 'app.bsky.actor.profile');
