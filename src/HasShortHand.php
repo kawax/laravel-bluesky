@@ -400,4 +400,13 @@ trait HasShortHand
                 seenAt: $seenAt,
             );
     }
+
+    public function countUnreadNotifications(?bool $priority = null, ?string $seenAt = null): Response
+    {
+        return $this->client(auth: true)
+            ->getUnreadCount(
+                priority: $priority,
+                seenAt: $seenAt,
+            );
+    }
 }
