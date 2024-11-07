@@ -51,7 +51,7 @@ trait WithOAuthSession
 
     protected function getUserByToken($token): array
     {
-        return Bluesky::profile($token)->json();
+        return Bluesky::getProfile($token)->json();
     }
 
     protected function getDidDoc($did): array
