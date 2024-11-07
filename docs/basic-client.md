@@ -20,7 +20,7 @@ BLUESKY_APP_PASSWORD=
 use Revolution\Bluesky\Facades\Bluesky;
 
 $profile = Bluesky::login(identifier: config('bluesky.identifier'), password: config('bluesky.password'))
-                  ->profile()
+                  ->getProfile()
                   ->json();
 ```
 
@@ -34,7 +34,7 @@ use Revolution\Bluesky\Session\OAuthSession;
 
 $session = OAuthSession::create(session('bluesky_session'));
 
-$timeline = Bluesky::withToken($session)->timeline()->json();
+$timeline = Bluesky::withToken($session)->getTimeline()->json();
 ```
 
 ## Response
@@ -85,7 +85,7 @@ Only my posts and reposts.
 use Revolution\Bluesky\Facades\Bluesky;
 
 /** @var \Illuminate\Http\Client\Response $response */
-$response = Bluesky::withToken()->feed();
+$response = Bluesky::withToken()->getAuthorFeed();
 
 dump($response->collect('feed'));
 ```
@@ -96,7 +96,7 @@ dump($response->collect('feed'));
 use Revolution\Bluesky\Facades\Bluesky;
 
 /** @var \Illuminate\Http\Client\Response $response */
-$response = Bluesky::withToken()->timeline();
+$response = Bluesky::withToken()->getTimeline();
 
 dump($response->json());
 ```
@@ -184,7 +184,7 @@ In fact, many of Bluesky's APIs can be used without authentication.
 ```php
 use Revolution\Bluesky\Facades\Bluesky;
 
-$profile = Bluesky::profile(actor: 'did')->json();
+$profile = Bluesky::getProfile(actor: 'did')->json();
 
 $feed = Bluesky::feed(actor: 'did')->json('feed');
 ```
