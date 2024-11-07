@@ -18,10 +18,11 @@ use Revolution\Bluesky\Support\Identity;
  */
 trait HasShortHand
 {
-    public function getTimeline(int $limit = 50, string $cursor = ''): Response
+    public function getTimeline(?string $algorithm = null, ?int $limit = 50, ?string $cursor = null): Response
     {
         return $this->client(auth: true)
             ->getTimeline(
+                algorithm: $algorithm,
                 limit: $limit,
                 cursor: $cursor,
             );
