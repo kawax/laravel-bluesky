@@ -8,5 +8,5 @@ interface XrpcClient
 {
     public function withHttp(PendingRequest $http): static;
 
-    public function withBody($content, $contentType = 'application/json'): static;
+    public function withBody($content, $contentType = 'image/png'): static;
 }
