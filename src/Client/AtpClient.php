@@ -20,20 +20,22 @@ use Revolution\Bluesky\Client\Concerns\AppBskyActor;
 use Revolution\Bluesky\Client\Concerns\AppBskyFeed;
 use Revolution\Bluesky\Client\Concerns\AppBskyGraph;
 use Revolution\Bluesky\Client\Concerns\AppBskyLabeler;
-use Revolution\Bluesky\Client\Concerns\AppBskyNotification;
 use Revolution\Bluesky\Client\Concerns\AppBskyUnspecced;
 use Revolution\Bluesky\Client\Concerns\AppBskyVideo;
-use Revolution\Bluesky\Client\Concerns\ComAtprotoAdmin;
 use Revolution\Bluesky\Client\Concerns\ComAtprotoIdentity;
 use Revolution\Bluesky\Client\Concerns\ComAtprotoLabel;
 use Revolution\Bluesky\Client\Concerns\ComAtprotoModeration;
 use Revolution\Bluesky\Client\Concerns\ComAtprotoRepo;
 use Revolution\Bluesky\Client\Concerns\ComAtprotoServer;
-use Revolution\Bluesky\Client\Concerns\ComAtprotoSync;
 use Revolution\Bluesky\Client\Concerns\ComAtprotoTemp;
+use Revolution\Bluesky\Client\Substitute\AtprotoAdmin;
+use Revolution\Bluesky\Client\Substitute\AtprotoSync;
+use Revolution\Bluesky\Client\Substitute\BskyNotification;
+use Revolution\Bluesky\Client\Substitute\ChatBsky;
+use Revolution\Bluesky\Client\Substitute\ToolsOzone;
 use Revolution\Bluesky\Contracts\XrpcClient;
 
-final class AtpClient implements XrpcClient,
+class AtpClient implements XrpcClient,
     Actor, Feed, Graph, Labeler, Unspecced, Video,
     Identity, Label, Moderation, Repo, Server, Temp
 {
@@ -45,32 +47,58 @@ final class AtpClient implements XrpcClient,
     // app.bsky
     use AppBskyActor;
     use AppBskyFeed;
-    use AppBskyGraph {
-        AppBskyGraph::getBlocks insteadof ComAtprotoSync;
-        ComAtprotoSync::getBlocks as getBlocksSync;
-    }
+    use AppBskyGraph;
     use AppBskyLabeler;
-    use AppBskyNotification {
-        AppBskyActor::putPreferences insteadof AppBskyNotification;
-        AppBskyNotification::putPreferences as putPreferencesNotification;
-    }
     use AppBskyUnspecced;
     use AppBskyVideo;
 
     // com.atproto
-    use ComAtprotoAdmin {
-        ComAtprotoServer::deleteAccount insteadof ComAtprotoAdmin;
-        ComAtprotoAdmin::deleteAccount as deleteAccountAdmin;
-    }
-
     use ComAtprotoIdentity;
     use ComAtprotoLabel;
     use ComAtprotoModeration;
     use ComAtprotoRepo;
     use ComAtprotoServer;
-    use ComAtprotoSync {
-        ComAtprotoRepo::getRecord insteadof ComAtprotoSync;
-        ComAtprotoSync::getRecord as getRecordSync;
-    }
     use ComAtprotoTemp;
+
+    /**
+     * Some methods are conflicting. Separate them into other class.
+     *
+     * app.bsky.notification
+     */
+    public function notification(): BskyNotification
+    {
+        return app(BskyNotification::class)->withHttp($this->http());
+    }
+
+    /**
+     * com.atproto.admin
+     */
+    public function admin(): AtprotoAdmin
+    {
+        return app(AtprotoAdmin::class)->withHttp($this->http());
+    }
+
+    /**
+     * com.atproto.sync
+     */
+    public function sync(): AtprotoSync
+    {
+        return app(AtprotoSync::class)->withHttp($this->http());
+    }
+
+    /**
+     * chat.bsky
+     */
+    public function chat(): ChatBsky
+    {
+        return app(ChatBsky::class)->withHttp($this->http());
+    }
+
+    /**
+     * tools.ozone
+     */
+    public function ozone(): ToolsOzone
+    {
+        return app(ToolsOzone::class)->withHttp($this->http());
+    }
 }

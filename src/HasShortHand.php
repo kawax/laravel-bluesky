@@ -518,6 +518,7 @@ trait HasShortHand
     public function listNotifications(?int $limit = 50, ?bool $priority = null, ?string $cursor = null, ?string $seenAt = null): Response
     {
         return $this->client(auth: true)
+            ->notification()
             ->listNotifications(
                 limit: $limit,
                 priority: $priority,
@@ -529,6 +530,7 @@ trait HasShortHand
     public function countUnreadNotifications(?bool $priority = null, ?string $seenAt = null): Response
     {
         return $this->client(auth: true)
+            ->notification()
             ->getUnreadCount(
                 priority: $priority,
                 seenAt: $seenAt,
@@ -538,6 +540,7 @@ trait HasShortHand
     public function updateSeenNotifications(string $seenAt): Response
     {
         return $this->client(auth: true)
+            ->notification()
             ->updateSeen(
                 seenAt: $seenAt,
             );
