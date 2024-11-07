@@ -13,6 +13,30 @@ use Revolution\Bluesky\Support\Identity;
 
 trait HasShortHand
 {
+    public function getTimeline(int $limit = 50, string $cursor = ''): Response
+    {
+        return $this->client(auth: true)
+            ->getTimeline(
+                limit: $limit,
+                cursor: $cursor,
+            );
+    }
+
+    /**
+     * @param  string|null  $actor  DID or handle.
+     */
+    public function getAuthorFeed(?string $actor = null, int $limit = 50, string $cursor = '', string $filter = 'posts_with_replies', ?bool $includePins = null): Response
+    {
+        return $this->client(auth: true)
+            ->getAuthorFeed(
+                actor: $actor ?? $this->agent()->did(),
+                limit: $limit,
+                cursor: $cursor,
+                filter: $filter,
+                includePins: $includePins,
+            );
+    }
+
     /**
      * @param  string|null  $actor  DID or handle.
      */
@@ -58,30 +82,6 @@ trait HasShortHand
         );
     }
 
-    /**
-     * @param  string|null  $actor  DID or handle.
-     */
-    public function getAuthorFeed(?string $actor = null, int $limit = 50, string $cursor = '', string $filter = 'posts_with_replies', ?bool $includePins = null): Response
-    {
-        return $this->client(auth: true)
-            ->getAuthorFeed(
-                actor: $actor ?? $this->agent()->did(),
-                limit: $limit,
-                cursor: $cursor,
-                filter: $filter,
-                includePins: $includePins,
-            );
-    }
-
-    public function getTimeline(int $limit = 50, string $cursor = ''): Response
-    {
-        return $this->client(auth: true)
-            ->getTimeline(
-                limit: $limit,
-                cursor: $cursor,
-            );
-    }
-
     public function createRecord(string $repo, string $collection, array $record, ?string $rkey = null, ?bool $validate = null, ?string $swapCommit = null): Response
     {
         return $this->client(auth: true)
@@ -92,6 +92,17 @@ trait HasShortHand
                 rkey: $rkey,
                 validate: $validate,
                 swapCommit: $swapCommit,
+            );
+    }
+
+    public function getRecord(string $repo, string $collection, string $rkey, ?string $cid = null): Response
+    {
+        return $this->client(auth: true)
+            ->getRecord(
+                repo: $repo,
+                collection: $collection,
+                rkey: $rkey,
+                cid: $cid,
             );
     }
 
@@ -136,6 +147,25 @@ trait HasShortHand
             repo: $at->repo(),
             collection: $at->collection(),
             rkey: $at->rkey(),
+        );
+    }
+
+    /**
+     * @param  string  $uri  at://did:plc:.../app.bsky.feed.post/{rkey}
+     */
+    public function getPost(string $uri, ?string $cid = null): Response
+    {
+        $at = AtUri::parse($uri);
+
+        if ($at->collection() !== Feed::Post->value) {
+            throw new InvalidArgumentException();
+        }
+
+        return $this->getRecord(
+            repo: $at->repo(),
+            collection: $at->collection(),
+            rkey: $at->rkey(),
+            cid: $cid,
         );
     }
 
