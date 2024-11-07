@@ -79,6 +79,13 @@ class BlueskyManager implements Factory
         return $this->agent()->http($auth);
     }
 
+    public function client(bool $auth = true): XrpcClient|AtpClient
+    {
+        return Container::getInstance()
+            ->make(XrpcClient::class)
+            ->withHttp($this->http($auth));
+    }
+
     /**
      * Send any API request.
      *
@@ -90,13 +97,6 @@ class BlueskyManager implements Factory
     public function send(BackedEnum|string $api, string $method = 'get', bool $auth = true, ?array $params = null): Response
     {
         return $this->http($auth)->$method(enum_value($api), $params);
-    }
-
-    public function client(bool $auth = true): XrpcClient|AtpClient
-    {
-        return Container::getInstance()
-            ->make(XrpcClient::class)
-            ->withHttp($this->http($auth));
     }
 
     public function refreshSession(): self
