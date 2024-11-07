@@ -391,6 +391,27 @@ trait HasShortHand
             );
     }
 
+    public function searchActors(?string $term = null, ?string $q = null, ?int $limit = 25, ?string $cursor = null): Response
+    {
+        return $this->client(auth: false)
+            ->searchActors(
+                term: $term,
+                q: $q,
+                limit: $limit,
+                cursor: $cursor,
+            );
+    }
+
+    public function searchActorsTypeahead(?string $term = null, ?string $q = null, ?int $limit = 10): Response
+    {
+        return $this->client(auth: false)
+            ->searchActorsTypeahead(
+                term: $term,
+                q: $q,
+                limit: $limit,
+            );
+    }
+
     /**
      * @param  string  $handle  e.g. "alice.test"
      */
