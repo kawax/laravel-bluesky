@@ -99,7 +99,7 @@ trait HasShortHand
             rkey: 'self',
         )->collect('value');
 
-        $updated = $callback($existing);
+        $updated = $callback($existing) ?? $existing;
 
         $updated->put('$type', 'app.bsky.actor.profile');
 
