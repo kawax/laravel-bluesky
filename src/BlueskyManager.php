@@ -93,10 +93,15 @@ class BlueskyManager implements Factory
      * @param  string  $method  get or post.
      * @param  bool  $auth  Requires auth.
      * @param  ?array  $params  get query or post data.
+     * @param  null|callable(PendingRequest $http): PendingRequest  $callback  Perform processing before sending.
      */
-    public function send(BackedEnum|string $api, string $method = 'get', bool $auth = true, ?array $params = null): Response
+    public function send(BackedEnum|string $api, string $method = 'get', bool $auth = true, ?array $params = null, ?callable $callback = null): Response
     {
-        return $this->http($auth)->$method(enum_value($api), $params);
+        $method = Str::lower($method) === 'post' ? 'post' : 'get';
+
+        return $this->http($auth)
+            ->when(is_callable($callback), fn (PendingRequest $http) => $callback($http))
+            ->$method(enum_value($api), $params);
     }
 
     public function refreshSession(): self
