@@ -269,6 +269,19 @@ trait HasShortHand
     }
 
     /**
+     * @param  string  $uri  at://did:plc:.../app.bsky.feed.post/{rkey}
+     */
+    public function getRepostedBy(string $uri, ?string $cid = null, ?int $limit = 50, ?string $cursor = null): Response
+    {
+        return $this->client(auth: true)->getRepostedBy(
+            uri: $uri,
+            cid: $cid,
+            limit: $limit,
+            cursor: $cursor,
+        );
+    }
+
+    /**
      * @param  string|null  $actor  DID or handle.
      */
     public function getFollowers(?string $actor = null, ?int $limit = 50, ?string $cursor = null): Response
