@@ -36,7 +36,7 @@ trait ComAtprotoServer
         );
     }
 
-    public function createAccount(string $handle, ?string $email = null, ?string $did = null, ?string $inviteCode = null, ?string $verificationCode = null, ?string $verificationPhone = null, ?string $password = null, ?string $recoveryKey = null, mixed $plcOp = null): Response
+    public function createAccount(string $handle, ?string $email = null, ?string $did = null, ?string $inviteCode = null, ?string $verificationCode = null, ?string $verificationPhone = null, #[\SensitiveParameter] ?string $password = null, ?string $recoveryKey = null, mixed $plcOp = null): Response
     {
         return $this->call(
             api: Server::createAccount,
@@ -72,7 +72,7 @@ trait ComAtprotoServer
         );
     }
 
-    public function createSession(string $identifier, string $password, ?string $authFactorToken = null): Response
+    public function createSession(string $identifier, #[\SensitiveParameter] string $password, ?string $authFactorToken = null): Response
     {
         return $this->call(
             api: Server::createSession,
@@ -90,7 +90,7 @@ trait ComAtprotoServer
         );
     }
 
-    public function deleteAccount(string $did, string $password, string $token): Response
+    public function deleteAccount(string $did, #[\SensitiveParameter] string $password, string $token): Response
     {
         return $this->call(
             api: Server::deleteAccount,
@@ -207,7 +207,7 @@ trait ComAtprotoServer
         );
     }
 
-    public function resetPassword(string $token, string $password): Response
+    public function resetPassword(string $token, #[\SensitiveParameter] string $password): Response
     {
         return $this->call(
             api: Server::resetPassword,
