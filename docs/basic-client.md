@@ -20,8 +20,7 @@ BLUESKY_APP_PASSWORD=
 use Revolution\Bluesky\Facades\Bluesky;
 
 $profile = Bluesky::login(identifier: config('bluesky.identifier'), password: config('bluesky.password'))
-                  ->getProfile()
-                  ->json();
+                  ->getProfile();
 ```
 
 ### OAuth
@@ -34,7 +33,7 @@ use Revolution\Bluesky\Session\OAuthSession;
 
 $session = OAuthSession::create(session('bluesky_session'));
 
-$timeline = Bluesky::withToken($session)->getTimeline()->json();
+$timeline = Bluesky::withToken($session)->getTimeline();
 ```
 
 ## Response
