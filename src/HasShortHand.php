@@ -414,7 +414,7 @@ trait HasShortHand
 
     public function mute(string $actor): Response
     {
-        return $this->client(auth: false)
+        return $this->client(auth: true)
             ->muteActor(
                 actor: $actor,
             );
@@ -422,9 +422,31 @@ trait HasShortHand
 
     public function unmute(string $actor): Response
     {
-        return $this->client(auth: false)
+        return $this->client(auth: true)
             ->unmuteActor(
                 actor: $actor,
+            );
+    }
+
+    /**
+     * @param  string  $list  AT-URI
+     */
+    public function muteModList(string $list): Response
+    {
+        return $this->client(auth: true)
+            ->muteActorList(
+                list: $list,
+            );
+    }
+
+    /**
+     * @param  string  $list  AT-URI
+     */
+    public function unmuteModList(string $list): Response
+    {
+        return $this->client(auth: true)
+            ->unmuteActorList(
+                list: $list,
             );
     }
 
