@@ -91,7 +91,7 @@ use Revolution\Bluesky\Notifications\BlueskyRoute;
 use Revolution\Bluesky\Session\OAuthSession;
 
 // App password
-BlueskyRoute::to(identifier: 'identifier', password: 'password')
+BlueskyRoute::to(identifier: config('bluesky.identifier'), password: config('bluesky.password'))
 
 // OAuth
 $session = OAuthSession::create([
@@ -100,4 +100,14 @@ $session = OAuthSession::create([
     'refresh_token' => '...',
 ]);
 BlueskyRoute::to(oauth: $session);
+```
+
+If you just want to notify your account, **App password** is a better option.
+You don't need to worry about updating refresh_token, and you can use it just by setting it in `.env`.
+
+```
+// .env
+
+BLUESKY_IDENTIFIER=
+BLUESKY_APP_PASSWORD=
 ```
