@@ -412,6 +412,22 @@ trait HasShortHand
             );
     }
 
+    public function mute(string $actor): Response
+    {
+        return $this->client(auth: false)
+            ->muteActor(
+                actor: $actor,
+            );
+    }
+
+    public function unmute(string $actor): Response
+    {
+        return $this->client(auth: false)
+            ->unmuteActor(
+                actor: $actor,
+            );
+    }
+
     /**
      * @param  string  $handle  e.g. "alice.test"
      */
