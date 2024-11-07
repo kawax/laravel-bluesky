@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Tests\Feature\Client;
 
+use GuzzleHttp\Psr7\Utils;
+use Illuminate\Http\Client\PendingRequest;
 use Illuminate\Http\Client\Request;
 use Illuminate\Support\Facades\Http;
 use InvalidArgumentException;
@@ -390,8 +392,28 @@ class ClientTest extends TestCase
     {
         Http::fake(fn () => ['did' => 'did']);
 
-        $response = Bluesky::send(api: Actor::getProfile, method: 'post', auth: false, params: ['actor' => 'test']);
+        $response = Bluesky::send(api: Actor::getProfile, method: 'get', auth: false, params: ['actor' => 'test']);
 
         $this->assertSame('did', $response->json('did'));
+
+        Http::assertSent(function (Request $request) {
+            return $request['actor'] === 'test' && $request->method() === 'GET';
+        });
+    }
+
+    public function test_send_callback()
+    {
+        Http::fake();
+
+        $response = Bluesky::send(
+            api: Actor::getProfile,
+            method: 'POST',
+            callback: function (PendingRequest $http) {
+                $http->withBody('test');
+            });
+
+        Http::assertSent(function (Request $request) {
+            return $request->body() === 'test' && $request->method() === 'POST';
+        });
     }
 }
