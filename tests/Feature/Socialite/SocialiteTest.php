@@ -115,7 +115,7 @@ class SocialiteTest extends TestCase
         Bluesky::shouldReceive('identity->resolveDID->json')->andReturn([
             'service' => [['id' => '#atproto_pds', 'serviceEndpoint' => 'https://pds']],
         ]);
-        Bluesky::shouldReceive('profile->json')->andReturn([
+        Bluesky::shouldReceive('getProfile->json')->andReturn([
             'did' => 'did',
             'handle' => 'handle',
         ]);
@@ -168,7 +168,7 @@ class SocialiteTest extends TestCase
         Bluesky::shouldReceive('identity->resolveDID->json')->andReturn([
             'service' => [['id' => '#atproto_pds', 'serviceEndpoint' => 'https://pds']],
         ]);
-        Bluesky::shouldReceive('profile->json')->andReturn([
+        Bluesky::shouldReceive('getProfile->json')->andReturn([
             'did' => 'did',
             'handle' => 'handle',
         ]);
