@@ -241,11 +241,9 @@ use Revolution\Bluesky\Session\OAuthSession;
 
 $session = OAuthSession::create(session('bluesky_session'));
 
-$timeline = Bluesky::withToken($session)
-                  ->timeline()
-                  ->json();
+$timeline = Bluesky::withToken($session)->getTimeline();
 
-dump($timeline);
+dump($timeline->json());
 ```
 
 ## OAuthSession values
@@ -275,10 +273,9 @@ $session = OAuthSession::create([
 
 $timeline = Bluesky::withToken($session)
                    ->refreshSession()
-                   ->timeline()
-                   ->json();
+                   ->getTimeline();
 
-dump($timeline);
+dump($timeline->json());
 ```
 
 If you created your account outside of `bsky.social`, please also specify `iss`.
@@ -295,10 +292,9 @@ $session = OAuthSession::create([
 
 $timeline = Bluesky::withToken($session)
                    ->refreshSession()
-                   ->timeline()
-                   ->json();
+                   ->getTimeline();
 
-dump($timeline);
+dump($timeline->json());
 ```
 
 Even if you want to use it in a Console or Job where Laravel sessions cannot be used, you can create an OAuthSession and call the API in this way.
@@ -384,7 +380,7 @@ use Revolution\Bluesky\Session\OAuthSession;
 
 $session = OAuthSession::create(['refresh_token' => null]);
 
-$timeline = Bluesky::withToken($session)->timeline()->json();
+$timeline = Bluesky::withToken($session)->getTimeline();
 
 // redirect to "login" route
 ```
@@ -429,8 +425,7 @@ class User extends Authenticatable
 $profile = auth()->user()
                  ->bluesky()
                  ->refreshSession()
-                 ->profile()
-                 ->json();
+                 ->getProfile();
 
-dump($profile);
+dump($profile->json());
 ```
