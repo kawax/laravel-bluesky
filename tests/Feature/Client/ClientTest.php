@@ -93,7 +93,7 @@ class ClientTest extends TestCase
 
         $response = Bluesky::login(identifier: 'identifier', password: 'password')
             ->when(Bluesky::check(), function () {
-                return Bluesky::feed(limit: 10, cursor: '2024', filter: 'posts_with_media');
+                return Bluesky::getAuthorFeed(limit: 10, cursor: '2024', filter: 'posts_with_media');
             });
 
         $this->assertTrue($response->collect()->has('feed'));
@@ -106,7 +106,7 @@ class ClientTest extends TestCase
             ->push(['feed' => ['post' => []]]);
 
         $response = Bluesky::unless(Bluesky::check(), fn () => Bluesky::login(identifier: 'identifier', password: 'password'))
-            ->timeline(limit: 10, cursor: '2024');
+            ->getTimeline(limit: 10, cursor: '2024');
 
         $this->assertTrue($response->collect()->has('feed'));
     }
@@ -169,7 +169,7 @@ class ClientTest extends TestCase
             ->push(['did' => 'test']);
 
         $response = Bluesky::login(identifier: 'identifier', password: 'password')
-            ->profile(actor: 'test');
+            ->getProfile(actor: 'test');
 
         $this->assertTrue($response->collect()->has('did'));
         $this->assertSame('test', $response->json('did'));
@@ -359,7 +359,7 @@ class ClientTest extends TestCase
     {
         Http::fake();
 
-        Bluesky::profile();
+        Bluesky::getProfile();
 
         Http::assertSentCount(1);
     }
