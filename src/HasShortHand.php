@@ -60,7 +60,7 @@ trait HasShortHand
      */
     public function getProfile(?string $actor = null): Response
     {
-        return $this->client(auth: false)
+        return $this->client(auth: true)
             ->getProfile(
                 actor: $actor ?? $this->agent()?->did() ?? '',
             );
@@ -71,7 +71,7 @@ trait HasShortHand
      */
     public function getProfiles(array $actors): Response
     {
-        return $this->client(auth: false)
+        return $this->client(auth: true)
             ->getProfiles(
                 actors: $actors,
             );
@@ -394,7 +394,7 @@ trait HasShortHand
 
     public function searchActors(?string $term = null, ?string $q = null, ?int $limit = 25, ?string $cursor = null): Response
     {
-        return $this->client(auth: false)
+        return $this->client(auth: true)
             ->searchActors(
                 term: $term,
                 q: $q,
@@ -405,7 +405,7 @@ trait HasShortHand
 
     public function searchActorsTypeahead(?string $term = null, ?string $q = null, ?int $limit = 10): Response
     {
-        return $this->client(auth: false)
+        return $this->client(auth: true)
             ->searchActorsTypeahead(
                 term: $term,
                 q: $q,
