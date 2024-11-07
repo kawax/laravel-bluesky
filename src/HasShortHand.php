@@ -25,7 +25,7 @@ trait HasShortHand
     /**
      * @param  string|null  $actor  DID or handle.
      */
-    public function getAuthorFeed(?string $actor = null, int $limit = 50, string $cursor = '', string $filter = 'posts_with_replies', ?bool $includePins = null): Response
+    public function getAuthorFeed(?string $actor = null, ?int $limit = 50, ?string $cursor = null, string $filter = 'posts_with_replies', ?bool $includePins = null): Response
     {
         return $this->client(auth: true)
             ->getAuthorFeed(
@@ -34,6 +34,19 @@ trait HasShortHand
                 cursor: $cursor,
                 filter: $filter,
                 includePins: $includePins,
+            );
+    }
+
+    /**
+     * @param  string|null  $actor  DID or handle.
+     */
+    public function getActorFeeds(?string $actor = null, ?int $limit = 50, ?string $cursor = null): Response
+    {
+        return $this->client(auth: true)
+            ->getActorFeeds(
+                actor: $actor ?? $this->agent()->did(),
+                limit: $limit,
+                cursor: $cursor,
             );
     }
 
