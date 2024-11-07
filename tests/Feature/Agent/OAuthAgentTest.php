@@ -75,7 +75,7 @@ class OAuthAgentTest extends TestCase
                 ],
             );
 
-        $response = Bluesky::profile();
+        $response = Bluesky::getProfile();
 
         $this->assertTrue($response->successful());
     }
