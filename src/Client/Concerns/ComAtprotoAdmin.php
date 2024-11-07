@@ -117,7 +117,7 @@ trait ComAtprotoAdmin
         );
     }
 
-    public function updateAccountPassword(string $did, string $password): Response
+    public function updateAccountPassword(string $did, #[\SensitiveParameter] string $password): Response
     {
         return $this->call(
             api: Admin::updateAccountPassword,
