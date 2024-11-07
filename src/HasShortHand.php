@@ -11,6 +11,10 @@ use Revolution\Bluesky\Notifications\BlueskyMessage;
 use Revolution\Bluesky\Support\AtUri;
 use Revolution\Bluesky\Support\Identity;
 
+/**
+ * The method names will be the same as the official client.
+ * https://github.com/bluesky-social/atproto/blob/main/packages/api/README.md
+ */
 trait HasShortHand
 {
     public function getTimeline(int $limit = 50, string $cursor = ''): Response
