@@ -86,23 +86,28 @@ trait HasShortHand
             );
     }
 
-    public function createRecord(string $repo, string $collection, array $record): Response
+    public function createRecord(string $repo, string $collection, array $record, ?string $rkey = null, ?bool $validate = null, ?string $swapCommit = null): Response
     {
         return $this->client(auth: true)
             ->createRecord(
                 repo: $repo,
                 collection: $collection,
                 record: $record,
+                rkey: $rkey,
+                validate: $validate,
+                swapCommit: $swapCommit,
             );
     }
 
-    public function deleteRecord(string $repo, string $collection, string $rkey): Response
+    public function deleteRecord(string $repo, string $collection, string $rkey, ?string $swapRecord = null, ?string $swapCommit = null): Response
     {
         return $this->client(auth: true)
             ->deleteRecord(
                 repo: $repo,
                 collection: $collection,
                 rkey: $rkey,
+                swapRecord: $swapRecord,
+                swapCommit: $swapCommit,
             );
     }
 
