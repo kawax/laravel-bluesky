@@ -11,6 +11,7 @@ use ReflectionAttribute;
 use ReflectionClass;
 use ReflectionMethod;
 use ReflectionParameter;
+use Revolution\AtProto\Lexicon\Attributes\Post;
 
 /**
  * ```
@@ -94,7 +95,9 @@ class LexiconClientCommand extends Command
                     ->map(function (ReflectionMethod $method) {
                         $func = $method->getName();
                         $params = $this->getParameters($method->getParameters());
-                        $http = Str::contains($method->getDocComment(), '* POST') ? 'POST' : 'GET';
+
+                        $attrs = $method->getAttributes(Post::class);
+                        $http = filled($attrs) ? 'POST' : 'GET';
 
                         return [
                             'func' => $func,
