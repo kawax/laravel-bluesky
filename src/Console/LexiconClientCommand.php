@@ -7,9 +7,11 @@ namespace Revolution\Bluesky\Console;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Str;
+use ReflectionAttribute;
 use ReflectionClass;
 use ReflectionMethod;
 use ReflectionParameter;
+use SensitiveParameter;
 
 /**
  * ```
@@ -119,6 +121,10 @@ class LexiconClientCommand extends Command
                 $name = $parameter->getName();
                 $type = $parameter->getType()->__toString();
 
+                $attrs = collect($parameter->getAttributes())
+                    ->map(fn (ReflectionAttribute $attr) => '#[\\'.$attr->getName().']')
+                    ->implode(' ');
+
                 if ($parameter->isOptional()) {
                     $default = $parameter->getDefaultValue();
 
@@ -131,7 +137,7 @@ class LexiconClientCommand extends Command
                     $default = null;
                 }
 
-                return Str::trim("$type \$$name $default");
+                return Str::trim("$attrs $type \$$name $default");
             })
             ->implode(', ');
     }
