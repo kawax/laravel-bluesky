@@ -11,7 +11,6 @@ use ReflectionAttribute;
 use ReflectionClass;
 use ReflectionMethod;
 use ReflectionParameter;
-use SensitiveParameter;
 
 /**
  * ```
