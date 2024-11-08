@@ -174,10 +174,6 @@ final class OAuthAgent implements Agent
         $base = $this->pdsUrl();
 
         if (empty($base)) {
-            if ($auth) {
-                logger()->warning('If you get an error on the public endpoint, please authenticate.');
-            }
-
             $base = config('bluesky.public_endpoint');
         }
 
