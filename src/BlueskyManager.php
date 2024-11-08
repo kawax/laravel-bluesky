@@ -58,15 +58,6 @@ class BlueskyManager implements Factory
         return $this;
     }
 
-    public function http(bool $auth = true): PendingRequest
-    {
-        if (! $auth || ! $this->check()) {
-            return Http::baseUrl($this->publicEndpoint());
-        }
-
-        return $this->agent()->http($auth);
-    }
-
     public function client(bool $auth = true): XrpcClient|AtpClient
     {
         return Container::getInstance()
@@ -90,6 +81,15 @@ class BlueskyManager implements Factory
         return $this->http($auth)
             ->when(is_callable($callback), fn (PendingRequest $http) => $callback($http))
             ->$method(enum_value($api), $params);
+    }
+
+    protected function http(bool $auth = true): PendingRequest
+    {
+        if (! $auth || ! $this->check()) {
+            return Http::baseUrl($this->publicEndpoint());
+        }
+
+        return $this->agent()->http($auth);
     }
 
     public function agent(): ?Agent
@@ -133,7 +133,7 @@ class BlueskyManager implements Factory
         return $this;
     }
 
-    public function publicEndpoint(): string
+    protected function publicEndpoint(): string
     {
         return Str::rtrim(config('bluesky.public_endpoint'), '/').'/xrpc/';
     }
