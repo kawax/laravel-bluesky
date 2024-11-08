@@ -58,18 +58,6 @@ class BlueskyManager implements Factory
         return $this;
     }
 
-    public function agent(): ?Agent
-    {
-        return $this->agent;
-    }
-
-    public function withAgent(?Agent $agent): self
-    {
-        $this->agent = $agent;
-
-        return $this;
-    }
-
     public function http(bool $auth = true): PendingRequest
     {
         if (! $auth || ! $this->check()) {
@@ -102,6 +90,18 @@ class BlueskyManager implements Factory
         return $this->http($auth)
             ->when(is_callable($callback), fn (PendingRequest $http) => $callback($http))
             ->$method(enum_value($api), $params);
+    }
+
+    public function agent(): ?Agent
+    {
+        return $this->agent;
+    }
+
+    public function withAgent(?Agent $agent): self
+    {
+        $this->agent = $agent;
+
+        return $this;
     }
 
     public function refreshSession(): self
