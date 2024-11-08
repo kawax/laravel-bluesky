@@ -177,8 +177,6 @@ final class OAuthAgent implements Agent
             $base = config('bluesky.public_endpoint');
         }
 
-        $base .= '/xrpc/';
-
-        return $base;
+        return $base.'/xrpc/';
     }
 }
