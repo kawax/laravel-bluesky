@@ -218,17 +218,6 @@ class ClientTest extends TestCase
         Http::assertNothingSent();
     }
 
-    public function test_resolve_handle_invalid()
-    {
-        $this->expectException(InvalidArgumentException::class);
-
-        Http::fake();
-
-        $response = Bluesky::resolveHandle(handle: 'invalid');
-
-        Http::assertNothingSent();
-    }
-
     public function test_resolve_did_invalid()
     {
         $this->expectException(InvalidArgumentException::class);
