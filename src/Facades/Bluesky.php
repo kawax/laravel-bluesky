@@ -21,7 +21,6 @@ use Revolution\Bluesky\Support\PDS;
 
 /**
  * @method static static withToken(?OAuthSession $token)
- * @method static PendingRequest http(bool $auth = true)
  * @method static XrpcClient|AtpClient client(bool $auth = true)
  * @method static Response send(BackedEnum|string $api, string $method = 'get', bool $auth = true, ?array $params = null, ?callable $callback = null)
  * @method static Agent agent()
