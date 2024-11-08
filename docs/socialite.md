@@ -303,6 +303,8 @@ Even if you want to use it in a Console or Job where Laravel sessions cannot be 
 
 To receive the updated OAuthSession, use the `OAuthSessionUpdated` event.
 
+The refresh_token can only be used once, so it is important to keep updating it here.
+
 ```bash
 php artisan make:listener OAuthSessionUpdatedListener
 ```
@@ -336,16 +338,15 @@ class OAuthSessionListener
 
         session()->put('bluesky_session', $event->session->toArray());
 
-        $user = User::updateOrCreate([
-            'did' => $event->session->did(), // Bluesky DID (did:plc:...)
-        ], [
-            'iss' => $event->session->issuer(), // Bluesky iss (https://bsky.social)
-            'handle' => $event->session->handle(), // Bluesky handle (alice.test)
-            'name' => $event->session->displayName(), // Bluesky displayName (Alice)
+        $user = User::firstWhere('did', $event->session->did());
+        $user->fill([
+            'iss' => $event->session->issuer(),
+            'handle' => $event->session->handle(),
+            'name' => $event->session->displayName(),
             'avatar' => $event->session->avatar(),
             'access_token' => $event->session->token(),
             'refresh_token' => $event->session->refresh(),
-        ]);
+        ])->save();
     }
 }
 ```
@@ -362,11 +363,9 @@ Similarly, when an OAuthSession refresh starts, the `OAuthSessionRefreshing` eve
             return;
         }
 
-        $user = User::updateOrCreate([
-            'did' => $event->session->did(),
-        ], [
-            'refresh_token' => $event->session->refresh(),
-        ]);
+        User::firstWhere('did', $event->session->did())
+            ->fill(['refresh_token' => ''])
+            ->save();
     }
 ```
 
