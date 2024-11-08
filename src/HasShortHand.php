@@ -31,7 +31,7 @@ trait HasShortHand
     /**
      * @param  string|null  $actor  DID or handle.
      */
-    public function getAuthorFeed(?string $actor = null, ?int $limit = 50, ?string $cursor = null, string $filter = 'posts_with_replies', ?bool $includePins = null): Response
+    public function getAuthorFeed(?string $actor = null, ?int $limit = 50, ?string $cursor = null, ?string $filter = 'posts_with_replies', ?bool $includePins = null): Response
     {
         return $this->client(auth: true)
             ->getAuthorFeed(
@@ -496,19 +496,15 @@ trait HasShortHand
      */
     public function resolveHandle(string $handle): Response
     {
-        if (! Identity::isHandle($handle)) {
-            throw new InvalidArgumentException("The handle '$handle' is not a valid handle.");
-        }
-
-        return $this->client(auth: false)->resolveHandle(handle: $handle);
+        return $this->client(auth: false)
+            ->resolveHandle(handle: $handle);
     }
 
+    /**
+     * @param  string  $handle  e.g. "alice.test"
+     */
     public function updateHandle(string $handle): Response
     {
-        if (! Identity::isHandle($handle)) {
-            throw new InvalidArgumentException("The handle '$handle' is not a valid handle.");
-        }
-
         return $this->client(auth: true)
             ->updateHandle(
                 handle: $handle,
