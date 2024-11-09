@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\Http;
 use InvalidArgumentException;
 use Revolution\AtProto\Lexicon\Enum\Feed;
 use Revolution\AtProto\Lexicon\Enum\Graph;
+use Revolution\Bluesky\Record\Block;
 use Revolution\Bluesky\Record\Like;
 use Revolution\Bluesky\Record\Post;
 use Revolution\Bluesky\Record\Follow;
@@ -427,6 +428,39 @@ trait HasShortHand
                 q: $q,
                 limit: $limit,
             );
+    }
+
+    /**
+     * @throws AuthenticationException
+     */
+    public function block(Block|string $did): Response
+    {
+        $block = $did instanceof Block ? $did : Block::create(did: $did);
+
+        return $this->createRecord(
+            repo: $this->assertDid(),
+            collection: Graph::Block->value,
+            record: $block->toRecord(),
+        );
+    }
+
+    /**
+     * @param  string  $uri  at://did:plc:.../app.bsky.graph.block/{rkey}
+     * @throws AuthenticationException
+     */
+    public function unblock(string $uri): Response
+    {
+        $at = AtUri::parse($uri);
+
+        if ($at->collection() !== Graph::Block->value) {
+            throw new InvalidArgumentException();
+        }
+
+        return $this->deleteRecord(
+            repo: $this->assertDid(),
+            collection: $at->collection(),
+            rkey: $at->rkey(),
+        );
     }
 
     public function mute(string $actor): Response
