@@ -7,6 +7,7 @@ namespace Revolution\Bluesky\Notifications;
 use Illuminate\Http\Client\RequestException;
 use Illuminate\Notifications\Notification;
 use Revolution\Bluesky\Facades\Bluesky;
+use Revolution\Bluesky\Record\Post;
 
 class BlueskyChannel
 {
@@ -16,12 +17,12 @@ class BlueskyChannel
     public function send(mixed $notifiable, Notification $notification): void
     {
         /**
-         * @var BlueskyMessage $message
+         * @var BlueskyMessage|Post $message
          * @phpstan-ignore-next-line
          */
         $message = $notification->toBluesky($notifiable);
 
-        if (! $message instanceof BlueskyMessage) {
+        if (! $message instanceof BlueskyMessage && ! $message instanceof Post) {
             return; // @codeCoverageIgnore
         }
 
