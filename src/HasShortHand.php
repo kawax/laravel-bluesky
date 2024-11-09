@@ -38,7 +38,7 @@ trait HasShortHand
     {
         return $this->client(auth: true)
             ->getAuthorFeed(
-                actor: $actor ?? $this->agent()->did(),
+                actor: $actor ?? $this->assertDid(),
                 limit: $limit,
                 cursor: $cursor,
                 filter: $filter,
@@ -53,7 +53,7 @@ trait HasShortHand
     {
         return $this->client(auth: true)
             ->getActorFeeds(
-                actor: $actor ?? $this->agent()->did(),
+                actor: $actor ?? $this->assertDid(),
                 limit: $limit,
                 cursor: $cursor,
             );
@@ -66,7 +66,7 @@ trait HasShortHand
     {
         return $this->client(auth: true)
             ->getProfile(
-                actor: $actor ?? $this->agent()?->did() ?? '',
+                actor: $actor ?? $this->assertDid(),
             );
     }
 
@@ -97,7 +97,7 @@ trait HasShortHand
     public function upsertProfile(callable $callback): Response
     {
         $existing = $this->client(auth: true)->getRecord(
-            repo: $this->agent()->did(),
+            repo: $this->assertDid(),
             collection: 'app.bsky.actor.profile',
             rkey: 'self',
         )->collect('value');
@@ -107,7 +107,7 @@ trait HasShortHand
         $updated->put('$type', 'app.bsky.actor.profile');
 
         return $this->client(auth: true)->putRecord(
-            repo: $this->agent()->did(),
+            repo: $this->assertDid(),
             collection: 'app.bsky.actor.profile',
             rkey: 'self',
             record: $updated->toArray(),
@@ -159,7 +159,7 @@ trait HasShortHand
         $post = $text instanceof Post ? $text : Post::create($text);
 
         return $this->createRecord(
-            repo: $this->agent()->did(),
+            repo: $this->assertDid(),
             collection: Feed::Post->value,
             record: $post->toRecord(),
         );
@@ -227,7 +227,7 @@ trait HasShortHand
     public function getActorLikes(?string $actor = null, ?int $limit = 50, ?string $cursor = null): Response
     {
         return $this->client(auth: true)->getActorLikes(
-            actor: $actor ?? $this->agent()->did(),
+            actor: $actor ?? $this->assertDid(),
             limit: $limit,
             cursor: $cursor,
         );
@@ -238,7 +238,7 @@ trait HasShortHand
         $like = $subject instanceof Like ? $subject : Like::create($subject);
 
         return $this->createRecord(
-            repo: $this->agent()->did(),
+            repo: $this->assertDid(),
             collection: Feed::Like->value,
             record: $like->toRecord(),
         );
@@ -269,7 +269,7 @@ trait HasShortHand
         $repost = $subject instanceof Repost ? $subject : Repost::create($subject);
 
         return $this->createRecord(
-            repo: $this->agent()->did(),
+            repo: $this->assertDid(),
             collection: Feed::Repost->value,
             record: $repost->toRecord(),
         );
@@ -312,7 +312,7 @@ trait HasShortHand
     public function getFollowers(?string $actor = null, ?int $limit = 50, ?string $cursor = null): Response
     {
         return $this->client(auth: true)->getFollowers(
-            actor: $actor ?? $this->agent()->did(),
+            actor: $actor ?? $this->assertDid(),
             limit: $limit,
             cursor: $cursor,
         );
@@ -324,7 +324,7 @@ trait HasShortHand
     public function getFollows(?string $actor = null, ?int $limit = 50, ?string $cursor = null): Response
     {
         return $this->client(auth: true)->getFollows(
-            actor: $actor ?? $this->agent()->did(),
+            actor: $actor ?? $this->assertDid(),
             limit: $limit,
             cursor: $cursor,
         );
@@ -335,7 +335,7 @@ trait HasShortHand
         $follow = $did instanceof Follow ? $did : Follow::create(did: $did);
 
         return $this->createRecord(
-            repo: $this->agent()->did(),
+            repo: $this->assertDid(),
             collection: Graph::Follow->value,
             record: $follow->toRecord(),
         );
@@ -455,7 +455,7 @@ trait HasShortHand
     public function blockModList(string $list): Response
     {
         return $this->createRecord(
-            repo: $this->agent()->did(),
+            repo: $this->assertDid(),
             collection: Graph::Listblock->value,
             record: [
                 '$type' => Graph::Listblock->value,
@@ -482,7 +482,7 @@ trait HasShortHand
         $at = AtUri::parse($blocked);
 
         return $this->deleteRecord(
-            repo: $this->agent()->did(),
+            repo: $this->assertDid(),
             collection: $at->collection(),
             rkey: $at->rkey(),
         );
