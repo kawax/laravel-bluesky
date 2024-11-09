@@ -17,6 +17,7 @@ use Revolution\AtProto\Lexicon\Contracts\App\Bsky\Actor;
 use Revolution\Bluesky\Record\Like;
 use Revolution\Bluesky\Record\Post;
 use Revolution\Bluesky\Record\Follow;
+use Revolution\Bluesky\Record\Repost;
 use Revolution\Bluesky\Session\LegacySession;
 use Revolution\Bluesky\Session\OAuthSession;
 use Revolution\Bluesky\Support\DNS;
@@ -443,6 +444,32 @@ class ClientTest extends TestCase
         $subject = StrongRef::create(uri: 'uri', cid: 'cid');
 
         $response = Bluesky::login('id', 'pass')->like($subject);
+
+        $this->assertTrue($response->successful());
+    }
+
+    public function test_repost()
+    {
+        Http::fakeSequence()
+            ->push($this->session)
+            ->push([]);
+
+        $repost = Repost::create(StrongRef::create(uri: 'uri', cid: 'cid'));
+
+        $response = Bluesky::login('id', 'pass')->repost($repost);
+
+        $this->assertTrue($response->successful());
+    }
+
+    public function test_repost_subject()
+    {
+        Http::fakeSequence()
+            ->push($this->session)
+            ->push([]);
+
+        $subject = StrongRef::create(uri: 'uri', cid: 'cid');
+
+        $response = Bluesky::login('id', 'pass')->repost($subject);
 
         $this->assertTrue($response->successful());
     }
