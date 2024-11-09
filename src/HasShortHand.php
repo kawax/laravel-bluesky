@@ -11,6 +11,7 @@ use Revolution\AtProto\Lexicon\Enum\Graph;
 use Revolution\Bluesky\Record\Like;
 use Revolution\Bluesky\Record\Post;
 use Revolution\Bluesky\Record\Follow;
+use Revolution\Bluesky\Record\Repost;
 use Revolution\Bluesky\Support\AtUri;
 use Revolution\Bluesky\Support\StrongRef;
 
@@ -263,16 +264,14 @@ trait HasShortHand
         );
     }
 
-    public function repost(string $uri, string $cid): Response
+    public function repost(Repost|StrongRef $subject): Response
     {
+        $repost = $subject instanceof Repost ? $subject : Repost::create($subject);
+
         return $this->createRecord(
             repo: $this->agent()->did(),
             collection: Feed::Repost->value,
-            record: [
-                '$type' => Feed::Repost->value,
-                'subject' => ['uri' => $uri, 'cid' => $cid],
-                'createdAt' => now()->toISOString(),
-            ],
+            record: $repost->toRecord(),
         );
     }
 
