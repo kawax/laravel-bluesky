@@ -30,4 +30,11 @@ class RecordTest extends TestCase
         $this->assertSame('2024', $post->toRecord()['createdAt']);
         $this->assertSame($post::NSID, $post->toRecord()['$type']);
     }
+
+    public function test_validator()
+    {
+        $post = Post::create(text: 'test');
+
+        $this->assertTrue($post->validator()->passes());
+    }
 }
