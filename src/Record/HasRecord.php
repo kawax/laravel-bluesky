@@ -14,7 +14,7 @@ trait HasRecord
     public function toArray(): array
     {
         return collect(get_object_vars($this))
-            ->reject(fn ($item) => blank($item))
+            ->reject(fn ($item) => is_null($item))
             ->toArray();
     }
 
