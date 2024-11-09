@@ -16,6 +16,7 @@ class RecordTest extends TestCase
         $this->assertArrayHasKey('subject', $follow->toRecord());
         $this->assertArrayHasKey('createdAt', $follow->toRecord());
         $this->assertSame('did', $follow->toRecord()['subject']);
+        $this->assertSame($follow::NSID, $follow->toRecord()['$type']);
     }
 
     public function test_post()
@@ -27,5 +28,6 @@ class RecordTest extends TestCase
         $this->assertArrayHasKey('text', $post->toRecord());
         $this->assertArrayHasKey('createdAt', $post->toRecord());
         $this->assertSame('2024', $post->toRecord()['createdAt']);
+        $this->assertSame($post::NSID, $post->toRecord()['$type']);
     }
 }
