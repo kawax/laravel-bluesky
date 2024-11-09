@@ -126,9 +126,6 @@ class Post extends AbstractPost implements Arrayable, Recordable
         ];
     }
 
-    /**
-     * Add embed.
-     */
     public function embed(array|Arrayable $embed): static
     {
         $this->embed = $embed instanceof Arrayable ? $embed->toArray() : $embed;
@@ -136,12 +133,16 @@ class Post extends AbstractPost implements Arrayable, Recordable
         return $this;
     }
 
-    /**
-     * Add langs.
-     */
     public function langs(array $langs): static
     {
         $this->langs = $langs;
+
+        return $this;
+    }
+
+    public function createdAt(string $createdAt): static
+    {
+        $this->createdAt = $createdAt;
 
         return $this;
     }
