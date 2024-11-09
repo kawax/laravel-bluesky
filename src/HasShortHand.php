@@ -2,6 +2,7 @@
 
 namespace Revolution\Bluesky;
 
+use Illuminate\Auth\AuthenticationException;
 use Illuminate\Http\Client\Response;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Http;
@@ -9,6 +10,7 @@ use InvalidArgumentException;
 use Revolution\AtProto\Lexicon\Enum\Feed;
 use Revolution\AtProto\Lexicon\Enum\Graph;
 use Revolution\Bluesky\Notifications\BlueskyMessage;
+use Revolution\Bluesky\Record\Follow;
 use Revolution\Bluesky\Support\AtUri;
 use Revolution\Bluesky\Support\Identity;
 
@@ -331,16 +333,14 @@ trait HasShortHand
         );
     }
 
-    public function follow(string $did): Response
+    public function follow(Follow|string $follow): Response
     {
+        $follow = $follow instanceof Follow ? $follow : Follow::create(did: $follow);
+
         return $this->createRecord(
             repo: $this->agent()->did(),
             collection: Graph::Follow->value,
-            record: [
-                '$type' => Graph::Follow->value,
-                'subject' => $did,
-                'createdAt' => now()->toISOString(),
-            ],
+            record: $follow->toRecord(),
         );
     }
 

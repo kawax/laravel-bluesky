@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Tests\Feature\Client;
 
-use GuzzleHttp\Psr7\Utils;
 use Illuminate\Http\Client\PendingRequest;
 use Illuminate\Http\Client\Request;
 use Illuminate\Support\Facades\Http;
@@ -16,6 +15,7 @@ use Revolution\Bluesky\BlueskyManager;
 use Revolution\Bluesky\Facades\Bluesky;
 use Revolution\AtProto\Lexicon\Contracts\App\Bsky\Actor;
 use Revolution\Bluesky\Notifications\BlueskyMessage;
+use Revolution\Bluesky\Record\Follow;
 use Revolution\Bluesky\Session\LegacySession;
 use Revolution\Bluesky\Session\OAuthSession;
 use Revolution\Bluesky\Support\DNS;
@@ -404,5 +404,18 @@ class ClientTest extends TestCase
         Http::assertSent(function (Request $request) {
             return $request->body() === 'test' && $request->method() === 'POST';
         });
+    }
+
+    public function test_follow()
+    {
+        Http::fakeSequence()
+            ->push($this->session)
+            ->push([]);
+
+        $follow = Follow::create(did: 'did');
+
+        $response = Bluesky::login('id', 'pass')->follow($follow);
+
+        $this->assertTrue($response->successful());
     }
 }
