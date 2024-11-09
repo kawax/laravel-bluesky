@@ -3,6 +3,7 @@
 namespace Tests\Feature\Record;
 
 use Revolution\Bluesky\Record\Follow;
+use Revolution\Bluesky\Record\Post;
 use Tests\TestCase;
 
 class RecordTest extends TestCase
@@ -13,6 +14,18 @@ class RecordTest extends TestCase
 
         $this->assertIsArray($follow->toRecord());
         $this->assertArrayHasKey('subject', $follow->toRecord());
+        $this->assertArrayHasKey('createdAt', $follow->toRecord());
         $this->assertSame('did', $follow->toRecord()['subject']);
+    }
+
+    public function test_post()
+    {
+        $post = Post::create(text: 'test');
+        $post->createdAt('2024');
+
+        $this->assertIsArray($post->toRecord());
+        $this->assertArrayHasKey('text', $post->toRecord());
+        $this->assertArrayHasKey('createdAt', $post->toRecord());
+        $this->assertSame('2024', $post->toRecord()['createdAt']);
     }
 }
