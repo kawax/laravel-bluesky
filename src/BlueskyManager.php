@@ -115,6 +115,56 @@ class BlueskyManager implements Factory
         return $this;
     }
 
+    public function createRecord(string $repo, string $collection, array $record, ?string $rkey = null, ?bool $validate = null, ?string $swapCommit = null): Response
+    {
+        return $this->client(auth: true)
+            ->createRecord(
+                repo: $repo,
+                collection: $collection,
+                record: $record,
+                rkey: $rkey,
+                validate: $validate,
+                swapCommit: $swapCommit,
+            );
+    }
+
+    public function getRecord(string $repo, string $collection, string $rkey, ?string $cid = null): Response
+    {
+        return $this->client(auth: true)
+            ->getRecord(
+                repo: $repo,
+                collection: $collection,
+                rkey: $rkey,
+                cid: $cid,
+            );
+    }
+
+    public function putRecord(string $repo, string $collection, string $rkey, mixed $record, ?bool $validate = null, ?string $swapRecord = null, ?string $swapCommit = null): Response
+    {
+        return $this->client(auth: true)
+            ->putRecord(
+                repo: $repo,
+                collection: $collection,
+                rkey: $rkey,
+                record: $record,
+                validate: $validate,
+                swapRecord: $swapRecord,
+                swapCommit: $swapCommit,
+            );
+    }
+
+    public function deleteRecord(string $repo, string $collection, string $rkey, ?string $swapRecord = null, ?string $swapCommit = null): Response
+    {
+        return $this->client(auth: true)
+            ->deleteRecord(
+                repo: $repo,
+                collection: $collection,
+                rkey: $rkey,
+                swapRecord: $swapRecord,
+                swapCommit: $swapCommit,
+            );
+    }
+
     public function refreshSession(): self
     {
         $this->agent = $this->agent()?->refreshSession();
