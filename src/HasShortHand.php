@@ -112,7 +112,7 @@ trait HasShortHand
 
         $updated->put('$type', 'app.bsky.actor.profile');
 
-        return $this->client(auth: true)->putRecord(
+        return $this->putRecord(
             repo: $this->assertDid(),
             collection: 'app.bsky.actor.profile',
             rkey: 'self',
@@ -142,6 +142,20 @@ trait HasShortHand
                 collection: $collection,
                 rkey: $rkey,
                 cid: $cid,
+            );
+    }
+
+    public function putRecord(string $repo, string $collection, string $rkey, mixed $record, ?bool $validate = null, ?string $swapRecord = null, ?string $swapCommit = null): Response
+    {
+        return $this->client(auth: true)
+            ->putRecord(
+                repo: $repo,
+                collection: $collection,
+                rkey: $rkey,
+                record: $record,
+                validate: $validate,
+                swapRecord: $swapRecord,
+                swapCommit: $swapCommit,
             );
     }
 
@@ -540,6 +554,41 @@ trait HasShortHand
             collection: $at->collection(),
             rkey: $at->rkey(),
         );
+    }
+
+    /**
+     * @throws AuthenticationException
+     */
+    public function getLists(?string $actor = null, ?int $limit = 50, ?string $cursor = null): Response
+    {
+        return $this->client(auth: true)
+            ->getLists(
+                actor: $actor ?? $this->assertDid(),
+                limit: $limit,
+                cursor: $cursor,
+            );
+    }
+
+    /**
+     * @param  string  $list  URI
+     */
+    public function getList(string $list, ?int $limit = 50, ?string $cursor = null): Response
+    {
+        return $this->client(auth: true)
+            ->getList(
+                list: $list,
+                limit: $limit,
+                cursor: $cursor,
+            );
+    }
+
+    public function getListMutes(?int $limit = 50, ?string $cursor = null): Response
+    {
+        return $this->client(auth: true)
+            ->getListMutes(
+                limit: $limit,
+                cursor: $cursor,
+            );
     }
 
     /**
