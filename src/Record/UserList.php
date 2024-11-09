@@ -12,14 +12,14 @@ class UserList extends AbstractList implements Arrayable, Recordable
 {
     use HasRecord;
 
-    public function __construct(string $name, string $purpose, string $description)
+    public function __construct(string $name, string $purpose, ?string $description = null)
     {
         $this->name = $name;
         $this->purpose = $purpose;
         $this->description = $description;
     }
 
-    public static function create(string $name, string $purpose, string $description): static
+    public static function create(string $name, string $purpose, ?string $description = null): static
     {
         return new static($name, $purpose, $description);
     }
