@@ -353,7 +353,7 @@ class ClientTest extends TestCase
     {
         Http::fake();
 
-        Bluesky::getProfile();
+        Bluesky::getProfile('did');
 
         Http::assertSentCount(1);
     }
