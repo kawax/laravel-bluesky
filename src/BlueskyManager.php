@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Revolution\Bluesky;
 
 use BackedEnum;
+use Illuminate\Auth\AuthenticationException;
 use Illuminate\Container\Container;
 use Illuminate\Http\Client\PendingRequest;
 use Illuminate\Http\Client\Response;
@@ -90,6 +91,16 @@ class BlueskyManager implements Factory
         }
 
         return $this->agent()->http($auth);
+    }
+
+    /**
+     * @throws AuthenticationException
+     */
+    public function assertDid(): string
+    {
+        $did = $this->agent()?->did();
+
+        return empty($did) ? throw new AuthenticationException() : $did;
     }
 
     public function agent(): ?Agent
