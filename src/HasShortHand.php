@@ -8,9 +8,11 @@ use Illuminate\Support\Facades\Http;
 use InvalidArgumentException;
 use Revolution\AtProto\Lexicon\Enum\Feed;
 use Revolution\AtProto\Lexicon\Enum\Graph;
+use Revolution\Bluesky\Record\Like;
 use Revolution\Bluesky\Record\Post;
 use Revolution\Bluesky\Record\Follow;
 use Revolution\Bluesky\Support\AtUri;
+use Revolution\Bluesky\Support\StrongRef;
 
 /**
  * The method names will be the same as the official client.
@@ -230,16 +232,14 @@ trait HasShortHand
         );
     }
 
-    public function like(string $uri, string $cid): Response
+    public function like(Like|StrongRef $subject): Response
     {
+        $like = $subject instanceof Like ? $subject : Like::create($subject);
+
         return $this->createRecord(
             repo: $this->agent()->did(),
             collection: Feed::Like->value,
-            record: [
-                '$type' => Feed::Like->value,
-                'subject' => ['uri' => $uri, 'cid' => $cid],
-                'createdAt' => now()->toISOString(),
-            ],
+            record: $like->toRecord(),
         );
     }
 
