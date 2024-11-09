@@ -2,6 +2,7 @@
 
 namespace Revolution\Bluesky;
 
+use Illuminate\Auth\AuthenticationException;
 use Illuminate\Http\Client\Response;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Http;
@@ -33,6 +34,7 @@ trait HasShortHand
 
     /**
      * @param  string|null  $actor  DID or handle.
+     * @throws AuthenticationException
      */
     public function getAuthorFeed(?string $actor = null, ?int $limit = 50, ?string $cursor = null, ?string $filter = 'posts_with_replies', ?bool $includePins = null): Response
     {
@@ -48,6 +50,7 @@ trait HasShortHand
 
     /**
      * @param  string|null  $actor  DID or handle.
+     * @throws AuthenticationException
      */
     public function getActorFeeds(?string $actor = null, ?int $limit = 50, ?string $cursor = null): Response
     {
@@ -61,6 +64,7 @@ trait HasShortHand
 
     /**
      * @param  string|null  $actor  DID or handle.
+     * @throws AuthenticationException
      */
     public function getProfile(?string $actor = null): Response
     {
@@ -93,6 +97,7 @@ trait HasShortHand
      * ```
      *
      * @param  callable(Collection $profile): Collection  $callback
+     * @throws AuthenticationException
      */
     public function upsertProfile(callable $callback): Response
     {
@@ -153,6 +158,7 @@ trait HasShortHand
 
     /**
      * Create new post.
+     * @throws AuthenticationException
      */
     public function post(Post|string $text): Response
     {
@@ -223,6 +229,7 @@ trait HasShortHand
 
     /**
      * @param  string|null  $actor  DID or handle.
+     * @throws AuthenticationException
      */
     public function getActorLikes(?string $actor = null, ?int $limit = 50, ?string $cursor = null): Response
     {
@@ -233,6 +240,9 @@ trait HasShortHand
         );
     }
 
+    /**
+     * @throws AuthenticationException
+     */
     public function like(Like|StrongRef $subject): Response
     {
         $like = $subject instanceof Like ? $subject : Like::create($subject);
@@ -264,6 +274,9 @@ trait HasShortHand
         );
     }
 
+    /**
+     * @throws AuthenticationException
+     */
     public function repost(Repost|StrongRef $subject): Response
     {
         $repost = $subject instanceof Repost ? $subject : Repost::create($subject);
@@ -308,6 +321,7 @@ trait HasShortHand
 
     /**
      * @param  string|null  $actor  DID or handle.
+     * @throws AuthenticationException
      */
     public function getFollowers(?string $actor = null, ?int $limit = 50, ?string $cursor = null): Response
     {
@@ -320,6 +334,7 @@ trait HasShortHand
 
     /**
      * @param  string|null  $actor  DID or handle.
+     * @throws AuthenticationException
      */
     public function getFollows(?string $actor = null, ?int $limit = 50, ?string $cursor = null): Response
     {
@@ -330,6 +345,9 @@ trait HasShortHand
         );
     }
 
+    /**
+     * @throws AuthenticationException
+     */
     public function follow(Follow|string $did): Response
     {
         $follow = $did instanceof Follow ? $did : Follow::create(did: $did);
@@ -451,6 +469,7 @@ trait HasShortHand
 
     /**
      * @param  string  $list  AT-URI
+     * @throws AuthenticationException
      */
     public function blockModList(string $list): Response
     {
@@ -467,6 +486,7 @@ trait HasShortHand
 
     /**
      * @param  string  $list  AT-URI
+     * @throws AuthenticationException
      */
     public function unblockModList(string $list): Response
     {
