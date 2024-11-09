@@ -124,7 +124,10 @@ class LexiconClientCommand extends Command
                 $type = $parameter->getType()->__toString();
 
                 $attrs = collect($parameter->getAttributes())
-                    ->map(fn (ReflectionAttribute $attr) => '#[\\'.$attr->getName().']')
+                    ->filter(fn (ReflectionAttribute $attr) => $attr->getName() === \SensitiveParameter::class)
+                    ->map(function (ReflectionAttribute $attr) {
+                        return '#[\\'.$attr->getName().']';
+                    })
                     ->implode(' ');
 
                 if ($parameter->isOptional()) {
@@ -139,7 +142,7 @@ class LexiconClientCommand extends Command
                     $default = null;
                 }
 
-                return Str::trim("$attrs $type \$$name $default");
+                return Str::squish("$attrs $type \$$name $default");
             })
             ->implode(', ');
     }
