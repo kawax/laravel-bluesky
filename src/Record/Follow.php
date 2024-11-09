@@ -17,8 +17,8 @@ class Follow extends AbstractFollow implements Arrayable, Recordable
         $this->subject = $did;
     }
 
-    public static function create(string $did): self
+    public static function create(string $did): static
     {
-        return new self($did);
+        return new static($did);
     }
 }
