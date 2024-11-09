@@ -17,6 +17,9 @@ final readonly class StrongRef implements Arrayable
         return new self($uri, $cid);
     }
 
+    /**
+     * @return array{uri: string, cid: string}
+     */
     public function toArray(): array
     {
         return [
