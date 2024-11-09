@@ -562,12 +562,11 @@ trait HasShortHand
      */
     public function createUserList(UserList $list): Response
     {
-        return $this->client(auth: true)
-            ->createRecord(
-                repo: $this->assertDid(),
-                collection: Graph::List->value,
-                record: $list->toRecord(),
-            );
+        return $this->createRecord(
+            repo: $this->assertDid(),
+            collection: Graph::List->value,
+            record: $list->toRecord(),
+        );
     }
 
     /**
