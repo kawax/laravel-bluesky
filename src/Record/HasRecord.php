@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Revolution\Bluesky\Record;
 
+use Illuminate\Support\Arr;
+
 trait HasRecord
 {
     public function toArray(): array
@@ -15,10 +17,8 @@ trait HasRecord
 
     public function toRecord(): array
     {
-        return collect($this->toArray())
-            ->put('$type', self::NSID)
-            ->put('createdAt', now()->toISOString())
-            ->reject(fn ($item) => blank($item))
-            ->toArray();
+        $record = Arr::add($this->toArray(), '$type', self::NSID);
+
+        return Arr::add($record, 'createdAt', now()->toISOString());
     }
 }
