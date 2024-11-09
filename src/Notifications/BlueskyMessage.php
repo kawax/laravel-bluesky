@@ -10,8 +10,9 @@ use Illuminate\Support\Traits\Conditionable;
 use Illuminate\Support\Traits\Macroable;
 use Revolution\AtProto\Lexicon\Enum\Facet;
 use Revolution\AtProto\Lexicon\Enum\Feed;
+use Revolution\Bluesky\Contracts\Recordable;
 
-final class BlueskyMessage implements Arrayable
+final class BlueskyMessage implements Arrayable, Recordable
 {
     use Conditionable;
     use Macroable;
