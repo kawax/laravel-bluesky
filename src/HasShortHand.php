@@ -14,6 +14,7 @@ use Revolution\Bluesky\Record\Like;
 use Revolution\Bluesky\Record\Post;
 use Revolution\Bluesky\Record\Follow;
 use Revolution\Bluesky\Record\Repost;
+use Revolution\Bluesky\Record\UserList;
 use Revolution\Bluesky\Support\AtUri;
 use Revolution\Bluesky\Support\StrongRef;
 
@@ -559,7 +560,20 @@ trait HasShortHand
     /**
      * @throws AuthenticationException
      */
-    public function getLists(?string $actor = null, ?int $limit = 50, ?string $cursor = null): Response
+    public function createUserList(UserList $list): Response
+    {
+        return $this->client(auth: true)
+            ->createRecord(
+                repo: $this->assertDid(),
+                collection: Graph::List->value,
+                record: $list->toRecord(),
+            );
+    }
+
+    /**
+     * @throws AuthenticationException
+     */
+    public function getUserLists(?string $actor = null, ?int $limit = 50, ?string $cursor = null): Response
     {
         return $this->client(auth: true)
             ->getLists(
@@ -572,7 +586,7 @@ trait HasShortHand
     /**
      * @param  string  $list  URI
      */
-    public function getList(string $list, ?int $limit = 50, ?string $cursor = null): Response
+    public function getUserList(string $list, ?int $limit = 50, ?string $cursor = null): Response
     {
         return $this->client(auth: true)
             ->getList(
@@ -582,7 +596,7 @@ trait HasShortHand
             );
     }
 
-    public function getListMutes(?int $limit = 50, ?string $cursor = null): Response
+    public function getUserListMutes(?int $limit = 50, ?string $cursor = null): Response
     {
         return $this->client(auth: true)
             ->getListMutes(
