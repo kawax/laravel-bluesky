@@ -539,7 +539,7 @@ trait HasShortHand
      */
     public function unblockModList(string $list): Response
     {
-        $blocked = $this->client(auth: true)->getList(
+        $blocked = $this->getList(
             list: $list,
             limit: 1,
         )->json('list.viewer.blocked');
@@ -560,7 +560,7 @@ trait HasShortHand
     /**
      * @throws AuthenticationException
      */
-    public function createUserList(UserList $list): Response
+    public function createList(UserList $list): Response
     {
         return $this->createRecord(
             repo: $this->assertDid(),
@@ -572,7 +572,7 @@ trait HasShortHand
     /**
      * @throws AuthenticationException
      */
-    public function getUserLists(?string $actor = null, ?int $limit = 50, ?string $cursor = null): Response
+    public function getLists(?string $actor = null, ?int $limit = 50, ?string $cursor = null): Response
     {
         return $this->client(auth: true)
             ->getLists(
@@ -585,7 +585,7 @@ trait HasShortHand
     /**
      * @param  string  $list  URI
      */
-    public function getUserList(string $list, ?int $limit = 50, ?string $cursor = null): Response
+    public function getList(string $list, ?int $limit = 50, ?string $cursor = null): Response
     {
         return $this->client(auth: true)
             ->getList(
@@ -595,7 +595,7 @@ trait HasShortHand
             );
     }
 
-    public function getUserListMutes(?int $limit = 50, ?string $cursor = null): Response
+    public function getListMutes(?int $limit = 50, ?string $cursor = null): Response
     {
         return $this->client(auth: true)
             ->getListMutes(
