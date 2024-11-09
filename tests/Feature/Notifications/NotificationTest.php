@@ -128,7 +128,9 @@ class NotificationTest extends TestCase
     public function test_message_embed()
     {
         $m = BlueskyMessage::create(text: 'test')
-            ->embed([]);
+            ->embed([
+                '$type' => Embed::External->value,
+            ]);
 
         $this->assertIsArray($m->toArray()['embed']);
     }

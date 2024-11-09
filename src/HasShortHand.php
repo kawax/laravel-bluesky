@@ -2,17 +2,15 @@
 
 namespace Revolution\Bluesky;
 
-use Illuminate\Auth\AuthenticationException;
 use Illuminate\Http\Client\Response;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Http;
 use InvalidArgumentException;
 use Revolution\AtProto\Lexicon\Enum\Feed;
 use Revolution\AtProto\Lexicon\Enum\Graph;
-use Revolution\Bluesky\Notifications\BlueskyMessage;
+use Revolution\Bluesky\Record\Post;
 use Revolution\Bluesky\Record\Follow;
 use Revolution\Bluesky\Support\AtUri;
-use Revolution\Bluesky\Support\Identity;
 
 /**
  * The method names will be the same as the official client.
@@ -153,14 +151,14 @@ trait HasShortHand
     /**
      * Create new post.
      */
-    public function post(string|BlueskyMessage $text): Response
+    public function post(Post|string $text): Response
     {
-        $message = $text instanceof BlueskyMessage ? $text : BlueskyMessage::create($text);
+        $post = $text instanceof Post ? $text : Post::create($text);
 
         return $this->createRecord(
             repo: $this->agent()->did(),
             collection: Feed::Post->value,
-            record: $message->toRecord(),
+            record: $post->toRecord(),
         );
     }
 
@@ -333,9 +331,9 @@ trait HasShortHand
         );
     }
 
-    public function follow(Follow|string $follow): Response
+    public function follow(Follow|string $did): Response
     {
-        $follow = $follow instanceof Follow ? $follow : Follow::create(did: $follow);
+        $follow = $did instanceof Follow ? $did : Follow::create(did: $did);
 
         return $this->createRecord(
             repo: $this->agent()->did(),

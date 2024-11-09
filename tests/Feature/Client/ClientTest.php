@@ -14,7 +14,7 @@ use Revolution\Bluesky\Agent\OAuthAgent;
 use Revolution\Bluesky\BlueskyManager;
 use Revolution\Bluesky\Facades\Bluesky;
 use Revolution\AtProto\Lexicon\Contracts\App\Bsky\Actor;
-use Revolution\Bluesky\Notifications\BlueskyMessage;
+use Revolution\Bluesky\Record\Post;
 use Revolution\Bluesky\Record\Follow;
 use Revolution\Bluesky\Session\LegacySession;
 use Revolution\Bluesky\Session\OAuthSession;
@@ -131,7 +131,7 @@ class ClientTest extends TestCase
             ->push($this->session)
             ->push(['uri' => 'at']);
 
-        $m = BlueskyMessage::create('text');
+        $m = Post::create('text');
 
         $response = Bluesky::login(identifier: 'identifier', password: 'password')
             ->post(text: $m);
