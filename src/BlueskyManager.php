@@ -18,6 +18,7 @@ use Revolution\Bluesky\Agent\OAuthAgent;
 use Revolution\Bluesky\Client\AtpClient;
 use Revolution\Bluesky\Contracts\Agent;
 use Revolution\Bluesky\Contracts\Factory;
+use Revolution\Bluesky\Contracts\Recordable;
 use Revolution\Bluesky\Contracts\XrpcClient;
 use Revolution\Bluesky\Session\LegacySession;
 use Revolution\Bluesky\Session\OAuthSession;
@@ -115,8 +116,10 @@ class BlueskyManager implements Factory
         return $this;
     }
 
-    public function createRecord(string $repo, string $collection, array $record, ?string $rkey = null, ?bool $validate = null, ?string $swapCommit = null): Response
+    public function createRecord(string $repo, string $collection, Recordable|array $record, ?string $rkey = null, ?bool $validate = null, ?string $swapCommit = null): Response
     {
+        $record = $record instanceof Recordable ? $record : $record->toRecord();
+
         return $this->client(auth: true)
             ->createRecord(
                 repo: $repo,
@@ -139,8 +142,10 @@ class BlueskyManager implements Factory
             );
     }
 
-    public function putRecord(string $repo, string $collection, string $rkey, mixed $record, ?bool $validate = null, ?string $swapRecord = null, ?string $swapCommit = null): Response
+    public function putRecord(string $repo, string $collection, string $rkey, Recordable|array $record, ?bool $validate = null, ?string $swapRecord = null, ?string $swapCommit = null): Response
     {
+        $record = $record instanceof Recordable ? $record : $record->toRecord();
+
         return $this->client(auth: true)
             ->putRecord(
                 repo: $repo,
