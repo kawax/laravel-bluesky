@@ -176,6 +176,44 @@ $response = Bluesky::post($post);
 dump($response->json());
 ```
 
+## Following a user
+
+```php
+use Revolution\Bluesky\Facades\Bluesky;
+
+/** @var \Illuminate\Http\Client\Response $response */
+$response = Bluesky::withToken()->follow(did: 'did:plc:...');
+
+dump($response->json());
+```
+
+## Like
+
+```php
+use Revolution\Bluesky\Facades\Bluesky;
+use Revolution\Bluesky\Support\StrongRef;
+
+/** @var \Illuminate\Http\Client\Response $response */
+$response = Bluesky::withToken()->like(StrongRef::to(uri: 'at://', cid: 'cid'));
+
+dump($response->json());
+```
+
+## Repost
+
+```php
+use Revolution\Bluesky\Facades\Bluesky;
+use Revolution\Bluesky\Record\Repost;
+use Revolution\Bluesky\Support\StrongRef;
+
+$repost = Repost::create(StrongRef::to(uri: 'at://', cid: 'cid'));
+
+/** @var \Illuminate\Http\Client\Response $response */
+$response = Bluesky::withToken()->repost($repost);
+
+dump($response->json());
+```
+
 ## Public API
 
 In fact, many of Bluesky's APIs can be used without authentication.
