@@ -12,6 +12,9 @@ final readonly class StrongRef implements Arrayable
     ) {
     }
 
+    /**
+     * @param  string  $uri  at://
+     */
     public static function to(string $uri, string $cid): self
     {
         return new self($uri, $cid);
