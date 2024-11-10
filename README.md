@@ -23,5 +23,8 @@ composer remove revolution/laravel-bluesky
 - [Laravel Notifications](./docs/notification.md)
 - [Socialite](./docs/socialite.md)
 
+## Contracts
+https://github.com/kawax/atproto-lexicon-contracts
+
 ## LICENCE
 MIT
