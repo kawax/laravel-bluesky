@@ -430,7 +430,7 @@ class ClientTest extends TestCase
             ->push($this->session)
             ->push([]);
 
-        $like = Like::create(StrongRef::make(uri: 'uri', cid: 'cid'));
+        $like = Like::create(StrongRef::to(uri: 'uri', cid: 'cid'));
 
         $response = Bluesky::login('id', 'pass')->like($like);
 
@@ -443,7 +443,7 @@ class ClientTest extends TestCase
             ->push($this->session)
             ->push([]);
 
-        $subject = StrongRef::make(uri: 'uri', cid: 'cid');
+        $subject = StrongRef::to(uri: 'uri', cid: 'cid');
 
         $response = Bluesky::login('id', 'pass')->like($subject);
 
@@ -456,7 +456,7 @@ class ClientTest extends TestCase
             ->push($this->session)
             ->push([]);
 
-        $repost = Repost::create(StrongRef::make(uri: 'uri', cid: 'cid'));
+        $repost = Repost::create(StrongRef::to(uri: 'uri', cid: 'cid'));
 
         $response = Bluesky::login('id', 'pass')->repost($repost);
 
@@ -469,7 +469,7 @@ class ClientTest extends TestCase
             ->push($this->session)
             ->push([]);
 
-        $subject = StrongRef::make(uri: 'uri', cid: 'cid');
+        $subject = StrongRef::to(uri: 'uri', cid: 'cid');
 
         $response = Bluesky::login('id', 'pass')->repost($subject);
 
