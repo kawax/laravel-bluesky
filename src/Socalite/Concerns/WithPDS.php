@@ -29,7 +29,7 @@ trait WithPDS
         }
 
         if (Identity::isDID($this->login_hint) || Identity::isHandle($this->login_hint)) {
-            $didDoc = DidDocument::create(Bluesky::identity()->resolveIdentity($this->login_hint)->collect());
+            $didDoc = DidDocument::make(Bluesky::identity()->resolveIdentity($this->login_hint)->collect());
 
             $auth_url = $this->pdsProtectedResource($didDoc->pdsUrl())
                 ->authServer(Bluesky::entryway());

@@ -77,7 +77,7 @@ trait WithOAuthSession
 
     protected function hasInvalidDidDoc(array $didDoc): bool
     {
-        $pds_url = DidDocument::create($didDoc)->pdsUrl();
+        $pds_url = DidDocument::make($didDoc)->pdsUrl();
 
         if (empty($pds_url)) {
             return true;

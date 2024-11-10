@@ -23,7 +23,7 @@ final class ProtectedResource implements Arrayable
             ]);
     }
 
-    public static function create(array|Collection|null $meta = null): self
+    public static function make(array|Collection|null $meta = null): self
     {
         return new self($meta);
     }

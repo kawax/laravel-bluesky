@@ -16,7 +16,7 @@ class PDS
      */
     public function resource(string $pds_url): ProtectedResource
     {
-        return ProtectedResource::create(
+        return ProtectedResource::make(
             Http::baseUrl($pds_url)
                 ->get('/.well-known/oauth-protected-resource')
                 ->json(),

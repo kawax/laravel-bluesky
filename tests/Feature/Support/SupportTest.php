@@ -18,7 +18,7 @@ class SupportTest extends TestCase
 
     public function test_did_document()
     {
-        $didDoc = DidDocument::create([
+        $didDoc = DidDocument::make([
             '@context' => [],
             'id' => 'did:plc:test',
             'alsoKnownAs' => [

@@ -14,10 +14,12 @@ use Revolution\Bluesky\Agent\OAuthAgent;
 use Revolution\Bluesky\BlueskyManager;
 use Revolution\Bluesky\Facades\Bluesky;
 use Revolution\AtProto\Lexicon\Contracts\App\Bsky\Actor;
+use Revolution\Bluesky\Record\Block;
 use Revolution\Bluesky\Record\Like;
 use Revolution\Bluesky\Record\Post;
 use Revolution\Bluesky\Record\Follow;
 use Revolution\Bluesky\Record\Repost;
+use Revolution\Bluesky\Record\UserList;
 use Revolution\Bluesky\Session\LegacySession;
 use Revolution\Bluesky\Session\OAuthSession;
 use Revolution\Bluesky\Support\DNS;
@@ -428,7 +430,7 @@ class ClientTest extends TestCase
             ->push($this->session)
             ->push([]);
 
-        $like = Like::create(StrongRef::create(uri: 'uri', cid: 'cid'));
+        $like = Like::create(StrongRef::make(uri: 'uri', cid: 'cid'));
 
         $response = Bluesky::login('id', 'pass')->like($like);
 
@@ -441,7 +443,7 @@ class ClientTest extends TestCase
             ->push($this->session)
             ->push([]);
 
-        $subject = StrongRef::create(uri: 'uri', cid: 'cid');
+        $subject = StrongRef::make(uri: 'uri', cid: 'cid');
 
         $response = Bluesky::login('id', 'pass')->like($subject);
 
@@ -454,7 +456,7 @@ class ClientTest extends TestCase
             ->push($this->session)
             ->push([]);
 
-        $repost = Repost::create(StrongRef::create(uri: 'uri', cid: 'cid'));
+        $repost = Repost::create(StrongRef::make(uri: 'uri', cid: 'cid'));
 
         $response = Bluesky::login('id', 'pass')->repost($repost);
 
@@ -467,9 +469,35 @@ class ClientTest extends TestCase
             ->push($this->session)
             ->push([]);
 
-        $subject = StrongRef::create(uri: 'uri', cid: 'cid');
+        $subject = StrongRef::make(uri: 'uri', cid: 'cid');
 
         $response = Bluesky::login('id', 'pass')->repost($subject);
+
+        $this->assertTrue($response->successful());
+    }
+
+    public function test_block()
+    {
+        Http::fakeSequence()
+            ->push($this->session)
+            ->push([]);
+
+        $block = Block::create(did: 'did');
+
+        $response = Bluesky::login('id', 'pass')->block($block);
+
+        $this->assertTrue($response->successful());
+    }
+
+    public function test_user_list()
+    {
+        Http::fakeSequence()
+            ->push($this->session)
+            ->push([]);
+
+        $userlist = UserList::create(name: 'name', purpose: 'purpose', description: '');
+
+        $response = Bluesky::login('id', 'pass')->createList($userlist);
 
         $this->assertTrue($response->successful());
     }

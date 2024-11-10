@@ -8,15 +8,15 @@ use InvalidArgumentException;
 /**
  * https://github.com/bluesky-social/atproto/blob/main/packages/syntax/src/aturi.ts
  */
-final class AtUri
+final readonly class AtUri
 {
     public const ATP = 'at://';
 
     protected const ATP_URI_REGEX = '/^(at:\/\/)?((?:did:[a-z0-9:%-]+)|(?:[a-z0-9][a-z0-9.:-]*))(\/[^?#\s]*)?(\?[^#\s]+)?(#[^\s]+)?$/i';
 
-    protected ?string $protocol = null;
-    protected ?string $host = null;
-    protected ?string $pathname = null;
+    protected ?string $protocol;
+    protected ?string $host;
+    protected ?string $pathname;
 
     public function __construct(protected string $uri)
     {

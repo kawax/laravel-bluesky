@@ -25,7 +25,7 @@ final class DidDocument implements Arrayable
             ]);
     }
 
-    public static function create(array|Collection|null $didDoc = null): self
+    public static function make(array|Collection|null $didDoc = null): self
     {
         return new self($didDoc);
     }

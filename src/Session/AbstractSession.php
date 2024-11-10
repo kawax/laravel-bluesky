@@ -74,7 +74,7 @@ abstract class AbstractSession implements Arrayable
 
     public function didDoc(): DidDocument
     {
-        return DidDocument::create($this->get('didDoc', $this->session));
+        return DidDocument::make($this->get('didDoc', $this->session));
     }
 
     public function handle(string $default = ''): string

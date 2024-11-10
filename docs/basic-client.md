@@ -120,10 +120,10 @@ use Revolution\Bluesky\Facades\Bluesky;
 use Revolution\Bluesky\Record\Post;
 
 $post = Post::create(text: 'test')
-           ->newLine()
-           ->link(text: 'http://', link: 'http://')
-           ->newLine()
-           ->tag(text: '#Laravel', tag: 'Laravel');
+            ->newLine()
+            ->link(text: 'http://', link: 'http://')
+            ->newLine()
+            ->tag(text: '#Laravel', tag: 'Laravel');
 
 /** @var \Illuminate\Http\Client\Response $response */
 $response = Bluesky::withToken()->post($post);
