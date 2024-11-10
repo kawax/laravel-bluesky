@@ -157,11 +157,12 @@ trait HasShortHand
 
     public function getPostThread(string $uri, ?int $depth = 6, ?int $parentHeight = 80): Response
     {
-        return $this->client(auth: true)->getPostThread(
-            uri: $uri,
-            depth: $depth,
-            parentHeight: $parentHeight,
-        );
+        return $this->client(auth: true)
+            ->getPostThread(
+                uri: $uri,
+                depth: $depth,
+                parentHeight: $parentHeight,
+            );
     }
 
     /**
@@ -188,9 +189,10 @@ trait HasShortHand
      */
     public function getPosts(array $uris): Response
     {
-        return $this->client(auth: true)->getPosts(
-            uris: $uris,
-        );
+        return $this->client(auth: true)
+            ->getPosts(
+                uris: $uris,
+            );
     }
 
     /**
@@ -199,11 +201,12 @@ trait HasShortHand
      */
     public function getActorLikes(?string $actor = null, ?int $limit = 50, ?string $cursor = null): Response
     {
-        return $this->client(auth: true)->getActorLikes(
-            actor: $actor ?? $this->assertDid(),
-            limit: $limit,
-            cursor: $cursor,
-        );
+        return $this->client(auth: true)
+            ->getActorLikes(
+                actor: $actor ?? $this->assertDid(),
+                limit: $limit,
+                cursor: $cursor,
+            );
     }
 
     /**
@@ -277,12 +280,13 @@ trait HasShortHand
      */
     public function getRepostedBy(string $uri, ?string $cid = null, ?int $limit = 50, ?string $cursor = null): Response
     {
-        return $this->client(auth: true)->getRepostedBy(
-            uri: $uri,
-            cid: $cid,
-            limit: $limit,
-            cursor: $cursor,
-        );
+        return $this->client(auth: true)
+            ->getRepostedBy(
+                uri: $uri,
+                cid: $cid,
+                limit: $limit,
+                cursor: $cursor,
+            );
     }
 
     /**
@@ -291,11 +295,12 @@ trait HasShortHand
      */
     public function getFollowers(?string $actor = null, ?int $limit = 50, ?string $cursor = null): Response
     {
-        return $this->client(auth: true)->getFollowers(
-            actor: $actor ?? $this->assertDid(),
-            limit: $limit,
-            cursor: $cursor,
-        );
+        return $this->client(auth: true)
+            ->getFollowers(
+                actor: $actor ?? $this->assertDid(),
+                limit: $limit,
+                cursor: $cursor,
+            );
     }
 
     /**
@@ -304,11 +309,12 @@ trait HasShortHand
      */
     public function getFollows(?string $actor = null, ?int $limit = 50, ?string $cursor = null): Response
     {
-        return $this->client(auth: true)->getFollows(
-            actor: $actor ?? $this->assertDid(),
-            limit: $limit,
-            cursor: $cursor,
-        );
+        return $this->client(auth: true)
+            ->getFollows(
+                actor: $actor ?? $this->assertDid(),
+                limit: $limit,
+                cursor: $cursor,
+            );
     }
 
     /**
