@@ -133,7 +133,7 @@ trait HasShortHand
         return $this->createRecord(
             repo: $this->assertDid(),
             collection: Feed::Post->value,
-            record: $post->toRecord(),
+            record: $post,
         );
     }
 
@@ -219,7 +219,7 @@ trait HasShortHand
         return $this->createRecord(
             repo: $this->assertDid(),
             collection: Feed::Like->value,
-            record: $like->toRecord(),
+            record: $like,
         );
     }
 
@@ -253,7 +253,7 @@ trait HasShortHand
         return $this->createRecord(
             repo: $this->assertDid(),
             collection: Feed::Repost->value,
-            record: $repost->toRecord(),
+            record: $repost,
         );
     }
 
@@ -327,7 +327,7 @@ trait HasShortHand
         return $this->createRecord(
             repo: $this->assertDid(),
             collection: Graph::Follow->value,
-            record: $follow->toRecord(),
+            record: $follow,
         );
     }
 
@@ -411,7 +411,7 @@ trait HasShortHand
         return $this->createRecord(
             repo: $this->assertDid(),
             collection: Graph::Block->value,
-            record: $block->toRecord(),
+            record: $block,
         );
     }
 
@@ -521,7 +521,7 @@ trait HasShortHand
         return $this->createRecord(
             repo: $this->assertDid(),
             collection: Graph::List->value,
-            record: $list->toRecord(),
+            record: $list,
         );
     }
 
