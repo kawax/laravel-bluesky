@@ -12,6 +12,7 @@ use Illuminate\Support\Facades\Notification;
 use Mockery;
 use Revolution\Bluesky\Embed\External;
 use Revolution\Bluesky\Embed\Images;
+use Revolution\Bluesky\Embed\QuoteRecord;
 use Revolution\Bluesky\Embed\Video;
 use Revolution\Bluesky\Facades\Bluesky;
 use Revolution\AtProto\Lexicon\Enum\Embed;
@@ -21,6 +22,7 @@ use Revolution\Bluesky\Record\Post;
 use Revolution\Bluesky\RichText\TextBuilder;
 use Revolution\Bluesky\Session\OAuthSession;
 use Revolution\Bluesky\Types\Blob;
+use Revolution\Bluesky\Types\StrongRef;
 use Tests\TestCase;
 
 class NotificationTest extends TestCase
@@ -203,6 +205,18 @@ class NotificationTest extends TestCase
         $this->assertSame($video_blob->toArray(), $m->toArray()['embed']['video']['video']);
         $this->assertSame('alt', $m->toArray()['embed']['video']['alt']);
         $this->assertSame(Embed::Video->value, $m->toArray()['embed']['$type']);
+    }
+
+    public function test_message_embed_quote()
+    {
+        $quote = QuoteRecord::create(StrongRef::to(uri: 'uri', cid: 'cid'));
+
+        $m = Post::create(text: 'test')
+            ->embed($quote);
+
+        $this->assertIsArray($m->toArray()['embed']);
+        $this->assertSame('uri', $m->toArray()['embed']['record']['uri']);
+        $this->assertSame(Embed::Record->value, $m->toArray()['embed']['$type']);
     }
 
     public function test_message_langs()
