@@ -6,6 +6,7 @@ use Illuminate\Auth\AuthenticationException;
 use Illuminate\Http\Client\Response;
 use Illuminate\Support\Facades\Http;
 use InvalidArgumentException;
+use Revolution\AtProto\Lexicon\Attributes\Format;
 use Revolution\AtProto\Lexicon\Enum\Feed;
 use Revolution\AtProto\Lexicon\Enum\Graph;
 use Revolution\Bluesky\Record\Block;
@@ -38,7 +39,7 @@ trait HasShortHand
      * @param  string|null  $actor  DID or handle.
      * @throws AuthenticationException
      */
-    public function getAuthorFeed(?string $actor = null, ?int $limit = 50, ?string $cursor = null, ?string $filter = 'posts_with_replies', ?bool $includePins = null): Response
+    public function getAuthorFeed(#[Format('at-identifier')] ?string $actor = null, ?int $limit = 50, ?string $cursor = null, ?string $filter = 'posts_with_replies', ?bool $includePins = null): Response
     {
         return $this->client(auth: true)
             ->getAuthorFeed(
@@ -54,7 +55,7 @@ trait HasShortHand
      * @param  string|null  $actor  DID or handle.
      * @throws AuthenticationException
      */
-    public function getActorFeeds(?string $actor = null, ?int $limit = 50, ?string $cursor = null): Response
+    public function getActorFeeds(#[Format('at-identifier')] ?string $actor = null, ?int $limit = 50, ?string $cursor = null): Response
     {
         return $this->client(auth: true)
             ->getActorFeeds(
@@ -68,7 +69,7 @@ trait HasShortHand
      * @param  string|null  $actor  DID or handle.
      * @throws AuthenticationException
      */
-    public function getProfile(?string $actor = null): Response
+    public function getProfile(#[Format('at-identifier')] ?string $actor = null): Response
     {
         return $this->client(auth: true)
             ->getProfile(
@@ -145,7 +146,7 @@ trait HasShortHand
     /**
      * @param  string  $uri  at://did:plc:.../app.bsky.feed.post/{rkey}
      */
-    public function deletePost(string $uri): Response
+    public function deletePost(#[Format('at-uri')] string $uri): Response
     {
         $at = AtUri::parse($uri);
 
@@ -160,7 +161,7 @@ trait HasShortHand
         );
     }
 
-    public function getPostThread(string $uri, ?int $depth = 6, ?int $parentHeight = 80): Response
+    public function getPostThread(#[Format('at-uri')] string $uri, ?int $depth = 6, ?int $parentHeight = 80): Response
     {
         return $this->client(auth: true)
             ->getPostThread(
@@ -173,7 +174,7 @@ trait HasShortHand
     /**
      * @param  string  $uri  at://did:plc:.../app.bsky.feed.post/{rkey}
      */
-    public function getPost(string $uri, ?string $cid = null): Response
+    public function getPost(#[Format('at-uri')] string $uri, ?string $cid = null): Response
     {
         $at = AtUri::parse($uri);
 
@@ -204,7 +205,7 @@ trait HasShortHand
      * @param  string|null  $actor  DID or handle.
      * @throws AuthenticationException
      */
-    public function getActorLikes(?string $actor = null, ?int $limit = 50, ?string $cursor = null): Response
+    public function getActorLikes(#[Format('at-identifier')] ?string $actor = null, ?int $limit = 50, ?string $cursor = null): Response
     {
         return $this->client(auth: true)
             ->getActorLikes(
@@ -233,7 +234,7 @@ trait HasShortHand
      *
      * @param  string  $uri  at://did:plc:.../app.bsky.feed.like/{rkey}
      */
-    public function deleteLike(string $uri): Response
+    public function deleteLike(#[Format('at-uri')] string $uri): Response
     {
         $at = AtUri::parse($uri);
 
@@ -265,7 +266,7 @@ trait HasShortHand
     /**
      * @param  string  $uri  at://did:plc:.../app.bsky.feed.repost/{rkey}
      */
-    public function deleteRepost(string $uri): Response
+    public function deleteRepost(#[Format('at-uri')] string $uri): Response
     {
         $at = AtUri::parse($uri);
 
@@ -283,7 +284,7 @@ trait HasShortHand
     /**
      * @param  string  $uri  at://did:plc:.../app.bsky.feed.post/{rkey}
      */
-    public function getRepostedBy(string $uri, ?string $cid = null, ?int $limit = 50, ?string $cursor = null): Response
+    public function getRepostedBy(#[Format('at-uri')] string $uri, ?string $cid = null, ?int $limit = 50, ?string $cursor = null): Response
     {
         return $this->client(auth: true)
             ->getRepostedBy(
@@ -298,7 +299,7 @@ trait HasShortHand
      * @param  string|null  $actor  DID or handle.
      * @throws AuthenticationException
      */
-    public function getFollowers(?string $actor = null, ?int $limit = 50, ?string $cursor = null): Response
+    public function getFollowers(#[Format('at-identifier')] ?string $actor = null, ?int $limit = 50, ?string $cursor = null): Response
     {
         return $this->client(auth: true)
             ->getFollowers(
@@ -312,7 +313,7 @@ trait HasShortHand
      * @param  string|null  $actor  DID or handle.
      * @throws AuthenticationException
      */
-    public function getFollows(?string $actor = null, ?int $limit = 50, ?string $cursor = null): Response
+    public function getFollows(#[Format('at-identifier')] ?string $actor = null, ?int $limit = 50, ?string $cursor = null): Response
     {
         return $this->client(auth: true)
             ->getFollows(
@@ -341,7 +342,7 @@ trait HasShortHand
      *
      * @param  string  $uri  at://did:plc:.../app.bsky.graph.follow/{rkey}
      */
-    public function deleteFollow(string $uri): Response
+    public function deleteFollow(#[Format('at-uri')] string $uri): Response
     {
         $at = AtUri::parse($uri);
 
@@ -424,7 +425,7 @@ trait HasShortHand
      * @param  string  $uri  at://did:plc:.../app.bsky.graph.block/{rkey}
      * @throws AuthenticationException
      */
-    public function unblock(string $uri): Response
+    public function unblock(#[Format('at-uri')] string $uri): Response
     {
         $at = AtUri::parse($uri);
 
@@ -439,7 +440,7 @@ trait HasShortHand
         );
     }
 
-    public function mute(string $actor): Response
+    public function mute(#[Format('at-identifier')] string $actor): Response
     {
         return $this->client(auth: true)
             ->muteActor(
@@ -447,7 +448,7 @@ trait HasShortHand
             );
     }
 
-    public function unmute(string $actor): Response
+    public function unmute(#[Format('at-identifier')] string $actor): Response
     {
         return $this->client(auth: true)
             ->unmuteActor(
@@ -458,7 +459,7 @@ trait HasShortHand
     /**
      * @param  string  $list  AT-URI
      */
-    public function muteModList(string $list): Response
+    public function muteModList(#[Format('at-uri')] string $list): Response
     {
         return $this->client(auth: true)
             ->muteActorList(
@@ -469,7 +470,7 @@ trait HasShortHand
     /**
      * @param  string  $list  AT-URI
      */
-    public function unmuteModList(string $list): Response
+    public function unmuteModList(#[Format('at-uri')] string $list): Response
     {
         return $this->client(auth: true)
             ->unmuteActorList(
@@ -481,7 +482,7 @@ trait HasShortHand
      * @param  string  $list  AT-URI
      * @throws AuthenticationException
      */
-    public function blockModList(string $list): Response
+    public function blockModList(#[Format('at-uri')] string $list): Response
     {
         return $this->createRecord(
             repo: $this->assertDid(),
@@ -498,7 +499,7 @@ trait HasShortHand
      * @param  string  $list  AT-URI
      * @throws AuthenticationException
      */
-    public function unblockModList(string $list): Response
+    public function unblockModList(#[Format('at-uri')] string $list): Response
     {
         $blocked = $this->getList(
             list: $list,
@@ -533,7 +534,7 @@ trait HasShortHand
     /**
      * @throws AuthenticationException
      */
-    public function getLists(?string $actor = null, ?int $limit = 50, ?string $cursor = null): Response
+    public function getLists(#[Format('at-identifier')] ?string $actor = null, ?int $limit = 50, ?string $cursor = null): Response
     {
         return $this->client(auth: true)
             ->getLists(
@@ -546,7 +547,7 @@ trait HasShortHand
     /**
      * @param  string  $list  URI
      */
-    public function getList(string $list, ?int $limit = 50, ?string $cursor = null): Response
+    public function getList(#[Format('at-uri')] string $list, ?int $limit = 50, ?string $cursor = null): Response
     {
         return $this->client(auth: true)
             ->getList(
@@ -568,7 +569,7 @@ trait HasShortHand
     /**
      * @param  string  $handle  e.g. "alice.test"
      */
-    public function resolveHandle(string $handle): Response
+    public function resolveHandle(#[Format('handle')] string $handle): Response
     {
         return $this->client(auth: false)
             ->resolveHandle(handle: $handle);
@@ -577,7 +578,7 @@ trait HasShortHand
     /**
      * @param  string  $handle  e.g. "alice.test"
      */
-    public function updateHandle(string $handle): Response
+    public function updateHandle(#[Format('handle')] string $handle): Response
     {
         return $this->client(auth: true)
             ->updateHandle(
