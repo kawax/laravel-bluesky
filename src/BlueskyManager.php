@@ -14,6 +14,7 @@ use Illuminate\Support\Str;
 use Illuminate\Support\Traits\Conditionable;
 use Illuminate\Support\Traits\Macroable;
 use Revolution\AtProto\Lexicon\Attributes\Format;
+use Revolution\AtProto\Lexicon\Attributes\KnownValues;
 use Revolution\Bluesky\Agent\LegacyAgent;
 use Revolution\Bluesky\Agent\OAuthAgent;
 use Revolution\Bluesky\Client\AtpClient;
@@ -77,7 +78,7 @@ class BlueskyManager implements Factory
      * @param  ?array  $params  get query or post data.
      * @param  null|callable(PendingRequest $http): PendingRequest  $callback  Perform processing before sending.
      */
-    public function send(#[Format('nsid')] BackedEnum|string $api, string $method = 'get', bool $auth = true, ?array $params = null, ?callable $callback = null): Response
+    public function send(#[Format('nsid')] BackedEnum|string $api, #[KnownValues(['get', 'post'])] string $method = 'get', bool $auth = true, ?array $params = null, ?callable $callback = null): Response
     {
         $method = Str::lower($method) === 'post' ? 'post' : 'get';
 
