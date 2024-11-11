@@ -140,7 +140,7 @@ class Profile extends AbstractProfile implements Arrayable, Recordable
 
     /**
      * ```
-     * use Revolution\Bluesky\Support\StrongRef;
+     * use Revolution\Bluesky\Types\StrongRef;
      *
      * $profile->pinnedPost(StrongRef::to(uri: 'at://', cid: ''));
      * ```
