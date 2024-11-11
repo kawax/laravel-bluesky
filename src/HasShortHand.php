@@ -94,11 +94,11 @@ trait HasShortHand
      * ```
      * use Revolution\Bluesky\Record\Profile;
      *
-     * Bluesky::upsertProfile(function(Profile $profile) {
+     * Bluesky::upsertProfile(function(Profile $profile): Profile {
      *     $profile->displayName('new name')
      *             ->description('new description');
      *
-     *     $profile->avatar(function (): array {
+     *     $profile->avatar(function(): array {
      *        return Bluesky::uploadBlob(Storage::get('test.png'), Storage::mimeType('test.png'))->json('blob');
      *     });
      *
