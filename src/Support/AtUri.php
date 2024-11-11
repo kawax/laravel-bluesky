@@ -4,6 +4,7 @@ namespace Revolution\Bluesky\Support;
 
 use Illuminate\Support\Str;
 use InvalidArgumentException;
+use Revolution\AtProto\Lexicon\Attributes\Format;
 
 /**
  * https://github.com/bluesky-social/atproto/blob/main/packages/syntax/src/aturi.ts
@@ -33,7 +34,7 @@ final readonly class AtUri
         $this->pathname = $matches[3] ?? null;
     }
 
-    public static function parse(string $uri): self
+    public static function parse(#[Format('at-uri')] string $uri): self
     {
         return new self($uri);
     }
