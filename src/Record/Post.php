@@ -8,6 +8,7 @@ use Illuminate\Contracts\Support\Arrayable;
 use Illuminate\Support\Str;
 use Illuminate\Support\Traits\Conditionable;
 use Illuminate\Support\Traits\Macroable;
+use Revolution\AtProto\Lexicon\Attributes\Format;
 use Revolution\AtProto\Lexicon\Enum\Facet;
 use Revolution\AtProto\Lexicon\Record\App\Bsky\Feed\AbstractPost;
 use Revolution\Bluesky\Contracts\Recordable;
@@ -52,7 +53,7 @@ class Post extends AbstractPost implements Arrayable, Recordable
     /**
      * Add mention facets.
      */
-    public function mention(string $text, string $did): static
+    public function mention(string $text, #[Format('did')] string $did): static
     {
         $this->facets[] = [
             'index' => $this->buildFacetIndex($text),
