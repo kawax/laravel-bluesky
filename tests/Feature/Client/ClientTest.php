@@ -27,6 +27,7 @@ use Revolution\Bluesky\Support\DNS;
 use Revolution\Bluesky\Support\Identity;
 use Revolution\Bluesky\Traits\WithBluesky;
 use Revolution\Bluesky\Types\Blob;
+use Revolution\Bluesky\Types\ReplyRef;
 use Revolution\Bluesky\Types\SelfLabels;
 use Revolution\Bluesky\Types\StrongRef;
 use Tests\TestCase;
@@ -139,7 +140,9 @@ class ClientTest extends TestCase
             ->push($this->session)
             ->push(['uri' => 'at']);
 
-        $m = Post::create('text');
+        $m = Post::create()
+            ->text('text')
+            ->reply(ReplyRef::to(root: StrongRef::to(uri: '', cid: ''), parent: StrongRef::to(uri: '', cid: '')));
 
         $response = Bluesky::login(identifier: 'identifier', password: 'password')
             ->post(text: $m);
