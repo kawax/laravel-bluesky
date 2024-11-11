@@ -10,14 +10,14 @@ use Revolution\AtProto\Lexicon\Enum\Embed;
 final readonly class Video implements Arrayable
 {
     public function __construct(
-        private string $video,
+        private array $video,
         private ?string $alt = null,
         private ?array $captions = null,
         private ?array $aspectRatio = null,
     ) {
     }
 
-    public static function create(string $video, ?string $alt = null, ?array $captions = null, ?array $aspectRatio = null): self
+    public static function create(array $video, ?string $alt = null, ?array $captions = null, ?array $aspectRatio = null): self
     {
         return new self(...func_get_args());
     }
