@@ -10,22 +10,25 @@ use Illuminate\Support\Facades\Http;
 use InvalidArgumentException;
 use Mockery;
 use Mockery\MockInterface;
+use Revolution\AtProto\Lexicon\Contracts\App\Bsky\Actor;
 use Revolution\Bluesky\Agent\OAuthAgent;
 use Revolution\Bluesky\BlueskyManager;
 use Revolution\Bluesky\Facades\Bluesky;
-use Revolution\AtProto\Lexicon\Contracts\App\Bsky\Actor;
 use Revolution\Bluesky\Record\Block;
+use Revolution\Bluesky\Record\Follow;
 use Revolution\Bluesky\Record\Like;
 use Revolution\Bluesky\Record\Post;
-use Revolution\Bluesky\Record\Follow;
+use Revolution\Bluesky\Record\Profile;
 use Revolution\Bluesky\Record\Repost;
 use Revolution\Bluesky\Record\UserList;
 use Revolution\Bluesky\Session\LegacySession;
 use Revolution\Bluesky\Session\OAuthSession;
 use Revolution\Bluesky\Support\DNS;
 use Revolution\Bluesky\Support\Identity;
-use Revolution\Bluesky\Support\StrongRef;
 use Revolution\Bluesky\Traits\WithBluesky;
+use Revolution\Bluesky\Types\Blob;
+use Revolution\Bluesky\Types\SelfLabels;
+use Revolution\Bluesky\Types\StrongRef;
 use Tests\TestCase;
 
 class ClientTest extends TestCase
@@ -498,6 +501,33 @@ class ClientTest extends TestCase
         $userlist = UserList::create(name: 'name', purpose: 'purpose', description: '');
 
         $response = Bluesky::login('id', 'pass')->createList($userlist);
+
+        $this->assertTrue($response->successful());
+    }
+
+    public function test_upsert_profile()
+    {
+        $profile = Profile::fromArray([
+            'displayName' => 'name',
+        ]);
+
+        Http::fakeSequence()
+            ->push($this->session)
+            ->push(['value' => $profile->toArray()])
+            ->push([]);
+
+        $response = Bluesky::login('id', 'pass')
+            ->upsertProfile(function (Profile $profile) {
+                $profile->displayName('test')
+                    ->description('test')
+                    ->avatar(fn () => Blob::make(link: '...', mimeType: 'image/png', size: 1000))
+                    ->banner(Blob::make(link: '...', mimeType: 'image/png', size: 1000))
+                    ->labels(SelfLabels::make([]))
+                    ->joinedViaStarterPack(StrongRef::to(uri: 'uri', cid: 'cid'))
+                    ->pinnedPost(StrongRef::to(uri: 'uri', cid: 'cid'));
+
+                return $profile;
+            });
 
         $this->assertTrue($response->successful());
     }
