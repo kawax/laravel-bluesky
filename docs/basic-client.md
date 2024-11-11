@@ -131,6 +131,25 @@ $response = Bluesky::withToken()->post($post);
 dump($response->json());
 ```
 
+### Reply
+
+```php
+use Revolution\Bluesky\Facades\Bluesky;
+use Revolution\Bluesky\Record\Post;
+use Revolution\Bluesky\Types\ReplyRef;
+use Revolution\Bluesky\Types\StrongRef;
+
+$reply = ReplyRef::to(root: StrongRef::to(uri: 'at://', cid: 'cid'), parent: StrongRef::to(uri: 'at://', cid: 'cid'));
+
+$post = Post::create(text: 'test')
+            ->reply($reply);
+
+/** @var \Illuminate\Http\Client\Response $response */
+$response = Bluesky::withToken()->post($post);
+
+dump($response->json());
+```
+
 ### Social Card
 
 ```php
