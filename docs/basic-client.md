@@ -134,11 +134,17 @@ dump($response->json());
 ### Social Card
 
 ```php
+use Illuminate\Support\Facades\Storage;
 use Revolution\Bluesky\Facades\Bluesky;
 use Revolution\Bluesky\Record\Post;
 use Revolution\Bluesky\Embed\External;
 
-$external = External::create(title: 'Title', description: 'test', uri: 'http://');
+$external = External::create(
+    title: 'Title', 
+    description: 'test', 
+    uri: 'http://', 
+    thumb: fn() => Bluesky::uploadBlob(Storage::get('test.png'), Storage::mimeType('test.png'))->json('blob'),
+);
 
 $post = Post::create(text: 'test')
             ->embed($external);
