@@ -3,7 +3,8 @@ Basic Client
 
 ## Authentication
 
-Bluesky has two authentication methods: "App password" and "OAuth". "OAuth" is recommended from now on, so please also read the [Socialite](./socialite.md) docs.
+Bluesky has two authentication methods: "App password" and "OAuth". "OAuth" is recommended from now on,
+so please also read the [Socialite](./socialite.md) docs.
 
 ### App password(Legacy)
 
@@ -38,7 +39,8 @@ $timeline = Bluesky::withToken($session)->getTimeline();
 
 ## Response
 
-The API results are returned as an `Illuminate\Http\Client\Response` object, so you can use it freely just like you would with normal Laravel.
+The API results are returned as an `Illuminate\Http\Client\Response` object,
+so you can use it freely just like you would with normal Laravel.
 
 ```php
 /** @var \Illuminate\Http\Client\Response $response */
@@ -293,6 +295,33 @@ $repost = Repost::create(StrongRef::to(uri: 'at://', cid: 'cid'));
 
 /** @var \Illuminate\Http\Client\Response $response */
 $response = Bluesky::withToken()->repost($repost);
+
+dump($response->json());
+```
+
+## Editing profiles
+
+Use a Closure to update an existing profile.
+
+```php
+use Illuminate\Support\Facades\Storage;
+use Revolution\Bluesky\Facades\Bluesky;
+use Revolution\Bluesky\Record\Profile;
+use Revolution\Bluesky\Types\StrongRef;
+
+/** @var \Illuminate\Http\Client\Response $response */
+$response = Bluesky::withToken()->upsertProfile(function(Profile $profile): Profile {
+    $profile->displayName('new name')
+            ->description('new description');
+
+    $profile->avatar(function(): array {
+        return Bluesky::uploadBlob(Storage::get('test.png'), Storage::mimeType('test.png'))->json('blob');
+    });
+
+    $profile->pinnedPost(StrongRef::to(uri: 'at://', cid: ''));
+
+    return $profile;
+})
 
 dump($response->json());
 ```
