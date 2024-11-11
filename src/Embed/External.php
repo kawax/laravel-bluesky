@@ -7,6 +7,7 @@ namespace Revolution\Bluesky\Embed;
 use Illuminate\Contracts\Support\Arrayable;
 use Revolution\AtProto\Lexicon\Enum\Embed;
 use Revolution\AtProto\Lexicon\Types\AbstractUnion;
+use Revolution\Bluesky\Types\Blob;
 
 final class External extends AbstractUnion implements Arrayable
 {
@@ -14,7 +15,7 @@ final class External extends AbstractUnion implements Arrayable
         private readonly string $title,
         private readonly string $description,
         private readonly string $uri,
-        private readonly ?string $thumb = null,
+        private readonly null|array|Blob $thumb = null,
     ) {
         $this->type = Embed::External->value;
     }
@@ -26,13 +27,15 @@ final class External extends AbstractUnion implements Arrayable
 
     public function toArray(): array
     {
+        $thumb = $this->thumb instanceof Blob ? $this->thumb->toArray() : $this->thumb;
+
         return [
             '$type' => $this->type,
             'external' => collect([
                 'uri' => $this->uri,
                 'title' => $this->title,
                 'description' => $this->description,
-                'thumb' => $this->thumb,
+                'thumb' => $thumb,
             ])->reject(fn ($item) => is_null($item))
                 ->toArray(),
         ];
