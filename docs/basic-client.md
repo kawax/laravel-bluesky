@@ -102,6 +102,8 @@ dump($response->json());
 
 ## Creating a post
 
+If it's just simple text you can just pass the string, but no automatic links or tags will work.
+
 ```php
 use Revolution\Bluesky\Facades\Bluesky;
 
@@ -113,17 +115,41 @@ dump($response->json());
 
 ### TextBuilder
 
-You can use `Revolution\Bluesky\Record\Post` class as a text builder.
+Bluesky requires you to set up facets for links and tags to work. `TextBuilder` makes this easy.
 
 ```php
 use Revolution\Bluesky\Facades\Bluesky;
 use Revolution\Bluesky\Record\Post;
+use Revolution\Bluesky\RichText\TextBuilder;
 
-$post = Post::create(text: 'test')
-            ->newLine()
-            ->link(text: 'http://', link: 'http://')
-            ->newLine()
-            ->tag(text: '#Laravel', tag: 'Laravel');
+$builder = TextBuilder::make(text: 'test')
+                      ->newLine()
+                      ->link(text: 'http://', link: 'http://')
+                      ->newLine()
+                      ->tag(text: '#Laravel', tag: 'Laravel')
+                      ->toArray();
+
+$post = Post::create(text: $builder['text'], facets: $builder['facets']);
+
+/** @var \Illuminate\Http\Client\Response $response */
+$response = Bluesky::withToken()->post($post);
+
+dump($response->json());
+```
+
+You can create a Post object directly using `toPost()`.
+
+```php
+use Revolution\Bluesky\Facades\Bluesky;
+use Revolution\Bluesky\Record\Post;
+use Revolution\Bluesky\RichText\TextBuilder;
+
+$post = TextBuilder::make(text: 'test')
+                   ->newLine()
+                   ->link(text: 'http://', link: 'http://')
+                   ->newLine()
+                   ->tag(text: '#Laravel', tag: 'Laravel')
+                   ->toPost();
 
 /** @var \Illuminate\Http\Client\Response $response */
 $response = Bluesky::withToken()->post($post);
@@ -194,6 +220,19 @@ dump($response->json());
 ```
 
 ### Upload Images
+
+Images are passed as an array of data called a blob object.
+
+```json
+{
+    "$type": "blob",
+    "ref": {
+        "$link": "..."
+    },
+    "mimeType": "image/png",
+    "size": 10000
+}
+```
 
 You can upload up to 4 images at a time.
 
