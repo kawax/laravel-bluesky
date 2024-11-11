@@ -11,6 +11,7 @@ use Illuminate\Support\Traits\Macroable;
 use Revolution\AtProto\Lexicon\Enum\Facet;
 use Revolution\AtProto\Lexicon\Record\App\Bsky\Feed\AbstractPost;
 use Revolution\Bluesky\Contracts\Recordable;
+use Revolution\Bluesky\Types\ReplyRef;
 
 class Post extends AbstractPost implements Arrayable, Recordable
 {
@@ -136,6 +137,13 @@ class Post extends AbstractPost implements Arrayable, Recordable
     public function langs(array $langs): static
     {
         $this->langs = $langs;
+
+        return $this;
+    }
+
+    public function reply(ReplyRef $reply): static
+    {
+        $this->reply = $reply->toArray();
 
         return $this;
     }
