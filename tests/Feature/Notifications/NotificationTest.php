@@ -100,10 +100,10 @@ class NotificationTest extends TestCase
     public function test_message_facets()
     {
         $builder = TextBuilder::make('test')
-            ->text('text')
-            ->mention('at', 'did:')
-            ->link('link', 'http://')
-            ->tag('tag', 'tag')
+            ->text(text: 'text')
+            ->mention(text: 'at', did: 'did:')
+            ->link(text: 'link', uri: 'http://')
+            ->tag(text: 'tag', tag: 'tag')
             ->toArray();
 
         $m = Post::create(text: $builder['text'], facets: $builder['facets']);
