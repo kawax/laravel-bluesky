@@ -6,18 +6,21 @@ namespace Revolution\Bluesky\Embed;
 
 use Illuminate\Contracts\Support\Arrayable;
 use Revolution\AtProto\Lexicon\Enum\Embed;
+use Revolution\AtProto\Lexicon\Types\AbstractUnion;
+use Revolution\Bluesky\Types\Blob;
 
-final readonly class Video implements Arrayable
+final class Video extends AbstractUnion implements Arrayable
 {
     public function __construct(
-        private array $video,
-        private ?string $alt = null,
-        private ?array $captions = null,
-        private ?array $aspectRatio = null,
+        private readonly Blob|array $video,
+        private readonly ?string $alt = null,
+        private readonly ?array $captions = null,
+        private readonly ?array $aspectRatio = null,
     ) {
+        $this->type = Embed::Video->value;
     }
 
-    public static function create(array $video, ?string $alt = null, ?array $captions = null, ?array $aspectRatio = null): self
+    public static function create(Blob|array $video, ?string $alt = null, ?array $captions = null, ?array $aspectRatio = null): self
     {
         return new self(...func_get_args());
     }
@@ -25,9 +28,9 @@ final readonly class Video implements Arrayable
     public function toArray(): array
     {
         return [
-            '$type' => Embed::Video->value,
+            '$type' => $this->type,
             'video' => collect([
-                'video' => $this->video,
+                'video' => $this->video instanceof Blob ? $this->video->toArray() : $this->video,
                 'alt' => $this->alt,
                 'captions' => $this->captions,
                 'aspectRatio' => $this->aspectRatio,
