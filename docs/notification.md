@@ -5,7 +5,9 @@ Laravel Notifications
 ```php
 use Illuminate\Notifications\Notification;
 use Revolution\Bluesky\Notifications\BlueskyChannel;
-use Revolution\Bluesky\Notifications\BlueskyMessage;
+use Revolution\Bluesky\Record\Post;
+use Revolution\Bluesky\RichText\TextBuilder;
+use Revolution\Bluesky\Embed\External;
 
 class TestNotification extends Notification
 {
@@ -16,13 +18,17 @@ class TestNotification extends Notification
         ];
     }
 
-    public function toBluesky(object $notifiable): BlueskyMessage
+    public function toBluesky(object $notifiable): Post
     {
-        return BlueskyMessage::create(text: 'test')
-                              ->newLine()
-                              ->link(text: 'http://', link: 'http://')
-                              ->newLine()
-                              ->tag(text: '#Laravel', tag: 'Laravel');
+        $external = External::create(title: 'Title', description: 'test', uri: 'http://');
+
+        $post = TextBuilder::make(text: 'test')
+                           ->newLine()
+                           ->tag(text: '#Laravel', tag: 'Laravel')
+                           ->toPost()
+                           ->embed($external);
+
+        return $post;
     }
 }
 ```
