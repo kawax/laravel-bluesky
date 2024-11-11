@@ -522,6 +522,8 @@ trait HasShortHand
     }
 
     /**
+     * Create a user list.
+     *
      * @throws AuthenticationException
      */
     public function createList(UserList $list): Response
@@ -534,6 +536,8 @@ trait HasShortHand
     }
 
     /**
+     * Get created lists.
+     *
      * @throws AuthenticationException
      */
     public function getLists(#[Format('at-identifier')] ?string $actor = null, ?int $limit = 50, ?string $cursor = null): Response
@@ -547,6 +551,8 @@ trait HasShortHand
     }
 
     /**
+     * Viewing a list.
+     *
      * @param  string  $list  URI
      */
     public function getList(#[Format('at-uri')] string $list, ?int $limit = 50, ?string $cursor = null): Response
