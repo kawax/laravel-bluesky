@@ -3,9 +3,10 @@
 namespace Revolution\Bluesky\Types;
 
 use Illuminate\Contracts\Support\Arrayable;
-use Revolution\AtProto\Lexicon\Types\AbstractBlob;
+use Revolution\AtProto\Lexicon\Attributes\NSID;
 use Revolution\AtProto\Lexicon\Types\AbstractUnion;
 
+#[NSID('com.atproto.label.defs#selfLabels')]
 final class SelfLabels extends AbstractUnion implements Arrayable
 {
     protected array $labels;
