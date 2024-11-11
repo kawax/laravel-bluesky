@@ -19,6 +19,7 @@ use Revolution\Bluesky\Notifications\BlueskyChannel;
 use Revolution\Bluesky\Notifications\BlueskyMessage;
 use Revolution\Bluesky\Notifications\BlueskyRoute;
 use Revolution\Bluesky\Session\OAuthSession;
+use Revolution\Bluesky\Types\Blob;
 use Tests\TestCase;
 
 class NotificationTest extends TestCase
@@ -150,9 +151,18 @@ class NotificationTest extends TestCase
 
     public function test_message_embed_images()
     {
+        $blob2 = Blob::fromArray([
+            'type' => 'blob',
+            'ref' => [
+                '$link' => '...',
+            ],
+            'mimeType' => 'image/jpeg',
+            'size' => 1000,
+        ]);
+
         $images = Images::create()
             ->add(alt: 'alt', blob: ['blob'])
-            ->add('alt2', fn () => ['blob2']);
+            ->add('alt2', fn () => $blob2);
 
         $m = BlueskyMessage::create(text: 'test')
             ->embed($images);
@@ -160,19 +170,21 @@ class NotificationTest extends TestCase
         $this->assertIsArray($m->toArray()['embed']);
         $this->assertSame('alt', $m->toArray()['embed']['images'][0]['alt']);
         $this->assertSame('alt2', $m->toArray()['embed']['images'][1]['alt']);
-        $this->assertSame(['blob2'], $m->toArray()['embed']['images'][1]['image']);
+        $this->assertSame($blob2->toArray(), $m->toArray()['embed']['images'][1]['image']);
         $this->assertSame(Embed::Images->value, $m->toArray()['embed']['$type']);
     }
 
     public function test_message_embed_video()
     {
-        $v = Video::create(video: 'video', alt: 'alt', captions: [], aspectRatio: ['width' => 1, 'height' => 1]);
+        $video_blob = Blob::make(link: '...', mimeType: 'video/mp4', size: 10000);
+
+        $v = Video::create(video: $video_blob, alt: 'alt', captions: [], aspectRatio: ['width' => 1, 'height' => 1]);
 
         $m = BlueskyMessage::create(text: 'test')
             ->embed($v);
 
         $this->assertIsArray($m->toArray()['embed']);
-        $this->assertSame('video', $m->toArray()['embed']['video']['video']);
+        $this->assertSame($video_blob->toArray(), $m->toArray()['embed']['video']['video']);
         $this->assertSame('alt', $m->toArray()['embed']['video']['alt']);
         $this->assertSame(Embed::Video->value, $m->toArray()['embed']['$type']);
     }
