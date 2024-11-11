@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Revolution\Bluesky\Embed;
 
+use Closure;
 use Illuminate\Contracts\Support\Arrayable;
 use Revolution\AtProto\Lexicon\Enum\Embed;
 use Revolution\AtProto\Lexicon\Types\AbstractUnion;
@@ -15,19 +16,27 @@ final class External extends AbstractUnion implements Arrayable
         private readonly string $title,
         private readonly string $description,
         private readonly string $uri,
-        private readonly null|array|Blob $thumb = null,
+        private readonly null|array|Blob|Closure $thumb = null,
     ) {
         $this->type = Embed::External->value;
     }
 
-    public static function create(string $title, string $description, string $uri, ?string $thumb = null): self
+    public static function create(string $title, string $description, string $uri, null|array|Blob|Closure $thumb = null): self
     {
         return new self(...func_get_args());
     }
 
     public function toArray(): array
     {
-        $thumb = $this->thumb instanceof Blob ? $this->thumb->toArray() : $this->thumb;
+        $thumb = $this->thumb;
+
+        if (is_callable($thumb)) {
+            $thumb = call_user_func($this->thumb);
+        }
+
+        if ($thumb instanceof Blob) {
+            $thumb = $thumb->toArray();
+        }
 
         return [
             '$type' => $this->type,
