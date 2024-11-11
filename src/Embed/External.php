@@ -6,15 +6,17 @@ namespace Revolution\Bluesky\Embed;
 
 use Illuminate\Contracts\Support\Arrayable;
 use Revolution\AtProto\Lexicon\Enum\Embed;
+use Revolution\AtProto\Lexicon\Types\AbstractUnion;
 
-final readonly class External implements Arrayable
+final class External extends AbstractUnion implements Arrayable
 {
     public function __construct(
-        private string $title,
-        private string $description,
-        private string $uri,
-        private ?string $thumb = null,
+        private readonly string $title,
+        private readonly string $description,
+        private readonly string $uri,
+        private readonly ?string $thumb = null,
     ) {
+        $this->type = Embed::External->value;
     }
 
     public static function create(string $title, string $description, string $uri, ?string $thumb = null): self
@@ -25,7 +27,7 @@ final readonly class External implements Arrayable
     public function toArray(): array
     {
         return [
-            '$type' => Embed::External->value,
+            '$type' => $this->type,
             'external' => collect([
                 'uri' => $this->uri,
                 'title' => $this->title,
