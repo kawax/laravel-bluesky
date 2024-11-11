@@ -155,6 +155,25 @@ $response = Bluesky::withToken()->post($post);
 dump($response->json());
 ```
 
+### Quote post
+
+```php
+use Revolution\Bluesky\Facades\Bluesky;
+use Revolution\Bluesky\Record\Post;
+use Revolution\Bluesky\Embed\QuoteRecord;
+use Revolution\Bluesky\Types\StrongRef;
+
+$quote = QuoteRecord::create(StrongRef::to(uri: 'at://', cid: 'cid'));
+
+$post = Post::create(text: 'test')
+            ->embed($quote);
+
+/** @var \Illuminate\Http\Client\Response $response */
+$response = Bluesky::withToken()->post($post);
+
+dump($response->json());
+```
+
 ### Upload Images
 
 You can upload up to 4 images at a time.
