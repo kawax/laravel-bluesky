@@ -498,7 +498,10 @@ class ClientTest extends TestCase
             ->push($this->session)
             ->push([]);
 
-        $userlist = UserList::create(name: 'name', purpose: 'purpose', description: '');
+        $userlist = UserList::create()
+            ->name('name')
+            ->purpose('purpose')
+            ->description('description');
 
         $response = Bluesky::login('id', 'pass')->createList($userlist);
 
