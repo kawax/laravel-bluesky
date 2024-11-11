@@ -124,7 +124,7 @@ use Revolution\Bluesky\RichText\TextBuilder;
 
 $builder = TextBuilder::make(text: 'test')
                       ->newLine()
-                      ->link(text: 'http://', link: 'http://')
+                      ->link(text: 'http://', uri: 'http://')
                       ->newLine()
                       ->tag(text: '#Laravel', tag: 'Laravel')
                       ->toArray();
