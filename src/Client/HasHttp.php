@@ -7,6 +7,10 @@ use Illuminate\Http\Client\PendingRequest;
 use Illuminate\Http\Client\Response;
 use ReflectionMethod;
 
+use Revolution\AtProto\Lexicon\Attributes\Format;
+
+use Revolution\AtProto\Lexicon\Attributes\KnownValues;
+
 use function Illuminate\Support\enum_value;
 
 trait HasHttp
@@ -16,7 +20,7 @@ trait HasHttp
 
     protected PendingRequest $http;
 
-    protected function call(BackedEnum|string $api, string $method = 'get', ?array $params = null): Response
+    protected function call(#[Format('nsid')] BackedEnum|string $api, #[KnownValues([self::GET, self::POST])] string $method = self::GET, ?array $params = null): Response
     {
         $params = collect($params)
             ->reject(fn ($param) => is_null($param))
