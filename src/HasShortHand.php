@@ -4,19 +4,19 @@ namespace Revolution\Bluesky;
 
 use Illuminate\Auth\AuthenticationException;
 use Illuminate\Http\Client\Response;
-use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Http;
 use InvalidArgumentException;
 use Revolution\AtProto\Lexicon\Enum\Feed;
 use Revolution\AtProto\Lexicon\Enum\Graph;
 use Revolution\Bluesky\Record\Block;
+use Revolution\Bluesky\Record\Follow;
 use Revolution\Bluesky\Record\Like;
 use Revolution\Bluesky\Record\Post;
-use Revolution\Bluesky\Record\Follow;
+use Revolution\Bluesky\Record\Profile;
 use Revolution\Bluesky\Record\Repost;
 use Revolution\Bluesky\Record\UserList;
 use Revolution\Bluesky\Support\AtUri;
-use Revolution\Bluesky\Support\StrongRef;
+use Revolution\Bluesky\Types\StrongRef;
 
 /**
  * The method names will be the same as the official client.
@@ -89,36 +89,41 @@ trait HasShortHand
 
     /**
      * ```
-     * use Illuminate\Support\Collection;
+     * use Revolution\Bluesky\Record\Profile;
      *
-     * Bluesky::upsertProfile(function(Collection $profile) {
-     *     $profile->put('description', 'new description');
+     * Bluesky::upsertProfile(function(Profile $profile) {
+     *     $profile->displayName('new name')
+     *             ->description('new description');
+     *
+     *     $profile->avatar(function (): array {
+     *        return Bluesky::uploadBlob(Storage::get('test.png'), Storage::mimeType('test.png'))->json('blob');
+     *     });
      *
      *     return $profile;
      * })
      * ```
      *
-     * @param  callable(Collection $profile): Collection  $callback
+     * @param  callable(Profile $profile): Profile  $callback
      * @throws AuthenticationException
      */
     public function upsertProfile(callable $callback): Response
     {
-        $existing = $this->getRecord(
+        $response = $this->getRecord(
             repo: $this->assertDid(),
-            collection: 'app.bsky.actor.profile',
+            collection: Profile::NSID,
             rkey: 'self',
-        )->collect('value');
+        );
+
+        $existing = Profile::fromArray($response->json('value'));
 
         $updated = $callback($existing) ?? $existing;
 
-        $updated->put('$type', 'app.bsky.actor.profile');
-
         return $this->putRecord(
             repo: $this->assertDid(),
-            collection: 'app.bsky.actor.profile',
+            collection: Profile::NSID,
             rkey: 'self',
-            record: $updated->toArray(),
-            swapRecord: $existing['cid'] ?? null,
+            record: $updated,
+            swapRecord: $response->json('cid'),
         );
     }
 
