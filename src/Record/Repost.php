@@ -7,7 +7,7 @@ namespace Revolution\Bluesky\Record;
 use Illuminate\Contracts\Support\Arrayable;
 use Revolution\AtProto\Lexicon\Record\App\Bsky\Feed\AbstractRepost;
 use Revolution\Bluesky\Contracts\Recordable;
-use Revolution\Bluesky\Support\StrongRef;
+use Revolution\Bluesky\Types\StrongRef;
 
 class Repost extends AbstractRepost implements Arrayable, Recordable
 {
