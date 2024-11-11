@@ -191,7 +191,7 @@ dump($response->json());
 
 ```php
 use Revolution\Bluesky\Facades\Bluesky;
-use Revolution\Bluesky\Support\StrongRef;
+use Revolution\Bluesky\Types\StrongRef;
 
 /** @var \Illuminate\Http\Client\Response $response */
 $response = Bluesky::withToken()->like(StrongRef::to(uri: 'at://', cid: 'cid'));
@@ -204,7 +204,7 @@ dump($response->json());
 ```php
 use Revolution\Bluesky\Facades\Bluesky;
 use Revolution\Bluesky\Record\Repost;
-use Revolution\Bluesky\Support\StrongRef;
+use Revolution\Bluesky\Types\StrongRef;
 
 $repost = Repost::create(StrongRef::to(uri: 'at://', cid: 'cid'));
 
