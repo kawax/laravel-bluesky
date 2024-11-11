@@ -16,8 +16,9 @@ use Revolution\Bluesky\Embed\Video;
 use Revolution\Bluesky\Facades\Bluesky;
 use Revolution\AtProto\Lexicon\Enum\Embed;
 use Revolution\Bluesky\Notifications\BlueskyChannel;
-use Revolution\Bluesky\Notifications\BlueskyMessage;
 use Revolution\Bluesky\Notifications\BlueskyRoute;
+use Revolution\Bluesky\Record\Post;
+use Revolution\Bluesky\RichText\TextBuilder;
 use Revolution\Bluesky\Session\OAuthSession;
 use Revolution\Bluesky\Types\Blob;
 use Tests\TestCase;
@@ -83,8 +84,8 @@ class NotificationTest extends TestCase
 
     public function test_message()
     {
-        $m = new BlueskyMessage(text: 'test');
-        $m2 = BlueskyMessage::create(text: 'test');
+        $m = new Post(text: 'test');
+        $m2 = Post::create(text: 'test');
 
         $this->assertIsArray($m->toArray());
         $this->assertSame('test', $m->toArray()['text']);
@@ -96,11 +97,14 @@ class NotificationTest extends TestCase
 
     public function test_message_facets()
     {
-        $m = BlueskyMessage::create(text: 'test')
+        $builder = TextBuilder::make('test')
             ->text('text')
             ->mention('at', 'did:')
             ->link('link', 'http://')
-            ->tag('tag', 'tag');
+            ->tag('tag', 'tag')
+            ->toArray();
+
+        $m = Post::create(text: $builder['text'], facets: $builder['facets']);
 
         $this->assertIsArray($m->toArray());
         $this->assertSame('testtextatlinktag', $m->toArray()['text']);
@@ -109,8 +113,12 @@ class NotificationTest extends TestCase
 
     public function test_message_facet_index()
     {
-        $m = BlueskyMessage::create(text: 'test')
-            ->link('テスト', 'http://');
+        $builder = TextBuilder::make('test')
+            ->link('テスト', 'http://')
+            ->toArray();
+
+        $m = Post::create(text: $builder['text'])
+            ->facets($builder['facets']);
 
         $this->assertSame([
             'byteStart' => 4,
@@ -120,15 +128,23 @@ class NotificationTest extends TestCase
 
     public function test_message_facet()
     {
-        $m = BlueskyMessage::create(text: 'test')
-            ->facet([]);
+        $m = Post::create(text: 'test')
+            ->facets([]);
 
         $this->assertIsArray($m->toArray()['facets']);
     }
 
+    public function test_text_builder_to_post()
+    {
+        $post = TextBuilder::make('test')->toPost();
+
+        $this->assertInstanceOf(Post::class, $post);
+        $this->assertSame('test', $post->toArray()['text']);
+    }
+
     public function test_message_embed()
     {
-        $m = BlueskyMessage::create(text: 'test')
+        $m = Post::create(text: 'test')
             ->embed([
                 '$type' => Embed::External->value,
             ]);
@@ -140,7 +156,7 @@ class NotificationTest extends TestCase
     {
         $e = External::create(title: 'test', description: 'test', uri: 'http://');
 
-        $m = BlueskyMessage::create(text: 'test')
+        $m = Post::create(text: 'test')
             ->embed($e);
 
         $this->assertIsArray($m->toArray()['embed']);
@@ -164,7 +180,7 @@ class NotificationTest extends TestCase
             ->add(alt: 'alt', blob: ['blob'])
             ->add('alt2', fn () => $blob2);
 
-        $m = BlueskyMessage::create(text: 'test')
+        $m = Post::create(text: 'test')
             ->embed($images);
 
         $this->assertIsArray($m->toArray()['embed']);
@@ -180,7 +196,7 @@ class NotificationTest extends TestCase
 
         $v = Video::create(video: $video_blob, alt: 'alt', captions: [], aspectRatio: ['width' => 1, 'height' => 1]);
 
-        $m = BlueskyMessage::create(text: 'test')
+        $m = Post::create(text: 'test')
             ->embed($v);
 
         $this->assertIsArray($m->toArray()['embed']);
@@ -191,7 +207,7 @@ class NotificationTest extends TestCase
 
     public function test_message_langs()
     {
-        $m = BlueskyMessage::create(text: 'test')
+        $m = Post::create(text: 'test')
             ->langs(['en']);
 
         $this->assertSame(['en'], $m->toArray()['langs']);
@@ -199,9 +215,12 @@ class NotificationTest extends TestCase
 
     public function test_message_new_line()
     {
-        $m = BlueskyMessage::create(text: 'test')
+        $builder = TextBuilder::make('test')
             ->newLine(2)
-            ->text('test');
+            ->text('test')
+            ->toArray();
+
+        $m = Post::create(text: $builder['text'], facets: $builder['facets']);
 
         $this->assertSame('test'.PHP_EOL.PHP_EOL.'test', $m->toArray()['text']);
     }
@@ -264,9 +283,9 @@ class TestNotification extends \Illuminate\Notifications\Notification
         return [BlueskyChannel::class];
     }
 
-    public function toBluesky(object $notifiable): BlueskyMessage
+    public function toBluesky(object $notifiable): Post
     {
-        return BlueskyMessage::create(text: $this->text);
+        return Post::create(text: $this->text);
     }
 }
 
