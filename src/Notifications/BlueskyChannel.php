@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Revolution\Bluesky\Notifications;
 
+use Illuminate\Auth\AuthenticationException;
 use Illuminate\Http\Client\RequestException;
 use Illuminate\Notifications\Notification;
 use Revolution\Bluesky\Facades\Bluesky;
@@ -13,16 +14,17 @@ class BlueskyChannel
 {
     /**
      * @throws RequestException
+     * @throws AuthenticationException
      */
     public function send(mixed $notifiable, Notification $notification): void
     {
         /**
-         * @var BlueskyMessage|Post $message
+         * @var Post $post
          * @phpstan-ignore-next-line
          */
-        $message = $notification->toBluesky($notifiable);
+        $post = $notification->toBluesky($notifiable);
 
-        if (! $message instanceof BlueskyMessage && ! $message instanceof Post) {
+        if (! $post instanceof Post) {
             return; // @codeCoverageIgnore
         }
 
@@ -36,10 +38,10 @@ class BlueskyChannel
         match (true) {
             $route->isOAuth() => Bluesky::withToken($route->oauth)
                 ->refreshSession()
-                ->post($message)
+                ->post($post)
                 ->throw(),
             $route->isLegacy() => Bluesky::login($route->identifier, $route->password)
-                ->post($message)
+                ->post($post)
                 ->throw(),
         };
     }
