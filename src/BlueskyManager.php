@@ -13,6 +13,7 @@ use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Str;
 use Illuminate\Support\Traits\Conditionable;
 use Illuminate\Support\Traits\Macroable;
+use Revolution\AtProto\Lexicon\Attributes\Format;
 use Revolution\Bluesky\Agent\LegacyAgent;
 use Revolution\Bluesky\Agent\OAuthAgent;
 use Revolution\Bluesky\Client\AtpClient;
@@ -48,7 +49,7 @@ class BlueskyManager implements Factory
     /**
      * App password authentication.
      */
-    public function login(string $identifier, #[\SensitiveParameter] string $password): self
+    public function login(#[Format('at-identifier')] string $identifier, #[\SensitiveParameter] string $password): self
     {
         $response = $this->client(auth: false)
             ->withHttp(Http::baseUrl($this->entryway().'/xrpc/'))
@@ -76,7 +77,7 @@ class BlueskyManager implements Factory
      * @param  ?array  $params  get query or post data.
      * @param  null|callable(PendingRequest $http): PendingRequest  $callback  Perform processing before sending.
      */
-    public function send(BackedEnum|string $api, string $method = 'get', bool $auth = true, ?array $params = null, ?callable $callback = null): Response
+    public function send(#[Format('nsid')] BackedEnum|string $api, string $method = 'get', bool $auth = true, ?array $params = null, ?callable $callback = null): Response
     {
         $method = Str::lower($method) === 'post' ? 'post' : 'get';
 
@@ -116,7 +117,7 @@ class BlueskyManager implements Factory
         return $this;
     }
 
-    public function createRecord(string $repo, string $collection, Recordable|array $record, ?string $rkey = null, ?bool $validate = null, ?string $swapCommit = null): Response
+    public function createRecord(#[Format('at-identifier')] string $repo, #[Format('nsid')] string $collection, Recordable|array $record, ?string $rkey = null, ?bool $validate = null, ?string $swapCommit = null): Response
     {
         $record = $record instanceof Recordable ? $record : $record->toRecord();
 
@@ -131,7 +132,7 @@ class BlueskyManager implements Factory
             );
     }
 
-    public function getRecord(string $repo, string $collection, string $rkey, ?string $cid = null): Response
+    public function getRecord(#[Format('at-identifier')] string $repo, #[Format('nsid')] string $collection, string $rkey, #[Format('cid')] ?string $cid = null): Response
     {
         return $this->client(auth: true)
             ->getRecord(
@@ -142,7 +143,7 @@ class BlueskyManager implements Factory
             );
     }
 
-    public function putRecord(string $repo, string $collection, string $rkey, Recordable|array $record, ?bool $validate = null, ?string $swapRecord = null, ?string $swapCommit = null): Response
+    public function putRecord(#[Format('at-identifier')] string $repo, #[Format('nsid')] string $collection, string $rkey, Recordable|array $record, ?bool $validate = null, #[Format('cid')] ?string $swapRecord = null, #[Format('cid')] ?string $swapCommit = null): Response
     {
         $record = $record instanceof Recordable ? $record : $record->toRecord();
 
@@ -158,7 +159,7 @@ class BlueskyManager implements Factory
             );
     }
 
-    public function deleteRecord(string $repo, string $collection, string $rkey, ?string $swapRecord = null, ?string $swapCommit = null): Response
+    public function deleteRecord(#[Format('at-identifier')] string $repo, #[Format('nsid')] string $collection, string $rkey, #[Format('cid')] ?string $swapRecord = null, #[Format('cid')] ?string $swapCommit = null): Response
     {
         return $this->client(auth: true)
             ->deleteRecord(
