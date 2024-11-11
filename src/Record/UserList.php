@@ -5,22 +5,114 @@ declare(strict_types=1);
 namespace Revolution\Bluesky\Record;
 
 use Illuminate\Contracts\Support\Arrayable;
+use Illuminate\Support\Collection;
+use Revolution\AtProto\Lexicon\Attributes\KnownValues;
 use Revolution\AtProto\Lexicon\Record\App\Bsky\Graph\AbstractList;
 use Revolution\Bluesky\Contracts\Recordable;
+use Revolution\Bluesky\Types\Blob;
+use Revolution\Bluesky\Types\SelfLabels;
 
 class UserList extends AbstractList implements Arrayable, Recordable
 {
     use HasRecord;
 
-    public function __construct(string $name, string $purpose, ?string $description = null)
+    public static function create(): static
     {
-        $this->name = $name;
-        $this->purpose = $purpose;
-        $this->description = $description;
+        return new static();
     }
 
-    public static function create(string $name, string $purpose, ?string $description = null): static
+    public static function fromArray(Collection|array $list): static
     {
-        return new static($name, $purpose, $description);
+        $list = Collection::make($list);
+
+        $self = new static();
+
+        $list->each(function ($value, $name) use ($self) {
+            if (property_exists($self, $name)) {
+                $self->$name = $value;
+            }
+        });
+
+        return $self;
+    }
+
+    /**
+     * Defines the purpose of the list (aka, moderation-oriented or curration-oriented).
+     */
+    public function purpose(#[KnownValues(['app.bsky.graph.defs#modlist', 'app.bsky.graph.defs#curatelist', 'app.bsky.graph.defs#referencelist'])] string $purpose): static
+    {
+        $this->purpose = $purpose;
+
+        return $this;
+    }
+
+    /**
+     * Display name for list; can not be empty.
+     */
+    public function name(string $name): static
+    {
+        $this->name = $name;
+
+        return $this;
+    }
+
+    public function description(?string $description = null): static
+    {
+        $this->description = $description;
+
+        return $this;
+    }
+
+    public function descriptionFacets(?array $descriptionFacets = null): static
+    {
+        $this->descriptionFacets = $descriptionFacets;
+
+        return $this;
+    }
+
+    /**
+     * accept: ['image/png', 'image/jpeg']
+     * maxSize: 1000000
+     *
+     * ```
+     * $list->avatar(function (): array {
+     *     return Bluesky::uploadBlob(Storage::get('test.png'), Storage::mimeType('test.png'))->json('blob');
+     * })
+     * ```
+     *
+     * @param  Blob|array|callable|null  $avatar
+     */
+    public function avatar(null|Blob|array|callable $avatar = null): static
+    {
+        if (is_null($avatar)) {
+            return $this;
+        }
+
+        if (is_callable($avatar)) {
+            $avatar = call_user_func($avatar);
+        }
+
+        if ($avatar instanceof Blob) {
+            $avatar = $avatar->toArray();
+        }
+
+        $this->avatar = $avatar;
+
+        return $this;
+    }
+
+    /**
+     * ```
+     * use Revolution\Bluesky\Types\SelfLabels;
+     *
+     * $labels = SelfLabels::make(['!no-unauthenticated']);
+     * $list->labels($labels);
+     * ```
+     */
+    public function labels(?SelfLabels $labels = null): static
+    {
+        $this->labels = $labels?->toArray();
+
+        return $this;
     }
 }
