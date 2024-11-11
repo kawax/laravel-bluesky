@@ -17,6 +17,7 @@ use Revolution\Bluesky\Record\Post;
 use Revolution\Bluesky\Record\Profile;
 use Revolution\Bluesky\Record\Repost;
 use Revolution\Bluesky\Record\UserList;
+use Revolution\Bluesky\Record\UserListItem;
 use Revolution\Bluesky\Support\AtUri;
 use Revolution\Bluesky\Types\StrongRef;
 
@@ -556,6 +557,45 @@ trait HasShortHand
                 limit: $limit,
                 cursor: $cursor,
             );
+    }
+
+    /**
+     * Add a user to a list.
+     *
+     * ```
+     * use Revolution\Bluesky\Record\UserListItem;
+     *
+     * $item = UserListItem::create(did: 'did', list: 'at://');
+     * Bluesky::createListItem($item);
+     * ```
+     *
+     * @throws AuthenticationException
+     */
+    public function createListItem(UserListItem $item): Response
+    {
+        return $this->createRecord(
+            repo: $this->assertDid(),
+            collection: Graph::Listitem->value,
+            record: $item,
+        );
+    }
+
+    /**
+     * Remove a user from a list.
+     */
+    public function deleteListItem(#[Format('at-uri')] string $uri): Response
+    {
+        $at = AtUri::parse($uri);
+
+        if ($at->collection() !== Graph::Listitem->value) {
+            throw new InvalidArgumentException();
+        }
+
+        return $this->deleteRecord(
+            repo: $at->repo(),
+            collection: $at->collection(),
+            rkey: $at->rkey(),
+        );
     }
 
     public function getListMutes(?int $limit = 50, ?string $cursor = null): Response
