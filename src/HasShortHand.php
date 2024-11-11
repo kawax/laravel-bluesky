@@ -379,6 +379,15 @@ trait HasShortHand
             ->uploadVideo();
     }
 
+    /**
+     * This will get you the "blob" of the video you uploaded.
+     */
+    public function getJobStatus(string $jobId): Response
+    {
+        return $this->client(auth: true)
+            ->getJobStatus($jobId);
+    }
+
     public function getSuggestions(?int $limit = 50, ?string $cursor = null): Response
     {
         return $this->client(auth: true)
