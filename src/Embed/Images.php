@@ -6,13 +6,16 @@ namespace Revolution\Bluesky\Embed;
 
 use Illuminate\Contracts\Support\Arrayable;
 use Revolution\AtProto\Lexicon\Enum\Embed;
+use Revolution\AtProto\Lexicon\Types\AbstractUnion;
+use Revolution\Bluesky\Types\Blob;
 
-final class Images implements Arrayable
+final class Images extends AbstractUnion implements Arrayable
 {
     private array $images = [];
 
     public function __construct()
     {
+        $this->type = Embed::Images->value;
     }
 
     public static function create(): self
@@ -20,10 +23,38 @@ final class Images implements Arrayable
         return new self();
     }
 
-    public function add(string $alt, array|callable $blob): self
+    /**
+     * Pass an Array or Blob.
+     * ```
+     * use Revolution\Bluesky\Types\Blob;
+     *
+     * $blob = Bluesky::uploadBlob(Storage::get('test.png'), Storage::mimeType('test.png'))->json('blob');
+     * $blob = Blob::fromArray($blob);
+     *
+     * $images = Images::create()
+     *                 ->add(alt: 'ALT TEXT', blob: $blob)
+     * ```
+     * Passing via closure.
+     * ```
+     * ->add(alt: 'ALT TEXT', blob: function (): array {
+     *     return Bluesky::uploadBlob(Storage::get('test.png'), Storage::mimeType('test.png'))->json('blob');
+     * })
+     * ```
+     *
+     * @param  Blob|array|callable  $blob
+     */
+    public function add(string $alt, Blob|array|callable $blob): self
     {
+        if (is_callable($blob)) {
+            $blob = call_user_func($blob);
+        }
+
+        if ($blob instanceof Blob) {
+            $blob = $blob->toArray();
+        }
+
         $this->images[] = [
-            'image' => is_callable($blob) ? call_user_func($blob) : $blob,
+            'image' => $blob,
             'alt' => $alt,
         ];
 
@@ -33,7 +64,7 @@ final class Images implements Arrayable
     public function toArray(): array
     {
         return [
-            '$type' => Embed::Images->value,
+            '$type' => $this->type,
             'images' => collect($this->images)->take(4)->toArray(),
         ];
     }
