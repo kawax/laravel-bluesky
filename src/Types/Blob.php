@@ -19,7 +19,7 @@ final class Blob extends AbstractBlob implements Arrayable
     }
 
     /**
-     * @param  array{type: string, ref: array{"$link": string}, mimeType: string, size: int}  $blob
+     * @param  array{"$type": string, ref: array{"$link": string}, mimeType: string, size: int}  $blob
      */
     public static function fromArray(array $blob): self
     {
