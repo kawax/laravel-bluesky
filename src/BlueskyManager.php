@@ -144,6 +144,18 @@ class BlueskyManager implements Factory
             );
     }
 
+    public function listRecords(#[Format('at-identifier')] string $repo, #[Format('nsid')] string $collection, ?int $limit = 50, ?string $cursor = null, ?bool $reverse = null): Response
+    {
+        return $this->client(auth: true)
+            ->listRecords(
+                repo: $repo,
+                collection: $collection,
+                limit: $limit,
+                cursor: $cursor,
+                reverse: $reverse,
+            );
+    }
+
     public function putRecord(#[Format('at-identifier')] string $repo, #[Format('nsid')] string $collection, string $rkey, Recordable|array $record, ?bool $validate = null, #[Format('cid')] ?string $swapRecord = null, #[Format('cid')] ?string $swapCommit = null): Response
     {
         $record = $record instanceof Recordable ? $record : $record->toRecord();
