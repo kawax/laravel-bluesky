@@ -11,6 +11,7 @@ use InvalidArgumentException;
 use Mockery;
 use Mockery\MockInterface;
 use Revolution\AtProto\Lexicon\Contracts\App\Bsky\Actor;
+use Revolution\AtProto\Lexicon\Enum\ListPurpose;
 use Revolution\Bluesky\Agent\OAuthAgent;
 use Revolution\Bluesky\BlueskyManager;
 use Revolution\Bluesky\Facades\Bluesky;
@@ -503,7 +504,7 @@ class ClientTest extends TestCase
 
         $userlist = UserList::create()
             ->name('name')
-            ->purpose('purpose')
+            ->purpose(ListPurpose::Curatelist)
             ->description('description');
 
         $response = Bluesky::login('id', 'pass')->createList($userlist);
