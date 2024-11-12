@@ -4,13 +4,17 @@ declare(strict_types=1);
 
 namespace Revolution\Bluesky\Record;
 
+use BackedEnum;
 use Illuminate\Contracts\Support\Arrayable;
 use Illuminate\Support\Collection;
 use Revolution\AtProto\Lexicon\Attributes\KnownValues;
+use Revolution\AtProto\Lexicon\Enum\ListPurpose;
 use Revolution\AtProto\Lexicon\Record\App\Bsky\Graph\AbstractList;
 use Revolution\Bluesky\Contracts\Recordable;
 use Revolution\Bluesky\Types\Blob;
 use Revolution\Bluesky\Types\SelfLabels;
+
+use function Illuminate\Support\enum_value;
 
 class UserList extends AbstractList implements Arrayable, Recordable
 {
@@ -39,9 +43,9 @@ class UserList extends AbstractList implements Arrayable, Recordable
     /**
      * Defines the purpose of the list (aka, moderation-oriented or curration-oriented).
      */
-    public function purpose(#[KnownValues(['app.bsky.graph.defs#modlist', 'app.bsky.graph.defs#curatelist', 'app.bsky.graph.defs#referencelist'])] string $purpose): static
+    public function purpose(#[KnownValues([ListPurpose::Modlist, ListPurpose::Curatelist, ListPurpose::Referencelist])] BackedEnum|string $purpose): static
     {
-        $this->purpose = $purpose;
+        $this->purpose = enum_value($purpose);
 
         return $this;
     }
