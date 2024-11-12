@@ -10,6 +10,7 @@ use Revolution\AtProto\Lexicon\Attributes\Format;
 use Revolution\AtProto\Lexicon\Attributes\KnownValues;
 use Revolution\AtProto\Lexicon\Enum\Feed;
 use Revolution\AtProto\Lexicon\Enum\Graph;
+use Revolution\AtProto\Lexicon\Enum\ListPurpose;
 use Revolution\Bluesky\Record\Block;
 use Revolution\Bluesky\Record\Follow;
 use Revolution\Bluesky\Record\Like;
@@ -533,6 +534,25 @@ trait HasShortHand
 
     /**
      * Create a user list.
+     *
+     * ```
+     * use Revolution\Bluesky\Record\UserList;
+     * use Revolution\Bluesky\RichText\TextBuilder;
+     * use Revolution\AtProto\Lexicon\Enum\ListPurpose;
+     *
+     * $description = TextBuilder::make(text: 'description')
+     *                           ->newLine(2)
+     *                           ->link(text: 'https://', uri: 'https://')
+     *                           ->toArray();
+     *
+     * $list = UserList::create()
+     *                 ->name('name')
+     *                 ->purpose(ListPurpose::Curatelist)
+     *                 ->description($description['text'])
+     *                 ->descriptionFacets($description['facets']);
+     *
+     * Bluesky::createList($list);
+     * ```
      *
      * @throws AuthenticationException
      */
