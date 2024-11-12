@@ -15,9 +15,9 @@ class TextBuilder implements Arrayable
     use Macroable;
     use Conditionable;
 
-    protected string $text = '';
+    public string $text = '';
 
-    protected array $facets = [];
+    public array $facets = [];
 
     public function __construct(string $text = '')
     {
