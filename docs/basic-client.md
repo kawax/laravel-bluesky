@@ -128,10 +128,9 @@ $builder = TextBuilder::make(text: 'test')
                       ->newLine()
                       ->link(text: 'http://', uri: 'http://')
                       ->newLine()
-                      ->tag(text: '#Laravel', tag: 'Laravel')
-                      ->toArray();
+                      ->tag(text: '#Laravel', tag: 'Laravel');
 
-$post = Post::create(text: $builder['text'], facets: $builder['facets']);
+$post = Post::create(text: $builder->text, facets: $builder->facets);
 
 /** @var \Illuminate\Http\Client\Response $response */
 $response = Bluesky::withToken()->post($post);
