@@ -16,6 +16,7 @@ use Revolution\Bluesky\Record\Like;
 use Revolution\Bluesky\Record\Post;
 use Revolution\Bluesky\Record\Profile;
 use Revolution\Bluesky\Record\Repost;
+use Revolution\Bluesky\Record\ThreadGate;
 use Revolution\Bluesky\Record\UserList;
 use Revolution\Bluesky\Record\UserListItem;
 use Revolution\Bluesky\Support\AtUri;
@@ -620,6 +621,33 @@ trait HasShortHand
                 limit: $limit,
                 cursor: $cursor,
             );
+    }
+
+    /**
+     * ```
+     * use Revolution\Bluesky\Record\ThreadGate;
+     *
+     * Bluesky::createThreadGate(post: 'at://.../app.bsky.feed.post/...', allow: [ThreadGate::mention(), ThreadGate::following() , ThreadGate::list('at://')]);
+     * ```
+     *
+     * @throws AuthenticationException
+     */
+    public function createThreadGate(#[Format('at-uri')] string $post, ?array $allow): Response
+    {
+        $at = AtUri::parse($post);
+
+        if ($at->collection() !== Feed::Post->value) {
+            throw new InvalidArgumentException();
+        }
+
+        $gate = ThreadGate::create($post, $allow);
+
+        return $this->createRecord(
+            repo: $this->assertDid(),
+            collection: Feed::Threadgate->value,
+            record: $gate,
+            rkey: $at->rkey(),
+        );
     }
 
     /**
