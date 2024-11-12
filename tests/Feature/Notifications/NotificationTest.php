@@ -116,11 +116,10 @@ class NotificationTest extends TestCase
     public function test_message_facet_index()
     {
         $builder = TextBuilder::make('test')
-            ->link('テスト', 'http://')
-            ->toArray();
+            ->link('テスト', 'http://');
 
-        $m = Post::create(text: $builder['text'])
-            ->facets($builder['facets']);
+        $m = Post::create(text: $builder->text)
+            ->facets($builder->facets);
 
         $this->assertSame([
             'byteStart' => 4,
