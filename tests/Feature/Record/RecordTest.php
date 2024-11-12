@@ -4,6 +4,7 @@ namespace Tests\Feature\Record;
 
 use Revolution\Bluesky\Record\Follow;
 use Revolution\Bluesky\Record\Post;
+use Revolution\Bluesky\Record\ThreadGate;
 use Tests\TestCase;
 
 class RecordTest extends TestCase
@@ -36,5 +37,15 @@ class RecordTest extends TestCase
         $post = Post::create(text: 'test');
 
         $this->assertTrue($post->validator()->passes());
+    }
+
+    public function test_thread_gate()
+    {
+        $gate = ThreadGate::create(post: 'at://', allow: [ThreadGate::mention(), ThreadGate::following(), ThreadGate::list('at://')]);
+
+        $this->assertIsArray($gate->toRecord());
+        $this->assertArrayHasKey('post', $gate->toRecord());
+        $this->assertArrayHasKey('allow', $gate->toRecord());
+        $this->assertSame($gate::NSID, $gate->toRecord()['$type']);
     }
 }
