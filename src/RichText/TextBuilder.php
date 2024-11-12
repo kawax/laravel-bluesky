@@ -7,6 +7,7 @@ use Illuminate\Support\Str;
 use Illuminate\Support\Traits\Conditionable;
 use Illuminate\Support\Traits\Macroable;
 use Revolution\AtProto\Lexicon\Attributes\Format;
+use Revolution\AtProto\Lexicon\Attributes\Ref;
 use Revolution\AtProto\Lexicon\Enum\Facet;
 use Revolution\Bluesky\Record\Post;
 
@@ -17,6 +18,10 @@ class TextBuilder implements Arrayable
 
     public string $text = '';
 
+    /**
+     * Annotations of text (mentions, URLs, hashtags, etc).
+     */
+    #[Ref('app.bsky.richtext.facet')]
     public array $facets = [];
 
     public function __construct(string $text = '')
