@@ -542,14 +542,13 @@ trait HasShortHand
      *
      * $description = TextBuilder::make(text: 'description')
      *                           ->newLine(2)
-     *                           ->link(text: 'https://', uri: 'https://')
-     *                           ->toArray();
+     *                           ->link(text: 'https://', uri: 'https://');
      *
      * $list = UserList::create()
      *                 ->name('name')
      *                 ->purpose(ListPurpose::Curatelist)
-     *                 ->description($description['text'])
-     *                 ->descriptionFacets($description['facets']);
+     *                 ->description($description->text)
+     *                 ->descriptionFacets($description->facets);
      *
      * Bluesky::createList($list);
      * ```
