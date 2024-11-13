@@ -65,6 +65,8 @@ class Profile extends AbstractProfile implements Arrayable, Recordable
     public function avatar(null|Blob|array|callable $avatar = null): static
     {
         if (is_null($avatar)) {
+            $this->avatar = $avatar;
+
             return $this;
         }
 
@@ -98,6 +100,8 @@ class Profile extends AbstractProfile implements Arrayable, Recordable
     public function banner(null|Blob|array|callable $banner = null): static
     {
         if (is_null($banner)) {
+            $this->banner = $banner;
+
             return $this;
         }
 
@@ -150,5 +154,11 @@ class Profile extends AbstractProfile implements Arrayable, Recordable
         $this->pinnedPost = $pinnedPost?->toArray();
 
         return $this;
+    }
+
+    #[\Override]
+    public function toArray(): array
+    {
+        return get_object_vars($this);
     }
 }
