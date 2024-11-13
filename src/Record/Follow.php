@@ -9,7 +9,7 @@ use Revolution\AtProto\Lexicon\Attributes\Format;
 use Revolution\AtProto\Lexicon\Record\App\Bsky\Graph\AbstractFollow;
 use Revolution\Bluesky\Contracts\Recordable;
 
-class Follow extends AbstractFollow implements Arrayable, Recordable
+final class Follow extends AbstractFollow implements Arrayable, Recordable
 {
     use HasRecord;
 
@@ -18,8 +18,8 @@ class Follow extends AbstractFollow implements Arrayable, Recordable
         $this->subject = $did;
     }
 
-    public static function create(#[Format('did')] string $did): static
+    public static function create(#[Format('did')] string $did): self
     {
-        return new static($did);
+        return new self($did);
     }
 }
