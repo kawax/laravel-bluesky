@@ -8,7 +8,7 @@ use Closure;
 use Illuminate\Contracts\Support\Arrayable;
 use Revolution\AtProto\Lexicon\Enum\Embed;
 use Revolution\AtProto\Lexicon\Types\AbstractUnion;
-use Revolution\Bluesky\Types\Blob;
+use Revolution\Bluesky\Types\BlobRef;
 
 final class External extends AbstractUnion implements Arrayable
 {
@@ -16,12 +16,12 @@ final class External extends AbstractUnion implements Arrayable
         private readonly string $title,
         private readonly string $description,
         private readonly string $uri,
-        private readonly null|array|Blob|Closure $thumb = null,
+        private readonly null|array|BlobRef|Closure $thumb = null,
     ) {
         $this->type = Embed::External->value;
     }
 
-    public static function create(string $title, string $description, string $uri, null|array|Blob|Closure $thumb = null): self
+    public static function create(string $title, string $description, string $uri, null|array|BlobRef|Closure $thumb = null): self
     {
         return new self(...func_get_args());
     }
@@ -34,7 +34,7 @@ final class External extends AbstractUnion implements Arrayable
             $thumb = call_user_func($this->thumb);
         }
 
-        if ($thumb instanceof Blob) {
+        if ($thumb instanceof BlobRef) {
             $thumb = $thumb->toArray();
         }
 

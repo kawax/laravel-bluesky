@@ -7,7 +7,7 @@ namespace Revolution\Bluesky\Embed;
 use Illuminate\Contracts\Support\Arrayable;
 use Revolution\AtProto\Lexicon\Enum\Embed;
 use Revolution\AtProto\Lexicon\Types\AbstractUnion;
-use Revolution\Bluesky\Types\Blob;
+use Revolution\Bluesky\Types\BlobRef;
 
 final class Images extends AbstractUnion implements Arrayable
 {
@@ -41,15 +41,15 @@ final class Images extends AbstractUnion implements Arrayable
      * })
      * ```
      *
-     * @param  Blob|array|callable  $blob
+     * @param  BlobRef|array|callable  $blob
      */
-    public function add(string $alt, Blob|array|callable $blob): self
+    public function add(string $alt, BlobRef|array|callable $blob): self
     {
         if (is_callable($blob)) {
             $blob = call_user_func($blob);
         }
 
-        if ($blob instanceof Blob) {
+        if ($blob instanceof BlobRef) {
             $blob = $blob->toArray();
         }
 

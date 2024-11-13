@@ -11,7 +11,7 @@ use Illuminate\Support\Traits\Macroable;
 use Illuminate\Support\Traits\Tappable;
 use Revolution\AtProto\Lexicon\Record\App\Bsky\Actor\AbstractProfile;
 use Revolution\Bluesky\Contracts\Recordable;
-use Revolution\Bluesky\Types\Blob;
+use Revolution\Bluesky\Types\BlobRef;
 use Revolution\Bluesky\Types\SelfLabels;
 use Revolution\Bluesky\Types\StrongRef;
 
@@ -66,9 +66,9 @@ final class Profile extends AbstractProfile implements Arrayable, Recordable
      * })
      * ```
      *
-     * @param  Blob|array|callable|null  $avatar
+     * @param  BlobRef|array|callable|null  $avatar
      */
-    public function avatar(null|Blob|array|callable $avatar = null): self
+    public function avatar(null|BlobRef|array|callable $avatar = null): self
     {
         if (is_null($avatar)) {
             $this->avatar = $avatar;
@@ -80,7 +80,7 @@ final class Profile extends AbstractProfile implements Arrayable, Recordable
             $avatar = call_user_func($avatar);
         }
 
-        if ($avatar instanceof Blob) {
+        if ($avatar instanceof BlobRef) {
             $avatar = $avatar->toArray();
         }
 
@@ -101,9 +101,9 @@ final class Profile extends AbstractProfile implements Arrayable, Recordable
      * })
      * ```
      *
-     * @param  Blob|array|callable|null  $banner
+     * @param  BlobRef|array|callable|null  $banner
      */
-    public function banner(null|Blob|array|callable $banner = null): self
+    public function banner(null|BlobRef|array|callable $banner = null): self
     {
         if (is_null($banner)) {
             $this->banner = $banner;
@@ -115,7 +115,7 @@ final class Profile extends AbstractProfile implements Arrayable, Recordable
             $banner = call_user_func($banner);
         }
 
-        if ($banner instanceof Blob) {
+        if ($banner instanceof BlobRef) {
             $banner = $banner->toArray();
         }
 

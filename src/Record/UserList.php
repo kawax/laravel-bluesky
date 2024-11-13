@@ -11,7 +11,7 @@ use Revolution\AtProto\Lexicon\Attributes\KnownValues;
 use Revolution\AtProto\Lexicon\Enum\ListPurpose;
 use Revolution\AtProto\Lexicon\Record\App\Bsky\Graph\AbstractList;
 use Revolution\Bluesky\Contracts\Recordable;
-use Revolution\Bluesky\Types\Blob;
+use Revolution\Bluesky\Types\BlobRef;
 use Revolution\Bluesky\Types\SelfLabels;
 
 use function Illuminate\Support\enum_value;
@@ -84,9 +84,9 @@ final class UserList extends AbstractList implements Arrayable, Recordable
      * })
      * ```
      *
-     * @param  Blob|array|callable|null  $avatar
+     * @param  BlobRef|array|callable|null  $avatar
      */
-    public function avatar(null|Blob|array|callable $avatar = null): self
+    public function avatar(null|BlobRef|array|callable $avatar = null): self
     {
         if (is_null($avatar)) {
             $this->avatar = $avatar;
@@ -98,7 +98,7 @@ final class UserList extends AbstractList implements Arrayable, Recordable
             $avatar = call_user_func($avatar);
         }
 
-        if ($avatar instanceof Blob) {
+        if ($avatar instanceof BlobRef) {
             $avatar = $avatar->toArray();
         }
 

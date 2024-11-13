@@ -21,7 +21,7 @@ use Revolution\Bluesky\Notifications\BlueskyRoute;
 use Revolution\Bluesky\Record\Post;
 use Revolution\Bluesky\RichText\TextBuilder;
 use Revolution\Bluesky\Session\OAuthSession;
-use Revolution\Bluesky\Types\Blob;
+use Revolution\Bluesky\Types\BlobRef;
 use Revolution\Bluesky\Types\StrongRef;
 use Tests\TestCase;
 
@@ -168,7 +168,7 @@ class NotificationTest extends TestCase
 
     public function test_message_embed_images()
     {
-        $blob2 = Blob::fromArray([
+        $blob2 = BlobRef::fromArray([
             'type' => 'blob',
             'ref' => [
                 '$link' => '...',
@@ -193,7 +193,7 @@ class NotificationTest extends TestCase
 
     public function test_message_embed_video()
     {
-        $video_blob = Blob::make(link: '...', mimeType: 'video/mp4', size: 10000);
+        $video_blob = BlobRef::make(link: '...', mimeType: 'video/mp4', size: 10000);
 
         $v = Video::create(video: $video_blob, alt: 'alt', captions: [], aspectRatio: ['width' => 1, 'height' => 1]);
 

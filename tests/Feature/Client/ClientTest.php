@@ -27,7 +27,7 @@ use Revolution\Bluesky\Session\OAuthSession;
 use Revolution\Bluesky\Support\DNS;
 use Revolution\Bluesky\Support\Identity;
 use Revolution\Bluesky\Traits\WithBluesky;
-use Revolution\Bluesky\Types\Blob;
+use Revolution\Bluesky\Types\BlobRef;
 use Revolution\Bluesky\Types\ReplyRef;
 use Revolution\Bluesky\Types\SelfLabels;
 use Revolution\Bluesky\Types\StrongRef;
@@ -527,8 +527,8 @@ class ClientTest extends TestCase
             ->upsertProfile(function (Profile $profile) {
                 $profile->displayName('test')
                     ->description('test')
-                    ->avatar(fn () => Blob::make(link: '...', mimeType: 'image/png', size: 1000))
-                    ->banner(Blob::make(link: '...', mimeType: 'image/png', size: 1000))
+                    ->avatar(fn () => BlobRef::make(link: '...', mimeType: 'image/png', size: 1000))
+                    ->banner(BlobRef::make(link: '...', mimeType: 'image/png', size: 1000))
                     ->labels(SelfLabels::make([]))
                     ->joinedViaStarterPack(StrongRef::to(uri: 'uri', cid: 'cid'))
                     ->pinnedPost(StrongRef::to(uri: 'uri', cid: 'cid'));

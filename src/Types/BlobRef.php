@@ -3,11 +3,12 @@
 namespace Revolution\Bluesky\Types;
 
 use Illuminate\Contracts\Support\Arrayable;
+use Revolution\AtProto\Lexicon\Attributes\Format;
 use Revolution\AtProto\Lexicon\Types\AbstractBlob;
 
-final class Blob extends AbstractBlob implements Arrayable
+final class BlobRef extends AbstractBlob implements Arrayable
 {
-    public static function make(string $link, string $mimeType, int $size): self
+    public static function make(#[Format('cid')] string $link, string $mimeType, int $size): self
     {
         $self = new self();
 
