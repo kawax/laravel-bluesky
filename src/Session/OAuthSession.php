@@ -10,6 +10,7 @@ use Revolution\Bluesky\Support\Identity;
 
 class OAuthSession extends AbstractSession
 {
+    #[\Override]
     public function did(string $default = ''): string
     {
         return (string) $this->session
@@ -18,6 +19,7 @@ class OAuthSession extends AbstractSession
             ->first(fn ($did) => Identity::isDID($did), $default);
     }
 
+    #[\Override]
     public function handle(string $default = ''): string
     {
         return $this->get('profile.handle', $this->get('handle', $default));
