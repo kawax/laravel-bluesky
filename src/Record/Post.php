@@ -11,7 +11,7 @@ use Revolution\AtProto\Lexicon\Record\App\Bsky\Feed\AbstractPost;
 use Revolution\Bluesky\Contracts\Recordable;
 use Revolution\Bluesky\Types\ReplyRef;
 
-class Post extends AbstractPost implements Arrayable, Recordable
+final class Post extends AbstractPost implements Arrayable, Recordable
 {
     use HasRecord;
     use Macroable;
@@ -23,47 +23,47 @@ class Post extends AbstractPost implements Arrayable, Recordable
         $this->facets = $facets;
     }
 
-    public static function create(string $text = '', ?array $facets = null): static
+    public static function create(string $text = '', ?array $facets = null): self
     {
-        return new static($text, $facets);
+        return new self($text, $facets);
     }
 
-    public function text(string $text = ''): static
+    public function text(string $text = ''): self
     {
         $this->text = $text;
 
         return $this;
     }
 
-    public function facets(?array $facets = null): static
+    public function facets(?array $facets = null): self
     {
         $this->facets = $facets;
 
         return $this;
     }
 
-    public function embed(null|array|Arrayable $embed = null): static
+    public function embed(null|array|Arrayable $embed = null): self
     {
         $this->embed = $embed instanceof Arrayable ? $embed->toArray() : $embed;
 
         return $this;
     }
 
-    public function langs(?array $langs = null): static
+    public function langs(?array $langs = null): self
     {
         $this->langs = $langs;
 
         return $this;
     }
 
-    public function reply(?ReplyRef $reply = null): static
+    public function reply(?ReplyRef $reply = null): self
     {
         $this->reply = $reply?->toArray();
 
         return $this;
     }
 
-    public function createdAt(string $createdAt): static
+    public function createdAt(string $createdAt): self
     {
         $this->createdAt = $createdAt;
 
