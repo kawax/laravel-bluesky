@@ -3,6 +3,7 @@
 namespace Revolution\Bluesky\RichText;
 
 use Illuminate\Contracts\Support\Arrayable;
+use Illuminate\Support\Number;
 use Illuminate\Support\Str;
 use Illuminate\Support\Traits\Conditionable;
 use Illuminate\Support\Traits\Macroable;
@@ -51,7 +52,7 @@ class TextBuilder implements Arrayable
      */
     public function newLine(int $count = 1): static
     {
-        $this->text .= Str::repeat(PHP_EOL, $count);
+        $this->text .= Str::repeat(PHP_EOL, max($count, 1));
 
         return $this;
     }
