@@ -6,6 +6,9 @@ namespace Revolution\Bluesky\Record;
 
 use Illuminate\Contracts\Support\Arrayable;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Traits\Conditionable;
+use Illuminate\Support\Traits\Macroable;
+use Illuminate\Support\Traits\Tappable;
 use Revolution\AtProto\Lexicon\Record\App\Bsky\Actor\AbstractProfile;
 use Revolution\Bluesky\Contracts\Recordable;
 use Revolution\Bluesky\Types\Blob;
@@ -15,6 +18,9 @@ use Revolution\Bluesky\Types\StrongRef;
 final class Profile extends AbstractProfile implements Arrayable, Recordable
 {
     use HasRecord;
+    use Macroable;
+    use Conditionable;
+    use Tappable;
 
     public static function fromArray(Collection|array $profile): self
     {
