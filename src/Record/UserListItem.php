@@ -9,7 +9,7 @@ use Revolution\AtProto\Lexicon\Attributes\Format;
 use Revolution\AtProto\Lexicon\Record\App\Bsky\Graph\AbstractListitem;
 use Revolution\Bluesky\Contracts\Recordable;
 
-class UserListItem extends AbstractListitem implements Arrayable, Recordable
+final class UserListItem extends AbstractListitem implements Arrayable, Recordable
 {
     use HasRecord;
 
@@ -19,8 +19,8 @@ class UserListItem extends AbstractListitem implements Arrayable, Recordable
         $this->list = $list;
     }
 
-    public static function create(#[Format('did')] string $did, #[Format('at-uri')] string $list): static
+    public static function create(#[Format('did')] string $did, #[Format('at-uri')] string $list): self
     {
-        return new static($did, $list);
+        return new self($did, $list);
     }
 }
