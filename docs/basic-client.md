@@ -348,16 +348,9 @@ use Illuminate\Http\Client\Response;
 
     public function boot(): void
     {
-        Bluesky::macro('searchPosts', function (string $q): Response {
+        Bluesky::macro('timeline', function (?int $limit = 50, ?string $cursor = null): Response {
             /** @var Bluesky $this */
-            return $this->send(
-                        api: Feed::searchPosts, 
-                        method: 'get',
-                        auth: false, 
-                        params: [
-                            'q' => $q,
-                        ]
-                   );
+            return $this->getTimeline(limit: $limit, cursor: $cursor);
         });
     }
 ```
@@ -365,5 +358,5 @@ use Illuminate\Http\Client\Response;
 ```php
 use Revolution\Bluesky\Facades\Bluesky;
 
-$posts = Bluesky::searchPosts('q')->json('posts');
+$posts = Bluesky::feed()->json('posts');
 ```
