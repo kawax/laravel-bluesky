@@ -538,4 +538,26 @@ class ClientTest extends TestCase
 
         $this->assertTrue($response->successful());
     }
+
+    public function test_search_posts()
+    {
+        Http::fake();
+
+        $response = Bluesky::searchPosts(
+            q: 'q',
+            sort: 'latest',
+            since: '',
+            until: '',
+            mentions: '',
+            author: '',
+            lang: '',
+            domain: '',
+            url: '',
+            tag: [],
+            limit: 25,
+            cursor: '',
+        );
+
+        $this->assertTrue($response->successful());
+    }
 }
