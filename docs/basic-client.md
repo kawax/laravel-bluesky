@@ -334,7 +334,7 @@ use Revolution\Bluesky\Facades\Bluesky;
 
 $profile = Bluesky::getProfile(actor: 'did')->json();
 
-$feed = Bluesky::feed(actor: 'did')->json('feed');
+$feed = Bluesky::getAuthorFeed(actor: 'did')->json('feed');
 ```
 
 ## Macroable
