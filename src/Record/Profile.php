@@ -12,15 +12,15 @@ use Revolution\Bluesky\Types\Blob;
 use Revolution\Bluesky\Types\SelfLabels;
 use Revolution\Bluesky\Types\StrongRef;
 
-class Profile extends AbstractProfile implements Arrayable, Recordable
+final class Profile extends AbstractProfile implements Arrayable, Recordable
 {
     use HasRecord;
 
-    public static function fromArray(Collection|array $profile): static
+    public static function fromArray(Collection|array $profile): self
     {
         $profile = Collection::make($profile);
 
-        $self = new static();
+        $self = new self();
 
         $profile->each(function ($value, $name) use ($self) {
             if (property_exists($self, $name)) {
@@ -31,7 +31,7 @@ class Profile extends AbstractProfile implements Arrayable, Recordable
         return $self;
     }
 
-    public function displayName(?string $displayName = null): static
+    public function displayName(?string $displayName = null): self
     {
         $this->displayName = $displayName;
 
@@ -41,7 +41,7 @@ class Profile extends AbstractProfile implements Arrayable, Recordable
     /**
      * Free-form profile description text.
      */
-    public function description(?string $description = null): static
+    public function description(?string $description = null): self
     {
         $this->description = $description;
 
@@ -62,7 +62,7 @@ class Profile extends AbstractProfile implements Arrayable, Recordable
      *
      * @param  Blob|array|callable|null  $avatar
      */
-    public function avatar(null|Blob|array|callable $avatar = null): static
+    public function avatar(null|Blob|array|callable $avatar = null): self
     {
         if (is_null($avatar)) {
             $this->avatar = $avatar;
@@ -97,7 +97,7 @@ class Profile extends AbstractProfile implements Arrayable, Recordable
      *
      * @param  Blob|array|callable|null  $banner
      */
-    public function banner(null|Blob|array|callable $banner = null): static
+    public function banner(null|Blob|array|callable $banner = null): self
     {
         if (is_null($banner)) {
             $this->banner = $banner;
@@ -128,14 +128,14 @@ class Profile extends AbstractProfile implements Arrayable, Recordable
      * $profile->labels($labels);
      * ```
      */
-    public function labels(?SelfLabels $labels = null): static
+    public function labels(?SelfLabels $labels = null): self
     {
         $this->labels = $labels?->toArray();
 
         return $this;
     }
 
-    public function joinedViaStarterPack(?StrongRef $joinedViaStarterPack = null): static
+    public function joinedViaStarterPack(?StrongRef $joinedViaStarterPack = null): self
     {
         $this->joinedViaStarterPack = $joinedViaStarterPack?->toArray();
 
@@ -149,7 +149,7 @@ class Profile extends AbstractProfile implements Arrayable, Recordable
      * $profile->pinnedPost(StrongRef::to(uri: 'at://', cid: ''));
      * ```
      */
-    public function pinnedPost(?StrongRef $pinnedPost = null): static
+    public function pinnedPost(?StrongRef $pinnedPost = null): self
     {
         $this->pinnedPost = $pinnedPost?->toArray();
 
