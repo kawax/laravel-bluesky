@@ -28,6 +28,9 @@ use Revolution\Bluesky\Types\StrongRef;
  */
 trait HasShortHand
 {
+    /**
+     * @return Response{cursor: string, feed: array<array{post: array, reply: array}>}
+     */
     public function getTimeline(?string $algorithm = null, ?int $limit = 50, ?string $cursor = null): Response
     {
         return $this->client(auth: true)
@@ -40,6 +43,8 @@ trait HasShortHand
 
     /**
      * @param  string|null  $actor  DID or handle.
+     *
+     * @return Response{cursor: string, feed: array<array{post: array, reply: array}>}
      * @throws AuthenticationException
      */
     public function getAuthorFeed(#[Format('at-identifier')] ?string $actor = null, ?int $limit = 50, ?string $cursor = null, #[KnownValues(['posts_with_replies', 'posts_no_replies', 'posts_with_media', 'posts_and_author_threads'])] ?string $filter = 'posts_with_replies', ?bool $includePins = null): Response
@@ -68,6 +73,9 @@ trait HasShortHand
             );
     }
 
+    /**
+     * @return Response{cursor: string, hitsTotal: int, posts: array<array>}
+     */
     public function searchPosts(string $q, #[KnownValues(['top', 'latest'])] ?string $sort = 'latest', ?string $since = null, ?string $until = null, #[Format('at-identifier')] ?string $mentions = null, #[Format('at-identifier')] ?string $author = null, #[Format('language')] ?string $lang = null, ?string $domain = null, #[Format('uri')] ?string $url = null, ?array $tag = null, ?int $limit = 25, ?string $cursor = null): Response
     {
         return $this->client(auth: true)
@@ -152,6 +160,8 @@ trait HasShortHand
 
     /**
      * Create new post.
+     *
+     * @return Response{uri: string, cid: string}
      * @throws AuthenticationException
      */
     public function post(Post|string $text): Response
@@ -381,6 +391,8 @@ trait HasShortHand
 
     /**
      * Upload blob.
+     *
+     * @return Response{blob: array}
      */
     public function uploadBlob(mixed $data, string $type = 'image/png'): Response
     {
@@ -391,6 +403,8 @@ trait HasShortHand
 
     /**
      * Upload video.
+     *
+     * @return Response{jobStatus: array}
      */
     public function uploadVideo(mixed $data, string $type = 'video/mp4'): Response
     {
