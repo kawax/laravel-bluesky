@@ -11,7 +11,7 @@ use Revolution\Bluesky\Contracts\Recordable;
 use Revolution\AtProto\Lexicon\Enum\ThreadGateRule;
 use Revolution\Bluesky\Types\BlankUnion;
 
-class ThreadGate extends AbstractThreadgate implements Arrayable, Recordable
+final class ThreadGate extends AbstractThreadgate implements Arrayable, Recordable
 {
     use HasRecord;
 
@@ -28,9 +28,9 @@ class ThreadGate extends AbstractThreadgate implements Arrayable, Recordable
      * $gate = ThreadGate::create(post: 'at://', allow: [ThreadGate::mention(), ThreadGate::following(), ThreadGate::list('at://')]);
      * ```
      */
-    public static function create(#[Format('at-uri')] string $post, ?array $allow = null): static
+    public static function create(#[Format('at-uri')] string $post, ?array $allow = null): self
     {
-        return new static($post, $allow);
+        return new self($post, $allow);
     }
 
     /**
@@ -60,7 +60,7 @@ class ThreadGate extends AbstractThreadgate implements Arrayable, Recordable
         ];
     }
 
-    public function hiddenReplies(?array $hiddenReplies): static
+    public function hiddenReplies(?array $hiddenReplies): self
     {
         $this->hiddenReplies = $hiddenReplies;
 
