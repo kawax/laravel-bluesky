@@ -16,20 +16,20 @@ use Revolution\Bluesky\Types\SelfLabels;
 
 use function Illuminate\Support\enum_value;
 
-class UserList extends AbstractList implements Arrayable, Recordable
+final class UserList extends AbstractList implements Arrayable, Recordable
 {
     use HasRecord;
 
-    public static function create(): static
+    public static function create(): self
     {
-        return new static();
+        return new self();
     }
 
-    public static function fromArray(Collection|array $list): static
+    public static function fromArray(Collection|array $list): self
     {
         $list = Collection::make($list);
 
-        $self = new static();
+        $self = new self();
 
         $list->each(function ($value, $name) use ($self) {
             if (property_exists($self, $name)) {
@@ -43,7 +43,7 @@ class UserList extends AbstractList implements Arrayable, Recordable
     /**
      * Defines the purpose of the list (aka, moderation-oriented or curration-oriented).
      */
-    public function purpose(#[KnownValues([ListPurpose::Modlist, ListPurpose::Curatelist, ListPurpose::Referencelist])] BackedEnum|string $purpose): static
+    public function purpose(#[KnownValues([ListPurpose::Modlist, ListPurpose::Curatelist, ListPurpose::Referencelist])] BackedEnum|string $purpose): self
     {
         $this->purpose = enum_value($purpose);
 
@@ -53,21 +53,21 @@ class UserList extends AbstractList implements Arrayable, Recordable
     /**
      * Display name for list; can not be empty.
      */
-    public function name(string $name): static
+    public function name(string $name): self
     {
         $this->name = $name;
 
         return $this;
     }
 
-    public function description(?string $description = null): static
+    public function description(?string $description = null): self
     {
         $this->description = $description;
 
         return $this;
     }
 
-    public function descriptionFacets(?array $descriptionFacets = null): static
+    public function descriptionFacets(?array $descriptionFacets = null): self
     {
         $this->descriptionFacets = $descriptionFacets;
 
@@ -86,7 +86,7 @@ class UserList extends AbstractList implements Arrayable, Recordable
      *
      * @param  Blob|array|callable|null  $avatar
      */
-    public function avatar(null|Blob|array|callable $avatar = null): static
+    public function avatar(null|Blob|array|callable $avatar = null): self
     {
         if (is_null($avatar)) {
             $this->avatar = $avatar;
@@ -115,7 +115,7 @@ class UserList extends AbstractList implements Arrayable, Recordable
      * $list->labels($labels);
      * ```
      */
-    public function labels(?SelfLabels $labels = null): static
+    public function labels(?SelfLabels $labels = null): self
     {
         $this->labels = $labels?->toArray();
 
