@@ -6,6 +6,7 @@ use Illuminate\Contracts\Support\Arrayable;
 use Illuminate\Support\Str;
 use Illuminate\Support\Traits\Conditionable;
 use Illuminate\Support\Traits\Macroable;
+use Illuminate\Support\Traits\Tappable;
 use Revolution\AtProto\Lexicon\Attributes\Format;
 use Revolution\AtProto\Lexicon\Attributes\Ref;
 use Revolution\AtProto\Lexicon\Enum\Facet;
@@ -15,6 +16,7 @@ class TextBuilder implements Arrayable
 {
     use Macroable;
     use Conditionable;
+    use Tappable;
 
     public string $text = '';
 
