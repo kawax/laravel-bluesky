@@ -9,7 +9,7 @@ use Revolution\AtProto\Lexicon\Record\App\Bsky\Feed\AbstractRepost;
 use Revolution\Bluesky\Contracts\Recordable;
 use Revolution\Bluesky\Types\StrongRef;
 
-class Repost extends AbstractRepost implements Arrayable, Recordable
+final class Repost extends AbstractRepost implements Arrayable, Recordable
 {
     use HasRecord;
 
@@ -18,8 +18,8 @@ class Repost extends AbstractRepost implements Arrayable, Recordable
         $this->subject = $subject->toArray();
     }
 
-    public static function create(StrongRef $subject): static
+    public static function create(StrongRef $subject): self
     {
-        return new static($subject);
+        return new self($subject);
     }
 }
