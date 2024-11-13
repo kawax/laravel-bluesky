@@ -68,6 +68,25 @@ trait HasShortHand
             );
     }
 
+    public function searchPosts(string $q, #[KnownValues(['top', 'latest'])] ?string $sort = 'latest', ?string $since = null, ?string $until = null, #[Format('at-identifier')] ?string $mentions = null, #[Format('at-identifier')] ?string $author = null, #[Format('language')] ?string $lang = null, ?string $domain = null, #[Format('uri')] ?string $url = null, ?array $tag = null, ?int $limit = 25, ?string $cursor = null): Response
+    {
+        return $this->client(auth: true)
+            ->searchPosts(
+                q: $q,
+                sort: $sort,
+                since: $since,
+                until: $until,
+                mentions: $mentions,
+                author: $author,
+                lang: $lang,
+                domain: $domain,
+                url: $url,
+                tag: $tag,
+                limit: $limit,
+                cursor: $cursor,
+            );
+    }
+
     /**
      * @param  string|null  $actor  DID or handle.
      * @throws AuthenticationException
