@@ -358,5 +358,5 @@ use Illuminate\Http\Client\Response;
 ```php
 use Revolution\Bluesky\Facades\Bluesky;
 
-$posts = Bluesky::timeline()->json('posts');
+$feed = Bluesky::timeline()->json('feed');
 ```
