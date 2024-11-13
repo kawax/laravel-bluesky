@@ -126,7 +126,7 @@ use Revolution\Bluesky\RichText\TextBuilder;
 
 $builder = TextBuilder::make(text: 'test')
                       ->newLine()
-                      ->link(text: 'http://', uri: 'http://')
+                      ->link(text: 'https://', uri: 'https://')
                       ->newLine()
                       ->tag(text: '#Laravel', tag: 'Laravel');
 
@@ -147,7 +147,7 @@ use Revolution\Bluesky\RichText\TextBuilder;
 
 $post = TextBuilder::make(text: 'test')
                    ->newLine()
-                   ->link(text: 'http://', link: 'http://')
+                   ->link(text: 'https://', uri: 'https://')
                    ->newLine()
                    ->tag(text: '#Laravel', tag: 'Laravel')
                    ->toPost();
