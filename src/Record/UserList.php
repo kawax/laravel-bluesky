@@ -89,6 +89,8 @@ class UserList extends AbstractList implements Arrayable, Recordable
     public function avatar(null|Blob|array|callable $avatar = null): static
     {
         if (is_null($avatar)) {
+            $this->avatar = $avatar;
+
             return $this;
         }
 
