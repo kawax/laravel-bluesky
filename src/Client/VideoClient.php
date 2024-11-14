@@ -9,31 +9,17 @@ use Revolution\AtProto\Lexicon\Attributes\Format;
 use Revolution\AtProto\Lexicon\Contracts\App\Bsky\Video;
 use Revolution\Bluesky\Client\Concerns\AppBskyVideo;
 
-class VideoClient
+class VideoClient implements Video
 {
     use Macroable;
     use Conditionable;
     use HasHttp;
+    use AppBskyVideo;
 
-    public function getJobStatus(string $jobId): Response
-    {
-        return $this->call(
-            api: Video::getJobStatus,
-            method: self::GET,
-            params: compact($this->params(__METHOD__)),
-        );
-    }
-
-    public function getUploadLimits(): Response
-    {
-        return $this->call(
-            api: Video::getUploadLimits,
-            method: self::GET,
-            params: compact($this->params(__METHOD__)),
-        );
-    }
-
-    public function uploadVideo(#[Format('did')] string $did, mixed $data, string $name, string $type = 'video/mp4'): Response
+    /**
+     * uploadVideo() doesn't work because it is missing required parameters.
+     */
+    public function upload(#[Format('did')] string $did, mixed $data, string $name, string $type = 'video/mp4'): Response
     {
         return $this->http()
             ->withBody($data, $type)
