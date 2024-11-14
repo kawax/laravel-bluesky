@@ -168,9 +168,9 @@ trait HasShortHand
      * @return Response{uri: string, cid: string}
      * @throws AuthenticationException
      */
-    public function post(Post|string $text): Response
+    public function post(Post|string|array $text): Response
     {
-        $post = $text instanceof Post ? $text : Post::create($text);
+        $post = is_string($text) ? Post::create($text) : $text;
 
         return $this->createRecord(
             repo: $this->assertDid(),
