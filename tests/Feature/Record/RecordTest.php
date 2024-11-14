@@ -6,6 +6,7 @@ use Illuminate\Support\Carbon;
 use Revolution\Bluesky\Record\Follow;
 use Revolution\Bluesky\Record\Post;
 use Revolution\Bluesky\Record\ThreadGate;
+use Revolution\Bluesky\RichText\TextBuilder;
 use Tests\TestCase;
 
 class RecordTest extends TestCase
@@ -43,6 +44,14 @@ class RecordTest extends TestCase
         $this->assertIsArray($post->toRecord());
         $this->assertArrayHasKey('createdAt', $post->toRecord());
         $this->assertStringStartsWith('2024', $post->toRecord()['createdAt']);
+    }
+
+    public function test_post_build()
+    {
+        $post = Post::build(fn (TextBuilder $builder): TextBuilder => $builder->text('test ')->tag('#tag', 'tag'));
+
+        $this->assertIsArray($post->toRecord());
+        $this->assertSame('test #tag', $post->toRecord()['text']);
     }
 
     public function test_validator()
