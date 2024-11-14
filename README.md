@@ -96,20 +96,30 @@ This is easy if you're just sending simple text, but in the real world you'll ne
 
 use Illuminate\Support\Facades\Route;
 use Revolution\Bluesky\Facades\Bluesky;
+use Revolution\Bluesky\Record\Post;
 use Revolution\Bluesky\RichText\TextBuilder;
 
 Route::get('text-builder', function () {
-    /** @var \Revolution\Bluesky\Record\Post $post */
-    $post = TextBuilder::make(text: 'Hello Bluesky')
-                       ->newLine()
-                       ->link(text: 'https://', uri: 'https://')
+    $post = Post::build(function (TextBuilder $builder) {
+        return $builder->text(text: 'Hello Bluesky')
+                       ->newLine(count: 2)
+                       ->link(text: 'https://bsky.app/', uri: 'https://bsky.app/')
                        ->newLine()
                        ->tag(text: '#Bluesky', tag: 'Bluesky')
-                       ->toPost();
+    });
 
     $response = Bluesky::login(identifier: config('bluesky.identifier'), password: config('bluesky.password'))
                        ->post($post);
 });
+```
+
+Following message will be posted:
+
+```
+Hello Bluesky
+
+https://bsky.app/
+#Bluesky
 ```
 
 ## Usage
