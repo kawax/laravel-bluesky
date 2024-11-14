@@ -260,6 +260,58 @@ $response = Bluesky::post($post);
 dump($response->json());
 ```
 
+### Upload video
+
+There is no official documentation so this may change in the future.
+
+```php
+// routes/web.php
+
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Storage;
+use Revolution\Bluesky\Facades\Bluesky;
+use Revolution\Bluesky\Record\Post;
+use Revolution\Bluesky\Embed\Video;
+
+Route::post('upload_video', function (Request $request) {
+    $upload = Bluesky::withToken()
+                     ->uploadVideo(
+                         data: $request->file('video')->get(),
+                         name: $request->file('video')->getClientOriginalName(),
+                         type: $request->file('video')->getMimeType(),
+                     );
+
+    $jobId = $upload->json('jobId');
+
+    // If the upload doesn't work, check the error message.
+    info('upload', $upload->json());
+    // successful
+    // ['did' => 'did:plc:***', 'jobId' => '***', 'status' => 'JOB_STATE_CREATED']
+    // fails
+    // ['did' => '', 'error' => '***', 'jobId' => '', 'message' => '***', 'status' => '']
+
+    // Bluesky::uploadVideo() returns a jobId, then you can use Bluesky::getJobStatus() to check if the upload is complete and retrieve the blob.
+
+    $status = Bluesky::getJobStatus($jobId);
+
+    info('status', $status->json());
+
+    // Wait until state becomes JOB_STATE_COMPLETED.
+    if($status->json('jobStatus.state') === 'JOB_STATE_COMPLETED') {
+         $blob = $status->json('jobStatus.blob');
+    }
+
+    $video = Video::create(video: $blob);
+
+    $post = Post::create(text: 'Upload video')->embed($video);
+
+    $response = Bluesky::post($post);
+
+    dump($response->json());
+})
+```
+
 ## Following a user
 
 ```php
