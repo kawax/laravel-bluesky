@@ -9,6 +9,7 @@ use Illuminate\Support\Traits\Conditionable;
 use Illuminate\Support\Traits\Macroable;
 use Revolution\AtProto\Lexicon\Record\App\Bsky\Feed\AbstractPost;
 use Revolution\Bluesky\Contracts\Recordable;
+use Revolution\Bluesky\RichText\TextBuilder;
 use Revolution\Bluesky\Types\ReplyRef;
 
 final class Post extends AbstractPost implements Arrayable, Recordable
@@ -23,9 +24,48 @@ final class Post extends AbstractPost implements Arrayable, Recordable
         $this->facets = $facets;
     }
 
+    /**
+     * ```
+     * use Revolution\Bluesky\Record\Post;
+     *
+     * $post = Post::create('test');
+     * ```
+     *
+     * ```
+     * use Revolution\Bluesky\Record\Post;
+     * use Revolution\Bluesky\RichText\TextBuilder;
+     *
+     * $builder = TextBuilder::make(text: 'test')
+     *                       ->newLine()
+     *                       ->link(text: 'https://', uri: 'https://');
+     *
+     * $post = Post::create(text: $builder->text, facets: $builder->facets);
+     * ```
+     */
     public static function create(string $text = '', ?array $facets = null): self
     {
         return new self($text, $facets);
+    }
+
+    /**
+     * ```
+     * use Revolution\Bluesky\Record\Post;
+     * use Revolution\Bluesky\RichText\TextBuilder;
+     *
+     *  $post = Post::build(function(TextBuilder $builder): TextBuilder {
+     *      return $builder->text('test')
+     *              ->newLine()
+     *              ->tag(text: '#bluesky', tag: 'bluesky');
+     *  });
+     * ```
+     * @param  callable(TextBuilder $builder): TextBuilder  $callback
+     * @return self
+     */
+    public static function build(callable $callback): self
+    {
+        $builder = $callback(TextBuilder::make());
+
+        return new self($builder->text ?? '', $builder?->facets);
     }
 
     public function text(string $text = ''): self
