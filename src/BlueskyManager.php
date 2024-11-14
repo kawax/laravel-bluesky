@@ -96,6 +96,20 @@ class BlueskyManager implements Factory
         return $this->agent()->http($auth);
     }
 
+    public function withServiceAuth(?string $token = null): static
+    {
+        $this->agent = $this->agent()->withServiceAuth($token);
+
+        return $this;
+    }
+
+    public function withoutServiceAuth(): static
+    {
+        $this->agent = $this->agent()->withoutServiceAuth();
+
+        return $this;
+    }
+
     /**
      * @throws AuthenticationException
      */
