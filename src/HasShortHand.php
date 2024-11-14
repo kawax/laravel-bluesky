@@ -412,22 +412,22 @@ trait HasShortHand
         $token = $this->getServiceAuth(aud: 'did:web:video.bsky.app', lxm: Video::uploadVideo)
             ->json('token');
 
-        return $this->withServiceAuth($token)
-            ->client(auth: true)
+        return $this->video($token)
             ->withBody($data, $type)
             ->uploadVideo();
     }
 
     /**
      * This will get you the "blob" of the video you uploaded.
+     *
+     * @return Response{jobStatus: array{jobId: string, did: string, state: string, progress: int}}
      */
     public function getJobStatus(string $jobId): Response
     {
         $token = $this->getServiceAuth(aud: 'did:web:video.bsky.app', lxm: Video::getJobStatus)
             ->json('token');
 
-        return $this->withServiceAuth($token)
-            ->client(auth: true)
+        return $this->video($token)
             ->getJobStatus($jobId);
     }
 
@@ -436,8 +436,7 @@ trait HasShortHand
         $token = $this->getServiceAuth(aud: 'did:web:video.bsky.app', lxm: Video::getUploadLimits)
             ->json('token');
 
-        return $this->withServiceAuth($token)
-            ->client(auth: true)
+        return $this->video($token)
             ->getUploadLimits();
     }
 
