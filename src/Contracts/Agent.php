@@ -22,6 +22,10 @@ interface Agent
 
     public function token(string $default = ''): string;
 
+    public function withServiceAuth(?string $token = null): self;
+
+    public function withoutServiceAuth(): self;
+
     public function refresh(string $default = ''): string;
 
     public function baseUrl(bool $auth = true): string;
