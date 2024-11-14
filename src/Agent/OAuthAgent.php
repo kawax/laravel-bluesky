@@ -30,6 +30,8 @@ final class OAuthAgent implements Agent
     use Macroable;
     use Conditionable;
 
+    protected ?string $service_token = null;
+
     public function __construct(
         #[\SensitiveParameter]
         protected OAuthSession $session,
@@ -151,7 +153,19 @@ final class OAuthAgent implements Agent
 
     public function token(string $default = ''): string
     {
-        return $this->session->token($default);
+        return empty($this->service_token) ? $this->session->token($default) : $this->service_token;
+    }
+
+    public function withServiceAuth(?string $token = null): self
+    {
+        $this->service_token = $token;
+
+        return $this;
+    }
+
+    public function withoutServiceAuth(): self
+    {
+        return $this->withServiceAuth(null);
     }
 
     public function refresh(string $default = ''): string
