@@ -407,7 +407,7 @@ trait HasShortHand
     /**
      * Upload video.
      *
-     * @return Response{jobStatus: array}
+     * @return Response{did: string, error?: string, jobId: string, message?: string, state: string, progress?: int}
      * @throws AuthenticationException
      */
     public function uploadVideo(mixed $data, string $name, string $type = 'video/mp4'): Response
@@ -430,7 +430,7 @@ trait HasShortHand
     /**
      * This will get you the "blob" of the video you uploaded.
      *
-     * @return Response{jobStatus: array{jobId: string, did: string, state: string, progress: int}}
+     * @return Response{jobStatus: array{blob: array, did: string, error?: string, jobId: string, message?: string, state: string, progress?: int}}
      */
     public function getJobStatus(string $jobId): Response
     {
@@ -444,6 +444,9 @@ trait HasShortHand
             ->getJobStatus($jobId);
     }
 
+    /**
+     * @return Response{canUpload: bool, error?: string, message?: string, remainingDailyBytes?: int, remainingDailyVideos?: int}
+     */
     public function getUploadLimits(): Response
     {
         $token = $this->getServiceAuth(aud: 'did:web:video.bsky.app', lxm: Video::getUploadLimits)
