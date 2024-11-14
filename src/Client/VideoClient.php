@@ -17,7 +17,7 @@ class VideoClient implements Video
     use AppBskyVideo;
 
     /**
-     * uploadVideo() doesn't work because it is missing required parameters.
+     * Original uploadVideo() doesn't work because it is missing required parameters.
      */
     public function upload(#[Format('did')] string $did, mixed $data, string $name, string $type = 'video/mp4'): Response
     {
