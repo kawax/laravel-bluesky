@@ -33,6 +33,9 @@ final class BlobRef extends AbstractBlob implements Arrayable
         return $self;
     }
 
+    /**
+     * @return array{"$type": string, ref: array{"$link": string}, mimeType: string, size: int}
+     */
     public function toArray(): array
     {
         return [
