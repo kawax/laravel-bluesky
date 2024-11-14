@@ -37,10 +37,10 @@ class VideoClient
     {
         return $this->http()
             ->withBody($data, $type)
-            ->withUrlParameters([
-                'did' => $did,
-                'name' => $name,
-            ])
-            ->post(Video::uploadVideo);
+            ->post(Video::uploadVideo.'?'.http_build_query([
+                    'did' => $did,
+                    'name' => $name,
+                ]),
+            );
     }
 }
