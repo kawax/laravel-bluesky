@@ -282,14 +282,14 @@ Route::post('upload_video', function (Request $request) {
                          type: $request->file('video')->getMimeType(),
                      );
 
-    $jobId = $upload->json('jobId');
-
     // If the upload doesn't work, check the error message.
     info('upload', $upload->json());
     // successful
     // ['did' => 'did:plc:***', 'jobId' => '***', 'status' => 'JOB_STATE_CREATED']
     // fails
     // ['did' => '', 'error' => '***', 'jobId' => '', 'message' => '***', 'status' => '']
+
+    $jobId = $upload->json('jobId');
 
     // Bluesky::uploadVideo() returns a jobId, then you can use Bluesky::getJobStatus() to check if the upload is complete and retrieve the blob.
 
