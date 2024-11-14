@@ -201,8 +201,8 @@ class NotificationTest extends TestCase
             ->embed($v);
 
         $this->assertIsArray($m->toArray()['embed']);
-        $this->assertSame($video_blob->toArray(), $m->toArray()['embed']['video']['video']);
-        $this->assertSame('alt', $m->toArray()['embed']['video']['alt']);
+        $this->assertSame($video_blob->toArray(), $m->toArray()['embed']['video']);
+        $this->assertSame('alt', $m->toArray()['embed']['alt']);
         $this->assertSame(Embed::Video->value, $m->toArray()['embed']['$type']);
     }
 
