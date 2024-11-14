@@ -25,7 +25,7 @@ class TestNotification extends Notification
         return Post::build(function(TextBuilder $builder) {
             return $builder->text(text: 'test')
                            ->newLine()
-                           ->tag(text: '#Laravel', tag: 'Laravel')
+                           ->tag(text: '#Laravel', tag: 'Laravel');
         })->embed($external);
     }
 }
