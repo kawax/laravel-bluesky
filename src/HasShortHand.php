@@ -10,6 +10,7 @@ use InvalidArgumentException;
 use Revolution\AtProto\Lexicon\Attributes\Format;
 use Revolution\AtProto\Lexicon\Attributes\KnownValues;
 use Revolution\AtProto\Lexicon\Contracts\App\Bsky\Video;
+use Revolution\AtProto\Lexicon\Contracts\Com\Atproto\Repo;
 use Revolution\AtProto\Lexicon\Enum\Feed;
 use Revolution\AtProto\Lexicon\Enum\Graph;
 use Revolution\Bluesky\Record\Block;
@@ -413,7 +414,7 @@ trait HasShortHand
         $aud = $this->agent()->session()->didDoc()->pdsUrl();
         $aud = Str::replace('https://', 'did:web:', $aud);
 
-        $token = $this->getServiceAuth(aud: $aud, lxm: Video::uploadVideo)
+        $token = $this->getServiceAuth(aud: $aud, lxm: Repo::uploadBlob)
             ->json('token');
 
         return $this->video($token)
