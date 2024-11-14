@@ -158,6 +158,21 @@ $response = Bluesky::withToken()->post($post);
 dump($response->json());
 ```
 
+Alternatively you can use `Post::build()`, use whichever you prefer.
+
+```php
+use Revolution\Bluesky\Record\Post;
+use Revolution\Bluesky\RichText\TextBuilder;
+
+$post = Post::build(function(TextBuilder $builder): TextBuilder {
+    return $builder->text(text: 'test')
+                   ->newLine()
+                   ->link(text: 'https://', uri: 'https://')
+                   ->newLine()
+                   ->tag(text: '#Laravel', tag: 'Laravel')
+    });
+```
+
 ### Reply
 
 ```php
