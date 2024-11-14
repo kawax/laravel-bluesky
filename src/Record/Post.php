@@ -54,10 +54,11 @@ final class Post extends AbstractPost implements Arrayable, Recordable
      *
      *  $post = Post::build(function(TextBuilder $builder): TextBuilder {
      *      return $builder->text('test')
-     *              ->newLine()
-     *              ->tag(text: '#bluesky', tag: 'bluesky');
+     *                     ->newLine()
+     *                     ->tag(text: '#bluesky', tag: 'bluesky');
      *  });
      * ```
+     *
      * @param  callable(TextBuilder $builder): TextBuilder  $callback
      * @return self
      */
@@ -68,6 +69,9 @@ final class Post extends AbstractPost implements Arrayable, Recordable
         return new self($builder->text ?? '', $builder?->facets);
     }
 
+    /**
+     * Unlike TextBuilder, it completely replaces text. You probably won't use this directly.
+     */
     public function text(string $text = ''): self
     {
         $this->text = $text;
@@ -75,6 +79,9 @@ final class Post extends AbstractPost implements Arrayable, Recordable
         return $this;
     }
 
+    /**
+     * Specify facets directly.
+     */
     public function facets(?array $facets = null): self
     {
         $this->facets = $facets;
@@ -82,6 +89,19 @@ final class Post extends AbstractPost implements Arrayable, Recordable
         return $this;
     }
 
+    /**
+     * ```
+     * use Revolution\Bluesky\Embed\External;
+     *
+     * $external = External::create(
+     *     title: 'Title',
+     *     description: 'description',
+     *     uri: 'https://',
+     * );
+     *
+     * $post->embed($external);
+     * ```
+     */
     public function embed(null|array|Arrayable $embed = null): self
     {
         $this->embed = $embed instanceof Arrayable ? $embed->toArray() : $embed;
@@ -89,6 +109,11 @@ final class Post extends AbstractPost implements Arrayable, Recordable
         return $this;
     }
 
+    /**
+     * ```
+     * $post->langs(['en-US']);
+     * ```
+     */
     public function langs(?array $langs = null): self
     {
         $this->langs = $langs;
@@ -96,6 +121,16 @@ final class Post extends AbstractPost implements Arrayable, Recordable
         return $this;
     }
 
+    /**
+     * ```
+     * use Revolution\Bluesky\Types\ReplyRef;
+     * use Revolution\Bluesky\Types\StrongRef;
+     *
+     * $reply = ReplyRef::to(root: StrongRef::to(uri: 'at://', cid: 'cid'), parent: StrongRef::to(uri: 'at://', cid: 'cid'));
+     *
+     * $post = Post::create('test')->reply($reply);
+     * ```
+     */
     public function reply(?ReplyRef $reply = null): self
     {
         $this->reply = $reply?->toArray();
@@ -103,6 +138,13 @@ final class Post extends AbstractPost implements Arrayable, Recordable
         return $this;
     }
 
+    /**
+     * Even if you don't use this, the current date and time will be automatically specified when posting. Use this when you want to import past posts.
+     *
+     * ```
+     * $post->createdAt('2024-12-31T12:00:00.000Z');
+     * ```
+     */
     public function createdAt(string $createdAt): self
     {
         $this->createdAt = $createdAt;
