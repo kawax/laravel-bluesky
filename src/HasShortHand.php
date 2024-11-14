@@ -7,6 +7,7 @@ use Illuminate\Http\Client\Response;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Str;
 use InvalidArgumentException;
+use Psr\Http\Message\StreamInterface;
 use Revolution\AtProto\Lexicon\Attributes\Format;
 use Revolution\AtProto\Lexicon\Attributes\KnownValues;
 use Revolution\AtProto\Lexicon\Contracts\App\Bsky\Video;
@@ -424,13 +425,13 @@ trait HasShortHand
      * }
      * ```
      *
-     * @param  mixed  $data  Video contents
+     * @param  StreamInterface|string  $data  Video data
      * @param  string  $name  File name
      * @param  string  $type  File mimetype
      * @return Response{did: string, error?: string, jobId: string, message?: string, state: string}
      * @throws AuthenticationException
      */
-    public function uploadVideo(mixed $data, string $name, string $type = 'video/mp4'): Response
+    public function uploadVideo(StreamInterface|string $data, string $name, string $type = 'video/mp4'): Response
     {
         $aud = $this->agent()->session()->didDoc()->pdsUrl();
         $aud = Str::replace(search: 'https://', replace: 'did:web:', subject: $aud);
