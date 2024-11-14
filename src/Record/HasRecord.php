@@ -20,8 +20,9 @@ trait HasRecord
 
     public function toRecord(): array
     {
-        $record = Arr::add($this->toArray(), '$type', self::NSID);
+        $record = $this->toArray();
 
+        $record = Arr::add($record, '$type', self::NSID);
         return Arr::add($record, 'createdAt', now()->toISOString());
     }
 
