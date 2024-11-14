@@ -26,6 +26,7 @@ class RecordTest extends TestCase
         $this->travelTo(Carbon::parse('2024-12-31'), function () {
             $post = Post::create(text: 'test');
 
+            $this->assertArrayNotHasKey('createdAt', $post->toArray());
             $this->assertIsArray($post->toRecord());
             $this->assertArrayHasKey('text', $post->toRecord());
             $this->assertArrayHasKey('createdAt', $post->toRecord());
