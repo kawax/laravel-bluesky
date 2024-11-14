@@ -22,8 +22,6 @@ final class LegacyAgent implements Agent
     use Macroable;
     use Conditionable;
 
-    protected ?string $service_token = null;
-
     public function __construct(
         protected LegacySession $session,
     ) {
@@ -71,19 +69,7 @@ final class LegacyAgent implements Agent
 
     public function token(string $default = ''): string
     {
-        return empty($this->service_token) ? $this->session->token($default) : $this->service_token;
-    }
-
-    public function withServiceAuth(?string $token = null): self
-    {
-        $this->service_token = $token;
-
-        return $this;
-    }
-
-    public function withoutServiceAuth(): self
-    {
-        return $this->withServiceAuth(null);
+        return $this->session->token($default);
     }
 
     public function refresh(string $default = ''): string
