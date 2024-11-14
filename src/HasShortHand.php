@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\Http;
 use InvalidArgumentException;
 use Revolution\AtProto\Lexicon\Attributes\Format;
 use Revolution\AtProto\Lexicon\Attributes\KnownValues;
+use Revolution\AtProto\Lexicon\Contracts\App\Bsky\Video;
 use Revolution\AtProto\Lexicon\Enum\Feed;
 use Revolution\AtProto\Lexicon\Enum\Graph;
 use Revolution\Bluesky\Record\Block;
@@ -408,7 +409,11 @@ trait HasShortHand
      */
     public function uploadVideo(mixed $data, string $type = 'video/mp4'): Response
     {
-        return $this->client(auth: true)
+        $token = $this->getServiceAuth(aud: 'did:web:video.bsky.app', lxm: Video::uploadVideo)
+            ->json('token');
+
+        return $this->withServiceAuth($token)
+            ->client(auth: true)
             ->withBody($data, $type)
             ->uploadVideo();
     }
@@ -418,8 +423,22 @@ trait HasShortHand
      */
     public function getJobStatus(string $jobId): Response
     {
-        return $this->client(auth: true)
+        $token = $this->getServiceAuth(aud: 'did:web:video.bsky.app', lxm: Video::getJobStatus)
+            ->json('token');
+
+        return $this->withServiceAuth($token)
+            ->client(auth: true)
             ->getJobStatus($jobId);
+    }
+
+    public function getUploadLimits(): Response
+    {
+        $token = $this->getServiceAuth(aud: 'did:web:video.bsky.app', lxm: Video::getUploadLimits)
+            ->json('token');
+
+        return $this->withServiceAuth($token)
+            ->client(auth: true)
+            ->getUploadLimits();
     }
 
     /**
