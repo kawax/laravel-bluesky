@@ -5,6 +5,7 @@ namespace Revolution\Bluesky;
 use Illuminate\Auth\AuthenticationException;
 use Illuminate\Http\Client\Response;
 use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Str;
 use InvalidArgumentException;
 use Revolution\AtProto\Lexicon\Attributes\Format;
 use Revolution\AtProto\Lexicon\Attributes\KnownValues;
@@ -409,7 +410,10 @@ trait HasShortHand
      */
     public function uploadVideo(mixed $data, string $type = 'video/mp4'): Response
     {
-        $token = $this->getServiceAuth(aud: 'did:web:video.bsky.app', lxm: Video::uploadVideo)
+        $aud = $this->agent()->session()->didDoc()->pdsUrl();
+        $aud = Str::replace('https://', 'did:web:', $aud);
+
+        $token = $this->getServiceAuth(aud: $aud, lxm: Video::uploadVideo)
             ->json('token');
 
         return $this->video($token)
@@ -424,7 +428,10 @@ trait HasShortHand
      */
     public function getJobStatus(string $jobId): Response
     {
-        $token = $this->getServiceAuth(aud: 'did:web:video.bsky.app', lxm: Video::getJobStatus)
+        $aud = $this->agent()->session()->didDoc()->pdsUrl();
+        $aud = Str::replace('https://', 'did:web:', $aud);
+
+        $token = $this->getServiceAuth(aud: $aud, lxm: Video::getJobStatus)
             ->json('token');
 
         return $this->video($token)
