@@ -407,19 +407,39 @@ trait HasShortHand
     /**
      * Upload video.
      *
-     * @return Response{did: string, error?: string, jobId: string, message?: string, state: string, progress?: int}
+     * ```
+     * use Illuminate\Support\Facades\Storage;
+     * use Revolution\Bluesky\Facades\Bluesky;
+     *
+     * $upload = Bluesky::withToken()->uploadVideo(data: Storage::get('video.mp4'), name: 'video.mp4');
+     *
+     * $jobId = $upload->json('jobId');
+     *
+     * // Bluesky::uploadVideo() returns a jobId, then you can use Bluesky::getJobStatus() to check if the upload is complete and retrieve the blob.
+     *
+     * $status = Bluesky::getJobStatus($jobId);
+     *
+     * if($status->json('jobStatus.state') === 'JOB_STATE_COMPLETED') {
+     *     $blob = $status->json('jobStatus.blob');
+     * }
+     * ```
+     *
+     * @param  mixed  $data  Video contents
+     * @param  string  $name  File name
+     * @param  string  $type  File mimetype
+     * @return Response{did: string, error?: string, jobId: string, message?: string, state: string}
      * @throws AuthenticationException
      */
     public function uploadVideo(mixed $data, string $name, string $type = 'video/mp4'): Response
     {
         $aud = $this->agent()->session()->didDoc()->pdsUrl();
-        $aud = Str::replace('https://', 'did:web:', $aud);
+        $aud = Str::replace(search: 'https://', replace: 'did:web:', subject: $aud);
 
         $token = $this->getServiceAuth(aud: $aud, lxm: Repo::uploadBlob)
             ->json('token');
 
         return $this->video($token)
-            ->uploadVideo(
+            ->upload(
                 did: $this->assertDid(),
                 data: $data,
                 name: $name,
@@ -435,7 +455,7 @@ trait HasShortHand
     public function getJobStatus(string $jobId): Response
     {
         $aud = $this->agent()->session()->didDoc()->pdsUrl();
-        $aud = Str::replace('https://', 'did:web:', $aud);
+        $aud = Str::replace(search: 'https://', replace: 'did:web:', subject: $aud);
 
         $token = $this->getServiceAuth(aud: $aud, lxm: Video::getJobStatus)
             ->json('token');
