@@ -22,9 +22,9 @@ trait HasHttp
 
     protected function call(#[Format('nsid')] BackedEnum|string $api, #[KnownValues([self::GET, self::POST])] string $method = self::GET, ?array $params = null): Response
     {
-        $params = collect($params)
-            ->reject(fn ($param) => is_null($param))
-            ->toArray();
+//        $params = collect($params)
+//            ->reject(fn ($param) => is_null($param))
+//            ->toArray();
 
         return $this->http()->$method(enum_value($api), $params);
     }
