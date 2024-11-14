@@ -27,15 +27,13 @@ final class Video extends AbstractUnion implements Arrayable
 
     public function toArray(): array
     {
-        return [
+        return collect([
             '$type' => $this->type,
-            'video' => collect([
-                'video' => $this->video instanceof BlobRef ? $this->video->toArray() : $this->video,
-                'alt' => $this->alt,
-                'captions' => $this->captions,
-                'aspectRatio' => $this->aspectRatio,
-            ])->reject(fn ($item) => is_null($item))
-                ->toArray(),
-        ];
+            'video' => $this->video instanceof BlobRef ? $this->video->toArray() : $this->video,
+            'alt' => $this->alt,
+            'captions' => $this->captions,
+            'aspectRatio' => $this->aspectRatio,
+        ])->reject(fn ($item) => is_null($item))
+            ->toArray();
     }
 }
