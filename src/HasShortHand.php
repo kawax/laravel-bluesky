@@ -398,7 +398,7 @@ trait HasShortHand
      *
      * @return Response{blob: array}
      */
-    public function uploadBlob(mixed $data, string $type = 'image/png'): Response
+    public function uploadBlob(StreamInterface|string $data, string $type = 'image/png'): Response
     {
         return $this->client(auth: true)
             ->withBody($data, $type)
