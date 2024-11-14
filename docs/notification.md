@@ -20,20 +20,18 @@ class TestNotification extends Notification
 
     public function toBluesky(object $notifiable): Post
     {
-        $external = External::create(title: 'Title', description: 'test', uri: 'http://');
+        $external = External::create(title: 'Title', description: 'test', uri: 'https://');
 
-        $post = TextBuilder::make(text: 'test')
+        return Post::build(function(TextBuilder $builder) {
+            return $builder->text(text: 'test')
                            ->newLine()
                            ->tag(text: '#Laravel', tag: 'Laravel')
-                           ->toPost();
-
-        return $post->embed($external);
+        })->embed($external);
     }
 }
 ```
 
-Bluesky is not automatically linked, so you need to specify `facets` to link it.  
-https://docs.bsky.app/docs/advanced-guides/post-richtext
+The usage of `Post` is the same as BasicClient, so TextBuilder, Embed, etc. can be used in the same way.
 
 ## On-Demand Notifications
 ```php
