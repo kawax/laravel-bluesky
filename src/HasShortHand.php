@@ -422,6 +422,22 @@ trait HasShortHand
             ->getJobStatus($jobId);
     }
 
+    /**
+     * ```
+     * $token = Bluesky::withToken()->getServiceAuth(aud: 'did:web:video.bsky.app', lxm: 'app.bsky.video.getUploadLimits')->json('token');
+     * ```
+     *
+     * @param  string  $aud  The DID of the service that the token will be used to authenticate with
+     * @param  int|null  $exp  The time in Unix Epoch seconds that the JWT expires. Defaults to 60 seconds in the future. The service may enforce certain time bounds on tokens depending on the requested scope.
+     * @param  string|null  $lxm  Lexicon (XRPC) method to bind the requested token to
+     * @return Response{token: string}
+     */
+    public function getServiceAuth(#[Format('did')] string $aud, ?int $exp = null, #[Format('nsid')] ?string $lxm = null): Response
+    {
+        return $this->client(auth: true)
+            ->getServiceAuth(aud: $aud, exp: $exp, lxm: $lxm);
+    }
+
     public function getSuggestions(?int $limit = 50, ?string $cursor = null): Response
     {
         return $this->client(auth: true)
