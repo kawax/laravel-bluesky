@@ -100,7 +100,7 @@ use Revolution\Bluesky\Record\Post;
 use Revolution\Bluesky\RichText\TextBuilder;
 
 Route::get('text-builder', function () {
-    $post = Post::build(function (TextBuilder $builder) {
+    $post = Post::build(function(TextBuilder $builder): TextBuilder {
         return $builder->text(text: 'Hello Bluesky')
                        ->newLine(count: 2)
                        ->link(text: 'https://bsky.app/', uri: 'https://bsky.app/')
