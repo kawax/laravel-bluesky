@@ -36,7 +36,7 @@ use Revolution\Bluesky\Client\Substitute\ToolsOzone;
 use Revolution\Bluesky\Contracts\XrpcClient;
 
 class AtpClient implements XrpcClient,
-    Actor, Feed, Graph, Labeler, Unspecced, Video,
+    Actor, Feed, Graph, Labeler, Unspecced,
     Identity, Label, Moderation, Repo, Server, Temp
 {
     use Macroable;
@@ -50,7 +50,6 @@ class AtpClient implements XrpcClient,
     use AppBskyGraph;
     use AppBskyLabeler;
     use AppBskyUnspecced;
-    use AppBskyVideo;
 
     // com.atproto
     use ComAtprotoIdentity;
