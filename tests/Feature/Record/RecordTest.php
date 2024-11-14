@@ -2,6 +2,7 @@
 
 namespace Tests\Feature\Record;
 
+use Illuminate\Support\Carbon;
 use Revolution\Bluesky\Record\Follow;
 use Revolution\Bluesky\Record\Post;
 use Revolution\Bluesky\Record\ThreadGate;
@@ -22,14 +23,25 @@ class RecordTest extends TestCase
 
     public function test_post()
     {
-        $post = Post::create(text: 'test');
-        $post->createdAt('2024');
+        $this->travelTo(Carbon::parse('2024-12-31'), function () {
+            $post = Post::create(text: 'test');
+
+            $this->assertIsArray($post->toRecord());
+            $this->assertArrayHasKey('text', $post->toRecord());
+            $this->assertArrayHasKey('createdAt', $post->toRecord());
+            $this->assertStringStartsWith('2024-12-31', $post->toRecord()['createdAt']);
+            $this->assertSame($post::NSID, $post->toRecord()['$type']);
+        });
+    }
+
+    public function test_post_created()
+    {
+        $post = Post::create(text: 'test')
+            ->createdAt('2024');
 
         $this->assertIsArray($post->toRecord());
-        $this->assertArrayHasKey('text', $post->toRecord());
         $this->assertArrayHasKey('createdAt', $post->toRecord());
-        $this->assertSame('2024', $post->toRecord()['createdAt']);
-        $this->assertSame($post::NSID, $post->toRecord()['$type']);
+        $this->assertStringStartsWith('2024', $post->toRecord()['createdAt']);
     }
 
     public function test_validator()
