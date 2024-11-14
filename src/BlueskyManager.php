@@ -99,6 +99,8 @@ class BlueskyManager implements Factory
 
     /**
      * Client for video.
+     *
+     * @param  string  $token  Service Auth token
      */
     protected function video(string $token): VideoClient
     {
