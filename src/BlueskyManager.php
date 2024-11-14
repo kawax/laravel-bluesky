@@ -148,7 +148,7 @@ class BlueskyManager implements Factory
 
     public function createRecord(#[Format('at-identifier')] string $repo, #[Format('nsid')] string $collection, Recordable|array $record, ?string $rkey = null, ?bool $validate = null, ?string $swapCommit = null): Response
     {
-        $record = $record instanceof Recordable ? $record : $record->toRecord();
+        $record = $record instanceof Recordable ? $record->toRecord() : $record;
 
         return $this->client(auth: true)
             ->createRecord(
