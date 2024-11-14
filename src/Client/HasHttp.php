@@ -5,6 +5,7 @@ namespace Revolution\Bluesky\Client;
 use BackedEnum;
 use Illuminate\Http\Client\PendingRequest;
 use Illuminate\Http\Client\Response;
+use Psr\Http\Message\StreamInterface;
 use ReflectionMethod;
 
 use Revolution\AtProto\Lexicon\Attributes\Format;
@@ -51,7 +52,7 @@ trait HasHttp
         return $this;
     }
 
-    public function withBody($content, $contentType = 'image/png'): static
+    public function withBody(StreamInterface|string $content, string $contentType = 'image/png'): static
     {
         $this->http->withBody($content, $contentType);
 
