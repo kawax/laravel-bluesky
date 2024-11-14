@@ -408,8 +408,9 @@ trait HasShortHand
      * Upload video.
      *
      * @return Response{jobStatus: array}
+     * @throws AuthenticationException
      */
-    public function uploadVideo(mixed $data, string $type = 'video/mp4'): Response
+    public function uploadVideo(mixed $data, string $name, string $type = 'video/mp4'): Response
     {
         $aud = $this->agent()->session()->didDoc()->pdsUrl();
         $aud = Str::replace('https://', 'did:web:', $aud);
@@ -418,8 +419,12 @@ trait HasShortHand
             ->json('token');
 
         return $this->video($token)
-            ->withBody($data, $type)
-            ->uploadVideo();
+            ->uploadVideo(
+                did: $this->assertDid(),
+                data: $data,
+                name: $name,
+                type: $type,
+            );
     }
 
     /**
