@@ -18,6 +18,7 @@ use Revolution\AtProto\Lexicon\Attributes\KnownValues;
 use Revolution\Bluesky\Agent\LegacyAgent;
 use Revolution\Bluesky\Agent\OAuthAgent;
 use Revolution\Bluesky\Client\AtpClient;
+use Revolution\Bluesky\Client\ChatClient;
 use Revolution\Bluesky\Client\VideoClient;
 use Revolution\Bluesky\Contracts\Agent;
 use Revolution\Bluesky\Contracts\Factory;
@@ -98,18 +99,19 @@ class BlueskyManager implements Factory
     }
 
     /**
-     * Client for video.
-     *
      * @param  string  $token  Service Auth token
      */
     protected function video(string $token): VideoClient
     {
-        $http = Http::baseUrl('https://video.bsky.app/xrpc/')
-            ->withToken($token);
+        return $this->client(auth: true)->video($token);
+    }
 
-        return Container::getInstance()
-            ->make(VideoClient::class)
-            ->withHttp($http);
+    /**
+     * Chat / DM.
+     */
+    public function chat(): ChatClient
+    {
+        return $this->client(auth: true)->chat();
     }
 
     /**
