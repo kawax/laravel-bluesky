@@ -431,7 +431,7 @@ trait HasShortHand
      * @return Response{did: string, error?: string, jobId: string, message?: string, state: string}
      * @throws AuthenticationException
      */
-    public function uploadVideo(StreamInterface|string $data, string $name, string $type = 'video/mp4'): Response
+    public function uploadVideo(StreamInterface|string $data, string $name, #[KnownValues(['video/mp4', 'video/mpeg', 'video/webm', 'video/quicktime', ' image/gif'])] string $type = 'video/mp4'): Response
     {
         $aud = $this->agent()->session()->didDoc()->pdsUrl();
         $aud = Str::replace(search: 'https://', replace: 'did:web:', subject: $aud);
