@@ -79,9 +79,7 @@ final class LegacyAgent implements Agent
 
     public function pdsUrl(?string $default = null): ?string
     {
-        $didDoc = $this->session('didDoc');
-
-        return DidDocument::make($didDoc)->pdsUrl($default);
+        return $this->session->didDoc()->pdsUrl($default);
     }
 
     public function baseUrl(bool $auth = true): string
