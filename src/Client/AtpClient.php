@@ -9,7 +9,6 @@ use Revolution\AtProto\Lexicon\Contracts\App\Bsky\Feed;
 use Revolution\AtProto\Lexicon\Contracts\App\Bsky\Graph;
 use Revolution\AtProto\Lexicon\Contracts\App\Bsky\Labeler;
 use Revolution\AtProto\Lexicon\Contracts\App\Bsky\Unspecced;
-use Revolution\AtProto\Lexicon\Contracts\App\Bsky\Video;
 use Revolution\AtProto\Lexicon\Contracts\Com\Atproto\Identity;
 use Revolution\AtProto\Lexicon\Contracts\Com\Atproto\Label;
 use Revolution\AtProto\Lexicon\Contracts\Com\Atproto\Moderation;
@@ -21,7 +20,6 @@ use Revolution\Bluesky\Client\Concerns\AppBskyFeed;
 use Revolution\Bluesky\Client\Concerns\AppBskyGraph;
 use Revolution\Bluesky\Client\Concerns\AppBskyLabeler;
 use Revolution\Bluesky\Client\Concerns\AppBskyUnspecced;
-use Revolution\Bluesky\Client\Concerns\AppBskyVideo;
 use Revolution\Bluesky\Client\Concerns\ComAtprotoIdentity;
 use Revolution\Bluesky\Client\Concerns\ComAtprotoLabel;
 use Revolution\Bluesky\Client\Concerns\ComAtprotoModeration;
@@ -31,8 +29,6 @@ use Revolution\Bluesky\Client\Concerns\ComAtprotoTemp;
 use Revolution\Bluesky\Client\Substitute\AtprotoAdmin;
 use Revolution\Bluesky\Client\Substitute\AtprotoSync;
 use Revolution\Bluesky\Client\Substitute\BskyNotification;
-use Revolution\Bluesky\Client\Substitute\ChatBsky;
-use Revolution\Bluesky\Client\Substitute\ToolsOzone;
 use Revolution\Bluesky\Contracts\XrpcClient;
 
 class AtpClient implements XrpcClient,
@@ -83,21 +79,5 @@ class AtpClient implements XrpcClient,
     public function sync(): AtprotoSync
     {
         return app(AtprotoSync::class)->withHttp($this->http());
-    }
-
-    /**
-     * chat.bsky
-     */
-    public function chat(): ChatBsky
-    {
-        return app(ChatBsky::class)->withHttp($this->http());
-    }
-
-    /**
-     * tools.ozone
-     */
-    public function ozone(): ToolsOzone
-    {
-        return app(ToolsOzone::class)->withHttp($this->http());
     }
 }
