@@ -18,7 +18,7 @@ class VideoClient implements Video
     use AppBskyVideo;
 
     /**
-     * Original uploadVideo() doesn't work because it is missing required parameters.
+     * {@link AppBskyVideo::uploadVideo()} doesn't work because it is missing required parameters.
      */
     public function upload(#[Format('did')] string $did, StreamInterface|string $data, string $name, string $type = 'video/mp4'): Response
     {
