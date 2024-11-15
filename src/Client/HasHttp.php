@@ -58,4 +58,16 @@ trait HasHttp
 
         return $this;
     }
+
+    /**
+     * ```
+     * ->withServiceProxy('did:web:api.bsky.chat')
+     * ```
+     */
+    public function withServiceProxy(#[Format('did')] string $did): static
+    {
+        $this->http->withHeader('atproto-proxy', $did);
+
+        return $this;
+    }
 }
