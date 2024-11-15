@@ -80,7 +80,7 @@ class AtpClient implements XrpcClient,
     {
         return app(ChatClient::class)
             ->withHttp($this->http())
-            ->withServiceProxy('did:web:api.bsky.chat');
+            ->withServiceProxy('did:web:api.bsky.chat#bsky_chat');
     }
 
     /**
