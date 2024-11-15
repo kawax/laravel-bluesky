@@ -2,6 +2,7 @@
 
 namespace Revolution\Bluesky\Client;
 
+use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Traits\Conditionable;
 use Illuminate\Support\Traits\Macroable;
 use Revolution\AtProto\Lexicon\Contracts\App\Bsky\Actor;
@@ -54,6 +55,33 @@ class AtpClient implements XrpcClient,
     use ComAtprotoRepo;
     use ComAtprotoServer;
     use ComAtprotoTemp;
+
+    /**
+     * VideoClient.
+     *
+     * app.bsky.video
+     *
+     * @param  string  $token  Service Auth token
+     */
+    public function video(string $token): VideoClient
+    {
+        $http = Http::baseUrl('https://video.bsky.app/xrpc/')
+            ->withToken($token);
+
+        return app(VideoClient::class)->withHttp($http);
+    }
+
+    /**
+     * ChatClient.
+     *
+     * chat.bsky
+     */
+    public function chat(): ChatClient
+    {
+        return app(ChatClient::class)
+            ->withHttp($this->http())
+            ->withServiceProxy('did:web:api.bsky.chat');
+    }
 
     /**
      * Some methods are conflicting. Separate them into other class.
