@@ -408,6 +408,8 @@ trait HasShortHand
     /**
      * Upload video.
      *
+     * Bluesky::uploadVideo() returns a jobId, then you can use {@link getJobStatus()} to check if the upload is complete and retrieve the blob.
+     *
      * ```
      * use Illuminate\Support\Facades\Storage;
      * use Revolution\Bluesky\Facades\Bluesky;
@@ -415,8 +417,6 @@ trait HasShortHand
      * $upload = Bluesky::withToken()->uploadVideo(data: Storage::get('video.mp4'), name: 'video.mp4');
      *
      * $jobId = $upload->json('jobId');
-     *
-     * // Bluesky::uploadVideo() returns a jobId, then you can use Bluesky::getJobStatus() to check if the upload is complete and retrieve the blob.
      *
      * $status = Bluesky::getJobStatus($jobId);
      *
@@ -433,6 +433,7 @@ trait HasShortHand
      */
     public function uploadVideo(StreamInterface|string $data, string $name, #[KnownValues(['video/mp4', 'video/mpeg', 'video/webm', 'video/quicktime', ' image/gif'])] string $type = 'video/mp4'): Response
     {
+        //Service auth is required to use the video upload features.
         $aud = $this->agent()->session()->didDoc()->pdsUrl();
         $aud = Str::replace(search: 'https://', replace: 'did:web:', subject: $aud);
 
@@ -502,22 +503,20 @@ trait HasShortHand
             );
     }
 
-    public function searchActors(?string $term = null, ?string $q = null, ?int $limit = 25, ?string $cursor = null): Response
+    public function searchActors(?string $q = null, ?int $limit = 25, ?string $cursor = null): Response
     {
         return $this->client(auth: true)
             ->searchActors(
-                term: $term,
                 q: $q,
                 limit: $limit,
                 cursor: $cursor,
             );
     }
 
-    public function searchActorsTypeahead(?string $term = null, ?string $q = null, ?int $limit = 10): Response
+    public function searchActorsTypeahead(?string $q = null, ?int $limit = 10): Response
     {
         return $this->client(auth: true)
             ->searchActorsTypeahead(
-                term: $term,
                 q: $q,
                 limit: $limit,
             );
