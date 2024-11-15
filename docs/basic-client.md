@@ -327,6 +327,35 @@ Route::post('upload_video', function (Request $request) {
 })
 ```
 
+uploadVideo() also accepts StreamInterface.
+
+```php
+// UploadedFile
+
+use GuzzleHttp\Psr7\Utils;
+
+$upload = Bluesky::withToken()
+                 ->uploadVideo(
+                     data: Utils::streamFor(Utils::tryFopen($request->file('video')->getPathname(), 'rb')),
+                     name: $request->file('video')->getClientOriginalName(),
+                     type: $request->file('video')->getMimeType(),
+                 );
+```
+
+```php
+// Upload from Storage
+
+use Illuminate\Support\Facades\Storage;
+use GuzzleHttp\Psr7\Utils;
+
+$upload = Bluesky::withToken()
+                 ->uploadVideo(
+                     data: Utils::streamFor(Storage::readStream('video.mp4')),
+                     name: 'video.mp4',
+                     type: Storage::mimeType('video.mp4'),
+                 );
+```
+
 ## Following a user
 
 ```php
