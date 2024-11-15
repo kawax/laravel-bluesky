@@ -61,7 +61,7 @@ trait HasHttp
 
     /**
      * ```
-     * ->withServiceProxy('did:web:api.bsky.chat')
+     * ->withServiceProxy('did:web:api.bsky.chat#bsky_chat')
      * ```
      */
     public function withServiceProxy(#[Format('did')] string $did): static
