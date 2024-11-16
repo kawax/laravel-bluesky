@@ -164,12 +164,12 @@ Alternatively you can use `Post::build()`, use whichever you prefer.
 use Revolution\Bluesky\Record\Post;
 use Revolution\Bluesky\RichText\TextBuilder;
 
-$post = Post::build(function(TextBuilder $builder): TextBuilder {
-    return $builder->text(text: 'test')
-                   ->newLine()
-                   ->link(text: 'https://', uri: 'https://')
-                   ->newLine()
-                   ->tag(text: '#Laravel', tag: 'Laravel')
+$post = Post::build(function (TextBuilder $builder) {
+            $builder->text(text: 'test')
+                    ->newLine()
+                    ->link(text: 'https://', uri: 'https://')
+                    ->newLine()
+                    ->tag(text: '#Laravel', tag: 'Laravel')
     });
 ```
 
