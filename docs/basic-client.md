@@ -405,7 +405,7 @@ use Revolution\Bluesky\Record\Profile;
 use Revolution\Bluesky\Types\StrongRef;
 
 /** @var \Illuminate\Http\Client\Response $response */
-$response = Bluesky::withToken()->upsertProfile(function(Profile $profile): Profile {
+$response = Bluesky::withToken()->upsertProfile(function(Profile $profile) {
     $profile->displayName('new name')
             ->description('new description');
 
@@ -414,8 +414,6 @@ $response = Bluesky::withToken()->upsertProfile(function(Profile $profile): Prof
     });
 
     $profile->pinnedPost(StrongRef::to(uri: 'at://', cid: ''));
-
-    return $profile;
 })
 
 dump($response->json());
