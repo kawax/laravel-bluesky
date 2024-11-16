@@ -126,15 +126,13 @@ trait HasShortHand
      * ```
      * use Revolution\Bluesky\Record\Profile;
      *
-     * Bluesky::upsertProfile(function(Profile $profile): Profile {
+     * $response = Bluesky::upsertProfile(function (Profile $profile) {
      *     $profile->displayName('new name')
      *             ->description('new description');
      *
-     *     $profile->avatar(function(): array {
+     *     $profile->avatar(function (): array {
      *        return Bluesky::uploadBlob(Storage::get('test.png'), Storage::mimeType('test.png'))->json('blob');
      *     });
-     *
-     *     return $profile;
      * })
      * ```
      *
@@ -149,15 +147,14 @@ trait HasShortHand
             rkey: 'self',
         );
 
-        $existing = Profile::fromArray($response->json('value'));
-
-        $updated = $callback($existing) ?? $existing;
+        $profile = Profile::fromArray($response->json('value'))
+            ->tap($callback);
 
         return $this->putRecord(
             repo: $this->assertDid(),
             collection: Profile::NSID,
             rkey: 'self',
-            record: $updated,
+            record: $profile,
             swapRecord: $response->json('cid'),
         );
     }
