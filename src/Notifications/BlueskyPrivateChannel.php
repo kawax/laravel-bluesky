@@ -41,7 +41,8 @@ class BlueskyPrivateChannel
 
         Bluesky::client(auth: true)
             ->chat()
-            ->sendMessage($id, $message->toArray());
+            ->sendMessage($id, $message->toArray())
+            ->throw();
     }
 
     protected function oauth(BlueskyRoute $route): string
