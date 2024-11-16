@@ -2,6 +2,7 @@ Laravel Notifications
 ====
 
 ## Available Channels
+
 - `BlueskyChannel`: Notify as a normal published post.
 - `BlueskyPrivateChannel`: Notify to the receiver as a private chat/DM.
 
@@ -42,7 +43,8 @@ The usage of `Post` is the same as BasicClient, so TextBuilder, Embed, etc. can 
 
 ### BlueskyPrivateChannel
 
-`BlueskyPrivateMessage` is almost the same as `Post`, but only supports text, facets, and embed. Embed only supports `QuoteRecord`.
+`BlueskyPrivateMessage` is almost the same as `Post`, but only supports text, facets, and embed.
+Embed only supports`QuoteRecord`.
 
 ```php
 use Illuminate\Notifications\Notification;
@@ -126,7 +128,8 @@ Notification::route('bluesky-private', BlueskyRoute::to(oauth: $session, receive
             ->notify(new TestNotification());
 ```
 
-Since you cannot send a DM to yourself in Bluesky, if you want to set yourself as the receiver, you need a separate account for the sender.
+Since you cannot send a DM to yourself in Bluesky,
+if you want to set yourself as the receiver, you need a separate account for the sender.
 
 ```php
 // Send to yourself a private message
@@ -215,7 +218,8 @@ You can also specify a user as a receiver.
 
 ## BlueskyRoute
 
-The method of specification differs depending on the authentication method, either "App password" or "OAuth". It is recommended to always use named arguments.
+The method of specification differs depending on the authentication method, either "App password" or "OAuth".
+It is recommended to always use named arguments.
 
 ```php
 use Revolution\Bluesky\Notifications\BlueskyRoute;
