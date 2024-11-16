@@ -99,22 +99,6 @@ class BlueskyManager implements Factory
     }
 
     /**
-     * @param  string  $token  Service Auth token
-     */
-    protected function video(string $token): VideoClient
-    {
-        return $this->client(auth: true)->video($token);
-    }
-
-    /**
-     * Chat / DM.
-     */
-    public function chat(): ChatClient
-    {
-        return $this->client(auth: true)->chat();
-    }
-
-    /**
      * @throws AuthenticationException
      */
     public function assertDid(): string
