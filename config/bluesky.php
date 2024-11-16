@@ -14,6 +14,18 @@ return [
     'identifier' => env('BLUESKY_IDENTIFIER'),
     'password' => env('BLUESKY_APP_PASSWORD'),
 
+    // Notification
+    'notification' => [
+        // Use a specific sender and receiver in a PrivateChannel.
+        'private' => [
+            'sender' => [
+                'identifier' => env('BLUESKY_SENDER_IDENTIFIER'),
+                'password' => env('BLUESKY_SENDER_APP_PASSWORD'),
+            ],
+            'receiver' => env('BLUESKY_RECEIVER'),
+        ],
+    ],
+
     // OAuth
     'oauth' => [
         // Disable all OAuth features
