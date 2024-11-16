@@ -67,10 +67,10 @@ final class BlueskyPrivateMessage implements Arrayable
      * use Revolution\Bluesky\Notifications\BlueskyPrivateMessage;
      * use Revolution\Bluesky\RichText\TextBuilder;
      *
-     *  $message = BlueskyPrivateMessage::build(function(TextBuilder $builder): TextBuilder {
-     *      return $builder->text('test')
-     *                     ->newLine()
-     *                     ->tag(text: '#bluesky', tag: 'bluesky');
+     *  $message = BlueskyPrivateMessage::build(function (TextBuilder $builder) {
+     *      $builder->text('test')
+     *              ->newLine()
+     *              ->tag(text: '#bluesky', tag: 'bluesky');
      *  });
      * ```
      *
@@ -78,8 +78,7 @@ final class BlueskyPrivateMessage implements Arrayable
      */
     public static function build(callable $callback): self
     {
-        $builder = TextBuilder::make();
-        $builder = $callback($builder) ?? $builder;
+        $builder = TextBuilder::make()->tap($callback);
 
         return new self($builder->text, $builder->facets);
     }
