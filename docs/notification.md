@@ -50,6 +50,7 @@ use Revolution\Bluesky\Notifications\BlueskyPrivateChannel;
 use Revolution\Bluesky\Notifications\BlueskyPrivateMessage;
 use Revolution\Bluesky\RichText\TextBuilder;
 use Revolution\Bluesky\Embed\QuoteRecord;
+use Revolution\Bluesky\Types\StrongRef;
 
 class TestNotification extends Notification
 {
