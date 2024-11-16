@@ -30,8 +30,8 @@ class TestNotification extends Notification
     {
         $external = External::create(title: 'Title', description: 'test', uri: 'https://');
 
-        return Post::build(function(TextBuilder $builder) {
-            return $builder->text(text: 'test')
+        return Post::build(function (TextBuilder $builder) {
+                   $builder->text(text: 'test')
                            ->newLine()
                            ->tag(text: '#Laravel', tag: 'Laravel');
         })->embed($external);
@@ -67,8 +67,8 @@ class TestNotification extends Notification
     {
         $quote = QuoteRecord::create(StrongRef::to(uri: 'at://', cid: 'cid'));
 
-        return BlueskyPrivateMessage::build(function(TextBuilder $builder) {
-            return $builder->text(text: 'test')
+        return BlueskyPrivateMessage::build(function (TextBuilder $builder) {
+                   $builder->text(text: 'test')
                            ->newLine()
                            ->tag(text: '#Laravel', tag: 'Laravel');
         })->embed($quote);
