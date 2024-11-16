@@ -440,7 +440,8 @@ trait HasShortHand
         $token = $this->getServiceAuth(aud: $aud, lxm: Repo::uploadBlob)
             ->json('token');
 
-        return $this->video($token)
+        return $this->client(auth: true)
+            ->video($token)
             ->upload(
                 did: $this->assertDid(),
                 data: $data,
@@ -462,7 +463,8 @@ trait HasShortHand
         $token = $this->getServiceAuth(aud: $aud, lxm: Video::getJobStatus)
             ->json('token');
 
-        return $this->video($token)
+        return $this->client(auth: true)
+            ->video($token)
             ->getJobStatus($jobId);
     }
 
@@ -474,7 +476,8 @@ trait HasShortHand
         $token = $this->getServiceAuth(aud: 'did:web:video.bsky.app', lxm: Video::getUploadLimits)
             ->json('token');
 
-        return $this->video($token)
+        return $this->client(auth: true)
+            ->video($token)
             ->getUploadLimits();
     }
 
