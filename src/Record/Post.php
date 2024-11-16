@@ -52,10 +52,10 @@ final class Post extends AbstractPost implements Arrayable, Recordable
      * use Revolution\Bluesky\Record\Post;
      * use Revolution\Bluesky\RichText\TextBuilder;
      *
-     *  $post = Post::build(function(TextBuilder $builder): TextBuilder {
-     *      return $builder->text('test')
-     *                     ->newLine()
-     *                     ->tag(text: '#bluesky', tag: 'bluesky');
+     *  $post = Post::build(function (TextBuilder $builder) {
+     *      $builder->text('test')
+     *              ->newLine()
+     *              ->tag(text: '#bluesky', tag: 'bluesky');
      *  });
      * ```
      *
@@ -63,8 +63,7 @@ final class Post extends AbstractPost implements Arrayable, Recordable
      */
     public static function build(callable $callback): self
     {
-        $builder = TextBuilder::make();
-        $builder = $callback($builder) ?? $builder;
+        $builder = TextBuilder::make()->tap($callback);
 
         return new self($builder->text, $builder->facets);
     }
