@@ -532,8 +532,6 @@ class ClientTest extends TestCase
                     ->labels(SelfLabels::make([]))
                     ->joinedViaStarterPack(StrongRef::to(uri: 'uri', cid: 'cid'))
                     ->pinnedPost(StrongRef::to(uri: 'uri', cid: 'cid'));
-
-                return $profile;
             });
 
         $this->assertTrue($response->successful());
