@@ -6,7 +6,9 @@ namespace Tests\Feature\Notifications;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Client\RequestException;
+use Illuminate\Notifications\Events\NotificationSent;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Notification;
 use Mockery;
@@ -62,7 +64,7 @@ class NotificationTest extends TestCase
 
     public function test_notification_failed()
     {
-        $this->expectException(RequestException::class);
+        Event::fake();
 
         Http::fakeSequence()
             ->push($this->session)
@@ -72,6 +74,10 @@ class NotificationTest extends TestCase
             ->notify(new TestNotification(text: 'test'));
 
         Http::assertSentCount(2);
+
+        Event::assertDispatched(function (NotificationSent $event) {
+            return $event->response->failed();
+        });
     }
 
     public function test_notification_fake()
@@ -274,7 +280,7 @@ class NotificationTest extends TestCase
     {
         Http::fake();
 
-        Bluesky::shouldReceive('withToken->refreshSession->post->throw')->once();
+        Bluesky::shouldReceive('withToken->refreshSession->post')->once();
 
         $user = new TestUserOAuth();
 
