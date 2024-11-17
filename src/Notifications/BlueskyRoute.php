@@ -10,24 +10,24 @@ use Revolution\Bluesky\Session\OAuthSession;
 final readonly class BlueskyRoute
 {
     /**
-     * @param  string|null  $receiver  Receiver DID when using PrivateChannel
+     * @param  string|null  $receiver  Receiver DID or handle when using PrivateChannel
      */
     public function __construct(
         #[\SensitiveParameter] public ?OAuthSession $oauth = null,
         public ?string $identifier = null,
         #[\SensitiveParameter] public ?string $password = null,
-        #[Format('did')] public ?string $receiver = null,
+        #[Format('at-identifier')] public ?string $receiver = null,
     ) {
     }
 
     /**
-     * @param  string|null  $receiver  Receiver DID when using PrivateChannel
+     * @param  string|null  $receiver  Receiver DID or handle when using PrivateChannel
      */
     public static function to(
         #[\SensitiveParameter] ?OAuthSession $oauth = null,
         ?string $identifier = null,
         #[\SensitiveParameter] ?string $password = null,
-        #[Format('did')] ?string $receiver = null,
+        #[Format('at-identifier')] ?string $receiver = null,
     ): self {
         return new self(...func_get_args());
     }
