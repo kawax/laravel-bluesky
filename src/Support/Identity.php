@@ -44,6 +44,7 @@ class Identity
 
     /**
      * @param  string|null  $handle  e.g. "alice.test"
+     * @return string|null DID
      */
     public function resolveHandle(?string $handle): ?string
     {
