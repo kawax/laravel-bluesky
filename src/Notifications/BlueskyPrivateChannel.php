@@ -9,6 +9,7 @@ use Illuminate\Http\Client\RequestException;
 use Illuminate\Notifications\Notification;
 use Illuminate\Support\Arr;
 use Revolution\Bluesky\Facades\Bluesky;
+use Revolution\Bluesky\Support\Identity;
 
 class BlueskyPrivateChannel
 {
@@ -51,7 +52,7 @@ class BlueskyPrivateChannel
             ->refreshSession()
             ->client(auth: true)
             ->chat()
-            ->getConvoForMembers(Arr::wrap($route->receiver));
+            ->getConvoForMembers(Arr::wrap($this->resolveHandle($route->receiver)));
 
         return $response->json('convo.id') ?? '';
     }
@@ -61,8 +62,28 @@ class BlueskyPrivateChannel
         $response = Bluesky::login($route->identifier, $route->password)
             ->client(auth: true)
             ->chat()
-            ->getConvoForMembers(Arr::wrap($route->receiver));
+            ->getConvoForMembers(Arr::wrap($this->resolveHandle($route->receiver)));
 
         return $response->json('convo.id') ?? '';
+    }
+
+    /**
+     * @param  string  $receiver  DID or handle
+     * @return string DID
+     */
+    protected function resolveHandle(string $receiver): string
+    {
+        if (Identity::isDID($receiver)) {
+            return $receiver;
+        }
+
+        if (Identity::isHandle($receiver)) {
+            $res = Bluesky::resolveHandle($receiver);
+            if ($res->successful()) {
+                return $res->json('did');
+            }
+        }
+
+        return $receiver;
     }
 }
