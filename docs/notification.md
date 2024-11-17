@@ -246,3 +246,23 @@ You don't need to worry about updating refresh_token, and you can use it just by
 BLUESKY_IDENTIFIER=
 BLUESKY_APP_PASSWORD=
 ```
+
+## Checking notification results
+
+Just like normal Laravel usage, you can check the response after the notification with the `NotificationSent` event.
+
+```php
+use Illuminate\Notifications\Events\NotificationSent;
+use Illuminate\Http\Client\Response;
+ 
+class Listener
+{
+    public function handle(NotificationSent $event): void
+    {
+        // $event->channel  BlueskyChannel
+        // $event->notifiable
+        // $event->notification
+        // $event->response  null|Response
+    }
+}
+```
