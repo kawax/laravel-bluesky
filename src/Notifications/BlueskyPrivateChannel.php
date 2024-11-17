@@ -6,6 +6,7 @@ namespace Revolution\Bluesky\Notifications;
 
 use Illuminate\Auth\AuthenticationException;
 use Illuminate\Http\Client\RequestException;
+use Illuminate\Http\Client\Response;
 use Illuminate\Notifications\Notification;
 use Illuminate\Support\Arr;
 use Revolution\Bluesky\Facades\Bluesky;
@@ -17,7 +18,7 @@ class BlueskyPrivateChannel
      * @throws RequestException
      * @throws AuthenticationException
      */
-    public function send(mixed $notifiable, Notification $notification): void
+    public function send(mixed $notifiable, Notification $notification): ?Response
     {
         /**
          * @var BlueskyPrivateMessage $message
@@ -25,14 +26,14 @@ class BlueskyPrivateChannel
         $message = $notification->toBlueskyPrivate($notifiable);
 
         if (! $message instanceof BlueskyPrivateMessage) {
-            return; // @codeCoverageIgnore
+            return null; // @codeCoverageIgnore
         }
 
         /** @var BlueskyRoute $route */
         $route = $notifiable->routeNotificationFor('bluesky-private', $notification);
 
         if (! $route instanceof BlueskyRoute || empty($route->receiver)) {
-            return; // @codeCoverageIgnore
+            return null; // @codeCoverageIgnore
         }
 
         $id = match (true) {
@@ -40,10 +41,9 @@ class BlueskyPrivateChannel
             $route->isLegacy() => $this->legacy($route),
         };
 
-        Bluesky::client(auth: true)
+        return Bluesky::client(auth: true)
             ->chat()
-            ->sendMessage($id, $message->toArray())
-            ->throw();
+            ->sendMessage($id, $message->toArray());
     }
 
     protected function oauth(BlueskyRoute $route): string
