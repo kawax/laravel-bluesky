@@ -9,6 +9,7 @@ use Illuminate\Support\ServiceProvider;
 use Laravel\Socialite\Facades\Socialite;
 use Revolution\Bluesky\BlueskyManager;
 use Revolution\Bluesky\Client\AtpClient;
+use Revolution\Bluesky\Console\WebSocketServeCommand;
 use Revolution\Bluesky\Console\LexiconClientCommand;
 use Revolution\Bluesky\Console\NewPrivateKeyCommand;
 use Revolution\Bluesky\Contracts\Factory;
@@ -35,6 +36,7 @@ class BlueskyServiceProvider extends ServiceProvider
 
             $this->commands([
                 NewPrivateKeyCommand::class,
+                WebSocketServeCommand::class,
             ]);
 
             if (class_exists(LexiconClientCommand::class)) {
