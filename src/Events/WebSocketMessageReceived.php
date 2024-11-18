@@ -32,6 +32,8 @@ class WebSocketMessageReceived
 
     public function __construct(
         public array $message,
+        public string $host,
+        public array $payload,
     ) {
         //
     }
