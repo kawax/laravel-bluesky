@@ -12,12 +12,14 @@
   "license": "MIT",
   "require": {
     "php": "^8.2",
+    "ext-pcntl": "*",
     "illuminate/support": "^11.20",
     "laravel/socialite": "^5.16",
     "guzzlehttp/guzzle": "^7.8",
     "firebase/php-jwt": "^6.10",
     "phpseclib/phpseclib": "^3.0",
-    "revolution/atproto-lexicon-contracts": "^1.0.25"
+    "revolution/atproto-lexicon-contracts": "^1.0.25",
+    "valtzu/guzzle-websocket-middleware": "^0.2.0"
   },
   "require-dev": {
     "orchestra/testbench": "^9.0"
