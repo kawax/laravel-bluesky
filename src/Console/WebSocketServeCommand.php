@@ -41,6 +41,8 @@ use Valtzu\WebSocketMiddleware\WebSocketStream;
  * php artisan bluesky:ws -v
  * ```
  *
+ * This is an advanced usage so they probably won't document it.
+ *
  * @see https://github.com/bluesky-social/jetstream
  */
 class WebSocketServeCommand extends Command
@@ -70,12 +72,13 @@ class WebSocketServeCommand extends Command
     {
         $handlerStack = new HandlerStack(new StreamHandler());
         $handlerStack->push(new WebSocketMiddleware());
-
         $client = new Client(['handler' => $handlerStack]);
 
         $host = $this->option('host');
 
-        $res = $client->get('wss://'.$host.'/subscribe?requireHello=true');
+        $uri = 'wss://'.$host.'/subscribe?requireHello=true';
+
+        $res = $client->get($uri);
 
         if ($res->getStatusCode() !== 101) {
             dd($res);
