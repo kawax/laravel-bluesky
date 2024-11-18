@@ -33,6 +33,10 @@ use Valtzu\WebSocketMiddleware\WebSocketStream;
  * php artisan bluesky:ws -H jetstream2.us-east.bsky.network
  * ```
  * ```
+ * // Set maxMessageSizeBytes
+ * php artisan bluesky:ws -M 1000000
+ * ```
+ * ```
  * // Display all received messages for debugging.
  * php artisan bluesky:ws -v
  * ```
@@ -46,7 +50,7 @@ class WebSocketServeCommand extends Command
      *
      * @var string
      */
-    protected $signature = 'bluesky:ws {--H|host=jetstream1.us-west.bsky.network} {--C|collection=*} {--D|did=*}';
+    protected $signature = 'bluesky:ws {--H|host=jetstream1.us-west.bsky.network} {--C|collection=*} {--D|did=*} {--M|max=0 : Set maxMessageSizeBytes}';
 
     /**
      * The console command description.
@@ -86,18 +90,19 @@ class WebSocketServeCommand extends Command
 
         $this->trap(SIGTERM, fn () => $this->running = false);
 
-        $options_update = [
+        $payload = [
             'type' => 'options_update',
             'payload' => [
                 'wantedCollections' => $this->option('collection'),
                 'wantedDids' => $this->option('did'),
+                'maxMessageSizeBytes' => (int) $this->option('max'),
             ],
         ];
 
-        $ws->write($options = json_encode($options_update));
+        $ws->write($options = json_encode($payload));
 
         $this->info('Host : '.$host);
-        $this->line('Payload : '.$options);
+        $this->info('Payload : '.$options);
 
         while (! $ws->eof() || $this->running) {
             $event = $ws->read();
@@ -110,7 +115,7 @@ class WebSocketServeCommand extends Command
             $message = json_decode($event, true);
 
             if (is_array($message) && Arr::has($message, ['did', 'kind'])) {
-                WebSocketMessageReceived::dispatch($message);
+                WebSocketMessageReceived::dispatch($message, $host, $payload);
             }
         }
 
