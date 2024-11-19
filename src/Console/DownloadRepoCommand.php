@@ -14,7 +14,7 @@ use Revolution\Bluesky\Support\DidDocument;
 use Revolution\Bluesky\Support\Identity;
 
 /**
- * Sample command to download the actor's "car" file. Does not include parsing the Car file.
+ * Sample command to download the actor's "CAR" file. Does not include parsing the Car file.
  *
  * ```
  * php artisan bluesky:download-repo ***.bsky.social
@@ -68,16 +68,18 @@ class DownloadRepoCommand extends Command
 
         $this->line('PDS: '.$pds);
 
-        $response = Http::baseUrl($pds.'/xrpc/')
-            ->get(Sync::getRepo, [
-                'did' => $did,
-            ])->throw();
+        $response = Bluesky::client(auth: false)
+            ->sync()
+            ->baseUrl($pds.'/xrpc/')
+            ->getRepo(did: $did)
+            ->throw();
 
         if ($response->successful()) {
-            $file = 'bluesky/download/'.Str::slug($actor, dictionary: ['.' => '-', ':' => '-']).'.car';
-            Storage::disk('local')->put($file, $response->body());
+            $name = Str::slug($actor, dictionary: ['.' => '-', ':' => '-']);
+            $file = 'bluesky/download/'.$name.'/'.$name.'.car';
+            Storage::put($file, $response->body());
 
-            $this->info('Download successful: '.Storage::disk('local')->path($file));
+            $this->info('Download successful: '.Storage::path($file));
         }
 
         return 0;
