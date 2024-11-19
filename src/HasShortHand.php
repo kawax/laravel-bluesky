@@ -162,7 +162,7 @@ trait HasShortHand
     /**
      * Create new post.
      *
-     * @return Response{uri: string, cid: string}
+     * @return Response{uri: string, cid: string, commit: array{cid: string, rev: string}, validationStatus: string}
      * @throws AuthenticationException
      */
     public function post(Post|string|array $text): Response
