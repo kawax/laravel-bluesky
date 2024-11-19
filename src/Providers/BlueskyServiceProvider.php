@@ -10,6 +10,7 @@ use Laravel\Socialite\Facades\Socialite;
 use Revolution\Bluesky\BlueskyManager;
 use Revolution\Bluesky\Client\AtpClient;
 use Revolution\Bluesky\Console\DownloadRepoCommand;
+use Revolution\Bluesky\Console\DownloadBlobsCommand;
 use Revolution\Bluesky\Console\WebSocketServeCommand;
 use Revolution\Bluesky\Console\LexiconClientCommand;
 use Revolution\Bluesky\Console\NewPrivateKeyCommand;
@@ -39,6 +40,7 @@ class BlueskyServiceProvider extends ServiceProvider
                 NewPrivateKeyCommand::class,
                 WebSocketServeCommand::class,
                 DownloadRepoCommand::class,
+                DownloadBlobsCommand::class,
             ]);
 
             if (class_exists(LexiconClientCommand::class)) {
