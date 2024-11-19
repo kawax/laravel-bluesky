@@ -162,6 +162,15 @@ trait AppBskyGraph
         );
     }
 
+    public function searchStarterPacks(string $q, ?int $limit = 25, ?string $cursor = null): Response
+    {
+        return $this->call(
+            api: Graph::searchStarterPacks,
+            method: self::GET,
+            params: compact($this->params(__METHOD__)),
+        );
+    }
+
     public function unmuteActor(string $actor): Response
     {
         return $this->call(
