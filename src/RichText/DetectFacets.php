@@ -15,8 +15,7 @@ class DetectFacets
 {
     protected const MENTION_REGEX = '/(^|\s|\()(@)([a-zA-Z0-9.-]+)(\b)/';
 
-    protected const URL_REGEX =
-        '/(^|\s|\()((https?:\/\/[\S]+)|((?<domain>[a-z][a-z0-9]*(\.[a-z0-9]+)+)[\S]*))/i';
+    protected const URL_REGEX = '/(^|\s|\()((https?:\/\/[\S]+)|((?<domain>[a-z][a-z0-9]*(\.[a-z0-9]+)+)[\S]*))/i';
 
     protected const TRAILING_PUNCTUATION_REGEX = '/\p{P}+$/u';
 
