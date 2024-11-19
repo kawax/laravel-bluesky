@@ -13,10 +13,10 @@ use Revolution\AtProto\Lexicon\Union\Com\Atproto\Repo\AbstractStrongRef;
 #[NSID('com.atproto.repo.strongRef')]
 final class StrongRef extends AbstractStrongRef implements Arrayable
 {
-    public function __construct(
-        protected string $uri,
-        protected string $cid,
-    ) {
+    public function __construct(string $uri, string $cid)
+    {
+        $this->uri = $uri;
+        $this->cid = $cid;
     }
 
     /**
