@@ -24,8 +24,7 @@ class Identity
 
     public static function isHandle(?string $handle): bool
     {
-        return ! Str::endsWith($handle, '.test')
-            && preg_match(self::HANDLE_REGEX, $handle ?? '') === 1;
+        return preg_match(self::HANDLE_REGEX, $handle ?? '') === 1;
     }
 
     public static function isDID(?string $did): bool
