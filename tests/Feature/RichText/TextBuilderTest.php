@@ -3,6 +3,7 @@
 namespace Tests\Feature\RichText;
 
 use Illuminate\Support\Facades\Http;
+use Revolution\Bluesky\Record\Post;
 use Revolution\Bluesky\RichText\TextBuilder;
 use Tests\TestCase;
 
@@ -71,5 +72,29 @@ class TextBuilderTest extends TestCase
         $this->assertSame('did:plc:alice', collect($builder->facets)->dot()->get('0.features.0.did'));
         $this->assertSame('https://localhost', collect($builder->facets)->dot()->get('1.features.0.uri'));
         $this->assertSame('alice', collect($builder->facets)->dot()->get('2.features.0.tag'));
+    }
+
+    public function test_detect_facets_post_build()
+    {
+        Http::fakeSequence()
+            ->push(['did' => 'did:plc:alice']);
+
+        $post = Post::build(function (TextBuilder $builder) {
+            $builder->text('@alice.test https://localhost #alice')->detectFacets();
+        });
+
+        $facets = $post->toArray()['facets'];
+
+        $this->assertIsArray($facets);
+        $this->assertSame(0, data_get($facets, '0.index.byteStart'));
+        $this->assertSame(11, data_get($facets, '0.index.byteEnd'));
+        $this->assertSame(12, data_get($facets, '1.index.byteStart'));
+        $this->assertSame(29, data_get($facets, '1.index.byteEnd'));
+        $this->assertSame(30, data_get($facets, '2.index.byteStart'));
+        $this->assertSame(36, data_get($facets, '2.index.byteEnd'));
+
+        $this->assertSame('did:plc:alice', collect($facets)->dot()->get('0.features.0.did'));
+        $this->assertSame('https://localhost', collect($facets)->dot()->get('1.features.0.uri'));
+        $this->assertSame('alice', collect($facets)->dot()->get('2.features.0.tag'));
     }
 }
