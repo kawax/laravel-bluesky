@@ -82,14 +82,7 @@ class DownloadBlobsCommand extends Command
 
                 $content = $response->body();
 
-                $type = getimagesizefromstring($content);
-                $ext = '';
-                if (is_array($type)) {
-                    $ext = image_type_to_extension($type[2]);
-                    if ($ext === false) {
-                        $ext = '';
-                    }
-                }
+                $ext = $this->ext($content);
 
                 $name = Str::slug($actor, dictionary: ['.' => '-', ':' => '-']);
                 $file = 'bluesky/download/'.$name.'/_blob/'.$cid.$ext;
@@ -99,5 +92,20 @@ class DownloadBlobsCommand extends Command
             });
 
         return 0;
+    }
+
+    protected function ext($content): string
+    {
+        $type = data_get(getimagesizefromstring($content), 2);
+        if (! is_int($type)) {
+            return '';
+        }
+
+        $ext = image_type_to_extension($type);
+        if ($ext === false) {
+            return '';
+        }
+
+        return $ext;
     }
 }
