@@ -43,7 +43,7 @@ class TextBuilderTest extends TestCase
 
     public function test_detect_facets_tag()
     {
-        $builder = TextBuilder::make('#test #a_ #ゑ #ん #ü #_ #')->detectFacets();
+        $builder = TextBuilder::make('#test #a_ #ゑ #ん #ü #_ #😇 #')->detectFacets();
 
         $this->assertIsArray($builder->facets);
         $this->assertSame(0, data_get($builder->facets, '0.index.byteStart'));
@@ -51,7 +51,7 @@ class TextBuilderTest extends TestCase
         $this->assertSame(10, data_get($builder->facets, '2.index.byteStart'));
         $this->assertSame(14, data_get($builder->facets, '2.index.byteEnd'));
 
-        $this->assertSame(['test', 'a', 'ゑ', 'ん', 'ü'], collect($builder->facets)->pluck('features.0.tag')->toArray());
+        $this->assertSame(['test', 'a', 'ゑ', 'ん', 'ü', '😇'], collect($builder->facets)->pluck('features.0.tag')->toArray());
     }
 
     public function test_detect_facets_all()
