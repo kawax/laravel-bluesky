@@ -35,6 +35,7 @@ class Identity
 
     /**
      * @param  string|null  $id  handle or DID.  e.g. "alice.test" "did:plc:1234..." "did:web:alice.test"
+     * @return Response{id: string, alsoKnownAs: array, verificationMethod: array, service: array} didDoc
      */
     public function resolveIdentity(?string $id): Response
     {
@@ -81,6 +82,7 @@ class Identity
 
     /**
      * @param  string|null  $did  e.g. "did:plc:1234..." "did:web:alice.test"
+     * @return Response{id: string, alsoKnownAs: array, verificationMethod: array, service: array} didDoc
      */
     public function resolveDID(?string $did): Response
     {
