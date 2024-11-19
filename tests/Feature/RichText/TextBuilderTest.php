@@ -80,7 +80,10 @@ class TextBuilderTest extends TestCase
             ->push(['did' => 'did:plc:alice']);
 
         $post = Post::build(function (TextBuilder $builder) {
-            $builder->text('@alice.test https://localhost #alice')->detectFacets();
+            $builder->text('@alice.test https://localhost #alice')
+                ->detectFacets()
+                ->newLine()
+                ->tag('#Additional_tag', 'Additional_tag');
         });
 
         $facets = $post->toArray()['facets'];
@@ -92,6 +95,8 @@ class TextBuilderTest extends TestCase
         $this->assertSame(29, data_get($facets, '1.index.byteEnd'));
         $this->assertSame(30, data_get($facets, '2.index.byteStart'));
         $this->assertSame(36, data_get($facets, '2.index.byteEnd'));
+        $this->assertSame(37, data_get($facets, '3.index.byteStart'));
+        $this->assertSame(52, data_get($facets, '3.index.byteEnd'));
 
         $this->assertSame('did:plc:alice', collect($facets)->dot()->get('0.features.0.did'));
         $this->assertSame('https://localhost', collect($facets)->dot()->get('1.features.0.uri'));
