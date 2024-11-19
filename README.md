@@ -46,8 +46,6 @@ Route::get('search', function () {
 
 ### Get someone's posts (no auth required)
 
-You can get your own posts by specifying your did or handle as the actor. No authentication is required to get and save your own posts.
-
 ```php
 // routes/web.php
 
@@ -56,7 +54,7 @@ use Revolution\Bluesky\Facades\Bluesky;
 
 Route::get('feed', function () {
     // "actor" is did(did:plc:***) or handle(***.bsky.social, alice.test)
-    $response = Bluesky::getAuthorFeed(actor: 'alice.test');
+    $response = Bluesky::getAuthorFeed(actor: '***.bsky.social');
 
     $response->collect('feed')
         ->each(function (array $feed) {
@@ -65,6 +63,8 @@ Route::get('feed', function () {
         });
 });
 ```
+
+You can get your own posts by specifying your did or handle as the actor. No authentication is required to get and save your own posts.
 
 ### Create a post (requires auth)
 
@@ -121,6 +121,8 @@ Hello Bluesky
 https://bsky.app/
 #Bluesky
 ```
+
+To authenticate with OAuth, read the Socialite documentation.
 
 ## Usage
 - [Basic Client](./docs/basic-client.md)
