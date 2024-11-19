@@ -8,9 +8,8 @@ use Closure;
 use Illuminate\Contracts\Support\Arrayable;
 use Revolution\AtProto\Lexicon\Attributes\Blob;
 use Revolution\AtProto\Lexicon\Attributes\Format;
-use Revolution\AtProto\Lexicon\Enum\Embed;
-use Revolution\AtProto\Lexicon\Types\AbstractUnion;
 use Revolution\Bluesky\Types\BlobRef;
+use Revolution\AtProto\Lexicon\Union\App\Bsky\Embed\AbstractExternal;
 
 /**
  * External link / Social card.
@@ -29,7 +28,7 @@ use Revolution\Bluesky\Types\BlobRef;
  * $post = Post::create('test')->embed($external);
  * ```
  */
-final class External extends AbstractUnion implements Arrayable
+final class External extends AbstractExternal implements Arrayable
 {
     public function __construct(
         private readonly string $title,
@@ -37,7 +36,6 @@ final class External extends AbstractUnion implements Arrayable
         #[Format('uri')] private readonly string $uri,
         #[Blob(accept: ['image/*'], maxSize: 1000000)] private readonly null|array|BlobRef|Closure $thumb = null,
     ) {
-        $this->type = Embed::External->value;
     }
 
     public static function create(string $title, string $description, string $uri, null|array|BlobRef|Closure $thumb = null): self
@@ -57,15 +55,17 @@ final class External extends AbstractUnion implements Arrayable
             $thumb = $thumb->toArray();
         }
 
+        $this->external = collect([
+            'uri' => $this->uri,
+            'title' => $this->title,
+            'description' => $this->description,
+            'thumb' => $thumb,
+        ])->reject(fn ($item) => is_null($item))
+            ->toArray();
+
         return [
-            '$type' => $this->type,
-            'external' => collect([
-                'uri' => $this->uri,
-                'title' => $this->title,
-                'description' => $this->description,
-                'thumb' => $thumb,
-            ])->reject(fn ($item) => is_null($item))
-                ->toArray(),
+            '$type' => self::NSID,
+            'external' => $this->external,
         ];
     }
 }
