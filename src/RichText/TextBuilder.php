@@ -45,8 +45,12 @@ class TextBuilder implements Arrayable
      * $post = Post::create($builder->text, $builder->facets);
      * ```
      * ```
+     * // You can add more facets after detectFacets().
      * $post = Post::build(function (TextBuilder $builder) {
-     *     $builder->text('[at]alice.test test https://example.com #alice')->detectFacets();
+     *     $builder->text('[at]alice.test test https://example.com #alice')
+     *             ->detectFacets()
+     *             ->newLine()
+     *             ->tag('#bob', 'bob');
      * });
      * ```
      * ([at] should be written as @)
