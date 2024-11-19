@@ -11,20 +11,21 @@ use Revolution\AtProto\Lexicon\Union\App\Bsky\Embed\AbstractRecord;
 final class QuoteRecord extends AbstractRecord implements Arrayable
 {
     public function __construct(
-        private readonly StrongRef $quote,
+        StrongRef $record,
     ) {
+        $this->record = $record->toArray();
     }
 
-    public static function create(StrongRef $quote): self
+    public static function create(StrongRef $record): self
     {
-        return new self($quote);
+        return new self($record);
     }
 
     public function toArray(): array
     {
         return [
             '$type' => self::NSID,
-            'record' => $this->quote->toArray(),
+            'record' => $this->record,
         ];
     }
 }
