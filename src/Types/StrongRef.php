@@ -5,9 +5,10 @@ namespace Revolution\Bluesky\Types;
 use Illuminate\Contracts\Support\Arrayable;
 use Revolution\AtProto\Lexicon\Attributes\Format;
 use Revolution\AtProto\Lexicon\Attributes\NSID;
+use Revolution\AtProto\Lexicon\Union\Com\Atproto\Repo\AbstractStrongRef;
 
 #[NSID('com.atproto.repo.strongRef')]
-final readonly class StrongRef implements Arrayable
+final class StrongRef extends AbstractStrongRef implements Arrayable
 {
     public function __construct(
         protected string $uri,
