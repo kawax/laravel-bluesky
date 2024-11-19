@@ -5,19 +5,11 @@ declare(strict_types=1);
 namespace Revolution\Bluesky\Embed;
 
 use Illuminate\Contracts\Support\Arrayable;
-use Revolution\AtProto\Lexicon\Enum\Embed;
-use Revolution\AtProto\Lexicon\Types\AbstractUnion;
 use Revolution\Bluesky\Types\BlobRef;
+use Revolution\AtProto\Lexicon\Union\App\Bsky\Embed\AbstractImages;
 
-final class Images extends AbstractUnion implements Arrayable
+final class Images extends AbstractImages implements Arrayable
 {
-    private array $images = [];
-
-    public function __construct()
-    {
-        $this->type = Embed::Images->value;
-    }
-
     public static function create(): self
     {
         return new self();
@@ -64,7 +56,7 @@ final class Images extends AbstractUnion implements Arrayable
     public function toArray(): array
     {
         return [
-            '$type' => $this->type,
+            '$type' => self::NSID,
             'images' => collect($this->images)->take(4)->toArray(),
         ];
     }
