@@ -37,6 +37,30 @@ class TextBuilder implements Arrayable
     }
 
     /**
+     * Auto-detect facets. If you want to be sure it links you're better off building it manually.
+     *
+     * ```
+     * $builder = TextBuilder::make(text: '[at]alice.test test https://example.com #alice')->detectFacets();
+     *
+     * $post = Post::create($builder->text, $builder->facets);
+     * ```
+     * ```
+     * $post = Post::build(function (TextBuilder $builder) {
+     *     $builder->text('[at]alice.test test https://example.com #alice')->detectFacets();
+     * });
+     * ```
+     * ([at] should be written as @)
+     */
+    public function detectFacets(): static
+    {
+        $detect = app(DetectFacets::class)->detect($this->text);
+
+        $this->facets = $detect->facets;
+
+        return $this;
+    }
+
+    /**
      * Append to existing text.
      */
     public function text(string $text): static
