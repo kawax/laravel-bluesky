@@ -7,7 +7,7 @@ use InvalidArgumentException;
 use Revolution\AtProto\Lexicon\Attributes\Format;
 
 /**
- * https://github.com/bluesky-social/atproto/blob/main/packages/syntax/src/aturi.ts
+ * @see https://github.com/bluesky-social/atproto/blob/main/packages/syntax/src/aturi.ts
  */
 final readonly class AtUri
 {
