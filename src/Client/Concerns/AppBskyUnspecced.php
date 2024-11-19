@@ -62,4 +62,13 @@ trait AppBskyUnspecced
             params: compact($this->params(__METHOD__)),
         );
     }
+
+    public function searchStarterPacksSkeleton(string $q, ?string $viewer = null, ?int $limit = 25, ?string $cursor = null): Response
+    {
+        return $this->call(
+            api: Unspecced::searchStarterPacksSkeleton,
+            method: self::GET,
+            params: compact($this->params(__METHOD__)),
+        );
+    }
 }
