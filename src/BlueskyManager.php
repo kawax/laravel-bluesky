@@ -18,8 +18,6 @@ use Revolution\AtProto\Lexicon\Attributes\KnownValues;
 use Revolution\Bluesky\Agent\LegacyAgent;
 use Revolution\Bluesky\Agent\OAuthAgent;
 use Revolution\Bluesky\Client\AtpClient;
-use Revolution\Bluesky\Client\ChatClient;
-use Revolution\Bluesky\Client\VideoClient;
 use Revolution\Bluesky\Contracts\Agent;
 use Revolution\Bluesky\Contracts\Factory;
 use Revolution\Bluesky\Contracts\Recordable;
