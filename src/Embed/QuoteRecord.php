@@ -5,28 +5,26 @@ declare(strict_types=1);
 namespace Revolution\Bluesky\Embed;
 
 use Illuminate\Contracts\Support\Arrayable;
-use Revolution\AtProto\Lexicon\Enum\Embed;
-use Revolution\AtProto\Lexicon\Types\AbstractUnion;
 use Revolution\Bluesky\Types\StrongRef;
+use Revolution\AtProto\Lexicon\Union\App\Bsky\Embed\AbstractRecord;
 
-final class QuoteRecord extends AbstractUnion implements Arrayable
+final class QuoteRecord extends AbstractRecord implements Arrayable
 {
     public function __construct(
-        private readonly StrongRef $record,
+        private readonly StrongRef $quote,
     ) {
-        $this->type = Embed::Record->value;
     }
 
-    public static function create(StrongRef $record): self
+    public static function create(StrongRef $quote): self
     {
-        return new self($record);
+        return new self($quote);
     }
 
     public function toArray(): array
     {
         return [
-            '$type' => $this->type,
-            'record' => $this->record->toArray(),
+            '$type' => self::NSID,
+            'record' => $this->quote->toArray(),
         ];
     }
 }
