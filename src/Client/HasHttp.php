@@ -52,6 +52,13 @@ trait HasHttp
         return $this;
     }
 
+    public function baseUrl(string $baseUrl): static
+    {
+        $this->http->baseUrl($baseUrl);
+
+        return $this;
+    }
+
     public function withBody(StreamInterface|string $content, string $contentType = 'image/png'): static
     {
         $this->http->withBody($content, $contentType);
