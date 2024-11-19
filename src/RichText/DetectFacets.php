@@ -19,8 +19,11 @@ class DetectFacets
 
     protected const TRAILING_PUNCTUATION_REGEX = '/\p{P}+$/u';
 
-    // Since the same regular expressions as in JS cannot be used, the behavior may be different.
-    protected const TAG_REGEX = '/(^|\s)#(\S*[^\d\s\p{P}]+\S*)?/i';
+    protected const TAG_REGEX = '/(^|\s)[#＃]((?!\x{fe0f})[^\s\x{00AD}\x{2060}\x{200A}\x{200B}\x{200C}\x{200D}\x{20e2}]*[^\d\s\p{P}\x{00AD}\x{2060}\x{200A}\x{200B}\x{200C}\x{200D}\x{20e2}]+[^\s\x{00AD}\x{2060}\x{200A}\x{200B}\x{200C}\x{200D}\x{20e2}]*)?/u';
+    /**
+     * `\ufe0f` emoji modifier
+     * `\u00AD\u2060\u200A\u200B\u200C\u200D\u20e2` zero-width spaces (likely incomplete)
+     */
     //protected const TAG_REGEX = '/(^|\s)[#＃]((?!\ufe0f)[^\s\u00AD\u2060\u200A\u200B\u200C\u200D\u20e2]*[^\d\s\p{P}\u00AD\u2060\u200A\u200B\u200C\u200D\u20e2]+[^\s\u00AD\u2060\u200A\u200B\u200C\u200D\u20e2]*)?/gu';
 
     protected const TYPE = 'app.bsky.richtext.facet';
