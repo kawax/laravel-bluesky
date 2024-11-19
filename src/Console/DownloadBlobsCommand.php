@@ -74,13 +74,12 @@ class DownloadBlobsCommand extends Command
 
         $response->collect('cids')
             ->each(function ($cid) use ($actor, $did, $pds) {
-                $response = Bluesky::client(auth: false)
+                $content = Bluesky::client(auth: false)
                     ->sync()
                     ->baseUrl($pds.'/xrpc/')
                     ->getBlob(did: $did, cid: $cid)
-                    ->throw();
-
-                $content = $response->body();
+                    ->throw()
+                    ->body();
 
                 $ext = $this->ext($content);
 
