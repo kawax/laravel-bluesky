@@ -8,6 +8,7 @@ use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 use Revolution\Bluesky\Facades\Bluesky;
+use Revolution\Bluesky\Support\AtUri;
 
 /**
  * Sample command to download the actor's Record. Download json directly instead of parsing CAR file.
@@ -55,11 +56,11 @@ class DownloadRecordCommand extends Command
                 ->throw();
 
             $response->collect('records')->each(function (array $record) use ($actor, $collection) {
-                $cid = data_get($record, 'cid');
+                $at = AtUri::parse(data_get($record, 'uri'));
 
                 $name = Str::slug($actor, dictionary: ['.' => '-', ':' => '-']);
 
-                $file = collect(['bluesky', 'download', $name, 'record', $collection, $cid.'.json'])
+                $file = collect(['bluesky', 'download', $name, $collection, $at->rkey().'.json'])
                     ->implode(DIRECTORY_SEPARATOR);
 
                 Storage::put($file, json_encode($record, JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES));
