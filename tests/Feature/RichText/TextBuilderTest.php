@@ -30,15 +30,15 @@ class TextBuilderTest extends TestCase
 
     public function test_detect_facets_link()
     {
-        $builder = TextBuilder::make('https://localhost https://localhost? test test (https://localhost) example.com https://')->detectFacets();
+        $builder = TextBuilder::make('https://localhost https://localhost/?test=a test test (https://localhost) example.com https://localhost/.,;:!? https://localhost/#hash https://')->detectFacets();
 
         $this->assertIsArray($builder->facets);
         $this->assertSame(0, data_get($builder->facets, '0.index.byteStart'));
         $this->assertSame(17, data_get($builder->facets, '0.index.byteEnd'));
-        $this->assertSame(48, data_get($builder->facets, '2.index.byteStart'));
-        $this->assertSame(65, data_get($builder->facets, '2.index.byteEnd'));
+        $this->assertSame(55, data_get($builder->facets, '2.index.byteStart'));
+        $this->assertSame(72, data_get($builder->facets, '2.index.byteEnd'));
 
-        $this->assertSame(['https://localhost', 'https://localhost', 'https://localhost'], collect($builder->facets)->pluck('features.0.uri')->toArray());
+        $this->assertSame(['https://localhost', 'https://localhost/?test=a', 'https://localhost','https://example.com', 'https://localhost/', 'https://localhost/#hash'], collect($builder->facets)->pluck('features.0.uri')->toArray());
     }
 
     public function test_detect_facets_tag()
