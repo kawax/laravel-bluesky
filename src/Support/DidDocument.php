@@ -67,6 +67,14 @@ final class DidDocument implements Arrayable
         return data_get($service, 'serviceEndpoint', $default);
     }
 
+    /**
+     * Get "aud" for Service Auth from PDS url.
+     */
+    public function serviceAuthAud(): string
+    {
+        return Str::replace(search: 'https://', replace: 'did:web:', subject: $this->pdsUrl());
+    }
+
     public function get(string $key, ?string $default = null): mixed
     {
         return data_get($this->didDoc, $key, $default);
