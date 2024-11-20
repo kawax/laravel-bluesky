@@ -74,7 +74,6 @@ class DownloadBlobsCommand extends Command
                 ->listBlobs(did: $did, cursor: $cursor)
                 ->throw();
 
-
             $response->collect('cids')
                 ->each(function ($cid) use ($actor, $did, $pds) {
                     $content = Bluesky::client(auth: false)
