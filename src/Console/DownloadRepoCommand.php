@@ -62,9 +62,7 @@ class DownloadRepoCommand extends Command
 
         $this->line('DID: '.$did);
 
-        $didDoc = DidDocument::make()->fetch($did);
-
-        $pds = $didDoc->pdsUrl();
+        $pds = DidDocument::make()->fetch($did)->pdsUrl();
 
         $this->line('PDS: '.$pds);
 
