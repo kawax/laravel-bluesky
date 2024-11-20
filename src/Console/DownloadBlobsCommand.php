@@ -46,7 +46,7 @@ class DownloadBlobsCommand extends Command
     {
         $actor = $this->argument('actor');
 
-        $this->line('Actor: '.$actor);
+        $this->warn('Actor: '.$actor);
 
         if (Identity::isHandle($actor)) {
             $did = Bluesky::resolveHandle($actor)->json('did');
@@ -59,38 +59,51 @@ class DownloadBlobsCommand extends Command
             return 1;
         }
 
-        $this->line('DID: '.$did);
+        $this->warn('DID: '.$did);
 
         $pds = DidDocument::make()->fetch($did)->pdsUrl();
 
-        $this->line('PDS: '.$pds);
+        $this->warn('PDS: '.$pds);
 
-        $response = Bluesky::client(auth: false)
-            ->sync()
-            ->baseUrl($pds.'/xrpc/')
-            ->listBlobs(did: $did)
-            ->throw();
+        $cursor = '';
 
-        $response->collect('cids')
-            ->each(function ($cid) use ($actor, $did, $pds) {
-                $content = Bluesky::client(auth: false)
-                    ->sync()
-                    ->baseUrl($pds.'/xrpc/')
-                    ->getBlob(did: $did, cid: $cid)
-                    ->throw()
-                    ->body();
+        do {
+            $response = Bluesky::client(auth: false)
+                ->sync()
+                ->baseUrl($pds.'/xrpc/')
+                ->listBlobs(did: $did, cursor: $cursor)
+                ->throw();
 
-                $name = Str::slug($actor, dictionary: ['.' => '-', ':' => '-']);
-                $file = 'bluesky/download/'.$name.'/blob/'.$cid;
-                Storage::put($file, $content);
 
-                $ext = $this->ext(Storage::mimeType($file));
-                $file_ext = $file.$ext;
+            $response->collect('cids')
+                ->each(function ($cid) use ($actor, $did, $pds) {
+                    $content = Bluesky::client(auth: false)
+                        ->sync()
+                        ->baseUrl($pds.'/xrpc/')
+                        ->getBlob(did: $did, cid: $cid)
+                        ->throw()
+                        ->body();
 
-                Storage::move($file, $file_ext);
+                    $name = Str::slug($actor, dictionary: ['.' => '-', ':' => '-']);
 
-                $this->info('Download successful: '.Storage::path($file_ext));
-            });
+                    $file = collect(['bluesky', 'download', $name, 'blob', $cid])
+                        ->implode(DIRECTORY_SEPARATOR);
+
+                    Storage::put($file, $content);
+
+                    $ext = $this->ext(Storage::mimeType($file));
+                    $file_ext = $file.$ext;
+
+                    Storage::move($file, $file_ext);
+
+                    $this->line('Download: '.Storage::path($file_ext));
+                });
+
+            $cursor = $response->json('cursor');
+            $this->warn('cursor: '.$cursor);
+        } while (filled($cursor));
+
+        $this->info('Download successful');
 
         return 0;
     }
