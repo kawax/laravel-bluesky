@@ -88,19 +88,19 @@ class DetectFacets
                 $start = data_get($match, 1);
                 $end = $start + strlen($uri);
 
-                if (! Str::startsWith($uri, 'http')) {
-                    return;
+                if (! Str::startsWith($uri, 'http') && Str::isUrl('https://'.$uri, ['https'])) {
+                    $uri = 'https://'.$uri;
                 }
 
-                $uri = Str::of($uri)->whenTest('/[.,;:!?]$/', function (Stringable $string) use (&$end) {
-                    $end--;
-                    return $string->rtrim('.,;:!?');
-                })->toString();
+                if (Str::of($uri)->test('/[.,;:!?]$/')) {
+                    $uri = Str::rtrim($uri, '.,;:!?');
+                    $end = $start + strlen($uri);
+                }
 
-                $uri = Str::of($uri)->whenTest('/[)]$/', function (Stringable $string) use (&$end) {
-                    $end--;
-                    return $string->rtrim(')');
-                })->toString();
+                if (Str::of($uri)->test('/[)]$/') && Str::doesntContain($uri, '(')) {
+                    $uri = Str::rtrim($uri, ')');
+                    $end = $start + strlen($uri);
+                }
 
                 $this->facets[] = [
                     '$type' => self::TYPE,
