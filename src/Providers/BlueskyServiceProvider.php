@@ -9,6 +9,7 @@ use Illuminate\Support\ServiceProvider;
 use Laravel\Socialite\Facades\Socialite;
 use Revolution\Bluesky\BlueskyManager;
 use Revolution\Bluesky\Client\AtpClient;
+use Revolution\Bluesky\Console\DownloadRecordCommand;
 use Revolution\Bluesky\Console\DownloadRepoCommand;
 use Revolution\Bluesky\Console\DownloadBlobsCommand;
 use Revolution\Bluesky\Console\WebSocketServeCommand;
@@ -41,6 +42,7 @@ class BlueskyServiceProvider extends ServiceProvider
                 WebSocketServeCommand::class,
                 DownloadRepoCommand::class,
                 DownloadBlobsCommand::class,
+                DownloadRecordCommand::class,
             ]);
 
             if (class_exists(LexiconClientCommand::class)) {
