@@ -10,6 +10,7 @@ use Illuminate\Support\Str;
 use Revolution\Bluesky\Facades\Bluesky;
 use Revolution\Bluesky\Support\DidDocument;
 use Revolution\Bluesky\Support\Identity;
+use Symfony\Component\Mime\MimeTypes;
 
 /**
  * Sample command to download the actor's blob files.
@@ -60,9 +61,7 @@ class DownloadBlobsCommand extends Command
 
         $this->line('DID: '.$did);
 
-        $didDoc = DidDocument::make()->fetch($did);
-
-        $pds = $didDoc->pdsUrl();
+        $pds = DidDocument::make()->fetch($did)->pdsUrl();
 
         $this->line('PDS: '.$pds);
 
@@ -81,30 +80,29 @@ class DownloadBlobsCommand extends Command
                     ->throw()
                     ->body();
 
-                $ext = $this->ext($content);
-
                 $name = Str::slug($actor, dictionary: ['.' => '-', ':' => '-']);
-                $file = 'bluesky/download/'.$name.'/_blob/'.$cid.$ext;
+                $file = 'bluesky/download/'.$name.'/blob/'.$cid;
                 Storage::put($file, $content);
 
-                $this->info('Download successful: '.Storage::path($file));
+                $ext = $this->ext(Storage::mimeType($file));
+                $file_ext = $file.$ext;
+
+                Storage::move($file, $file_ext);
+
+                $this->info('Download successful: '.Storage::path($file_ext));
             });
 
         return 0;
     }
 
-    protected function ext($content): string
+    protected function ext($mime): string
     {
-        $type = data_get(getimagesizefromstring($content), 2);
-        if (! is_int($type)) {
+        $ext = head(MimeTypes::getDefault()->getExtensions($mime));
+
+        if (empty($ext)) {
             return '';
         }
 
-        $ext = image_type_to_extension($type);
-        if ($ext === false) {
-            return '';
-        }
-
-        return $ext;
+        return '.'.$ext;
     }
 }
