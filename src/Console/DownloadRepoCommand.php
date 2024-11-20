@@ -47,7 +47,7 @@ class DownloadRepoCommand extends Command
     {
         $actor = $this->argument('actor');
 
-        $this->line('Actor: '.$actor);
+        $this->warn('Actor: '.$actor);
 
         if (Identity::isHandle($actor)) {
             $did = Bluesky::resolveHandle($actor)->json('did');
@@ -60,11 +60,11 @@ class DownloadRepoCommand extends Command
             return 1;
         }
 
-        $this->line('DID: '.$did);
+        $this->warn('DID: '.$did);
 
         $pds = DidDocument::make()->fetch($did)->pdsUrl();
 
-        $this->line('PDS: '.$pds);
+        $this->warn('PDS: '.$pds);
 
         $response = Bluesky::client(auth: false)
             ->sync()
@@ -72,13 +72,16 @@ class DownloadRepoCommand extends Command
             ->getRepo(did: $did)
             ->throw();
 
-        if ($response->successful()) {
-            $name = Str::slug($actor, dictionary: ['.' => '-', ':' => '-']);
-            $file = 'bluesky/download/'.$name.'/'.$name.'.car';
-            Storage::put($file, $response->body());
+        $name = Str::slug($actor, dictionary: ['.' => '-', ':' => '-']);
 
-            $this->info('Download successful: '.Storage::path($file));
-        }
+        $file = collect(['bluesky', 'download', $name, $name.'.car'])
+            ->implode(DIRECTORY_SEPARATOR);
+
+        Storage::put($file, $response->body());
+
+        $this->line('Download: '.Storage::path($file));
+
+        $this->info('Download successful');
 
         return 0;
     }
