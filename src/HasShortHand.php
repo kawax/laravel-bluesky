@@ -431,10 +431,9 @@ trait HasShortHand
     public function uploadVideo(StreamInterface|string $data, string $name, #[KnownValues(['video/mp4', 'video/mpeg', 'video/webm', 'video/quicktime', ' image/gif'])] string $type = 'video/mp4'): Response
     {
         //Service auth is required to use the video upload features.
-        $aud = $this->agent()->session()->didDoc()->pdsUrl();
-        $aud = Str::replace(search: 'https://', replace: 'did:web:', subject: $aud);
+        $aud = $this->agent()->session()->didDoc()->serviceAuthAud();
 
-        $token = $this->getServiceAuth(aud: $aud, lxm: Repo::uploadBlob)
+        $token = $this->getServiceAuth(aud: $aud, exp: now()->addMinutes(30)->timestamp, lxm: Repo::uploadBlob)
             ->json('token');
 
         return $this->client(auth: true)
@@ -454,8 +453,7 @@ trait HasShortHand
      */
     public function getJobStatus(string $jobId): Response
     {
-        $aud = $this->agent()->session()->didDoc()->pdsUrl();
-        $aud = Str::replace(search: 'https://', replace: 'did:web:', subject: $aud);
+        $aud = $this->agent()->session()->didDoc()->serviceAuthAud();
 
         $token = $this->getServiceAuth(aud: $aud, lxm: Video::getJobStatus)
             ->json('token');
@@ -480,7 +478,7 @@ trait HasShortHand
 
     /**
      * ```
-     * $token = Bluesky::withToken()->getServiceAuth(aud: 'did:web:video.bsky.app', lxm: 'app.bsky.video.getUploadLimits')->json('token');
+     * $token = Bluesky::withToken()->getServiceAuth(aud: 'did:web:video.bsky.app', exp: now()->addMinutes(5)->timestamp, lxm: 'app.bsky.video.getUploadLimits')->json('token');
      * ```
      *
      * @param  string  $aud  The DID of the service that the token will be used to authenticate with
