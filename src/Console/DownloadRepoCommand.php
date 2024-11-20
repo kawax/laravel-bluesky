@@ -36,7 +36,7 @@ class DownloadRepoCommand extends Command
      *
      * @var string
      */
-    protected $description = 'Download actor\'s car file';
+    protected $description = 'Download actor\'s car file. Does not require auth.';
 
     /**
      * Execute the console command.
