@@ -448,7 +448,7 @@ trait HasShortHand
     /**
      * This will get you the "blob" of the video you uploaded.
      *
-     * @return Response{jobStatus: array{blob: array, did: string, error?: string, jobId: string, message?: string, state: string, progress?: int}}
+     * @return Response{jobStatus: array{blob?: array, did: string, error?: string, jobId: string, message?: string, state: string, progress?: int}}
      */
     public function getJobStatus(string $jobId): Response
     {
