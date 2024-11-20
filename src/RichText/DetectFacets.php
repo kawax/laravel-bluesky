@@ -20,8 +20,6 @@ class DetectFacets
 
     protected const TAG_REGEX = '/(^|\s)[#＃]((?!\x{fe0f})[^\s\x{00AD}\x{2060}\x{200A}\x{200B}\x{200C}\x{200D}\x{20e2}]*[^\d\s\p{P}\x{00AD}\x{2060}\x{200A}\x{200B}\x{200C}\x{200D}\x{20e2}]+[^\s\x{00AD}\x{2060}\x{200A}\x{200B}\x{200C}\x{200D}\x{20e2}]*)?/u';
 
-    protected const TYPE = 'app.bsky.richtext.facet';
-
     protected readonly string $text;
 
     public array $facets = [];
@@ -57,7 +55,6 @@ class DetectFacets
                 }
 
                 $this->facets[] = [
-                    '$type' => self::TYPE,
                     'index' => [
                         'byteStart' => $start - 1,
                         'byteEnd' => $start + strlen($handle),
@@ -97,7 +94,6 @@ class DetectFacets
                 }
 
                 $this->facets[] = [
-                    '$type' => self::TYPE,
                     'index' => [
                         'byteStart' => $start,
                         'byteEnd' => $end,
@@ -128,7 +124,6 @@ class DetectFacets
                 }
 
                 $this->facets[] = [
-                    '$type' => self::TYPE,
                     'index' => [
                         'byteStart' => $start,
                         'byteEnd' => $start + 1 + strlen($tag),
