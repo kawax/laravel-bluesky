@@ -411,7 +411,7 @@ trait HasShortHand
      * use Illuminate\Support\Facades\Storage;
      * use Revolution\Bluesky\Facades\Bluesky;
      *
-     * $upload = Bluesky::withToken()->uploadVideo(data: Storage::get('video.mp4'), name: 'video.mp4');
+     * $upload = Bluesky::withToken()->uploadVideo(Storage::get('video.mp4'));
      *
      * $jobId = $upload->json('jobId');
      *
@@ -423,12 +423,11 @@ trait HasShortHand
      * ```
      *
      * @param  StreamInterface|string  $data  Video data
-     * @param  string  $name  File name
      * @param  string  $type  File mimetype
      * @return Response{did: string, error?: string, jobId: string, message?: string, state: string}
      * @throws AuthenticationException
      */
-    public function uploadVideo(StreamInterface|string $data, string $name, #[KnownValues(['video/mp4', 'video/mpeg', 'video/webm', 'video/quicktime', ' image/gif'])] string $type = 'video/mp4'): Response
+    public function uploadVideo(StreamInterface|string $data, #[KnownValues(['video/mp4', 'video/mpeg', 'video/webm', 'video/quicktime', 'image/gif'])] string $type = 'video/mp4'): Response
     {
         //Service auth is required to use the video upload features.
         $aud = $this->agent()->session()->didDoc()->serviceAuthAud();
@@ -441,7 +440,6 @@ trait HasShortHand
             ->upload(
                 did: $this->assertDid(),
                 data: $data,
-                name: $name,
                 type: $type,
             );
     }
