@@ -34,7 +34,7 @@ class DownloadBlobsCommand extends Command
      *
      * @var string
      */
-    protected $description = 'Download actor\'s blobs';
+    protected $description = 'Download actor\'s blobs. Does not require auth.';
 
     /**
      * Execute the console command.
