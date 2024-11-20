@@ -18,7 +18,7 @@ use Revolution\Bluesky\Support\Identity;
  * php artisan bluesky:download-blobs ***.bsky.social
  * ```
  *
- * @see https://docs.bsky.app/blog/repo-export
+ * @link https://docs.bsky.app/blog/repo-export
  */
 class DownloadBlobsCommand extends Command
 {

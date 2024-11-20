@@ -10,7 +10,7 @@ use Illuminate\Support\Str;
 use InvalidArgumentException;
 
 /**
- * @see https://github.com/bluesky-social/cookbook/blob/main/python-oauth-web-app/atproto_identity.py
+ * @link https://github.com/bluesky-social/cookbook/blob/main/python-oauth-web-app/atproto_identity.py
  */
 class Identity
 {

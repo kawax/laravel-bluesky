@@ -3,13 +3,12 @@
 namespace Revolution\Bluesky\RichText;
 
 use Illuminate\Support\Str;
-use Illuminate\Support\Stringable;
 use Revolution\AtProto\Lexicon\Enum\Facet;
 use Revolution\Bluesky\Facades\Bluesky;
 use Revolution\Bluesky\Support\Identity;
 
 /**
- * @see https://github.com/bluesky-social/atproto/blob/main/packages/api/src/rich-text/detection.ts
+ * @link https://github.com/bluesky-social/atproto/blob/main/packages/api/src/rich-text/detection.ts
  */
 class DetectFacets
 {
@@ -20,11 +19,6 @@ class DetectFacets
     protected const TRAILING_PUNCTUATION_REGEX = '/\p{P}+$/u';
 
     protected const TAG_REGEX = '/(^|\s)[#＃]((?!\x{fe0f})[^\s\x{00AD}\x{2060}\x{200A}\x{200B}\x{200C}\x{200D}\x{20e2}]*[^\d\s\p{P}\x{00AD}\x{2060}\x{200A}\x{200B}\x{200C}\x{200D}\x{20e2}]+[^\s\x{00AD}\x{2060}\x{200A}\x{200B}\x{200C}\x{200D}\x{20e2}]*)?/u';
-    /**
-     * `\ufe0f` emoji modifier
-     * `\u00AD\u2060\u200A\u200B\u200C\u200D\u20e2` zero-width spaces (likely incomplete)
-     */
-    //protected const TAG_REGEX = '/(^|\s)[#＃]((?!\ufe0f)[^\s\u00AD\u2060\u200A\u200B\u200C\u200D\u20e2]*[^\d\s\p{P}\u00AD\u2060\u200A\u200B\u200C\u200D\u20e2]+[^\s\u00AD\u2060\u200A\u200B\u200C\u200D\u20e2]*)?/gu';
 
     protected const TYPE = 'app.bsky.richtext.facet';
 

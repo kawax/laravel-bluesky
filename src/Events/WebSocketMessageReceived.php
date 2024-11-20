@@ -24,7 +24,7 @@ use Illuminate\Foundation\Events\Dispatchable;
  * }
  * ```
  *
- * @see https://github.com/bluesky-social/jetstream
+ * @link https://github.com/bluesky-social/jetstream
  */
 class WebSocketMessageReceived
 {

@@ -28,7 +28,8 @@ use Revolution\Bluesky\Types\StrongRef;
 
 /**
  * The method names will be the same as the official client.
- * https://github.com/bluesky-social/atproto/blob/main/packages/api/README.md
+ *
+ * @link https://github.com/bluesky-social/atproto/blob/main/packages/api/README.md
  */
 trait HasShortHand
 {

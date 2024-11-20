@@ -43,7 +43,7 @@ use Valtzu\WebSocketMiddleware\WebSocketStream;
  *
  * This is an advanced usage so they probably won't document it.
  *
- * @see https://github.com/bluesky-social/jetstream
+ * @link https://github.com/bluesky-social/jetstream
  */
 class WebSocketServeCommand extends Command
 {
