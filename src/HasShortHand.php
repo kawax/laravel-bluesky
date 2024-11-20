@@ -411,7 +411,7 @@ trait HasShortHand
      * use Illuminate\Support\Facades\Storage;
      * use Revolution\Bluesky\Facades\Bluesky;
      *
-     * $upload = Bluesky::withToken()->uploadVideo(data: Storage::get('video.mp4'));
+     * $upload = Bluesky::withToken()->uploadVideo(Storage::get('video.mp4'));
      *
      * $jobId = $upload->json('jobId');
      *
