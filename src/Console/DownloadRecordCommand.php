@@ -17,6 +17,8 @@ use Revolution\Bluesky\Support\AtUri;
  * ```
  * php artisan bluesky:download-record ***.bsky.social -C app.bsky.feed.post
  * ```
+ *
+ * @link https://docs.bsky.app/blog/repo-export
  */
 class DownloadRecordCommand extends Command
 {
