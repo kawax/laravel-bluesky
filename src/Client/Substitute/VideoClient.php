@@ -3,6 +3,7 @@
 namespace Revolution\Bluesky\Client\Substitute;
 
 use Illuminate\Http\Client\Response;
+use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Str;
 use Illuminate\Support\Traits\Conditionable;
 use Illuminate\Support\Traits\Macroable;
@@ -20,6 +21,19 @@ class VideoClient implements Video
     use AppBskyVideo;
 
     public const VIDEO_ENDPOINT = 'https://video.bsky.app/xrpc/';
+
+    public const VIDEO_SERVICE_DID = 'did:web:video.bsky.app';
+
+    /**
+     * @param  string  $token  Service Auth token
+     */
+    public function withToken(string $token): self
+    {
+        $http = Http::baseUrl(VideoClient::VIDEO_ENDPOINT)
+            ->withToken($token);
+
+        return $this->withHttp($http);
+    }
 
     /**
      * {@link AppBskyVideo::uploadVideo()} doesn't work because it is missing required parameters.
