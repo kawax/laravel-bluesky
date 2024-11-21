@@ -28,7 +28,7 @@ class VideoClient implements XrpcClient, Video
     /**
      * @param  string  $token  Service Auth token
      */
-    public function withToken(string $token): self
+    public function withServiceAuthToken(string $token): self
     {
         $http = Http::baseUrl(VideoClient::VIDEO_ENDPOINT)
             ->withToken($token);
