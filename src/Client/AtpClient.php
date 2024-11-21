@@ -67,7 +67,7 @@ class AtpClient implements XrpcClient,
      */
     public function video(string $token): VideoClient
     {
-        $http = Http::baseUrl('https://video.bsky.app/xrpc/')
+        $http = Http::baseUrl(VideoClient::VIDEO_ENDPOINT)
             ->withToken($token);
 
         return app(VideoClient::class)->withHttp($http);
@@ -82,7 +82,7 @@ class AtpClient implements XrpcClient,
     {
         return app(ChatClient::class)
             ->withHttp($this->http())
-            ->withServiceProxy('did:web:api.bsky.chat#bsky_chat');
+            ->withServiceProxy(ChatClient::CHAT_SERVICE_DID);
     }
 
     /**
