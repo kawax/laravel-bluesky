@@ -8,9 +8,10 @@ use Revolution\Bluesky\Facades\Bluesky;
 use Revolution\Bluesky\Support\Identity;
 
 /**
+ * @internal
  * @link https://github.com/bluesky-social/atproto/blob/main/packages/api/src/rich-text/detection.ts
  */
-class DetectFacets
+final class DetectFacets
 {
     protected const MENTION_REGEX = '/(^|\s|\()(@)([a-zA-Z0-9.-]+)(\b)/';
 
@@ -22,9 +23,9 @@ class DetectFacets
 
     protected readonly string $text;
 
-    public array $facets = [];
+    protected array $facets = [];
 
-    public function detect(string $text): static
+    public function __invoke(string $text): array
     {
         $this->text = $text;
 
@@ -32,7 +33,7 @@ class DetectFacets
         $this->link();
         $this->tag();
 
-        return $this;
+        return $this->facets;
     }
 
     protected function mention(): void
