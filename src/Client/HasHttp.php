@@ -28,6 +28,15 @@ trait HasHttp
         return $this->http()->$method(enum_value($api), $params);
     }
 
+    /**
+     * Get the method parameter names. Used in conjunction with compact() on the original method.
+     *
+     * ```
+     * params('...AppBskyActor::getProfile')
+     *
+     * ['actor']
+     * ```
+     */
     protected function params(string $method): array
     {
         $ref = new ReflectionMethod($method);
@@ -76,6 +85,8 @@ trait HasHttp
     }
 
     /**
+     * Set "atproto-proxy" header.
+     *
      * ```
      * ->withServiceProxy('did:web:api.bsky.chat#bsky_chat')
      * ```
