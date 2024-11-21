@@ -7,7 +7,7 @@ use Revolution\Bluesky\Client\Concerns\ComAtprotoAdmin;
 use Revolution\Bluesky\Client\HasHttp;
 use Revolution\Bluesky\Contracts\XrpcClient;
 
-class AtprotoAdmin implements XrpcClient, Admin
+class AdminClient implements XrpcClient, Admin
 {
     use HasHttp;
 

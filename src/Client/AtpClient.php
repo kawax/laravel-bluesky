@@ -27,7 +27,7 @@ use Revolution\Bluesky\Client\Concerns\ComAtprotoModeration;
 use Revolution\Bluesky\Client\Concerns\ComAtprotoRepo;
 use Revolution\Bluesky\Client\Concerns\ComAtprotoServer;
 use Revolution\Bluesky\Client\Concerns\ComAtprotoTemp;
-use Revolution\Bluesky\Client\Substitute\AtprotoAdmin;
+use Revolution\Bluesky\Client\Substitute\AdminClient;
 use Revolution\Bluesky\Client\Substitute\SyncClient;
 use Revolution\Bluesky\Client\Substitute\BskyNotification;
 use Revolution\Bluesky\Contracts\XrpcClient;
@@ -96,9 +96,9 @@ class AtpClient implements XrpcClient,
     /**
      * com.atproto.admin
      */
-    public function admin(): AtprotoAdmin
+    public function admin(): AdminClient
     {
-        return app(AtprotoAdmin::class)->withHttp($this->http());
+        return app(AdminClient::class)->withHttp($this->http());
     }
 
     /**
