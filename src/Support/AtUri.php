@@ -44,16 +44,25 @@ final readonly class AtUri
         return $this->protocol ?? '';
     }
 
+    /**
+     * @return string DID
+     */
     public function repo(): string
     {
         return $this->host ?? '';
     }
 
+    /**
+     * @return string "app.bsky.feed.post"
+     */
     public function collection(): string
     {
         return Str::of($this->pathname)->explode('/')->get(1, default: '');
     }
 
+    /**
+     * @return string Record key
+     */
     public function rkey(): string
     {
         return Str::of($this->pathname)->explode('/')->get(2, default: '');
