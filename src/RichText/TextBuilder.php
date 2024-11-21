@@ -45,12 +45,11 @@ class TextBuilder implements Arrayable
      * $post = Post::create($builder->text, $builder->facets);
      * ```
      * ```
-     * // You can add more facets after detectFacets().
      * $post = Post::build(function (TextBuilder $builder) {
      *     $builder->text('[at]alice.test test https://example.com #alice')
      *             ->detectFacets()
      *             ->newLine()
-     *             ->tag('#bob', 'bob');
+     *             ->tag('#bob', 'bob');// Add more facets after detectFacets().
      * });
      * ```
      * ([at] should be written as @)
@@ -150,6 +149,16 @@ class TextBuilder implements Arrayable
     public function facet(array $facet): static
     {
         $this->facets[] = $facet;
+
+        return $this;
+    }
+
+    /**
+     * Remove all Facets.
+     */
+    public function resetFacets(): static
+    {
+        $this->facets = [];
 
         return $this;
     }
