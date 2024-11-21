@@ -59,6 +59,10 @@ final class DidDocument implements Arrayable
         return Str::chopStart($handle, 'at://');
     }
 
+    /**
+     * PDS url.
+     * "https://***.***.host.bsky.network"
+     */
     public function pdsUrl(?string $default = null): ?string
     {
         $service = collect($this->didDoc->get('service', []))
@@ -69,6 +73,7 @@ final class DidDocument implements Arrayable
 
     /**
      * Get "aud" for Service Auth from PDS url.
+     * "did:web:***.***.host.bsky.network"
      */
     public function serviceAuthAud(): string
     {
