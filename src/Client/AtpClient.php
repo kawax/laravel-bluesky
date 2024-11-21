@@ -67,10 +67,7 @@ class AtpClient implements XrpcClient,
      */
     public function video(string $token): VideoClient
     {
-        $http = Http::baseUrl(VideoClient::VIDEO_ENDPOINT)
-            ->withToken($token);
-
-        return app(VideoClient::class)->withHttp($http);
+        return app(VideoClient::class)->withToken($token);
     }
 
     /**
