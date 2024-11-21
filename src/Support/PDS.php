@@ -14,7 +14,7 @@ class PDS
     /**
      * Get PDS OAuth protected resource.
      */
-    public function resource(string $pds_url): ProtectedResource
+    public function getProtectedResource(string $pds_url): ProtectedResource
     {
         return ProtectedResource::make(
             Http::baseUrl($pds_url)

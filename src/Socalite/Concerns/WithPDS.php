@@ -41,7 +41,7 @@ trait WithPDS
     protected function pdsProtectedResource(string $pds_url, string $key = '', ?string $default = null): ProtectedResource|array|string|null
     {
         if (empty($this->pds_resource)) {
-            $this->pds_resource = Bluesky::pds()->resource($pds_url);
+            $this->pds_resource = Bluesky::pds()->getProtectedResource($pds_url);
 
             if ($this->pds_resource->resource() !== $pds_url) {
                 throw new InvalidArgumentException('Invalid PDS url.');

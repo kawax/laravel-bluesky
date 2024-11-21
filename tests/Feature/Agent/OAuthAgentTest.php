@@ -98,7 +98,7 @@ class OAuthAgentTest extends TestCase
         Bluesky::shouldReceive('getProfile->json')->once()->andReturn([
             'handle' => 'handle',
         ]);
-        Bluesky::shouldReceive('pds->resource')->once()->andReturn(ProtectedResource::make([
+        Bluesky::shouldReceive('pds->getProtectedResource')->once()->andReturn(ProtectedResource::make([
             'authorization_servers' => ['https://iss'],
         ]));
 
