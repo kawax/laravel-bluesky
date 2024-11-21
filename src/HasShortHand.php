@@ -14,7 +14,7 @@ use Revolution\AtProto\Lexicon\Contracts\App\Bsky\Video;
 use Revolution\AtProto\Lexicon\Contracts\Com\Atproto\Repo;
 use Revolution\AtProto\Lexicon\Enum\Feed;
 use Revolution\AtProto\Lexicon\Enum\Graph;
-use Revolution\Bluesky\Client\Substitute\VideoClient;
+use Revolution\Bluesky\Client\SubClient\VideoClient;
 use Revolution\Bluesky\Record\Block;
 use Revolution\Bluesky\Record\Follow;
 use Revolution\Bluesky\Record\Like;

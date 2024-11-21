@@ -1,6 +1,6 @@
 <?php
 
-namespace Revolution\Bluesky\Client\Substitute;
+namespace Revolution\Bluesky\Client\SubClient;
 
 use Revolution\AtProto\Lexicon\Contracts\Com\Atproto\Admin;
 use Revolution\Bluesky\Client\Concerns\ComAtprotoAdmin;

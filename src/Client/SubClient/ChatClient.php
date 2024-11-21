@@ -1,6 +1,6 @@
 <?php
 
-namespace Revolution\Bluesky\Client\Substitute;
+namespace Revolution\Bluesky\Client\SubClient;
 
 use Illuminate\Support\Traits\Conditionable;
 use Illuminate\Support\Traits\Macroable;

@@ -26,11 +26,11 @@ use Revolution\Bluesky\Client\Concerns\ComAtprotoModeration;
 use Revolution\Bluesky\Client\Concerns\ComAtprotoRepo;
 use Revolution\Bluesky\Client\Concerns\ComAtprotoServer;
 use Revolution\Bluesky\Client\Concerns\ComAtprotoTemp;
-use Revolution\Bluesky\Client\Substitute\AdminClient;
-use Revolution\Bluesky\Client\Substitute\BskyNotification;
-use Revolution\Bluesky\Client\Substitute\ChatClient;
-use Revolution\Bluesky\Client\Substitute\SyncClient;
-use Revolution\Bluesky\Client\Substitute\VideoClient;
+use Revolution\Bluesky\Client\SubClient\AdminClient;
+use Revolution\Bluesky\Client\SubClient\BskyNotification;
+use Revolution\Bluesky\Client\SubClient\ChatClient;
+use Revolution\Bluesky\Client\SubClient\SyncClient;
+use Revolution\Bluesky\Client\SubClient\VideoClient;
 use Revolution\Bluesky\Contracts\XrpcClient;
 
 class AtpClient implements XrpcClient,
