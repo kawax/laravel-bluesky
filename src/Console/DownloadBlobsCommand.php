@@ -96,7 +96,8 @@ class DownloadBlobsCommand extends Command
                 $this->line('Download: '.Storage::path($file_ext));
             });
 
-            $this->warn('cursor: '.$cursor = $response->json('cursor'));
+            $cursor = $response->json('cursor');
+            $this->warn('cursor: '.$cursor);
         } while (filled($cursor));
 
         $this->info('Download successful');
