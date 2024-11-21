@@ -5,7 +5,6 @@ namespace Revolution\Bluesky\Client;
 use BackedEnum;
 use Illuminate\Http\Client\PendingRequest;
 use Illuminate\Http\Client\Response;
-use InvalidArgumentException;
 use Psr\Http\Message\StreamInterface;
 use ReflectionMethod;
 use Revolution\AtProto\Lexicon\Attributes\Format;
@@ -48,13 +47,13 @@ trait HasHttp
     protected function params(string $method): array
     {
         if (! str_contains($method, '::')) {
-            throw new InvalidArgumentException();
+            return [];
         }
 
         [$class, $method] = explode('::', $method, 2);
 
         if (! method_exists($class, $method)) {
-            throw new InvalidArgumentException();
+            return [];
         }
 
         $ref = new ReflectionMethod($class, $method);
