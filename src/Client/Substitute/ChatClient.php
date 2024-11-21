@@ -11,13 +11,14 @@ use Revolution\Bluesky\Client\Concerns\ChatBskyActor;
 use Revolution\Bluesky\Client\Concerns\ChatBskyConvo;
 use Revolution\Bluesky\Client\Concerns\ChatBskyModeration;
 use Revolution\Bluesky\Client\HasHttp;
+use Revolution\Bluesky\Contracts\XrpcClient;
 
 /**
  * Chat / DM Client.
  *
  * chat.bsky
  */
-class ChatClient implements Actor, Convo, Moderation
+class ChatClient implements XrpcClient, Actor, Convo, Moderation
 {
     use Macroable;
     use Conditionable;
