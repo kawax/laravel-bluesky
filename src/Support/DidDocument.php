@@ -7,7 +7,6 @@ namespace Revolution\Bluesky\Support;
 use Illuminate\Contracts\Support\Arrayable;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Str;
-use Revolution\Bluesky\Facades\Bluesky;
 
 final readonly class DidDocument implements Arrayable
 {
