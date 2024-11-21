@@ -56,9 +56,7 @@ class TextBuilder implements Arrayable
      */
     public function detectFacets(): static
     {
-        $detect = app(DetectFacets::class)->detect($this->text);
-
-        $this->facets = $detect->facets;
+        $this->facets = app()->call(DetectFacets::class, ['text' => $this->text]);
 
         return $this;
     }
