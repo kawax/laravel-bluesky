@@ -7,9 +7,9 @@ use Illuminate\Support\Str;
 use Illuminate\Support\Traits\Conditionable;
 use Illuminate\Support\Traits\Macroable;
 use Psr\Http\Message\StreamInterface;
-use Revolution\AtProto\Lexicon\Attributes\Format;
 use Revolution\AtProto\Lexicon\Contracts\App\Bsky\Video;
 use Revolution\Bluesky\Client\Concerns\AppBskyVideo;
+use Symfony\Component\Mime\MimeTypes;
 
 class VideoClient implements Video
 {
@@ -21,9 +21,9 @@ class VideoClient implements Video
     /**
      * {@link AppBskyVideo::uploadVideo()} doesn't work because it is missing required parameters.
      */
-    public function upload(#[Format('did')] string $did, StreamInterface|string $data, string $type = 'video/mp4'): Response
+    public function upload(string $did, StreamInterface|string $data, string $type = 'video/mp4'): Response
     {
-        $name = Str::random(12).$this->mimeToExt($type);
+        $name = Str::random(12).$this->ext($type);
 
         return $this->http()
             ->withBody($data, $type)
@@ -32,6 +32,17 @@ class VideoClient implements Video
                     'name' => $name,
                 ]),
             );
+    }
+
+    protected function ext(string $type): string
+    {
+        $ext = head(MimeTypes::getDefault()->getExtensions($type));
+
+        if (empty($ext)) {
+            return $this->mimeToExt($type);
+        }
+
+        return '.'.$ext;
     }
 
     protected function mimeToExt(string $type): string
