@@ -5,8 +5,11 @@ declare(strict_types=1);
 namespace Revolution\Bluesky\Events;
 
 use Illuminate\Foundation\Events\Dispatchable;
+use Revolution\Bluesky\Console\WebSocketServeCommand;
 
 /**
+ * Dispatch from {@link WebSocketServeCommand}.
+ *
  * ```
  * use Revolution\Bluesky\Events\WebSocketMessageReceived;
  *
