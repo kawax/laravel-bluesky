@@ -61,7 +61,8 @@ final class DidDocument implements Arrayable
 
     /**
      * PDS url.
-     * "https://***.***.host.bsky.network"
+     *
+     * @return string|null `https://***.***.host.bsky.network`
      */
     public function pdsUrl(?string $default = null): ?string
     {
@@ -73,7 +74,8 @@ final class DidDocument implements Arrayable
 
     /**
      * Get "aud" for Service Auth from PDS url.
-     * "did:web:***.***.host.bsky.network"
+     *
+     * @return string `did:web:***.***.host.bsky.network`
      */
     public function serviceAuthAud(): string
     {
