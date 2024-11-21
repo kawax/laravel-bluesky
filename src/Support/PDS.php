@@ -13,6 +13,8 @@ class PDS
 {
     /**
      * Get PDS OAuth protected resource.
+     *
+     * @link https://morel.us-east.host.bsky.network/.well-known/oauth-protected-resource
      */
     public function getProtectedResource(string $pds_url): ProtectedResource
     {
