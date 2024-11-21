@@ -4,13 +4,28 @@ declare(strict_types=1);
 
 namespace Revolution\Bluesky\Support;
 
-/**
- * @codeCoverageIgnore
- */
 class DNS
 {
+    protected static ?string $fake = null;
+
     public function record(string $hostname, int $type = DNS_TXT): array
     {
-        return dns_get_record($hostname, $type) ?: [];
+        if (! is_null(static::$fake)) {
+            return [
+                [
+                    'txt' => static::$fake,
+                ],
+            ];
+        }
+
+        return dns_get_record($hostname, $type) ?: [];// @codeCoverageIgnore
+    }
+
+    /**
+     * Set fake TXT.
+     */
+    public static function fake(?string $txt = null): void
+    {
+        static::$fake = $txt;
     }
 }
