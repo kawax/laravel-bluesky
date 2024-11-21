@@ -11,9 +11,10 @@ use Psr\Http\Message\StreamInterface;
 use Revolution\AtProto\Lexicon\Contracts\App\Bsky\Video;
 use Revolution\Bluesky\Client\Concerns\AppBskyVideo;
 use Revolution\Bluesky\Client\HasHttp;
+use Revolution\Bluesky\Contracts\XrpcClient;
 use Symfony\Component\Mime\MimeTypes;
 
-class VideoClient implements Video
+class VideoClient implements XrpcClient, Video
 {
     use Macroable;
     use Conditionable;
