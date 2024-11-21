@@ -33,7 +33,8 @@ final class ProtectedResource implements Arrayable
 
     /**
      * PDS url.
-     * "https://***.***.host.bsky.network"
+     *
+     * @return string|null `https://***.***.host.bsky.network`
      */
     public function resource(): ?string
     {
@@ -42,7 +43,8 @@ final class ProtectedResource implements Arrayable
 
     /**
      * service or issuer url.
-     * "https://bsky.social"
+     *
+     * @return string|null `https://bsky.social`
      */
     public function authServer(?string $default = null): ?string
     {
