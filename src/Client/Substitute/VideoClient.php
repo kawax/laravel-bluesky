@@ -19,6 +19,8 @@ class VideoClient implements Video
     use HasHttp;
     use AppBskyVideo;
 
+    public const VIDEO_ENDPOINT = 'https://video.bsky.app/xrpc/';
+
     /**
      * {@link AppBskyVideo::uploadVideo()} doesn't work because it is missing required parameters.
      */
