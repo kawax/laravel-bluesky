@@ -243,13 +243,7 @@ class ClientTest extends TestCase
 
     public function test_identity_resolve_handle_dns()
     {
-        $this->mock(DNS::class, function (MockInterface $mock) {
-            $mock->shouldReceive('record')->andReturn([
-                [
-                    'txt' => 'did=did:plc:1234',
-                ],
-            ]);
-        });
+        DNS::fake(txt: 'did=did:plc:1234');
 
         $did = Bluesky::identity()->resolveHandle('example.com');
 
@@ -258,9 +252,7 @@ class ClientTest extends TestCase
 
     public function test_identity_resolve_handle_wellknown()
     {
-        $this->mock(DNS::class, function (MockInterface $mock) {
-            $mock->shouldReceive('record')->andReturn([]);
-        });
+        DNS::fake(txt: '');
 
         Http::fakeSequence()
             ->push('did:plc:1234');
@@ -272,13 +264,7 @@ class ClientTest extends TestCase
 
     public function test_identity_resolve_identity_handle()
     {
-        $this->mock(DNS::class, function (MockInterface $mock) {
-            $mock->shouldReceive('record')->andReturn([
-                [
-                    'txt' => 'did=did:web:example.com',
-                ],
-            ]);
-        });
+        DNS::fake(txt: 'did=did:web:example.com');
 
         Http::fakeSequence()
             ->push(['id' => 'did:web:example.com']);
