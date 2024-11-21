@@ -173,6 +173,19 @@ $post = Post::build(function (TextBuilder $builder) {
     });
 ```
 
+### Auto-detect
+
+TextBuilder also has `detectFacets()`, but it is not clear whether it works perfectly, so it is safer to assemble it manually.
+
+```php
+use Revolution\Bluesky\Record\Post;
+use Revolution\Bluesky\RichText\TextBuilder;
+
+$post = Post::build(function (TextBuilder $builder) {
+            $builder->text('@alice.test test https://alice.test #alice #🙃')->detectFacets();
+    });
+```
+
 ### Reply
 
 ```php
