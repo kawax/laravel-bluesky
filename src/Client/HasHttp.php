@@ -5,6 +5,7 @@ namespace Revolution\Bluesky\Client;
 use BackedEnum;
 use Illuminate\Http\Client\PendingRequest;
 use Illuminate\Http\Client\Response;
+use InvalidArgumentException;
 use Psr\Http\Message\StreamInterface;
 use ReflectionMethod;
 use Revolution\AtProto\Lexicon\Attributes\Format;
@@ -31,21 +32,32 @@ trait HasHttp
     /**
      * Get the method parameter names. Used in conjunction with compact() on the original method.
      *
+     * example: {@link AppBskyActor::getProfile}
+     *
      * ```
      * params('...AppBskyActor::getProfile')
      *
      * ['actor']
+     *
+     * compact(['actor'])
+     *
+     * // An array of named arguments and values
+     * ['actor' => 'did:plc:***']
      * ```
      */
     protected function params(string $method): array
     {
-        if (method_exists(ReflectionMethod::class, 'createFromMethodName')) {
-            // PHP >= 8.3
-            $ref = ReflectionMethod::createFromMethodName($method);
-        } else {
-            // Deprecated from PHP 8.4
-            $ref = new ReflectionMethod($method);
+        if (! str_contains($method, '::')) {
+            throw new InvalidArgumentException();
         }
+
+        [$class, $method] = explode('::', $method, 2);
+
+        if (! method_exists($class, $method)) {
+            throw new InvalidArgumentException();
+        }
+
+        $ref = new ReflectionMethod($class, $method);
 
         return collect($ref->getParameters())
             ->map
