@@ -28,11 +28,19 @@ final class ProtectedResource implements Arrayable
         return new self($meta);
     }
 
+    /**
+     * PDS url.
+     * "https://***.***.host.bsky.network"
+     */
     public function resource(): ?string
     {
         return $this->get('resource');
     }
 
+    /**
+     * service or issuer url.
+     * "https://bsky.social"
+     */
     public function authServer(?string $default = null): ?string
     {
         return $this->get('authorization_servers.{first}', $default);
