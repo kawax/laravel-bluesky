@@ -12,7 +12,7 @@ use Revolution\AtProto\Lexicon\Attributes\Ref;
 use Revolution\AtProto\Lexicon\Enum\Facet;
 use Revolution\Bluesky\Record\Post;
 
-class TextBuilder implements Arrayable
+final class TextBuilder implements Arrayable
 {
     use Macroable;
     use Conditionable;
@@ -31,9 +31,9 @@ class TextBuilder implements Arrayable
         $this->text = $text;
     }
 
-    public static function make(string $text = ''): static
+    public static function make(string $text = ''): self
     {
-        return new static(text: $text);
+        return new self(text: $text);
     }
 
     /**
@@ -54,7 +54,7 @@ class TextBuilder implements Arrayable
      * ```
      * ([at] should be written as @)
      */
-    public function detectFacets(): static
+    public function detectFacets(): self
     {
         $this->facets = app()->call(DetectFacets::class, ['text' => $this->text]);
 
@@ -64,7 +64,7 @@ class TextBuilder implements Arrayable
     /**
      * Append to existing text.
      */
-    public function text(string $text): static
+    public function text(string $text): self
     {
         $this->text .= $text;
 
@@ -74,7 +74,7 @@ class TextBuilder implements Arrayable
     /**
      * Add new lines to text.
      */
-    public function newLine(int $count = 1): static
+    public function newLine(int $count = 1): self
     {
         $this->text .= Str::repeat(PHP_EOL, max($count, 1));
 
@@ -84,7 +84,7 @@ class TextBuilder implements Arrayable
     /**
      * Add mention facets.
      */
-    public function mention(string $text, #[Format('did')] string $did): static
+    public function mention(string $text, #[Format('did')] string $did): self
     {
         $this->facets[] = [
             'index' => $this->buildFacetIndex($text),
@@ -104,7 +104,7 @@ class TextBuilder implements Arrayable
     /**
      * Add link facets.
      */
-    public function link(string $text, string $uri): static
+    public function link(string $text, string $uri): self
     {
         $this->facets[] = [
             'index' => $this->buildFacetIndex($text),
@@ -124,7 +124,7 @@ class TextBuilder implements Arrayable
     /**
      * Add tag facets.
      */
-    public function tag(string $text, string $tag): static
+    public function tag(string $text, string $tag): self
     {
         $this->facets[] = [
             'index' => $this->buildFacetIndex($text),
@@ -144,7 +144,7 @@ class TextBuilder implements Arrayable
     /**
      * Add any facets.
      */
-    public function facet(array $facet): static
+    public function facet(array $facet): self
     {
         $this->facets[] = $facet;
 
@@ -154,7 +154,7 @@ class TextBuilder implements Arrayable
     /**
      * Remove all Facets.
      */
-    public function resetFacets(): static
+    public function resetFacets(): self
     {
         $this->facets = [];
 
