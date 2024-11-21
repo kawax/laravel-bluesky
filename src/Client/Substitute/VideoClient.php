@@ -1,6 +1,6 @@
 <?php
 
-namespace Revolution\Bluesky\Client;
+namespace Revolution\Bluesky\Client\Substitute;
 
 use Illuminate\Http\Client\Response;
 use Illuminate\Support\Str;
@@ -9,6 +9,7 @@ use Illuminate\Support\Traits\Macroable;
 use Psr\Http\Message\StreamInterface;
 use Revolution\AtProto\Lexicon\Contracts\App\Bsky\Video;
 use Revolution\Bluesky\Client\Concerns\AppBskyVideo;
+use Revolution\Bluesky\Client\HasHttp;
 use Symfony\Component\Mime\MimeTypes;
 
 class VideoClient implements Video

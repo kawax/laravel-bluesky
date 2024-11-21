@@ -1,6 +1,6 @@
 <?php
 
-namespace Revolution\Bluesky\Client;
+namespace Revolution\Bluesky\Client\Substitute;
 
 use Illuminate\Support\Traits\Conditionable;
 use Illuminate\Support\Traits\Macroable;
@@ -10,6 +10,7 @@ use Revolution\AtProto\Lexicon\Contracts\Chat\Bsky\Moderation;
 use Revolution\Bluesky\Client\Concerns\ChatBskyActor;
 use Revolution\Bluesky\Client\Concerns\ChatBskyConvo;
 use Revolution\Bluesky\Client\Concerns\ChatBskyModeration;
+use Revolution\Bluesky\Client\HasHttp;
 
 /**
  * Chat / DM Client.
