@@ -39,7 +39,13 @@ trait HasHttp
      */
     protected function params(string $method): array
     {
-        $ref = new ReflectionMethod($method);
+        if (method_exists(ReflectionMethod::class, 'createFromMethodName')) {
+            // PHP >= 8.3
+            $ref = ReflectionMethod::createFromMethodName($method);
+        } else {
+            // Deprecated from PHP 8.4
+            $ref = new ReflectionMethod($method);
+        }
 
         return collect($ref->getParameters())
             ->map
