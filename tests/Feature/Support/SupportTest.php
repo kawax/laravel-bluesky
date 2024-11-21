@@ -3,6 +3,7 @@
 namespace Tests\Feature\Support;
 
 use Illuminate\Support\Facades\Http;
+use Revolution\Bluesky\Facades\Bluesky;
 use Revolution\Bluesky\Support\AtUri;
 use Revolution\Bluesky\Support\DidDocument;
 use Tests\TestCase;
@@ -47,7 +48,7 @@ class SupportTest extends TestCase
         $this->assertSame([], $didDoc->get('verificationMethod'));
     }
 
-    public function test_did_document_fetch()
+    public function test_did_document_make()
     {
         Http::fakeSequence()
             ->push([
@@ -72,7 +73,7 @@ class SupportTest extends TestCase
                 ],
             ]);
 
-        $didDoc = (new DidDocument())->fetch('did:plc:test');
+        $didDoc = DidDocument::make(Bluesky::identity()->resolveDID('did:plc:test')->json());
 
         $this->assertSame('did:plc:test', $didDoc->id());
         $this->assertSame('alice.test', $didDoc->handle());

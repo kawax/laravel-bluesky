@@ -9,7 +9,7 @@ use Illuminate\Support\Collection;
 use Illuminate\Support\Str;
 use Revolution\Bluesky\Facades\Bluesky;
 
-final class DidDocument implements Arrayable
+final readonly class DidDocument implements Arrayable
 {
     protected Collection $didDoc;
 
@@ -28,23 +28,6 @@ final class DidDocument implements Arrayable
     public static function make(array|Collection|null $didDoc = null): self
     {
         return new self($didDoc);
-    }
-
-    public function fetch(?string $did = null): self
-    {
-        $did = $did ?? $this->id();
-
-        if (empty($did)) {
-            return $this;
-        }
-
-        $response = Bluesky::identity()->resolveDID($did);
-
-        if ($response->successful()) {
-            $this->didDoc = $response->collect();
-        }
-
-        return $this;
     }
 
     public function id(): ?string

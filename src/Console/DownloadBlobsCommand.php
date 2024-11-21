@@ -61,7 +61,7 @@ class DownloadBlobsCommand extends Command
 
         $this->warn('DID: '.$did);
 
-        $pds = DidDocument::make()->fetch($did)->pdsUrl();
+        $pds = DidDocument::make(Bluesky::identity()->resolveDID($did)->json())->pdsUrl();
 
         $this->warn('PDS: '.$pds);
 
