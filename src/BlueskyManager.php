@@ -40,7 +40,7 @@ class BlueskyManager implements Factory
     /**
      * OAuth authentication.
      */
-    public function withToken(#[\SensitiveParameter] ?OAuthSession $token): self
+    public function withToken(#[\SensitiveParameter] ?OAuthSession $token): Factory
     {
         $this->agent = OAuthAgent::create($token);
 
@@ -50,10 +50,10 @@ class BlueskyManager implements Factory
     /**
      * App password authentication.
      */
-    public function login(#[Format('at-identifier')] string $identifier, #[\SensitiveParameter] string $password): self
+    public function login(#[Format('at-identifier')] string $identifier, #[\SensitiveParameter] string $password): Factory
     {
         $response = $this->client(auth: false)
-            ->withHttp(Http::baseUrl($this->entryway().'/xrpc/'))
+            ->baseUrl($this->entryway().'/xrpc/')
             ->createSession($identifier, $password);
 
         $session = LegacySession::create($response->collect());
@@ -111,7 +111,7 @@ class BlueskyManager implements Factory
         return $this->agent;
     }
 
-    public function withAgent(?Agent $agent): self
+    public function withAgent(?Agent $agent): Factory
     {
         $this->agent = $agent;
 
@@ -184,7 +184,7 @@ class BlueskyManager implements Factory
             );
     }
 
-    public function refreshSession(): self
+    public function refreshSession(): Factory
     {
         $this->agent = $this->agent()?->refreshSession();
 
@@ -206,7 +206,7 @@ class BlueskyManager implements Factory
         return ! empty($this->agent()?->refresh());
     }
 
-    public function logout(): self
+    public function logout(): Factory
     {
         $this->agent = null;
 
