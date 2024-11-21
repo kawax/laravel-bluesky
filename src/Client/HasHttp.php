@@ -65,6 +65,9 @@ trait HasHttp
         return $this;
     }
 
+    /**
+     * Used when uploadBlob().
+     */
     public function withBody(StreamInterface|string $content, string $contentType = 'image/png'): static
     {
         $this->http->withBody($content, $contentType);
