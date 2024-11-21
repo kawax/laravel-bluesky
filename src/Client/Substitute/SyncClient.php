@@ -7,7 +7,7 @@ use Revolution\Bluesky\Client\Concerns\ComAtprotoSync;
 use Revolution\Bluesky\Client\HasHttp;
 use Revolution\Bluesky\Contracts\XrpcClient;
 
-class AtprotoSync implements XrpcClient, Sync
+class SyncClient implements XrpcClient, Sync
 {
     use HasHttp;
 

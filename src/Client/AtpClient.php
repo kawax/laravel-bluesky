@@ -28,7 +28,7 @@ use Revolution\Bluesky\Client\Concerns\ComAtprotoRepo;
 use Revolution\Bluesky\Client\Concerns\ComAtprotoServer;
 use Revolution\Bluesky\Client\Concerns\ComAtprotoTemp;
 use Revolution\Bluesky\Client\Substitute\AtprotoAdmin;
-use Revolution\Bluesky\Client\Substitute\AtprotoSync;
+use Revolution\Bluesky\Client\Substitute\SyncClient;
 use Revolution\Bluesky\Client\Substitute\BskyNotification;
 use Revolution\Bluesky\Contracts\XrpcClient;
 
@@ -104,8 +104,8 @@ class AtpClient implements XrpcClient,
     /**
      * com.atproto.sync
      */
-    public function sync(): AtprotoSync
+    public function sync(): SyncClient
     {
-        return app(AtprotoSync::class)->withHttp($this->http());
+        return app(SyncClient::class)->withHttp($this->http());
     }
 }
