@@ -10,6 +10,9 @@ trait WithAuthServer
 {
     protected ?array $auth_server_meta = [];
 
+    /**
+     * @link  https://bsky.social/.well-known/oauth-authorization-server
+     */
     protected function authServerMeta(?string $key = null, ?string $default = null): array|string|null
     {
         $auth_url = $this->authUrl();
