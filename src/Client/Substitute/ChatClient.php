@@ -26,4 +26,6 @@ class ChatClient implements Actor, Convo, Moderation
     use ChatBskyActor;
     use ChatBskyConvo;
     use ChatBskyModeration;
+
+    public const CHAT_SERVICE_DID = 'did:web:api.bsky.chat#bsky_chat';
 }
