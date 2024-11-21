@@ -105,9 +105,9 @@ class DownloadBlobsCommand extends Command
         return 0;
     }
 
-    protected function ext($mime): string
+    protected function ext(string $type): string
     {
-        $ext = head(MimeTypes::getDefault()->getExtensions($mime));
+        $ext = head(MimeTypes::getDefault()->getExtensions($type));
 
         if (empty($ext)) {
             return '';
