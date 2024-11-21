@@ -53,7 +53,7 @@ final readonly class AtUri
     }
 
     /**
-     * @return string "app.bsky.feed.post"
+     * @return string `app.bsky.feed.post`
      */
     public function collection(): string
     {
