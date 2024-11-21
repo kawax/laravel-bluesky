@@ -7,9 +7,7 @@ use Illuminate\Http\Client\PendingRequest;
 use Illuminate\Http\Client\Response;
 use Psr\Http\Message\StreamInterface;
 use ReflectionMethod;
-
 use Revolution\AtProto\Lexicon\Attributes\Format;
-
 use Revolution\AtProto\Lexicon\Attributes\KnownValues;
 
 use function Illuminate\Support\enum_value;
@@ -52,6 +50,14 @@ trait HasHttp
         return $this;
     }
 
+    /**
+     * Normally you don't need to use this method. You only need to use it if you want to specify a special BaseUrl.
+     *
+     * ```
+     * Bluesky::client(auth: false)
+     *        ->baseUrl(Bluesky::entryway().'/xrpc');
+     * ```
+     */
     public function baseUrl(string $baseUrl): static
     {
         $this->http->baseUrl($baseUrl);
