@@ -74,32 +74,29 @@ class DownloadBlobsCommand extends Command
                 ->listBlobs(did: $did, cursor: $cursor)
                 ->throw();
 
-            $response->collect('cids')
-                ->each(function ($cid) use ($actor, $did, $pds) {
-                    $content = Bluesky::client(auth: false)
-                        ->sync()
-                        ->baseUrl($pds.'/xrpc/')
-                        ->getBlob(did: $did, cid: $cid)
-                        ->throw()
-                        ->body();
+            $response->collect('cids')->each(function ($cid) use ($actor, $did, $pds) {
+                $content = Bluesky::client(auth: false)
+                    ->sync()
+                    ->baseUrl($pds.'/xrpc/')
+                    ->getBlob(did: $did, cid: $cid)
+                    ->throw()
+                    ->body();
 
-                    $name = Str::slug($actor, dictionary: ['.' => '-', ':' => '-']);
+                $name = Str::slug($actor, dictionary: ['.' => '-', ':' => '-']);
 
-                    $file = collect(['bluesky', 'download', $name, 'blob', $cid])
-                        ->implode(DIRECTORY_SEPARATOR);
+                $file = collect(['bluesky', 'download', $name, 'blob', $cid])
+                    ->implode(DIRECTORY_SEPARATOR);
 
-                    Storage::put($file, $content);
+                Storage::put($file, $content);
 
-                    $ext = $this->ext(Storage::mimeType($file));
-                    $file_ext = $file.$ext;
+                $file_ext = $file.$this->ext(Storage::mimeType($file));
 
-                    Storage::move($file, $file_ext);
+                Storage::move($file, $file_ext);
 
-                    $this->line('Download: '.Storage::path($file_ext));
-                });
+                $this->line('Download: '.Storage::path($file_ext));
+            });
 
-            $cursor = $response->json('cursor');
-            $this->warn('cursor: '.$cursor);
+            $this->warn('cursor: '.$cursor = $response->json('cursor'));
         } while (filled($cursor));
 
         $this->info('Download successful');
