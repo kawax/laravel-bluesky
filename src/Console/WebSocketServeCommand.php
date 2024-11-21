@@ -43,6 +43,8 @@ use Valtzu\WebSocketMiddleware\WebSocketStream;
  *
  * This is an advanced usage so they probably won't document it.
  *
+ * To run this on a production server, you will need to start the artisan command as a daemon using Supervisor or similar.
+ *
  * @link https://github.com/bluesky-social/jetstream
  */
 class WebSocketServeCommand extends Command
