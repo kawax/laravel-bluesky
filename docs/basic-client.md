@@ -452,9 +452,9 @@ use Illuminate\Http\Client\Response;
 
     public function boot(): void
     {
-        Bluesky::macro('timeline', function (?int $limit = 50, ?string $cursor = null): Response {
+        Bluesky::macro('timeline', function (?int $limit = 50, ?string $cursor = null): array {
             /** @var Bluesky $this */
-            return $this->getTimeline(limit: $limit, cursor: $cursor);
+            return $this->getTimeline(limit: $limit, cursor: $cursor)->throw()->json('feed');
         });
     }
 ```
@@ -462,5 +462,5 @@ use Illuminate\Http\Client\Response;
 ```php
 use Revolution\Bluesky\Facades\Bluesky;
 
-$feed = Bluesky::timeline()->json('feed');
+$feed = Bluesky::timeline();
 ```
