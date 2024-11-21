@@ -105,7 +105,8 @@ Notification::route('bluesky', BlueskyRoute::to(oauth: $session))
 
 In PrivateChannel, you must specify a `receiver`, and receiver user must be set up to receive DMs.
 
-App password requires privileges to send DMs.
+App password requires privileges to send DMs.  
+OAuth requires the `transition:chat.bsky` scope.
 
 ```php
 use Illuminate\Support\Facades\Notification;
@@ -114,7 +115,7 @@ use Revolution\Bluesky\Session\OAuthSession;
 use App\Models\User;
 
 // App password
-Notification::route('bluesky-private', BlueskyRoute::to(identifier: config('bluesky.identifier'), password: config('bluesky.password'), receiver: 'did'))
+Notification::route('bluesky-private', BlueskyRoute::to(identifier: config('bluesky.identifier'), password: config('bluesky.password'), receiver: 'did or handle'))
             ->notify(new TestNotification());
 
 // OAuth
@@ -124,7 +125,7 @@ $session = OAuthSession::create([
     'iss' => $user->iss,
     'refresh_token' => $user->refresh_token,
 ]);
-Notification::route('bluesky-private', BlueskyRoute::to(oauth: $session, receiver: 'did'))
+Notification::route('bluesky-private', BlueskyRoute::to(oauth: $session, receiver: 'did or handle'))
             ->notify(new TestNotification());
 ```
 
@@ -138,7 +139,20 @@ use Illuminate\Support\Facades\Notification;
 use Revolution\Bluesky\Notifications\BlueskyRoute;
 use Revolution\Bluesky\Session\OAuthSession;
 
-Notification::route('bluesky-private', BlueskyRoute::to(identifier: 'sender identifier', password: 'sender password', receiver: 'your did'))
+Notification::route('bluesky-private', BlueskyRoute::to(identifier: 'sender identifier', password: 'sender password', receiver: 'your did or handle'))
+            ->notify(new TestNotification());
+```
+
+If you want to always use the same sender and receiver for personal notification purposes, you can set it in `.env`. Create a dedicated sender account.
+
+```
+BLUESKY_SENDER_IDENTIFIER=sender did or handle
+BLUESKY_SENDER_APP_PASSWORD=sender password
+BLUESKY_RECEIVER=your did or handle
+```
+
+```php
+Notification::route('bluesky-private', BlueskyRoute::to(identifier: config('bluesky.notification.private.sender.identifier'), password: config('bluesky.notification.private.sender.password'), receiver: config('bluesky.notification.private.receiver')))
             ->notify(new TestNotification());
 ```
 
