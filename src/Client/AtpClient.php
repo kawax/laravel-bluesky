@@ -2,7 +2,6 @@
 
 namespace Revolution\Bluesky\Client;
 
-use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Traits\Conditionable;
 use Illuminate\Support\Traits\Macroable;
 use Revolution\AtProto\Lexicon\Contracts\App\Bsky\Actor;
