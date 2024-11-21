@@ -19,7 +19,7 @@ trait WithPDS
 
     protected function updateServiceWithHint(): void
     {
-        if (Str::startsWith($this->login_hint, 'https://') && $this->isSafeUrl($this->login_hint)) {
+        if (Str::startsWith($this->login_hint, 'https://') && Str::isUrl($this->login_hint, ['https', 'http']) && $this->isSafeUrl($this->login_hint)) {
             $auth_url = $this->pdsProtectedResource($this->login_hint)
                 ->authServer(Bluesky::entryway());
 
