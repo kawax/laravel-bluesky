@@ -7,6 +7,9 @@ namespace Revolution\Bluesky\Support;
 use Illuminate\Contracts\Support\Arrayable;
 use Illuminate\Support\Collection;
 
+/**
+ * @link https://morel.us-east.host.bsky.network/.well-known/oauth-protected-resource
+ */
 final class ProtectedResource implements Arrayable
 {
     protected Collection $meta;
