@@ -9,5 +9,9 @@ interface XrpcClient
 {
     public function withHttp(PendingRequest $http): static;
 
+    public function baseUrl(string $baseUrl): static;
+
     public function withBody(StreamInterface|string $content, string $contentType = 'image/png'): static;
+
+    public function withServiceProxy(string $did): static;
 }
