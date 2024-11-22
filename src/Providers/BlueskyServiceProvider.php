@@ -20,6 +20,7 @@ use Revolution\Bluesky\Contracts\Factory;
 use Revolution\Bluesky\Contracts\XrpcClient;
 use Revolution\Bluesky\FeedGenerator\Http\DescribeController;
 use Revolution\Bluesky\FeedGenerator\Http\FeedSkeletonController;
+use Revolution\Bluesky\FeedGenerator\Http\WellKnownDidController;
 use Revolution\Bluesky\Socalite\BlueskyProvider;
 use Revolution\Bluesky\Socalite\Http\OAuthMetaController;
 
@@ -103,5 +104,7 @@ class BlueskyServiceProvider extends ServiceProvider
                 Route::get(Feed::describeFeedGenerator, DescribeController::class)
                     ->name('bluesky.feed.describe');
             });
+
+        Route::get('.well-known/did.json', WellKnownDidController::class);
     }
 }
