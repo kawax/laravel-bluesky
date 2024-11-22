@@ -9,7 +9,7 @@ class FeedGeneratorTest extends TestCase
 {
     public function test_feed_register(): void
     {
-        FeedGenerator::register('test', function (int $limit, string $cursor): array {
+        FeedGenerator::register('test', function (?int $limit, ?string $cursor): array {
             return [];
         });
 
@@ -18,7 +18,7 @@ class FeedGeneratorTest extends TestCase
 
     public function test_feed_http(): void
     {
-        FeedGenerator::register('test', function (int $limit, string $cursor): array {
+        FeedGenerator::register('test', function (?int $limit, ?string $cursor): array {
             return ['feed' => [['post' => 'at://']]];
         });
 
@@ -30,7 +30,7 @@ class FeedGeneratorTest extends TestCase
 
     public function test_feed_http_missing(): void
     {
-        FeedGenerator::register('test', function (int $limit, string $cursor): array {
+        FeedGenerator::register('test', function (?int $limit, ?string $cursor): array {
             return ['feed' => [['post' => 'at://']]];
         });
 
