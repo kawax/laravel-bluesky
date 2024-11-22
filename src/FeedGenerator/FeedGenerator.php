@@ -16,7 +16,7 @@ final class FeedGenerator
      *
      * use use Revolution\Bluesky\FeedGenerator\FeedGenerator;
      *
-     * FeedGenerator::register(name: 'artisan', algo: function(int $limit, string $cursor): array {
+     * FeedGenerator::register(name: 'artisan', algo: function(?int $limit, ?string $cursor): array {
      *     // The implementation is entirely up to you.
      *
      *     $response = Bluesky::searchPosts(q: '#laravel', limit: $limit, cursor: $cursor);
@@ -38,7 +38,7 @@ final class FeedGenerator
         self::$algos[$name] = $algo;
     }
 
-    public static function getFeedSkeleton(string $name, int $limit, string $cursor, Request $request): mixed
+    public static function getFeedSkeleton(string $name, ?int $limit, ?string $cursor, Request $request): mixed
     {
         return call_user_func(self::$algos[$name], $limit, $cursor, $request);
     }
