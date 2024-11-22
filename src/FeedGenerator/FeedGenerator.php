@@ -14,7 +14,7 @@ final class FeedGenerator
      * ```
      * // Register in your AppServiceProvider::boot()
      *
-     * use use Revolution\Bluesky\FeedGenerator\FeedGenerator;
+     * use Revolution\Bluesky\FeedGenerator\FeedGenerator;
      *
      * FeedGenerator::register(name: 'artisan', algo: function(?int $limit, ?string $cursor): array {
      *     // The implementation is entirely up to you.
@@ -41,6 +41,18 @@ final class FeedGenerator
     public static function getFeedSkeleton(string $name, ?int $limit, ?string $cursor, Request $request): mixed
     {
         return call_user_func(self::$algos[$name], $limit, $cursor, $request);
+    }
+
+    public static function describeFeedGenerator(string $publisher, string $service): array
+    {
+        $feeds = collect(self::$algos)
+            ->map(fn ($algo) => 'at://'.$publisher.'/app.bsky.feed.generator/'.$algo)
+            ->toArray();
+
+        return [
+            'did' => $service,
+            'feeds' => $feeds,
+        ];
     }
 
     public static function has(string $name): bool
