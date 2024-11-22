@@ -143,7 +143,7 @@ $res = Bluesky::publishFeedGenerator(name: 'feed1', generator: $generator1);
 $generator2 = Generator::create(did: 'did:web:example.com', displayName: 'Feed 2')
                        ->description('Feed 2');
 
-$res = Bluesky::publishFeedGenerator(name: 'feed2', generator: $generator1);
+$res = Bluesky::publishFeedGenerator(name: 'feed2', generator: $generator2);
 ```
 
 ## Advanced
