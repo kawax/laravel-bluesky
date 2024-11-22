@@ -15,9 +15,10 @@ final class FeedGenerator
      * ```
      * // Register in your AppServiceProvider::boot()
      *
+     * use Illuminate\Http\Request;
      * use Revolution\Bluesky\FeedGenerator\FeedGenerator;
      *
-     * FeedGenerator::register(name: 'artisan', algo: function (?int $limit, ?string $cursor): array {
+     * FeedGenerator::register(name: 'artisan', algo: function (?int $limit, ?string $cursor, Request $request): array {
      *     // The implementation is entirely up to you.
      *
      *     $response = Bluesky::searchPosts(q: '#laravel', limit: $limit, cursor: $cursor);
