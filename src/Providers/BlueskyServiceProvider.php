@@ -18,6 +18,7 @@ use Revolution\Bluesky\Console\LexiconClientCommand;
 use Revolution\Bluesky\Console\NewPrivateKeyCommand;
 use Revolution\Bluesky\Contracts\Factory;
 use Revolution\Bluesky\Contracts\XrpcClient;
+use Revolution\Bluesky\FeedGenerator\Http\DescribeController;
 use Revolution\Bluesky\FeedGenerator\Http\FeedSkeletonController;
 use Revolution\Bluesky\Socalite\BlueskyProvider;
 use Revolution\Bluesky\Socalite\Http\OAuthMetaController;
@@ -96,7 +97,11 @@ class BlueskyServiceProvider extends ServiceProvider
     protected function generator(): void
     {
         Route::prefix('/xrpc/')
-            ->get(Feed::getFeedSkeleton, FeedSkeletonController::class)
-            ->name('bluesky.feed.generator');
+            ->group(function () {
+                Route::get(Feed::getFeedSkeleton, FeedSkeletonController::class)
+                    ->name('bluesky.feed.skeleton');
+                Route::get(Feed::describeFeedGenerator, DescribeController::class)
+                    ->name('bluesky.feed.describe');
+            });
     }
 }
