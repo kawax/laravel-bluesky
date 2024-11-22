@@ -65,7 +65,7 @@ class Identity
         }
 
         // check DND TXT record
-        $record = app(DNS::class)->record('_atproto.'.$handle);
+        $record = DNS::record('_atproto.'.$handle);
 
         $did = collect($record)->pluck('txt')->first(function ($txt) {
             return Str::startsWith($txt, 'did=did:');
@@ -89,6 +89,10 @@ class Identity
     }
 
     /**
+     * ```
+     * $didDoc = Bluesky::identity()->resolveDID('did:plc:***')->json();
+     * ```
+     *
      * @param  string|null  $did  e.g. "did:plc:1234..." "did:web:alice.test"
      * @return Response{id: string, alsoKnownAs: array, verificationMethod: array, service: array} didDoc
      * @link https://plc.directory/did:plc:ewvi7nxzyoun6zhxrhs64oiz
