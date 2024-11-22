@@ -70,7 +70,7 @@ class BlueskyProvider extends AbstractProvider implements ProviderInterface
         }
 
         // Generate a new secret key for DPoP when starting a new authentication.
-        session()->put(DPoP::SESSION_KEY, DPoP::generate());
+        $this->request->session()->put(DPoP::SESSION_KEY, DPoP::generate());
 
         $this->updateServiceWithHint();
 
