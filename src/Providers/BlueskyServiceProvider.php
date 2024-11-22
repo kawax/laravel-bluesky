@@ -18,7 +18,7 @@ use Revolution\Bluesky\Console\LexiconClientCommand;
 use Revolution\Bluesky\Console\NewPrivateKeyCommand;
 use Revolution\Bluesky\Contracts\Factory;
 use Revolution\Bluesky\Contracts\XrpcClient;
-use Revolution\Bluesky\FeedGenerator\Http\DescribeController;
+use Revolution\Bluesky\FeedGenerator\Http\DescribeFeedController;
 use Revolution\Bluesky\FeedGenerator\Http\FeedSkeletonController;
 use Revolution\Bluesky\FeedGenerator\Http\WellKnownDidController;
 use Revolution\Bluesky\Socalite\BlueskyProvider;
@@ -101,7 +101,7 @@ class BlueskyServiceProvider extends ServiceProvider
             ->group(function () {
                 Route::get(Feed::getFeedSkeleton, FeedSkeletonController::class)
                     ->name('bluesky.feed.skeleton');
-                Route::get(Feed::describeFeedGenerator, DescribeController::class)
+                Route::get(Feed::describeFeedGenerator, DescribeFeedController::class)
                     ->name('bluesky.feed.describe');
             });
 

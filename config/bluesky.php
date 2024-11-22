@@ -62,7 +62,10 @@ return [
         'prefix' => env('BLUESKY_OAUTH_PREFIX', '/bluesky/oauth/'),
     ],
 
-    // Feed Generator
+    /**
+     * Feed Generator.
+     * Optional, as if not set, `did:web:example.com` will be used from the current URL.
+     */
     'generator' => [
         // did:web:example.com
         'service' => env('BLUESKY_GENERATOR_SERVICE'),

@@ -3,6 +3,7 @@
 namespace Revolution\Bluesky\FeedGenerator;
 
 use Illuminate\Http\Request;
+use Revolution\Bluesky\Support\DID;
 
 final class FeedGenerator
 {
@@ -43,15 +44,17 @@ final class FeedGenerator
         return call_user_func(self::$algos[$name], $limit, $cursor, $request);
     }
 
-    public static function describeFeedGenerator(?string $publisher, ?string $service): array
+    public static function describeFeedGenerator(): array
     {
+        $pub = config('bluesky.generator.publisher') ?? DID::web();
+
         $feeds = collect(self::$algos)
             ->keys()
-            ->map(fn ($algo) => 'at://'.$publisher.'/app.bsky.feed.generator/'.$algo)
+            ->map(fn ($algo) => 'at://'.$pub.'/app.bsky.feed.generator/'.$algo)
             ->toArray();
 
         return [
-            'did' => $service,
+            'did' => config('bluesky.generator.service') ?? DID::web(),
             'feeds' => $feeds,
         ];
     }

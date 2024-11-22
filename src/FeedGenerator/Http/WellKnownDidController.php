@@ -2,16 +2,16 @@
 
 namespace Revolution\Bluesky\FeedGenerator\Http;
 
-use Illuminate\Http\Request;
 use Illuminate\Support\Str;
+use Revolution\Bluesky\Support\DID;
 
 class WellKnownDidController
 {
-    public function __invoke(Request $request): array
+    public function __invoke(): array
     {
         return [
             '@context' => ['https://www.w3.org/ns/did/v1'],
-            'id' => config('bluesky.generator.service') ?? 'did:web:'.Str::of(url('/'))->rtrim('/')->chopStart(['http://', 'https://'])->toString(),
+            'id' => config('bluesky.generator.service') ?? DID::web(),
             'service' => [
                 [
                     'id' => '#bsky_fg',
