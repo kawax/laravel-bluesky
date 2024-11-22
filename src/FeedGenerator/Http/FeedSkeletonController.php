@@ -11,7 +11,7 @@ class FeedSkeletonController
 {
     public function __invoke(Request $request): mixed
     {
-        $at = AtUri::parse($request->input('feed'));
+        $at = AtUri::parse($request->input('feed', ''));
 
         if ($at->collection() !== Feed::Generator->value || FeedGenerator::missing($at->rkey())) {
             abort(404);
