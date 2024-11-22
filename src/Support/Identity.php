@@ -8,6 +8,7 @@ use Illuminate\Http\Client\Response;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Str;
 use InvalidArgumentException;
+use Revolution\Bluesky\Facades\Bluesky;
 
 /**
  * @link https://github.com/bluesky-social/cookbook/blob/main/python-oauth-web-app/atproto_identity.py
@@ -46,6 +47,10 @@ class Identity
     }
 
     /**
+     * Get the handle's did directly from the DNS record or well-known.
+     *
+     * {@link Bluesky::resolveHandle()} is an alternative way to use the API.
+     *
      * @param  string|null  $handle  e.g. "alice.test"
      * @return string|null DID
      */
