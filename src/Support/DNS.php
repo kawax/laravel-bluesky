@@ -8,7 +8,7 @@ class DNS
 {
     protected static ?string $fake = null;
 
-    public function record(string $hostname, int $type = DNS_TXT): array
+    public static function record(string $hostname, int $type = DNS_TXT): array
     {
         if (! is_null(static::$fake)) {
             return [
