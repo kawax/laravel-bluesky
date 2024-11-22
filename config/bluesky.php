@@ -64,7 +64,9 @@ return [
 
     // Feed Generator
     'generator' => [
-        'publisher' => env('BLUESKY_GENERATOR_PUBLISHER'),
+        // did:web:example.com
         'service' => env('BLUESKY_GENERATOR_SERVICE'),
+        // did:plc:***
+        'publisher' => env('BLUESKY_GENERATOR_PUBLISHER'),
     ],
 ];
