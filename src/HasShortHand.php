@@ -771,6 +771,7 @@ trait HasShortHand
 
     /**
      * @param  string  $handle  e.g. "alice.test"
+     * @return Response{did: string}
      */
     public function resolveHandle(#[Format('handle')] string $handle): Response
     {
