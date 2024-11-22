@@ -68,4 +68,12 @@ final class FeedGenerator
     {
         return ! self::has($name);
     }
+
+    /**
+     * Remove all algos.
+     */
+    public static function flush(): void
+    {
+        self::$algos = [];
+    }
 }
