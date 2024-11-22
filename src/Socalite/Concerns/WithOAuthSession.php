@@ -99,7 +99,7 @@ trait WithOAuthSession
                 return $this->login_hint !== $did;
             }
             if (Identity::isHandle($this->login_hint)) {
-                return Bluesky::identity()->resolveHandle($this->login_hint) !== $did;
+                return Bluesky::resolveHandle($this->login_hint)->json('did') !== $did;
             }
         }
 
