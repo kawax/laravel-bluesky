@@ -11,7 +11,7 @@ use Revolution\AtProto\Lexicon\Attributes\Format;
  */
 final readonly class AtUri
 {
-    public const ATP = 'at://';
+    protected const ATP = 'at://';
 
     protected const ATP_URI_REGEX = '/^(at:\/\/)?((?:did:[a-z0-9:%-]+)|(?:[a-z0-9][a-z0-9.:-]*))(\/[^?#\s]*)?(\?[^#\s]+)?(#[^\s]+)?$/i';
 
