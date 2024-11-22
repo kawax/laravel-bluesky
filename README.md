@@ -105,7 +105,7 @@ Route::get('text-builder', function () {
                 ->newLine(count: 2)
                 ->link(text: 'https://bsky.app/', uri: 'https://bsky.app/')
                 ->newLine()
-                ->tag(text: '#Bluesky', tag: 'Bluesky')
+                ->tag(text: '#Bluesky', tag: 'Bluesky');
     });
 
     $response = Bluesky::login(identifier: config('bluesky.identifier'), password: config('bluesky.password'))
