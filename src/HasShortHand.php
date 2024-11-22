@@ -494,7 +494,9 @@ trait HasShortHand
     }
 
     /**
-     * @param  Generator  $generator
+     * Publish Feed Generator.
+     * Run again to update your Feed Generator information.
+     *
      * @param  string  $name  Generator short name
      * @throws AuthenticationException
      */
