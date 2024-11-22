@@ -61,4 +61,10 @@ return [
         // Route
         'prefix' => env('BLUESKY_OAUTH_PREFIX', '/bluesky/oauth/'),
     ],
+
+    // Feed Generator
+    'generator' => [
+        'publisher' => env('BLUESKY_GENERATOR_PUBLISHER'),
+        'service' => env('BLUESKY_GENERATOR_SERVICE'),
+    ],
 ];
