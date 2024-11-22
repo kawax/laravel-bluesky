@@ -46,6 +46,7 @@ final class FeedGenerator
     public static function describeFeedGenerator(string $publisher, string $service): array
     {
         $feeds = collect(self::$algos)
+            ->keys()
             ->map(fn ($algo) => 'at://'.$publisher.'/app.bsky.feed.generator/'.$algo)
             ->toArray();
 
