@@ -16,12 +16,12 @@ final class Images extends AbstractImages implements Arrayable
     }
 
     /**
-     * Pass an Array or Blob.
+     * Pass an Array or BlobRef.
      * ```
-     * use Revolution\Bluesky\Types\Blob;
+     * use Revolution\Bluesky\Types\BlobRef;
      *
      * $blob = Bluesky::uploadBlob(Storage::get('test.png'), Storage::mimeType('test.png'))->json('blob');
-     * $blob = Blob::fromArray($blob);
+     * $blob = BlobRef::fromArray($blob);
      *
      * $images = Images::create()
      *                 ->add(alt: 'ALT TEXT', blob: $blob)
