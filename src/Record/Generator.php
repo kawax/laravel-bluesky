@@ -52,6 +52,13 @@ final class Generator extends AbstractGenerator implements Arrayable, Recordable
         return $this;
     }
 
+    public function descriptionFacets(?array $descriptionFacets = null): self
+    {
+        $this->descriptionFacets = $descriptionFacets;
+
+        return $this;
+    }
+
     public function avatar(null|BlobRef|array|callable $avatar = null): self
     {
         if (is_null($avatar)) {
