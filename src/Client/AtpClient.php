@@ -34,8 +34,8 @@ use Revolution\Bluesky\Client\SubClient\VideoClient;
 use Revolution\Bluesky\Contracts\XrpcClient;
 
 class AtpClient implements XrpcClient,
-    Actor, Feed, Graph, Labeler, Unspecced,
-    Identity, Label, Moderation, Repo, Server, Temp
+    Actor, Feed, Graph, Labeler,
+    Identity, Label, Moderation, Repo, Server
 {
     use Macroable;
     use Conditionable;
@@ -47,7 +47,6 @@ class AtpClient implements XrpcClient,
     use AppBskyFeed;
     use AppBskyGraph;
     use AppBskyLabeler;
-    use AppBskyUnspecced;
 
     // com.atproto
     use ComAtprotoIdentity;
@@ -55,7 +54,6 @@ class AtpClient implements XrpcClient,
     use ComAtprotoModeration;
     use ComAtprotoRepo;
     use ComAtprotoServer;
-    use ComAtprotoTemp;
 
     /**
      * VideoClient.
