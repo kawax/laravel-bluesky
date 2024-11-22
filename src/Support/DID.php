@@ -11,6 +11,6 @@ final class DID
      */
     public static function web(?string $url = null): string
     {
-        return 'did:web:'.Str::of($url ?? url('/'))->explode('/', 3)->get(2);
+        return 'did:web:'.Str::of($url ?? url('/'))->explode('/', 4)->get(2);
     }
 }
