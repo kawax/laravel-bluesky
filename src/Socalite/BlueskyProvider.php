@@ -39,6 +39,7 @@ class BlueskyProvider extends AbstractProvider implements ProviderInterface
     protected $scopes = [
         'atproto',
         'transition:generic',
+        'transition:chat.bsky',
     ];
 
     /**
