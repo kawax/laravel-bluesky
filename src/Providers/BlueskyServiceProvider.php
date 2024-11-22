@@ -7,6 +7,7 @@ namespace Revolution\Bluesky\Providers;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\ServiceProvider;
 use Laravel\Socialite\Facades\Socialite;
+use Revolution\AtProto\Lexicon\Contracts\App\Bsky\Feed;
 use Revolution\Bluesky\BlueskyManager;
 use Revolution\Bluesky\Client\AtpClient;
 use Revolution\Bluesky\Console\DownloadRecordCommand;
@@ -17,6 +18,7 @@ use Revolution\Bluesky\Console\LexiconClientCommand;
 use Revolution\Bluesky\Console\NewPrivateKeyCommand;
 use Revolution\Bluesky\Contracts\Factory;
 use Revolution\Bluesky\Contracts\XrpcClient;
+use Revolution\Bluesky\FeedGenerator\Http\FeedSkeletonController;
 use Revolution\Bluesky\Socalite\BlueskyProvider;
 use Revolution\Bluesky\Socalite\Http\OAuthMetaController;
 
@@ -53,6 +55,7 @@ class BlueskyServiceProvider extends ServiceProvider
         }
 
         $this->socialite();
+        $this->generator();
     }
 
     protected function socialite(): void
@@ -88,5 +91,11 @@ class BlueskyServiceProvider extends ServiceProvider
                 Route::get('jwks.json', [OAuthMetaController::class, 'jwks'])
                     ->name('bluesky.oauth.jwks');
             });
+    }
+
+    protected function generator(): void
+    {
+        Route::prefix('/xrpc/')
+            ->get(Feed::getFeedSkeleton, FeedSkeletonController::class);
     }
 }

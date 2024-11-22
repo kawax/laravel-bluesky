@@ -17,6 +17,7 @@ use Revolution\AtProto\Lexicon\Enum\Graph;
 use Revolution\Bluesky\Client\SubClient\VideoClient;
 use Revolution\Bluesky\Record\Block;
 use Revolution\Bluesky\Record\Follow;
+use Revolution\Bluesky\Record\Generator;
 use Revolution\Bluesky\Record\Like;
 use Revolution\Bluesky\Record\Post;
 use Revolution\Bluesky\Record\Profile;
@@ -490,6 +491,30 @@ trait HasShortHand
     {
         return $this->client(auth: true)
             ->getServiceAuth(aud: $aud, exp: $exp, lxm: $lxm);
+    }
+
+    /**
+     * @param  Generator  $generator
+     * @param  string  $name  Generator short name
+     * @throws AuthenticationException
+     */
+    public function publishFeedGenerator(string $name, Generator $generator): Response
+    {
+        return $this->putRecord(
+            repo: $this->assertDid(),
+            collection: Feed::Generator->value,
+            rkey: $name,
+            record: $generator,
+        );
+    }
+
+    public function unpublishFeedGenerator(string $name): Response
+    {
+        return $this->deleteRecord(
+            repo: $this->assertDid(),
+            collection: Feed::Generator->value,
+            rkey: $name,
+        );
     }
 
     public function getSuggestions(?int $limit = 50, ?string $cursor = null): Response
