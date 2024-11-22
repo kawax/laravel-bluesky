@@ -9,6 +9,15 @@ use Revolution\AtProto\Lexicon\Contracts\Com\Atproto\Temp;
 
 trait ComAtprotoTemp
 {
+    public function addReservedHandle(string $handle): Response
+    {
+        return $this->call(
+            api: Temp::addReservedHandle,
+            method: self::POST,
+            params: compact($this->params(__METHOD__)),
+        );
+    }
+
     public function checkSignupQueue(): Response
     {
         return $this->call(
