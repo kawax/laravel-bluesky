@@ -22,7 +22,7 @@ class FeedGeneratorTest extends TestCase
             return ['feed' => [['post' => 'at://']]];
         });
 
-        $response = $this->get(route('bluesky.feed.generator', ['feed' => 'at://did:/app.bsky.feed.generator/test']));
+        $response = $this->get(route('bluesky.feed.skeleton', ['feed' => 'at://did:/app.bsky.feed.generator/test']));
 
         $response->assertSuccessful();
         $response->assertJson(['feed' => [['post' => 'at://']]]);
@@ -34,8 +34,20 @@ class FeedGeneratorTest extends TestCase
             return ['feed' => [['post' => 'at://']]];
         });
 
-        $response = $this->get(route('bluesky.feed.generator', ['feed' => 'at://did:/app.bsky.feed.generator/miss']));
+        $response = $this->get(route('bluesky.feed.skeleton', ['feed' => 'at://did:/app.bsky.feed.generator/miss']));
 
         $response->assertNotFound();
+    }
+
+    public function test_feed_describe(): void
+    {
+        FeedGenerator::register('test', function (?int $limit, ?string $cursor): array {
+            return ['feed' => [['post' => 'at://']]];
+        });
+
+        $response = $this->get(route('bluesky.feed.describe'));
+
+        $response->assertSuccessful();
+        $response->assertJson(['did' => null, 'feeds' => ['at:///app.bsky.feed.generator/test']]);
     }
 }
