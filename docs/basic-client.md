@@ -237,25 +237,6 @@ $response = Bluesky::withToken()->post($post);
 dump($response->json());
 ```
 
-### Quote post
-
-```php
-use Revolution\Bluesky\Facades\Bluesky;
-use Revolution\Bluesky\Record\Post;
-use Revolution\Bluesky\Embed\QuoteRecord;
-use Revolution\Bluesky\Types\StrongRef;
-
-$quote = QuoteRecord::create(StrongRef::to(uri: 'at://', cid: 'cid'));
-
-$post = Post::create(text: 'test')
-            ->embed($quote);
-
-/** @var \Illuminate\Http\Client\Response $response */
-$response = Bluesky::withToken()->post($post);
-
-dump($response->json());
-```
-
 ### Upload Images
 
 Images are passed as an array of data called a blob object.
@@ -372,6 +353,53 @@ $upload = Bluesky::withToken()
                      data: Utils::streamFor(Storage::readStream('video.mp4')),
                      type: Storage::mimeType('video.mp4'),
                  );
+```
+
+### Quote post
+
+```php
+use Revolution\Bluesky\Facades\Bluesky;
+use Revolution\Bluesky\Record\Post;
+use Revolution\Bluesky\Embed\QuoteRecord;
+use Revolution\Bluesky\Types\StrongRef;
+
+$quote = QuoteRecord::create(StrongRef::to(uri: 'at://', cid: 'cid'));
+
+$post = Post::create(text: 'test')
+            ->embed($quote);
+
+/** @var \Illuminate\Http\Client\Response $response */
+$response = Bluesky::withToken()->post($post);
+
+dump($response->json());
+```
+
+### Quote post with media
+
+Supported media: One of `Images` `Video` `External`
+
+```php
+use Revolution\Bluesky\Facades\Bluesky;
+use Revolution\Bluesky\Record\Post;
+use Revolution\Bluesky\Embed\External;
+use Revolution\Bluesky\Embed\QuoteRecordWithMedia;
+use Revolution\Bluesky\Types\StrongRef;
+
+$external = External::create(
+    title: 'Title', 
+    description: '', 
+    uri: 'https://', 
+);
+
+$quote = QuoteRecordWithMedia::create(StrongRef::to(uri: 'at://', cid: 'cid'), media: $external);
+
+$post = Post::create(text: 'test')
+            ->embed($quote);
+
+/** @var \Illuminate\Http\Client\Response $response */
+$response = Bluesky::withToken()->post($post);
+
+dump($response->json());
 ```
 
 ## Following a user

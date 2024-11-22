@@ -15,6 +15,7 @@ use Mockery;
 use Revolution\Bluesky\Embed\External;
 use Revolution\Bluesky\Embed\Images;
 use Revolution\Bluesky\Embed\QuoteRecord;
+use Revolution\Bluesky\Embed\QuoteRecordWithMedia;
 use Revolution\Bluesky\Embed\Video;
 use Revolution\Bluesky\Facades\Bluesky;
 use Revolution\AtProto\Lexicon\Enum\Embed;
@@ -222,6 +223,21 @@ class NotificationTest extends TestCase
         $this->assertIsArray($m->toArray()['embed']);
         $this->assertSame('uri', $m->toArray()['embed']['record']['uri']);
         $this->assertSame(Embed::Record->value, $m->toArray()['embed']['$type']);
+    }
+
+    public function test_message_embed_quote_with_media()
+    {
+        $external = External::create(title: 'title', description: '', uri: 'https://');
+
+        $quote = QuoteRecordWithMedia::create(StrongRef::to(uri: 'uri', cid: 'cid'), media: $external);
+
+        $m = Post::create(text: 'test')
+            ->embed($quote);
+
+        $this->assertIsArray($m->toArray()['embed']);
+        $this->assertSame('uri', $m->toArray()['embed']['record']['uri']);
+        $this->assertSame('title', $m->toArray()['embed']['media']['external']['title']);
+        $this->assertSame(Embed::RecordWithMedia->value, $m->toArray()['embed']['$type']);
     }
 
     public function test_message_langs()
