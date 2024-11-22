@@ -14,10 +14,11 @@ The simplest usage in Laravel is to just register an algorithm.
 ```php
 // Register in your AppServiceProvider::boot()
 
+use Illuminate\Http\Request;
 use Revolution\Bluesky\Facades\Bluesky;
 use Revolution\Bluesky\FeedGenerator\FeedGenerator;
 
-FeedGenerator::register(name: 'artisan', algo: function(?int $limit, ?string $cursor): array {
+FeedGenerator::register(name: 'artisan', algo: function(?int $limit, ?string $cursor, Request $request): array {
     // The implementation is entirely up to you.
 
     $response = Bluesky::searchPosts(q: '#laravel', limit: $limit, cursor: $cursor);
@@ -26,6 +27,10 @@ FeedGenerator::register(name: 'artisan', algo: function(?int $limit, ?string $cu
     $feed = $response->collect('posts')->map(function(array $post) {
         return ['post' => data_get($post, 'uri')];
     })->toArray();
+
+    // You can also use the Request object to change the results depending on the user's state.
+    info('header', $request->header());
+    info('auth', $request->header('Authorization'));
 
     return compact('cursor', 'feed');
 });
