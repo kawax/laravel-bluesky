@@ -128,6 +128,7 @@ To authenticate with OAuth, read the Socialite documentation.
 - [Basic Client](./docs/basic-client.md)
 - [Laravel Notifications](./docs/notification.md)
 - [Socialite](./docs/socialite.md)
+- [FeedGenerator](./docs/feed-generator.md)
 
 ## Contracts
 https://github.com/kawax/atproto-lexicon-contracts
