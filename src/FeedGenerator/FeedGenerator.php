@@ -31,7 +31,7 @@ final class FeedGenerator
      * ```
      *
      * @param  string  $name  short name. Used in generator url. `at://did:.../app.bsky.feed.generator/{name}`
-     * @param  callable(int $limit, string $cursor, string $feed): array  $algo
+     * @param  callable(?int $limit, ?string $cursor, string $feed): array  $algo
      */
     public static function register(string $name, callable $algo): void
     {
