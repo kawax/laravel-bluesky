@@ -14,6 +14,8 @@ final class FeedGenerator
      * ```
      * // Register in your AppServiceProvider::boot()
      *
+     * use use Revolution\Bluesky\FeedGenerator\FeedGenerator;
+     *
      * FeedGenerator::register(name: 'artisan', algo: function(int $limit, string $cursor): array {
      *     // The implementation is entirely up to you.
      *
