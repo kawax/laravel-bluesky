@@ -43,7 +43,7 @@ final class FeedGenerator
         return call_user_func(self::$algos[$name], $limit, $cursor, $request);
     }
 
-    public static function describeFeedGenerator(string $publisher, string $service): array
+    public static function describeFeedGenerator(?string $publisher, ?string $service): array
     {
         $feeds = collect(self::$algos)
             ->keys()
