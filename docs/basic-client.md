@@ -213,7 +213,7 @@ $response = Bluesky::withToken()->post($post);
 dump($response->json());
 ```
 
-### Social Card
+### External link / Social Card
 
 ```php
 use Illuminate\Support\Facades\Storage;
