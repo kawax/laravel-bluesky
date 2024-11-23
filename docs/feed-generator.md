@@ -130,9 +130,9 @@ You can create as many FeedGenerators as you want by changing the `name`.
 use Revolution\Bluesky\Facades\Bluesky;
 use Revolution\Bluesky\FeedGenerator\FeedGenerator;
 
-FeedGenerator::register(name: 'feed1', algo: function()
+FeedGenerator::register(name: 'feed1');
 
-FeedGenerator::register(name: 'feed2', algo: function()
+FeedGenerator::register(name: 'feed2');
 ```
 
 ```php
