@@ -3,7 +3,6 @@
 namespace Revolution\Bluesky\FeedGenerator\Http;
 
 use Illuminate\Http\Request;
-use Illuminate\Support\Str;
 use Revolution\AtProto\Lexicon\Enum\Feed;
 use Revolution\Bluesky\FeedGenerator\FeedGenerator;
 use Revolution\Bluesky\Socalite\Key\JsonWebToken;
@@ -35,14 +34,6 @@ class FeedSkeletonController
      */
     protected function userDid(Request $request): ?string
     {
-        $jwt = Str::of($request->header('Authorization'))->chopStart('Bearer')->trim()->toString();
-
-        if (empty($jwt)) {
-            return null;
-        }
-
-        $payload = data_get(JsonWebToken::decode($jwt), 'payload');
-
-        return data_get($payload, 'iss');
+        return data_get(JsonWebToken::decode($request->bearerToken()), 'payload.iss');
     }
 }
