@@ -2,8 +2,11 @@
 
 namespace Revolution\Bluesky\FeedGenerator;
 
+use BackedEnum;
 use Illuminate\Http\Request;
 use Revolution\Bluesky\Support\DID;
+
+use function Illuminate\Support\enum_value;
 
 final class FeedGenerator
 {
@@ -32,12 +35,12 @@ final class FeedGenerator
      * });
      * ```
      *
-     * @param  string  $name  short name. Used in generator url. `at://did:.../app.bsky.feed.generator/{name}`
+     * @param  BackedEnum|string  $name  short name. Used in generator url. `at://did:.../app.bsky.feed.generator/{name}`
      * @param  callable(?int $limit, ?string $cursor, ?string $user, Request $request): array  $algo
      */
-    public static function register(string $name, callable $algo): void
+    public static function register(BackedEnum|string $name, callable $algo): void
     {
-        self::$algos[$name] = $algo;
+        self::$algos[enum_value($name)] = $algo;
     }
 
     public static function getFeedSkeleton(string $name, ?int $limit, ?string $cursor, ?string $user, Request $request): mixed
