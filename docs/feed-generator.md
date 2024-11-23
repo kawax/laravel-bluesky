@@ -18,7 +18,7 @@ use Illuminate\Http\Request;
 use Revolution\Bluesky\Facades\Bluesky;
 use Revolution\Bluesky\FeedGenerator\FeedGenerator;
 
-FeedGenerator::register(name: 'artisan', algo: function(?int $limit, ?string $cursor, Request $request): array {
+FeedGenerator::register(name: 'artisan', algo: function(?int $limit, ?string $cursor, ?string $user, Request $request): array {
     // The implementation is entirely up to you.
 
     $response = Bluesky::searchPosts(q: '#laravel', limit: $limit, cursor: $cursor);
@@ -29,8 +29,8 @@ FeedGenerator::register(name: 'artisan', algo: function(?int $limit, ?string $cu
     })->toArray();
 
     // You can also use the Request object to change the results depending on the user's state.
+    info('user: '.$user);// Requesting user's DID. 'did:plc:***'
     info('header', $request->header());
-    info('auth', $request->header('Authorization'));
 
     return compact('cursor', 'feed');
 });
