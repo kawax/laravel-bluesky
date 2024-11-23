@@ -15,6 +15,7 @@ use Revolution\Bluesky\Socalite\BlueskyProvider;
 use Revolution\Bluesky\Socalite\Key\BlueskyKey;
 use Revolution\Bluesky\Socalite\Key\JsonWebKey;
 use Revolution\Bluesky\Socalite\Key\JsonWebKeySet;
+use Revolution\Bluesky\Socalite\Key\JsonWebToken;
 use Revolution\Bluesky\Socalite\OAuthConfig;
 use Tests\TestCase;
 
@@ -362,5 +363,21 @@ class SocialiteTest extends TestCase
 
         $response->assertOk()
             ->assertJson(['keys' => 'test']);
+    }
+
+    public function test_jwt()
+    {
+        $jwtStr = JsonWebToken::encode(
+            head: ['typ' => 'JWT', 'alg' => JsonWebKey::ALG],
+            payload: [
+                'iss' => 'iss',
+            ],
+            key: BlueskyKey::create()->privateKey(),
+        );
+
+        $jwt = JsonWebToken::decode($jwtStr);
+
+        $this->assertArrayHasKey('typ', $jwt['header']);
+        $this->assertSame('iss', $jwt['payload']['iss']);
     }
 }
