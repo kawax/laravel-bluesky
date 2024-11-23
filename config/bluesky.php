@@ -67,6 +67,9 @@ return [
      * Optional, as if not set, `did:web:example.com` will be used from the current URL.
      */
     'generator' => [
+        // Disable Feed Generator routes
+        'disabled' => env('BLUESKY_GENERATOR_DISABLED', false),
+
         // did:web:example.com
         'service' => env('BLUESKY_GENERATOR_SERVICE'),
         // did:plc:***
