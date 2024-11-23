@@ -800,7 +800,7 @@ trait HasShortHand
     }
 
     /**
-     * @param  string  $handle  e.g. "alice.test"
+     * @param  string  $handle  `***.bsky.social` `alice.test`
      * @return Response{did: string}
      */
     public function resolveHandle(#[Format('handle')] string $handle): Response
@@ -810,7 +810,7 @@ trait HasShortHand
     }
 
     /**
-     * @param  string  $handle  e.g. "alice.test"
+     * @param  string  $handle  `***.bsky.social` `alice.test`
      */
     public function updateHandle(#[Format('handle')] string $handle): Response
     {
