@@ -21,4 +21,36 @@ final class JsonWebToken
             head: $head,
         );
     }
+
+    /**
+     * Get payload from JsonWebToken.
+     *
+     * ```
+     * $jwt = JsonWebToken::decode('****.****.****');
+     *
+     * [
+     *     'header' => [],
+     *     'payload' => [],
+     *     'sig' => 'Remains url-safe base64 encoded',
+     * ]
+     * ```
+     * ```
+     * // Decode sig
+     * use Firebase\JWT\JWT;
+     *
+     * $sig = JWT::urlsafeB64Decode($sig);
+     * ```
+     *
+     * @return array{header: array, payload: array, sig: string}
+     */
+    public static function decode(string $jwt): array
+    {
+        [$header, $payload, $sig] = explode('.', $jwt, 3);
+
+        $header = json_decode(JWT::urlsafeB64Decode($header), true);
+        $payload = json_decode(JWT::urlsafeB64Decode($payload), true);
+        //$sig = JWT::urlsafeB64Decode($sig);
+
+        return compact('header', 'payload', 'sig');
+    }
 }
