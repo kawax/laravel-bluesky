@@ -44,13 +44,13 @@ final class JsonWebToken
      *
      * @return null|array{header: array, payload: array, sig: string}
      */
-    public static function decode(?string $jwt): ?array
+    public static function decode(?string $token): ?array
     {
-        if (Str::substrCount($jwt, '.') !== 2) {
+        if (Str::substrCount($token, '.') !== 2) {
             return null;
         }
 
-        [$header, $payload, $sig] = explode('.', $jwt, 3);
+        [$header, $payload, $sig] = explode('.', $token, 3);
 
         $header = json_decode(JWT::urlsafeB64Decode($header), true);
         $payload = json_decode(JWT::urlsafeB64Decode($payload), true);
