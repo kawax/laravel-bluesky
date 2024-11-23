@@ -2,6 +2,7 @@
 
 namespace Revolution\Bluesky;
 
+use BackedEnum;
 use Illuminate\Auth\AuthenticationException;
 use Illuminate\Http\Client\Response;
 use Illuminate\Support\Facades\Http;
@@ -27,6 +28,8 @@ use Revolution\Bluesky\Record\UserList;
 use Revolution\Bluesky\Record\UserListItem;
 use Revolution\Bluesky\Support\AtUri;
 use Revolution\Bluesky\Types\StrongRef;
+
+use function Illuminate\Support\enum_value;
 
 /**
  * The method names will be the same as the official client.
@@ -497,25 +500,25 @@ trait HasShortHand
      * Publish Feed Generator.
      * Run again to update your Feed Generator information.
      *
-     * @param  string  $name  Generator short name
+     * @param  BackedEnum|string  $name  Generator short name
      * @throws AuthenticationException
      */
-    public function publishFeedGenerator(string $name, Generator $generator): Response
+    public function publishFeedGenerator(BackedEnum|string $name, Generator $generator): Response
     {
         return $this->putRecord(
             repo: $this->assertDid(),
             collection: Feed::Generator->value,
-            rkey: $name,
+            rkey: enum_value($name),
             record: $generator,
         );
     }
 
-    public function unpublishFeedGenerator(string $name): Response
+    public function unpublishFeedGenerator(BackedEnum|string $name): Response
     {
         return $this->deleteRecord(
             repo: $this->assertDid(),
             collection: Feed::Generator->value,
-            rkey: $name,
+            rkey: enum_value($name),
         );
     }
 
