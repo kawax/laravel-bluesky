@@ -74,8 +74,18 @@ Finally, if you want to use an API not in Client, you can send anything with `se
 
 ```php
 use Revolution\Bluesky\Facades\Bluesky;
+use Illuminate\Http\Client\PendingRequest;
 
-$response = Bluesky::withToken()->send(api: 'com.atproto.repo.createRecord', method: 'post', auth: true, params: []);
+$response = Bluesky::withToken()
+                   ->send(
+                         api: 'com.atproto.repo.createRecord',
+                         method: 'post',
+                         auth: true,
+                         params: [],
+                         callback: function (PendingRequest $http) {
+                                $http->...;
+                         },
+                   );
 ```
 
 ## Viewing my feed
