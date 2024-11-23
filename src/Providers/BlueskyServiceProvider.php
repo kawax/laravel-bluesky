@@ -97,6 +97,10 @@ class BlueskyServiceProvider extends ServiceProvider
 
     protected function generator(): void
     {
+        if (config('bluesky.generator.disabled')) {
+            return;
+        }
+
         Route::prefix('/xrpc/')
             ->group(function () {
                 Route::get(Feed::getFeedSkeleton, FeedSkeletonController::class)
