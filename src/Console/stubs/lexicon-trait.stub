@@ -1,4 +1,7 @@
 <?php
+/**
+ * GENERATED CODE.
+ */
 
 declare(strict_types=1);
 
