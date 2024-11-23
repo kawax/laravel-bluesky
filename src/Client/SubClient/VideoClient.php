@@ -21,7 +21,7 @@ class VideoClient implements XrpcClient, Video
     use HasHttp;
     use AppBskyVideo;
 
-    public const VIDEO_ENDPOINT = 'https://video.bsky.app/xrpc/';
+    protected const VIDEO_ENDPOINT = 'https://video.bsky.app/xrpc/';
 
     public const VIDEO_SERVICE_DID = 'did:web:video.bsky.app';
 
