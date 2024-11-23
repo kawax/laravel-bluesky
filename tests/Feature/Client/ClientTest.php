@@ -35,7 +35,7 @@ use Tests\TestCase;
 
 class ClientTest extends TestCase
 {
-    protected array $session = ['accessJwt' => 'test', 'refreshJwt' => 'test', 'did' => 'test', 'handle' => 'handle'];
+    protected array $session = ['accessJwt' => 'test', 'refreshJwt' => 'test', 'did' => 'test', 'handle' => 'handle', 'didDoc' => ['service' => [['id' => '#atproto_pds', 'serviceEndpoint' => 'https://pds']]]];
 
     protected function setUp(): void
     {
@@ -541,6 +541,45 @@ class ClientTest extends TestCase
             limit: 25,
             cursor: '',
         );
+
+        $this->assertTrue($response->successful());
+    }
+
+    public function test_video_upload()
+    {
+        Http::fakeSequence()
+            ->push($this->session)
+            ->push(['token' => 'test'])
+            ->push([]);
+
+        $response = Bluesky::login('id', 'pass')
+            ->uploadVideo(data: '', type: 'video/mp4');
+
+        $this->assertTrue($response->successful());
+    }
+
+    public function test_video_status()
+    {
+        Http::fakeSequence()
+            ->push($this->session)
+            ->push(['token' => 'test'])
+            ->push([]);
+
+        $response = Bluesky::login('id', 'pass')
+            ->getJobStatus(jobId: 'id');
+
+        $this->assertTrue($response->successful());
+    }
+
+    public function test_video_limits()
+    {
+        Http::fakeSequence()
+            ->push($this->session)
+            ->push(['token' => 'test'])
+            ->push([]);
+
+        $response = Bluesky::login('id', 'pass')
+            ->getUploadLimits();
 
         $this->assertTrue($response->successful());
     }
