@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Tests\Feature\Notifications;
 
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Http\Client\RequestException;
 use Illuminate\Notifications\Events\NotificationSent;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Facades\Event;
