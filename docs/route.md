@@ -1,7 +1,7 @@
 Routes defined in the package
 ====
 
-Some routes are defined in the package. You can disable a route by setting it in config or .env.
+Some routes are defined in the package. You can disable a route by setting it in config or `.env`.
 
 | path                                        | name                            |
 |---------------------------------------------|---------------------------------|
