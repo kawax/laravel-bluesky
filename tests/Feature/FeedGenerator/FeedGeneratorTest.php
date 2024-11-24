@@ -57,4 +57,11 @@ class FeedGeneratorTest extends TestCase
 
         $response->assertSuccessful();
     }
+
+    public function test_feed_atproto_did(): void
+    {
+        $response = $this->get('.well-known/atproto-did');
+
+        $response->assertSuccessful();
+    }
 }
