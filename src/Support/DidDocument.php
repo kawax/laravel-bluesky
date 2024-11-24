@@ -8,6 +8,9 @@ use Illuminate\Contracts\Support\Arrayable;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Str;
 
+/**
+ * @link https://plc.directory/did:plc:ewvi7nxzyoun6zhxrhs64oiz
+ */
 final readonly class DidDocument implements Arrayable
 {
     protected Collection $didDoc;
