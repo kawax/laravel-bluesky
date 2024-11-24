@@ -4,7 +4,7 @@ return [
     // service / PDS url
     'service' => env('BLUESKY_SERVICE', 'https://bsky.social'),
 
-    // PLC
+    // PLC directory
     'plc' => env('BLUESKY_PLC', 'https://plc.directory'),
 
     // Public endpoint
@@ -48,7 +48,7 @@ return [
             'client_uri' => env('BLUESKY_OAUTH_CLIENT_URI'),
             'logo_uri' => env('BLUESKY_OAUTH_LOGO'),
             'tos_uri' => env('BLUESKY_OAUTH_TOS'),
-            'policy_uri' => env('BLUESKY_OAUTH_PRIVACY'),
+            'policy_uri' => env('BLUESKY_OAUTH_POLICY'),
         ],
 
         // Socialite
@@ -58,7 +58,7 @@ return [
         // Private key(base64 encoded)
         'private_key' => env('BLUESKY_OAUTH_PRIVATE_KEY'),
 
-        // Route
+        // Route prefix
         'prefix' => env('BLUESKY_OAUTH_PREFIX', '/bluesky/oauth/'),
     ],
 
@@ -70,7 +70,7 @@ return [
         // Disable Feed Generator routes
         'disabled' => env('BLUESKY_GENERATOR_DISABLED', false),
 
-        // did:web:example.com
+        // did:plc:***
         'service' => env('BLUESKY_GENERATOR_SERVICE'),
         // did:plc:***
         'publisher' => env('BLUESKY_GENERATOR_PUBLISHER'),
