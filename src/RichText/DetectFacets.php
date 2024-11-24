@@ -19,7 +19,7 @@ final class DetectFacets
 
     protected const TRAILING_PUNCTUATION_REGEX = '/\p{P}+$/u';
 
-    protected const TAG_REGEX = '/(^|\s)[#＃]((?!\x{fe0f})[^\s\x{00AD}\x{2060}\x{200A}\x{200B}\x{200C}\x{200D}\x{20e2}]*[^\d\s\p{P}\x{00AD}\x{2060}\x{200A}\x{200B}\x{200C}\x{200D}\x{20e2}]+[^\s\x{00AD}\x{2060}\x{200A}\x{200B}\x{200C}\x{200D}\x{20e2}]*)?/u';
+    protected const TAG_REGEX = '/(^|\s)([#＃])((?!\x{fe0f})[^\s\x{00AD}\x{2060}\x{200A}\x{200B}\x{200C}\x{200D}\x{20e2}]*[^\d\s\p{P}\x{00AD}\x{2060}\x{200A}\x{200B}\x{200C}\x{200D}\x{20e2}]+[^\s\x{00AD}\x{2060}\x{200A}\x{200B}\x{200C}\x{200D}\x{20e2}]*)?/u';
 
     protected readonly string $text;
 
@@ -113,12 +113,18 @@ final class DetectFacets
     {
         preg_match_all(self::TAG_REGEX, $this->text, $matches, flags: PREG_OFFSET_CAPTURE);
 
-        collect(data_get($matches, 2))
-            ->each(function ($match) {
-                $tag = data_get($match, 0);
-                $start = data_get($match, 1) - 1;
+        collect(data_get($matches, 3))
+            ->each(function ($match, $index) use ($matches) {
+                // # or ＃
+                $leading = data_get($matches, "2.$index.0");
 
-                $tag = Str::of($tag)->replaceMatches(self::TRAILING_PUNCTUATION_REGEX, '')->toString();
+                $tag = data_get($match, 0);
+                $start = data_get($match, 1);
+
+                $tag = Str::of($tag)
+                    ->trim()
+                    ->replaceMatches(self::TRAILING_PUNCTUATION_REGEX, '')
+                    ->toString();
 
                 if (empty($tag) || strlen($tag) > 64) {
                     return;
@@ -126,8 +132,8 @@ final class DetectFacets
 
                 $this->facets[] = [
                     'index' => [
-                        'byteStart' => $start,
-                        'byteEnd' => $start + 1 + strlen($tag),
+                        'byteStart' => $start - strlen($leading),
+                        'byteEnd' => $start + strlen($tag),
                     ],
                     'features' => [
                         [
