@@ -20,9 +20,9 @@ use Revolution\Bluesky\Contracts\Factory;
 use Revolution\Bluesky\Contracts\XrpcClient;
 use Revolution\Bluesky\FeedGenerator\Http\DescribeFeedController;
 use Revolution\Bluesky\FeedGenerator\Http\FeedSkeletonController;
-use Revolution\Bluesky\FeedGenerator\Http\WellKnownDidController;
 use Revolution\Bluesky\Socalite\BlueskyProvider;
 use Revolution\Bluesky\Socalite\Http\OAuthMetaController;
+use Revolution\Bluesky\WellKnown\Http\WellKnownController;
 
 class BlueskyServiceProvider extends ServiceProvider
 {
@@ -58,6 +58,7 @@ class BlueskyServiceProvider extends ServiceProvider
 
         $this->socialite();
         $this->generator();
+        $this->well();
     }
 
     protected function socialite(): void
@@ -108,7 +109,15 @@ class BlueskyServiceProvider extends ServiceProvider
                 Route::get(Feed::describeFeedGenerator, DescribeFeedController::class)
                     ->name('bluesky.feed.describe');
             });
+    }
 
-        Route::get('.well-known/did.json', WellKnownDidController::class);
+    protected function well(): void
+    {
+        if (config('bluesky.well-known.disabled')) {
+            return;
+        }
+
+        Route::get('.well-known/did.json', [WellKnownController::class, 'did']);
+        Route::get('.well-known/atproto-did', [WellKnownController::class, 'atproto']);
     }
 }
