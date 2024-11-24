@@ -8,7 +8,7 @@ use Illuminate\Contracts\Support\Arrayable;
 use Illuminate\Support\Collection;
 
 /**
- * @link https://morel.us-east.host.bsky.network/.well-known/oauth-protected-resource
+ * @link https://matsutake.us-west.host.bsky.network/.well-known/oauth-protected-resource
  */
 final readonly class ProtectedResource implements Arrayable
 {
