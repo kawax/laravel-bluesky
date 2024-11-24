@@ -14,6 +14,16 @@ class OAuthConfig
 
     protected static ?Closure $jwksUsing = null;
 
+    /**
+     * Overrides the `client-metadata.json` response.
+     * ```
+     * // AppServiceProvider::boot()
+     *
+     * OAuthConfig::clientMetadataUsing(function() {
+     *     return [];
+     * });
+     * ```
+     */
     public static function clientMetadataUsing(?Closure $callback): void
     {
         static::$metadataUsing = $callback;
@@ -42,6 +52,16 @@ class OAuthConfig
             ->toArray();
     }
 
+    /**
+     * Overrides the `jwks.json` response.
+     * ```
+     * // AppServiceProvider::boot()
+     *
+     * OAuthConfig::jwksUsing(function() {
+     *     return [];
+     * });
+     * ```
+     */
     public static function jwksUsing(?Closure $callback): void
     {
         static::$jwksUsing = $callback;
