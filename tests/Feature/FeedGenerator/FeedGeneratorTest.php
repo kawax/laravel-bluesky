@@ -53,14 +53,14 @@ class FeedGeneratorTest extends TestCase
 
     public function test_feed_did(): void
     {
-        $response = $this->get('.well-known/did.json');
+        $response = $this->get(route('bluesky.well-known.did'));
 
         $response->assertSuccessful();
     }
 
     public function test_feed_atproto_did(): void
     {
-        $response = $this->get('.well-known/atproto-did');
+        $response = $this->get(route('bluesky.well-known.atproto'));
 
         $response->assertSuccessful();
     }
