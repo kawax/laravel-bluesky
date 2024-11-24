@@ -117,7 +117,9 @@ class BlueskyServiceProvider extends ServiceProvider
             return;
         }
 
-        Route::get('.well-known/did.json', [WellKnownController::class, 'did']);
-        Route::get('.well-known/atproto-did', [WellKnownController::class, 'atproto']);
+        Route::get('.well-known/did.json', [WellKnownController::class, 'did'])
+            ->name('bluesky.well-known.did');
+        Route::get('.well-known/atproto-did', [WellKnownController::class, 'atproto'])
+            ->name('bluesky.well-known.atproto');
     }
 }
