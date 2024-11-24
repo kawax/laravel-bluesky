@@ -110,8 +110,8 @@ BLUESKY_REDIRECT=/bluesky/callback
 
 ## Customize client-metadata
 
-`bluesky.oauth.client-metadata` and `bluesky.oauth.jwks` routes are defined within the package, so you are free to
-modify them here as well. However, they usually do not need to be changed.
+`bluesky.oauth.client-metadata` and `bluesky.oauth.jwks` routes are defined within the package, 
+so you are free to modify them here as well. However, they usually do not need to be changed.
 
 You can also see these routes on localhost.
 
