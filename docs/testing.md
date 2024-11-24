@@ -15,6 +15,7 @@ Bluesky::shouldReceive('login->getProfile')->once()->andReturn(new Response(Http
 This package uses the Laravel Http client. If you write `Http::preventStrayRequests()` in the test `setUp()`, you can immediately detect external requests. If there are any unexpected external requests, you can prevent them by mocking them.
 
 ```php
+use Revolution\Bluesky\Facades\Bluesky;
 use Illuminate\Support\Facades\Http;
 
     protected function setUp(): void
@@ -22,6 +23,16 @@ use Illuminate\Support\Facades\Http;
         parent::setUp();
 
         Http::preventStrayRequests();
+    }
+
+    public function test_post(): void
+    {
+        Http::fake();
+
+        Http::fakeSequence()
+            ->push();
+
+        Bluesky::shouldReceive('resolveHandle->json')->once()->andReturn('did');
     }
 ```
 
