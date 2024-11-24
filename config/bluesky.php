@@ -75,4 +75,9 @@ return [
         // did:plc:***
         'publisher' => env('BLUESKY_GENERATOR_PUBLISHER'),
     ],
+
+    'well-known' => [
+        // Disable well-known routes
+        'disabled' => env('BLUESKY_WELLKNOWN_DISABLED', false),
+    ],
 ];
