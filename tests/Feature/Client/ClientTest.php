@@ -9,7 +9,6 @@ use Illuminate\Http\Client\Request;
 use Illuminate\Support\Facades\Http;
 use InvalidArgumentException;
 use Mockery;
-use Mockery\MockInterface;
 use Revolution\AtProto\Lexicon\Contracts\App\Bsky\Actor;
 use Revolution\AtProto\Lexicon\Enum\ListPurpose;
 use Revolution\Bluesky\Agent\OAuthAgent;
