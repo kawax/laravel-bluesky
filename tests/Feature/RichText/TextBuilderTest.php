@@ -38,18 +38,20 @@ class TextBuilderTest extends TestCase
         $this->assertSame(55, data_get($builder->facets, '2.index.byteStart'));
         $this->assertSame(72, data_get($builder->facets, '2.index.byteEnd'));
 
-        $this->assertSame(['https://localhost', 'https://localhost/?test=a', 'https://localhost','https://example.com', 'https://localhost/', 'https://localhost/#hash'], collect($builder->facets)->pluck('features.0.uri')->toArray());
+        $this->assertSame(['https://localhost', 'https://localhost/?test=a', 'https://localhost', 'https://example.com', 'https://localhost/', 'https://localhost/#hash'], collect($builder->facets)->pluck('features.0.uri')->toArray());
     }
 
     public function test_detect_facets_tag()
     {
-        $builder = TextBuilder::make('#test #a_ #ゑ #ん #ü #_ #😇 #')->detectFacets();
+        $builder = TextBuilder::make('#test #a_ #ゑ ＃ん #ü #_ #😇 #')->detectFacets();
 
         $this->assertIsArray($builder->facets);
         $this->assertSame(0, data_get($builder->facets, '0.index.byteStart'));
         $this->assertSame(5, data_get($builder->facets, '0.index.byteEnd'));
         $this->assertSame(10, data_get($builder->facets, '2.index.byteStart'));
         $this->assertSame(14, data_get($builder->facets, '2.index.byteEnd'));
+        $this->assertSame(15, data_get($builder->facets, '3.index.byteStart'));
+        $this->assertSame(21, data_get($builder->facets, '3.index.byteEnd'));
 
         $this->assertSame(['test', 'a', 'ゑ', 'ん', 'ü', '😇'], collect($builder->facets)->pluck('features.0.tag')->toArray());
     }
