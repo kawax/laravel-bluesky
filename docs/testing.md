@@ -37,7 +37,7 @@ use Revolution\Bluesky\FeedGenerator\FeedGenerator;
 
     public function test_feed_generator(): void
     {
-        FeedGenerator::register('test', function (?int $limit, ?string $cursor) {
+        FeedGenerator::register(name: 'test', algo: function (?int $limit, ?string $cursor) {
             $posts = Bluesky::searchPosts(q: '#bluesky')->collect('posts');
             $feed = $posts->map(function (array $post) {
                 return ['post' => data_get($post, 'uri')];
