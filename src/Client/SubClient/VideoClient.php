@@ -38,9 +38,12 @@ class VideoClient implements XrpcClient, Video
 
     /**
      * {@link AppBskyVideo::uploadVideo()} doesn't work because it is missing required parameters.
+     *
+     * @link https://github.com/bluesky-social/social-app/blob/main/src/lib/media/video/upload.ts
      */
     public function upload(string $did, StreamInterface|string $data, string $type = 'video/mp4'): Response
     {
+        // Generates random names just like the official app
         $name = Str::random(12).$this->ext($type);
 
         return $this->http()
