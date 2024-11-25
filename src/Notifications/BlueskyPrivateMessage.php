@@ -52,7 +52,7 @@ final class BlueskyPrivateMessage implements Arrayable
      *
      * $builder = TextBuilder::make(text: 'test')
      *                       ->newLine()
-     *                       ->link(text: 'https://', uri: 'https://');
+     *                       ->link(text: 'https://');
      *
      * $message = BlueskyPrivateMessage::create(text: $builder->text, facets: $builder->facets);
      * ```
@@ -70,7 +70,7 @@ final class BlueskyPrivateMessage implements Arrayable
      *  $message = BlueskyPrivateMessage::build(function (TextBuilder $builder) {
      *      $builder->text('test')
      *              ->newLine()
-     *              ->tag(text: '#bluesky', tag: 'bluesky');
+     *              ->tag(text: '#bluesky');
      *  });
      * ```
      *
