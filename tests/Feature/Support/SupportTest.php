@@ -3,6 +3,7 @@
 namespace Tests\Feature\Support;
 
 use Illuminate\Support\Facades\Http;
+use InvalidArgumentException;
 use Revolution\Bluesky\Facades\Bluesky;
 use Revolution\Bluesky\Support\AtUri;
 use Revolution\Bluesky\Support\DID;
@@ -89,6 +90,32 @@ class SupportTest extends TestCase
         $this->assertSame('did:plc:test', $at->repo());
         $this->assertSame('app.bsky.feed.post', $at->collection());
         $this->assertSame('abcde', $at->rkey());
+    }
+
+    public function test_at_uri_invalid()
+    {
+        $this->expectException(InvalidArgumentException::class);
+
+        $at = AtUri::parse('http://did:plc:test/app.bsky.feed.post/abcde');
+    }
+
+    public function test_at_uri_to_string()
+    {
+        $at = AtUri::parse('at://did:plc:test/app.bsky.feed.post/abcde?test=a#hash');
+
+        $this->assertSame('at://did:plc:test/app.bsky.feed.post/abcde?test=a#hash', (string) $at);
+        $this->assertSame('at://did:plc:test/app.bsky.feed.post/abcde?test=a#hash', $at->__toString());
+    }
+
+    public function test_at_uri_make()
+    {
+        $at = AtUri::make(repo: 'did:plc:test', collection: 'app.bsky.feed.post', rkey: 'abcde');
+        $at2 = AtUri::make(repo: 'did:plc:test', collection: 'app.bsky.feed.post');
+        $at3 = AtUri::make(repo: 'did:plc:test');
+
+        $this->assertSame('at://did:plc:test/app.bsky.feed.post/abcde', (string) $at);
+        $this->assertSame('at://did:plc:test/app.bsky.feed.post', $at2->__toString());
+        $this->assertSame('at://did:plc:test', $at3->__toString());
     }
 
     public function test_did_web()
