@@ -90,7 +90,7 @@ final class TextBuilder implements Arrayable
      * ```
      * If did is not passed, did will be automatically resolved from handle.
      * ```
-     * $builder->mention('@***.bsky.social');
+     * $builder->mention(text: '@***.bsky.social');
      * ```
      */
     public function mention(string $text, #[Format('did')] ?string $did = null): self
@@ -127,7 +127,7 @@ final class TextBuilder implements Arrayable
      *  ```
      *  If uri is not passed, input text will be used as the uri.
      *  ```
-     *  $builder->link('https://example.com');
+     *  $builder->link(text: 'https://example.com');
      *  ```
      */
     public function link(string $text, ?string $uri = null): self
@@ -161,7 +161,7 @@ final class TextBuilder implements Arrayable
      * ```
      * If tag is not passed, tag will be automatically set from input text.
      * ```
-     * $builder->tag('#alice');
+     * $builder->tag(text: '#alice');
      * ```
      */
     public function tag(string $text, ?string $tag = null): self
