@@ -12,4 +12,4 @@ Some routes are defined in the package. You can disable a route by setting it in
 | `/.well-known/did.json`                     | `bluesky.well-known.did`        |
 | `/.well-known/atproto-did`                  | `bluesky.well-known.atproto`    |
 
-To change the response, use [OAuthConfig](../src/Socalite/OAuthConfig.php) or [WellKnownConfig](../src/WellKnown/WellKnownConfig.php).
+To change the response, use [OAuthConfig](../src/Socialite/OAuthConfig.php) or [WellKnownConfig](../src/WellKnown/WellKnownConfig.php).

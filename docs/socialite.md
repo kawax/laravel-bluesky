@@ -126,7 +126,7 @@ You can also see these routes on localhost.
 namespace App\Providers;
 
 use Illuminate\Support\ServiceProvider;
-use Revolution\Bluesky\Socalite\OAuthConfig;
+use Revolution\Bluesky\Socialite\OAuthConfig;
 
 class AppServiceProvider extends ServiceProvider
 {

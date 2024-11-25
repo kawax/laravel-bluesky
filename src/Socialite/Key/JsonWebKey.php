@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Revolution\Bluesky\Socalite\Key;
+namespace Revolution\Bluesky\Socialite\Key;
 
 use Illuminate\Contracts\Support\Arrayable;
 use Illuminate\Contracts\Support\Jsonable;

@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace Revolution\Bluesky\Socalite\Key;
+namespace Revolution\Bluesky\Socialite\Key;
 
 use Firebase\JWT\JWT;
 use Illuminate\Support\Str;

@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace Revolution\Bluesky\Socalite\Http;
+namespace Revolution\Bluesky\Socialite\Http;
 
-use Revolution\Bluesky\Socalite\OAuthConfig;
+use Revolution\Bluesky\Socialite\OAuthConfig;
 
 class OAuthMetaController
 {

@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Revolution\Bluesky\Socalite\Concerns;
+namespace Revolution\Bluesky\Socialite\Concerns;
 
 use Illuminate\Http\Client\Response;
 use Illuminate\Support\Facades\Http;
@@ -10,7 +10,7 @@ use Illuminate\Support\Str;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
 use Revolution\Bluesky\Events\DPoPNonceReceived;
-use Revolution\Bluesky\Socalite\Key\DPoP;
+use Revolution\Bluesky\Socialite\Key\DPoP;
 
 /**
  * Pushed Authentication Request

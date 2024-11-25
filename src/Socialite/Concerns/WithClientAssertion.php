@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
-namespace Revolution\Bluesky\Socalite\Concerns;
+namespace Revolution\Bluesky\Socialite\Concerns;
 
 use Illuminate\Support\Str;
-use Revolution\Bluesky\Socalite\Key\BlueskyKey;
-use Revolution\Bluesky\Socalite\Key\JsonWebKey;
-use Revolution\Bluesky\Socalite\Key\JsonWebToken;
+use Revolution\Bluesky\Socialite\Key\BlueskyKey;
+use Revolution\Bluesky\Socialite\Key\JsonWebKey;
+use Revolution\Bluesky\Socialite\Key\JsonWebToken;
 
 trait WithClientAssertion
 {

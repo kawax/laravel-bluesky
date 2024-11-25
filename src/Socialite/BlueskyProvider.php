@@ -2,21 +2,21 @@
 
 declare(strict_types=1);
 
-namespace Revolution\Bluesky\Socalite;
+namespace Revolution\Bluesky\Socialite;
 
 use Illuminate\Support\Str;
 use Laravel\Socialite\Two\AbstractProvider;
 use Laravel\Socialite\Two\InvalidStateException;
 use Laravel\Socialite\Two\ProviderInterface;
 use Laravel\Socialite\Two\User;
-use Revolution\Bluesky\Socalite\Concerns\WithAuthServer;
-use Revolution\Bluesky\Socalite\Concerns\WithClientAssertion;
-use Revolution\Bluesky\Socalite\Concerns\WithOAuthSession;
-use Revolution\Bluesky\Socalite\Concerns\WithPAR;
-use Revolution\Bluesky\Socalite\Concerns\WithPDS;
-use Revolution\Bluesky\Socalite\Concerns\WithTokenRequest;
+use Revolution\Bluesky\Socialite\Concerns\WithAuthServer;
+use Revolution\Bluesky\Socialite\Concerns\WithClientAssertion;
+use Revolution\Bluesky\Socialite\Concerns\WithOAuthSession;
+use Revolution\Bluesky\Socialite\Concerns\WithPAR;
+use Revolution\Bluesky\Socialite\Concerns\WithPDS;
+use Revolution\Bluesky\Socialite\Concerns\WithTokenRequest;
 use InvalidArgumentException;
-use Revolution\Bluesky\Socalite\Key\DPoP;
+use Revolution\Bluesky\Socialite\Key\DPoP;
 
 class BlueskyProvider extends AbstractProvider implements ProviderInterface
 {

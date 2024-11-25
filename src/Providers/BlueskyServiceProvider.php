@@ -20,8 +20,8 @@ use Revolution\Bluesky\Contracts\Factory;
 use Revolution\Bluesky\Contracts\XrpcClient;
 use Revolution\Bluesky\FeedGenerator\Http\DescribeFeedController;
 use Revolution\Bluesky\FeedGenerator\Http\FeedSkeletonController;
-use Revolution\Bluesky\Socalite\BlueskyProvider;
-use Revolution\Bluesky\Socalite\Http\OAuthMetaController;
+use Revolution\Bluesky\Socialite\BlueskyProvider;
+use Revolution\Bluesky\Socialite\Http\OAuthMetaController;
 use Revolution\Bluesky\WellKnown\Http\WellKnownController;
 
 class BlueskyServiceProvider extends ServiceProvider

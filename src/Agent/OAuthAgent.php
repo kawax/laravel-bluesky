@@ -19,7 +19,7 @@ use Revolution\Bluesky\Events\OAuthSessionRefreshing;
 use Revolution\Bluesky\Events\OAuthSessionUpdated;
 use Revolution\Bluesky\Facades\Bluesky;
 use Revolution\Bluesky\Session\OAuthSession;
-use Revolution\Bluesky\Socalite\Key\DPoP;
+use Revolution\Bluesky\Socialite\Key\DPoP;
 use Revolution\Bluesky\Support\Identity;
 
 /**

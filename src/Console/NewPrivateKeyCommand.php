@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Revolution\Bluesky\Console;
 
 use Illuminate\Console\Command;
-use Revolution\Bluesky\Socalite\Key\BlueskyKey;
+use Revolution\Bluesky\Socialite\Key\BlueskyKey;
 
 class NewPrivateKeyCommand extends Command
 {

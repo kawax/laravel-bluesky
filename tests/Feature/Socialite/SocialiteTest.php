@@ -11,12 +11,12 @@ use Mockery as m;
 use Revolution\Bluesky\Events\DPoPNonceReceived;
 use Revolution\Bluesky\Facades\Bluesky;
 use Revolution\Bluesky\Session\OAuthSession;
-use Revolution\Bluesky\Socalite\BlueskyProvider;
-use Revolution\Bluesky\Socalite\Key\BlueskyKey;
-use Revolution\Bluesky\Socalite\Key\JsonWebKey;
-use Revolution\Bluesky\Socalite\Key\JsonWebKeySet;
-use Revolution\Bluesky\Socalite\Key\JsonWebToken;
-use Revolution\Bluesky\Socalite\OAuthConfig;
+use Revolution\Bluesky\Socialite\BlueskyProvider;
+use Revolution\Bluesky\Socialite\Key\BlueskyKey;
+use Revolution\Bluesky\Socialite\Key\JsonWebKey;
+use Revolution\Bluesky\Socialite\Key\JsonWebKeySet;
+use Revolution\Bluesky\Socialite\Key\JsonWebToken;
+use Revolution\Bluesky\Socialite\OAuthConfig;
 use Tests\TestCase;
 
 class SocialiteTest extends TestCase

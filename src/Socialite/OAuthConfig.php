@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace Revolution\Bluesky\Socalite;
+namespace Revolution\Bluesky\Socialite;
 
 use Closure;
 use Illuminate\Support\Facades\Route;
-use Revolution\Bluesky\Socalite\Key\JsonWebKeySet;
+use Revolution\Bluesky\Socialite\Key\JsonWebKeySet;
 
 class OAuthConfig
 {
