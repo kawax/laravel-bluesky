@@ -5,7 +5,6 @@ namespace Revolution\Bluesky\FeedGenerator\Http;
 use Illuminate\Http\Request;
 use Revolution\AtProto\Lexicon\Enum\Feed;
 use Revolution\Bluesky\FeedGenerator\FeedGenerator;
-use Revolution\Bluesky\Socalite\Key\JsonWebToken;
 use Revolution\Bluesky\Support\AtUri;
 
 class FeedSkeletonController
@@ -29,11 +28,9 @@ class FeedSkeletonController
 
     /**
      * Requesting user's DID.
-     *
-     * Skip verify.
      */
     protected function userDid(Request $request): ?string
     {
-        return data_get(JsonWebToken::decode($request->bearerToken()), 'payload.iss');
+        return FeedGenerator::validateAuth($request);
     }
 }

@@ -2,6 +2,7 @@
 
 namespace Tests\Feature\FeedGenerator;
 
+use Illuminate\Http\Request;
 use Revolution\Bluesky\FeedGenerator\FeedGenerator;
 use Tests\TestCase;
 
@@ -63,5 +64,21 @@ class FeedGeneratorTest extends TestCase
         $response = $this->get(route('bluesky.well-known.atproto'));
 
         $response->assertSuccessful();
+    }
+
+    public function test_validate_auth_using()
+    {
+        FeedGenerator::validateAuthUsing(function (Request $request) {
+            return 'did';
+        });
+
+        FeedGenerator::register('test', function (?int $limit, ?string $cursor): array {
+            return ['feed' => [['post' => 'at://']]];
+        });
+
+        $response = $this->get(route('bluesky.feed.skeleton', ['feed' => 'at://did:/app.bsky.feed.generator/test']));
+
+        $response->assertSuccessful();
+        $response->assertJson(['feed' => [['post' => 'at://']]]);
     }
 }
