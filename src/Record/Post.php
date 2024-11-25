@@ -37,7 +37,7 @@ final class Post extends AbstractPost implements Arrayable, Recordable
      *
      * $builder = TextBuilder::make(text: 'test')
      *                       ->newLine()
-     *                       ->link(text: 'https://', uri: 'https://');
+     *                       ->link(text: 'https://');
      *
      * $post = Post::create(text: $builder->text, facets: $builder->facets);
      * ```
@@ -55,7 +55,7 @@ final class Post extends AbstractPost implements Arrayable, Recordable
      *  $post = Post::build(function (TextBuilder $builder) {
      *      $builder->text('test')
      *              ->newLine()
-     *              ->tag(text: '#bluesky', tag: 'bluesky');
+     *              ->tag(text: '#bluesky');
      *  });
      * ```
      *
