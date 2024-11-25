@@ -136,6 +136,8 @@ use Revolution\Bluesky\RichText\TextBuilder;
 
 $builder = TextBuilder::make(text: 'test')
                       ->newLine()
+                      ->mention('@***.bsky.social')
+                      ->newLine()
                       ->link('https://')
                       ->newLine()
                       ->tag('#Laravel');
