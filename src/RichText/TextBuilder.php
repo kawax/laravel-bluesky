@@ -10,6 +10,7 @@ use Illuminate\Support\Traits\Tappable;
 use Revolution\AtProto\Lexicon\Attributes\Format;
 use Revolution\AtProto\Lexicon\Attributes\Ref;
 use Revolution\AtProto\Lexicon\Enum\Facet;
+use Revolution\Bluesky\Facades\Bluesky;
 use Revolution\Bluesky\Record\Post;
 
 final class TextBuilder implements Arrayable
@@ -83,18 +84,35 @@ final class TextBuilder implements Arrayable
 
     /**
      * Add mention facets.
+     *
+     * ```
+     * $builder->mention(text: '@***.bsky.social', did: 'did:plc:***');
+     * ```
+     * If did is not passed, did will be automatically resolved from handle.
+     * ```
+     * $builder->mention('@***.bsky.social');
+     * ```
      */
-    public function mention(string $text, #[Format('did')] string $did): self
+    public function mention(string $text, #[Format('did')] ?string $did = null): self
     {
-        $this->facets[] = [
-            'index' => $this->buildFacetIndex($text),
-            'features' => [
-                [
-                    '$type' => Facet::Mention->value,
-                    'did' => $did,
+        $text = Str::rtrim($text);
+
+        if (is_null($did) && Str::startsWith($text, '@')) {
+            $handle = Str::of($text)->after('@')->trim()->toString();
+            $did = Bluesky::resolveHandle($handle)->json('did');
+        }
+
+        if (filled($did)) {
+            $this->facets[] = [
+                'index' => $this->buildFacetIndex($text),
+                'features' => [
+                    [
+                        '$type' => Facet::Mention->value,
+                        'did' => $did,
+                    ],
                 ],
-            ],
-        ];
+            ];
+        }
 
         $this->text .= $text;
 
@@ -103,9 +121,23 @@ final class TextBuilder implements Arrayable
 
     /**
      * Add link facets.
+     *
+     * ```
+     *  $builder->link(text: 'https://example.com', uri: 'https://example.com');
+     *  ```
+     *  If uri is not passed, input text will be used as the uri.
+     *  ```
+     *  $builder->link('https://example.com');
+     *  ```
      */
-    public function link(string $text, string $uri): self
+    public function link(string $text, ?string $uri = null): self
     {
+        $text = Str::rtrim($text);
+
+        if (is_null($uri)) {
+            $uri = $text;
+        }
+
         $this->facets[] = [
             'index' => $this->buildFacetIndex($text),
             'features' => [
@@ -123,9 +155,23 @@ final class TextBuilder implements Arrayable
 
     /**
      * Add tag facets.
+     *
+     * ```
+     * $builder->tag(text: '#alice', tag: 'alice');
+     * ```
+     * If tag is not passed, tag will be automatically set from input text.
+     * ```
+     * $builder->tag('#alice');
+     * ```
      */
-    public function tag(string $text, string $tag): self
+    public function tag(string $text, ?string $tag = null): self
     {
+        $text = Str::rtrim($text);
+
+        if (is_null($tag) && Str::startsWith($text, '#')) {
+            $tag = Str::of($text)->after('#')->trim()->toString();
+        }
+
         $this->facets[] = [
             'index' => $this->buildFacetIndex($text),
             'features' => [

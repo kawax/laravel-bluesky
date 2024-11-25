@@ -136,9 +136,9 @@ use Revolution\Bluesky\RichText\TextBuilder;
 
 $builder = TextBuilder::make(text: 'test')
                       ->newLine()
-                      ->link(text: 'https://', uri: 'https://')
+                      ->link('https://')
                       ->newLine()
-                      ->tag(text: '#Laravel', tag: 'Laravel');
+                      ->tag('#Laravel');
 
 $post = Post::create(text: $builder->text, facets: $builder->facets);
 
@@ -157,9 +157,9 @@ use Revolution\Bluesky\RichText\TextBuilder;
 
 $post = TextBuilder::make(text: 'test')
                    ->newLine()
-                   ->link(text: 'https://', uri: 'https://')
+                   ->link('https://')
                    ->newLine()
-                   ->tag(text: '#Laravel', tag: 'Laravel')
+                   ->tag('#Laravel')
                    ->toPost();
 
 /** @var \Illuminate\Http\Client\Response $response */
@@ -175,11 +175,11 @@ use Revolution\Bluesky\Record\Post;
 use Revolution\Bluesky\RichText\TextBuilder;
 
 $post = Post::build(function (TextBuilder $builder) {
-            $builder->text(text: 'test')
+            $builder->text('test')
                     ->newLine()
-                    ->link(text: 'https://', uri: 'https://')
+                    ->link('https://')
                     ->newLine()
-                    ->tag(text: '#Laravel', tag: 'Laravel')
+                    ->tag('#Laravel')
     });
 ```
 

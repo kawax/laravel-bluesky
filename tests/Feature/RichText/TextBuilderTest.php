@@ -9,6 +9,13 @@ use Tests\TestCase;
 
 class TextBuilderTest extends TestCase
 {
+    protected function setUp(): void
+    {
+        parent::setUp();
+
+        Http::preventStrayRequests();
+    }
+
     public function test_detect_facets_mention()
     {
         Http::fakeSequence()
@@ -103,5 +110,38 @@ class TextBuilderTest extends TestCase
         $this->assertSame('did:plc:alice', collect($facets)->dot()->get('0.features.0.did'));
         $this->assertSame('https://localhost', collect($facets)->dot()->get('1.features.0.uri'));
         $this->assertSame('alice', collect($facets)->dot()->get('2.features.0.tag'));
+    }
+
+    public function test_resolve_mention()
+    {
+        Http::fakeSequence()
+            ->push(['did' => 'did:plc:alice']);
+
+        $builder = TextBuilder::make('test')
+            ->mention('@alice.test ');
+
+        $this->assertSame(4, data_get($builder->facets, '0.index.byteStart'));
+        $this->assertSame(15, data_get($builder->facets, '0.index.byteEnd'));
+        $this->assertSame('did:plc:alice', collect($builder->facets)->dot()->get('0.features.0.did'));
+    }
+
+    public function test_resolve_link()
+    {
+        $builder = TextBuilder::make('test')
+            ->link('https://localhost ');
+
+        $this->assertSame(4, data_get($builder->facets, '0.index.byteStart'));
+        $this->assertSame(21, data_get($builder->facets, '0.index.byteEnd'));
+        $this->assertSame('https://localhost', collect($builder->facets)->dot()->get('0.features.0.uri'));
+    }
+
+    public function test_resolve_tag()
+    {
+        $builder = TextBuilder::make('test')
+            ->tag('#alice ');
+
+        $this->assertSame(4, data_get($builder->facets, '0.index.byteStart'));
+        $this->assertSame(10, data_get($builder->facets, '0.index.byteEnd'));
+        $this->assertSame('alice', collect($builder->facets)->dot()->get('0.features.0.tag'));
     }
 }
