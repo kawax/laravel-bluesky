@@ -67,6 +67,17 @@ final readonly class DidDocument implements Arrayable
         return Str::replace(search: 'https://', replace: 'did:web:', subject: $this->pdsUrl());
     }
 
+    /**
+     * Get public key.
+     */
+    public function publicKey(?string $default = null): ?string
+    {
+        $verification = collect($this->didDoc->get('verificationMethod', []))
+            ->firstWhere('type', 'Multikey');
+
+        return data_get($verification, 'publicKeyMultibase', $default);
+    }
+
     public function get(string $key, ?string $default = null): mixed
     {
         return data_get($this->didDoc, $key, $default);
