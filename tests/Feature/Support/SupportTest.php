@@ -28,7 +28,14 @@ class SupportTest extends TestCase
                 'at://alice.test',
                 'at://alice2.test',
             ],
-            'verificationMethod' => [],
+            'verificationMethod' => [
+                [
+                    'id' => '',
+                    'type' => 'Multikey',
+                    'controller' => '',
+                    'publicKeyMultibase' => 'ztest',
+                ]
+            ],
             'service' => [
                 [
                     'id' => '#test',
@@ -47,7 +54,7 @@ class SupportTest extends TestCase
         $this->assertSame('did:plc:test', $didDoc->id());
         $this->assertSame('alice.test', $didDoc->handle());
         $this->assertSame('https://pds', $didDoc->pdsUrl());
-        $this->assertSame([], $didDoc->get('verificationMethod'));
+        $this->assertSame('ztest', $didDoc->publicKey());
     }
 
     public function test_did_document_make()
