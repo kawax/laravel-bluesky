@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Revolution\Bluesky\Console;
 
 use Illuminate\Console\Command;
-use Revolution\Bluesky\Socialite\Key\BlueskyKey;
+use Revolution\Bluesky\Socialite\Key\OAuthKey;
 
 class NewPrivateKeyCommand extends Command
 {
@@ -30,7 +30,7 @@ class NewPrivateKeyCommand extends Command
      */
     public function handle(): int
     {
-        $private = BlueskyKey::create()->privateB64();
+        $private = OAuthKey::create()->privateB64();
 
         $this->comment('Please set this private key in .env');
         $this->newLine();

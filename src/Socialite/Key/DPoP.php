@@ -23,12 +23,12 @@ final class DPoP
      */
     public static function generate(): string
     {
-        return BlueskyKey::create()->privateB64();
+        return OAuthKey::create()->privateB64();
     }
 
     public static function load(): JsonWebKey
     {
-        return BlueskyKey::load(session()->remember(self::SESSION_KEY, fn () => self::generate()))->toJWK();
+        return OAuthKey::load(session()->remember(self::SESSION_KEY, fn () => self::generate()))->toJWK();
     }
 
     /**

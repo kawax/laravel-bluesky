@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Revolution\Bluesky\Socialite\Concerns;
 
 use Illuminate\Support\Str;
-use Revolution\Bluesky\Socialite\Key\BlueskyKey;
+use Revolution\Bluesky\Socialite\Key\OAuthKey;
 use Revolution\Bluesky\Socialite\Key\JsonWebKey;
 use Revolution\Bluesky\Socialite\Key\JsonWebToken;
 
@@ -15,7 +15,7 @@ trait WithClientAssertion
 
     protected function getClientAssertion(string $auth_url): string
     {
-        $client_secret_jwk = BlueskyKey::load()->toJWK();
+        $client_secret_jwk = OAuthKey::load()->toJWK();
 
         $head = [
             'alg' => JsonWebKey::ALG,

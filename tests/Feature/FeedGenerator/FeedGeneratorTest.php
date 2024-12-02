@@ -10,7 +10,7 @@ use Revolution\Bluesky\Crypto\DidKey;
 use Revolution\Bluesky\Facades\Bluesky;
 use Revolution\Bluesky\FeedGenerator\FeedGenerator;
 use Revolution\Bluesky\FeedGenerator\ValidateAuth;
-use Revolution\Bluesky\Socialite\Key\BlueskyKey;
+use Revolution\Bluesky\Socialite\Key\OAuthKey;
 use Revolution\Bluesky\Socialite\Key\JsonWebKey;
 use Revolution\Bluesky\Socialite\Key\JsonWebToken;
 use Tests\TestCase;
@@ -115,10 +115,10 @@ class FeedGeneratorTest extends TestCase
                 'iss' => 'did:plc:alice',
                 'exp' => now()->addDay()->timestamp,
             ],
-            key: BlueskyKey::load()->privateKey(),
+            key: OAuthKey::load()->privateKey(),
         );
 
-        $pubkey = BlueskyKey::load()->publicPEM();
+        $pubkey = OAuthKey::load()->publicPEM();
         $derSerializer = new DerPublicKeySerializer(EccFactory::getAdapter());
         $pemSerializer = new PemPublicKeySerializer($derSerializer);
         $key = $pemSerializer->parse($pubkey);

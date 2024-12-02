@@ -16,7 +16,7 @@ final class JsonWebKeySet implements Arrayable, Jsonable, Stringable
     {
         $self = new self();
 
-        $key = BlueskyKey::load()->toJWK()->asPublic();
+        $key = OAuthKey::load()->toJWK()->asPublic();
 
         return $self->addKey($key);
     }

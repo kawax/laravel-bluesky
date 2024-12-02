@@ -12,7 +12,7 @@ use Revolution\Bluesky\Events\DPoPNonceReceived;
 use Revolution\Bluesky\Facades\Bluesky;
 use Revolution\Bluesky\Session\OAuthSession;
 use Revolution\Bluesky\Socialite\BlueskyProvider;
-use Revolution\Bluesky\Socialite\Key\BlueskyKey;
+use Revolution\Bluesky\Socialite\Key\OAuthKey;
 use Revolution\Bluesky\Socialite\Key\JsonWebKey;
 use Revolution\Bluesky\Socialite\Key\JsonWebKeySet;
 use Revolution\Bluesky\Socialite\Key\JsonWebToken;
@@ -301,7 +301,7 @@ class SocialiteTest extends TestCase
 
     public function test_jwk_private()
     {
-        $jwk = new JsonWebKey(BlueskyKey::create()->privateKey());
+        $jwk = new JsonWebKey(OAuthKey::create()->privateKey());
         $jwk->withKid('kid');
 
         $this->assertArrayHasKey('d', $jwk->toArray());
@@ -311,7 +311,7 @@ class SocialiteTest extends TestCase
 
     public function test_jwk_public()
     {
-        $jwk = new JsonWebKey(BlueskyKey::create()->publicKey());
+        $jwk = new JsonWebKey(OAuthKey::create()->publicKey());
         $jwk->withKid('kid')->asPublic();
 
         $this->assertArrayNotHasKey('d', $jwk->toArray());
@@ -372,7 +372,7 @@ class SocialiteTest extends TestCase
             payload: [
                 'iss' => 'iss',
             ],
-            key: BlueskyKey::create()->privateKey(),
+            key: OAuthKey::create()->privateKey(),
         );
 
         [$header, $payload, $sig] = JsonWebToken::explode($jwtStr);

@@ -17,7 +17,7 @@ final class JsonWebToken
     ): string {
         return JWT::encode(
             payload: $payload,
-            key: $key->toString(BlueskyKey::TYPE),
+            key: $key->toString(OAuthKey::TYPE),
             alg: JsonWebKey::ALG,
             head: $head,
         );

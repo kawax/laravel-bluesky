@@ -11,7 +11,7 @@ use phpseclib3\Crypt\EC;
 use phpseclib3\Crypt\EC\PrivateKey;
 use phpseclib3\Crypt\EC\PublicKey;
 
-final class BlueskyKey
+final class OAuthKey
 {
     protected const CURVE = 'secp256r1';
 
