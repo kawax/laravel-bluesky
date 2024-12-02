@@ -17,7 +17,7 @@ final class OAuthKey
 
     public const TYPE = 'PKCS8';
 
-    protected PrivateKey|CommonPrivateKey $pk;
+    protected PrivateKey|CommonPrivateKey $key;
 
     /**
      * @param  string|null  $key  url-safe base64 encoded private key
@@ -34,7 +34,7 @@ final class OAuthKey
 
         $self = new self();
 
-        $self->pk = EC::loadPrivateKey(JWT::urlsafeB64Decode($key));
+        $self->key = EC::loadPrivateKey(JWT::urlsafeB64Decode($key));
 
         return $self;
     }
@@ -43,19 +43,19 @@ final class OAuthKey
     {
         $self = new self();
 
-        $self->pk = EC::createKey(self::CURVE);
+        $self->key = EC::createKey(self::CURVE);
 
         return $self;
     }
 
     public function privateKey(): PrivateKey
     {
-        return $this->pk;
+        return $this->key;
     }
 
     public function privatePEM(): string
     {
-        return $this->pk->toString(self::TYPE);
+        return $this->key->toString(self::TYPE);
     }
 
     public function privateB64(): string
@@ -65,12 +65,12 @@ final class OAuthKey
 
     public function publicPEM(): string
     {
-        return $this->pk->getPublicKey()->toString(self::TYPE);
+        return $this->key->getPublicKey()->toString(self::TYPE);
     }
 
     public function publicKey(): PublicKey
     {
-        return $this->pk->getPublicKey();
+        return $this->key->getPublicKey();
     }
 
     public function toJWK(): JsonWebKey
