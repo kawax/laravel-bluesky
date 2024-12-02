@@ -42,7 +42,7 @@ class DidKey
      */
     public static function parse(string $didkey): array
     {
-        if (! class_exists(CurveFactory::class)) {
+        if (! class_exists(EccFactory::class)) {
             throw new RuntimeException('Please install any ecc package.');
         }
 
