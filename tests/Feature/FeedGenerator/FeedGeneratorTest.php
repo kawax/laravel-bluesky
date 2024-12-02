@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use Mdanter\Ecc\EccFactory;
 use Mdanter\Ecc\Serializer\PublicKey\DerPublicKeySerializer;
 use Mdanter\Ecc\Serializer\PublicKey\PemPublicKeySerializer;
+use PHPUnit\Framework\Attributes\RequiresMethod;
 use Revolution\Bluesky\Crypto\DidKey;
 use Revolution\Bluesky\Facades\Bluesky;
 use Revolution\Bluesky\FeedGenerator\FeedGenerator;
@@ -103,6 +104,7 @@ class FeedGeneratorTest extends TestCase
         $response->assertJson(['feed' => [['post' => 'at://']]]);
     }
 
+    #[RequiresMethod(PemPublicKeySerializer::class, 'parse')]
     public function test_feed_validate_auth(): void
     {
         FeedGenerator::register('test', function (?int $limit, ?string $cursor, ?string $user): array {
