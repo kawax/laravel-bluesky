@@ -2,14 +2,15 @@
 
 namespace Tests\Feature\Crypto;
 
-use Mdanter\Ecc\Crypto\Key\PublicKey;
 use Mdanter\Ecc\Curves\CurveFactory;
 use Mdanter\Ecc\Curves\SecgCurve;
+use PHPUnit\Framework\Attributes\RequiresMethod;
 use Revolution\Bluesky\Crypto\DidKey;
 use Tests\TestCase;
 
 class CryptoTest extends TestCase
 {
+    #[RequiresMethod(CurveFactory::class, 'getGeneratorByName')]
     public function test_did_key_parse(): void
     {
         // https://plc.directory/did:plc:ewvi7nxzyoun6zhxrhs64oiz
@@ -19,6 +20,7 @@ class CryptoTest extends TestCase
         $this->assertIsString($parsed['key']);
     }
 
+    #[RequiresMethod(CurveFactory::class, 'getGeneratorByName')]
     public function test_did_key_encode(): void
     {
         $generator = CurveFactory::getGeneratorByName(SecgCurve::NAME_SECP_256K1);
