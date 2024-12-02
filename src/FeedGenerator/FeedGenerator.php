@@ -44,7 +44,11 @@ final class FeedGenerator
      */
     public static function register(BackedEnum|string $name, callable $algo): void
     {
-        self::$algos[enum_value($name)] = $algo;
+        if (! is_callable($algo)) {
+            throw new \InvalidArgumentException('algo is not callable.');
+        }
+
+        self::$algos[enum_value($name)] = $algo(...);
     }
 
     public static function getFeedSkeleton(string $name, ?int $limit, ?string $cursor, ?string $user, Request $request): mixed
@@ -115,7 +119,7 @@ final class FeedGenerator
      */
     public static function validateAuthUsing(?callable $callback = null): void
     {
-        self::$validateAuthUsing = $callback;
+        self::$validateAuthUsing = is_callable($callback) ? $callback(...) : null;
     }
 
     /**
