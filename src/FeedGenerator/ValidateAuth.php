@@ -4,7 +4,7 @@ namespace Revolution\Bluesky\FeedGenerator;
 
 use Firebase\JWT\JWT;
 use Firebase\JWT\Key;
-use Mdanter\Ecc\Curves\CurveFactory;
+use Mdanter\Ecc\EccFactory;
 use Revolution\Bluesky\Crypto\DidKey;
 use Revolution\Bluesky\Facades\Bluesky;
 use Revolution\Bluesky\Socialite\Key\JsonWebToken;
@@ -25,7 +25,7 @@ class ValidateAuth
         // Used only when any ecc package is installed.
         // Since there are multiple forked packages,
         // the user can decide which one to use.
-        if (! class_exists(CurveFactory::class)) {
+        if (! class_exists(EccFactory::class)) {
             return $did;
         }
 
