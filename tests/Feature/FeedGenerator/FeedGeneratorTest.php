@@ -112,7 +112,7 @@ class FeedGeneratorTest extends TestCase
         $jwt = JsonWebToken::encode(
             head: ['typ' => 'JWT', 'alg' => JsonWebKey::ALG],
             payload: [
-                'iss' => 'did',
+                'iss' => 'did:plc:alice',
                 'exp' => now()->addDay()->timestamp,
             ],
             key: BlueskyKey::load()->privateKey(),
