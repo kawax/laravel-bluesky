@@ -105,8 +105,8 @@ class FeedGeneratorTest extends TestCase
 
     public function test_feed_validate_auth(): void
     {
-        FeedGenerator::register('test', function (?int $limit, ?string $cursor): array {
-            return ['feed' => [['post' => 'at://']]];
+        FeedGenerator::register('test', function (?int $limit, ?string $cursor, ?string $user): array {
+            return ['user' => $user];
         });
 
         $jwt = JsonWebToken::encode(
@@ -129,13 +129,13 @@ class FeedGeneratorTest extends TestCase
                 [
                     'type' => 'Multikey',
                     'publicKeyMultibase' => $didkey,
-                ]
-            ]
+                ],
+            ],
         ]);
 
         $response = $this->withToken($jwt)->get(route('bluesky.feed.skeleton', ['feed' => 'at://did:/app.bsky.feed.generator/test']));
 
         $response->assertSuccessful();
-        $response->assertJson(['feed' => [['post' => 'at://']]]);
+        $response->assertJson(['user' => 'did:plc:alice']);
     }
 }
