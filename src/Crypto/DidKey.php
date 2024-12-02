@@ -52,7 +52,7 @@ class DidKey
         // decode base58btc
         $keyBytes = Multibase::decode($key);
 
-        $alg_prefix = Str::substr($keyBytes, start: 0, length: 2, encoding: '8bit');
+        $alg_prefix = substr($keyBytes, offset: 0, length: 2);
 
         $alg = match ($alg_prefix) {
             self::p256prefix() => 'ES256',
@@ -61,10 +61,10 @@ class DidKey
         };
 
         // remove alg prefix
-        $keyBytes = Str::substr($keyBytes, start: 2, encoding: '8bit');
+        $keyBytes = substr($keyBytes, offset: 2, length: null);
 
         // compressed key length must be 33.
-        if (Str::length($keyBytes, encoding: '8bit') !== 33) {
+        if (strlen($keyBytes) !== 33) {
             throw new InvalidArgumentException();
         }
 
