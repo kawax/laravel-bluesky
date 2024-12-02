@@ -27,13 +27,23 @@ final class JsonWebToken
      * Get payload from JsonWebToken.
      *
      * ```
-     * $jwt = JsonWebToken::decode('****.****.****');
+     * [$header, $payload, $sig] = JsonWebToken::explode('****.****.****');
      *
+     * $header
      * [
-     *     'header' => [],
-     *     'payload' => [],
-     *     'sig' => 'Remains url-safe base64 encoded',
+     *     'type' => 'JWT',
+     *     'alg' => 'ES256K',
      * ]
+     *
+     * $payload
+     * [
+     *     'iss' => 'did',
+     *     'aud' => '',
+     *     'exp' => int,
+     * ]
+     *
+     * $sig
+     * Remains url-safe base64 encoded
      * ```
      * ```
      * // Decode sig
@@ -42,20 +52,20 @@ final class JsonWebToken
      * $sig = JWT::urlsafeB64Decode($sig);
      * ```
      *
-     * @return null|array{header: array, payload: array, sig: string}
+     * @return null|array<array{type: string, alg: string}, array{iss: string, aud: string, exp: int}, string>
      */
-    public static function decode(?string $token): ?array
+    public static function explode(?string $token): ?array
     {
         if (Str::substrCount($token, '.') !== 2) {
             return null;
         }
 
-        [$header, $payload, $sig] = explode('.', $token, 3);
+        [$header, $payload, $sig] = explode(separator: '.', string: $token, limit: 3);
 
         $header = json_decode(JWT::urlsafeB64Decode($header), true);
         $payload = json_decode(JWT::urlsafeB64Decode($payload), true);
         //$sig = JWT::urlsafeB64Decode($sig);
 
-        return compact('header', 'payload', 'sig');
+        return [$header, $payload, $sig];
     }
 }

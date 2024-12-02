@@ -5,7 +5,7 @@ namespace Revolution\Bluesky\FeedGenerator;
 use BackedEnum;
 use Closure;
 use Illuminate\Http\Request;
-use Revolution\Bluesky\Socialite\Key\JsonWebToken;
+use InvalidArgumentException;
 use Revolution\Bluesky\Support\DID;
 
 use function Illuminate\Support\enum_value;
@@ -44,7 +44,11 @@ final class FeedGenerator
      */
     public static function register(BackedEnum|string $name, callable $algo): void
     {
-        self::$algos[enum_value($name)] = $algo;
+        if (! is_callable($algo)) {
+            throw new InvalidArgumentException('algo is not callable.');
+        }
+
+        self::$algos[enum_value($name)] = $algo(...);
     }
 
     public static function getFeedSkeleton(string $name, ?int $limit, ?string $cursor, ?string $user, Request $request): mixed
@@ -94,8 +98,8 @@ final class FeedGenerator
      * use Revolution\Bluesky\Socialite\Key\JsonWebToken;
      * use Firebase\JWT\JWT;
      *
-     * FeedGenerator::validateAuthUsing(function (Request $request): ?string {
-     *     $jwt = JsonWebToken::decode($request->bearerToken());
+     * FeedGenerator::validateAuthUsing(function (?string $jwt, Request $request): ?string {
+     *     $jwt = JsonWebToken::explode($jwt);
      *     $header = data_get($jwt, 'header');
      *
      *     $payload = data_get($jwt, 'payload');
@@ -111,24 +115,22 @@ final class FeedGenerator
      * });
      * ```
      *
-     * @param  callable(Request $request): ?string  $callback
+     * @param  null|callable(?string $jwt, Request $request): ?string  $callback
      */
-    public static function validateAuthUsing(callable $callback): void
+    public static function validateAuthUsing(?callable $callback = null): void
     {
-        self::$validateAuthUsing = $callback;
+        self::$validateAuthUsing = is_callable($callback) ? $callback(...) : null;
     }
 
     /**
-     * Normally, validation is recommended here, but it is skipped. If you want to validate strictly, add callback with {@link validateAuthUsing()}.
-     *
      * @link https://github.com/bluesky-social/feed-generator/blob/main/src/auth.ts
      */
     public static function validateAuth(Request $request): ?string
     {
         if (is_callable(self::$validateAuthUsing)) {
-            return call_user_func(self::$validateAuthUsing, $request);
+            return call_user_func(self::$validateAuthUsing, $request->bearerToken(), $request);
         }
 
-        return data_get(JsonWebToken::decode($request->bearerToken()), 'payload.iss');
+        return app()->call(ValidateAuth::class, ['jwt' => $request->bearerToken()]);
     }
 }

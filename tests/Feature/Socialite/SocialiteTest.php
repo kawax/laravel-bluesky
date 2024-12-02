@@ -375,9 +375,9 @@ class SocialiteTest extends TestCase
             key: BlueskyKey::create()->privateKey(),
         );
 
-        $jwt = JsonWebToken::decode($jwtStr);
+        [$header, $payload, $sig] = JsonWebToken::explode($jwtStr);
 
-        $this->assertArrayHasKey('typ', $jwt['header']);
-        $this->assertSame('iss', $jwt['payload']['iss']);
+        $this->assertArrayHasKey('typ', $header);
+        $this->assertSame('iss', $payload['iss']);
     }
 }

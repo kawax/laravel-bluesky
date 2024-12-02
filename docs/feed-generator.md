@@ -151,6 +151,17 @@ $generator2 = Generator::create(did: 'did:web:example.com', displayName: 'Feed 2
 $res = Bluesky::publishFeedGenerator(name: 'feed2', generator: $generator2);
 ```
 
+## Authentication (Optional)
+
+To enable the "Authentication" section of the official starter kit, install one of the ecc packages.
+
+There are multiple forked packages, so it's up to you to decide which one to use.
+
+- https://github.com/1ma/phpecc
+- https://github.com/paragonie/phpecc
+
+If you don't install any of them, the verification will be skipped. You will still get the user's DID.
+
 ## Advanced
 
 Use artisan commands and task schedules to save posts to a database. With algo, you can just retrieve them from the DB. It's up to you how you use it.
