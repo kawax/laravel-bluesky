@@ -131,6 +131,6 @@ final class FeedGenerator
             return call_user_func(self::$validateAuthUsing, $request->bearerToken(), $request);
         }
 
-        return app()->call(ValidateAuth::class, ['jwt' => $request->bearerToken()]);
+        return app()->call(ValidateAuth::class, ['jwt' => $request->bearerToken(), 'request' => $request]);
     }
 }
