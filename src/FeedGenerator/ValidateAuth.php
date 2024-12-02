@@ -4,6 +4,7 @@ namespace Revolution\Bluesky\FeedGenerator;
 
 use Firebase\JWT\JWT;
 use Firebase\JWT\Key;
+use Illuminate\Http\Request;
 use Mdanter\Ecc\EccFactory;
 use Revolution\Bluesky\Crypto\DidKey;
 use Revolution\Bluesky\Facades\Bluesky;
@@ -16,7 +17,7 @@ class ValidateAuth
     /**
      * @return string|null User's did
      */
-    public function __invoke(?string $jwt): ?string
+    public function __invoke(?string $jwt, Request $request): ?string
     {
         [$header, $payload] = JsonWebToken::explode($jwt);
 
