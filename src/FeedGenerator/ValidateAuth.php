@@ -9,6 +9,7 @@ use Revolution\Bluesky\Crypto\DidKey;
 use Revolution\Bluesky\Facades\Bluesky;
 use Revolution\Bluesky\Socialite\Key\JsonWebToken;
 use Revolution\Bluesky\Support\DidDocument;
+use Revolution\Bluesky\Support\Identity;
 
 class ValidateAuth
 {
@@ -26,6 +27,10 @@ class ValidateAuth
         // the user can decide which one to use.
         if (! class_exists(CurveFactory::class)) {
             return $did;
+        }
+
+        if (! Identity::isDID($did)) {
+            return null;
         }
 
         $didKey = cache()->remember(
