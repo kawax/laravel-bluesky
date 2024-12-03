@@ -29,10 +29,12 @@ class CryptoTest extends TestCase
         $pubkey = $sk->getPublicKey();
 
         $b58key = DidKey::encode($pubkey);
+        $didkey = DidKey::format($pubkey);
 
         $parsed = DidKey::parse($b58key);
 
         $this->assertStringStartsWith('z', $b58key);
+        $this->assertStringStartsWith('did:key:z', $didkey);
         $this->assertSame('ES256K', $parsed['alg']);
     }
 }
