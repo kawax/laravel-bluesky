@@ -23,9 +23,9 @@ class WellKnownConfig
      * });
      * ```
      */
-    public static function didUsing(?Closure $callback): void
+    public static function didUsing(?callable $callback): void
     {
-        static::$didUsing = $callback;
+        static::$didUsing = is_callable($callback) ? $callback(...) : null;
     }
 
     /**
@@ -61,9 +61,9 @@ class WellKnownConfig
      * WellKnownConfig::atprotoDidUsing(fn() => 'did:plc:***');
      * ```
      */
-    public static function atprotoDidUsing(?Closure $callback): void
+    public static function atprotoDidUsing(?callable $callback): void
     {
-        static::$atprotoDidUsing = $callback;
+        static::$atprotoDidUsing = is_callable($callback) ? $callback(...) : null;
     }
 
     /**
