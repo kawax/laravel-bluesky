@@ -11,7 +11,7 @@ use Revolution\Bluesky\Socialite\Key\JsonWebKey;
 
 abstract class AbstractKeypair
 {
-    protected const CURVE = '';
+    public const CURVE = '';
 
     public const ALG = '';
 

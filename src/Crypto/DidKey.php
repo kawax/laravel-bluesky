@@ -7,7 +7,6 @@ use InvalidArgumentException;
 use Mdanter\Ecc\Crypto\Key\PublicKey;
 use Mdanter\Ecc\Crypto\Key\PublicKeyInterface;
 use Mdanter\Ecc\Curves\CurveFactory;
-use Mdanter\Ecc\Curves\SecgCurve;
 use Mdanter\Ecc\EccFactory;
 use Mdanter\Ecc\Serializer\Point\CompressedPointSerializer;
 use Mdanter\Ecc\Serializer\PublicKey\DerPublicKeySerializer;
@@ -27,13 +26,9 @@ class DidKey
 {
     protected const DID_KEY_PREFIX = 'did:key:';
 
-    protected const P256_DID_PREFIX = [0x80, 0x24];
-
-    protected const SECP256K1_DID_PREFIX = [0xe7, 0x01];
-
     protected const ALGS = [
-        'ES256' => SecgCurve::NAME_SECP_256R1,
-        'ES256K' => SecgCurve::NAME_SECP_256K1,
+        P256Keypair::ALG => P256Keypair::CURVE,
+        K256Keypair::ALG => K256Keypair::CURVE,
     ];
 
     /**
@@ -55,8 +50,8 @@ class DidKey
         $alg_prefix = substr($keyBytes, offset: 0, length: 2);
 
         $alg = match ($alg_prefix) {
-            self::p256prefix() => 'ES256',
-            self::k256prefix() => 'ES256K',
+            P256Keypair::MULTIBASE_PREFIX => P256Keypair::ALG,
+            K256Keypair::MULTIBASE_PREFIX => K256Keypair::ALG,
             default => throw new InvalidArgumentException('Unsupported format.'),
         };
 
@@ -85,7 +80,7 @@ class DidKey
 
         return [
             'alg' => $alg,
-            'key' => $pem
+            'key' => $pem,
         ];
     }
 
@@ -103,8 +98,8 @@ class DidKey
         $compressed = $serializer->serialize($pubkey->getPoint());
 
         $prefix = match ($pubkey->getCurve()->getName()) {
-            SecgCurve::NAME_SECP_256R1 => self::p256prefix(),
-            SecgCurve::NAME_SECP_256K1 => self::k256prefix(),
+            P256Keypair::CURVE => P256Keypair::MULTIBASE_PREFIX,
+            K256Keypair::CURVE => K256Keypair::MULTIBASE_PREFIX,
         };
 
         return Multibase::encode(Multibase::BASE58BTC, $prefix.hex2bin($compressed));
@@ -116,15 +111,5 @@ class DidKey
     public static function format(PublicKeyInterface $pubkey): string
     {
         return self::DID_KEY_PREFIX.self::encode($pubkey);
-    }
-
-    protected static function k256prefix(): string
-    {
-        return collect(self::SECP256K1_DID_PREFIX)->implode(fn ($value) => chr($value), '');
-    }
-
-    protected static function p256prefix(): string
-    {
-        return collect(self::P256_DID_PREFIX)->implode(fn ($value) => chr($value), '');
     }
 }
