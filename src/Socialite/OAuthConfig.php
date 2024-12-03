@@ -24,9 +24,9 @@ class OAuthConfig
      * });
      * ```
      */
-    public static function clientMetadataUsing(?Closure $callback): void
+    public static function clientMetadataUsing(?callable $callback): void
     {
-        static::$metadataUsing = $callback;
+        static::$metadataUsing = $callback(...);
     }
 
     public static function clientMetadata(): mixed
@@ -62,9 +62,9 @@ class OAuthConfig
      * });
      * ```
      */
-    public static function jwksUsing(?Closure $callback): void
+    public static function jwksUsing(?callable $callback): void
     {
-        static::$jwksUsing = $callback;
+        static::$jwksUsing = $callback(...);
     }
 
     public static function jwks(): mixed
