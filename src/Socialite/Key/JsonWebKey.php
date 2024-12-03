@@ -53,6 +53,11 @@ final class JsonWebKey implements Arrayable, Jsonable, Stringable
         return $clone;
     }
 
+    public function toPEM(): string
+    {
+        return (string) $this->key;
+    }
+
     public function toArray(): array
     {
         return data_get(json_decode($this->key->toString('JWK', [

@@ -375,7 +375,7 @@ class SocialiteTest extends TestCase
             payload: [
                 'iss' => 'iss',
             ],
-            key: OAuthKey::create()->privateKey(),
+            key: OAuthKey::create()->privatePEM(),
         );
 
         [$header, $payload, $sig] = JsonWebToken::explode($jwtStr);

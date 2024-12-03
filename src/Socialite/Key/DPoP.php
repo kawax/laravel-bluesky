@@ -55,7 +55,7 @@ final class DPoP
             'exp' => now()->addSeconds(600)->timestamp,
         ];
 
-        return JsonWebToken::encode($head, $payload, $jwk->key());
+        return JsonWebToken::encode($head, $payload, $jwk->toPEM());
     }
 
     /**
@@ -86,7 +86,7 @@ final class DPoP
             'ath' => self::createCodeChallenge($token),
         ];
 
-        return JsonWebToken::encode($head, $payload, $jwk->key());
+        return JsonWebToken::encode($head, $payload, $jwk->toPEM());
     }
 
     protected static function createCodeChallenge(string $code): string

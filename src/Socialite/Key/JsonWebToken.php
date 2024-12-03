@@ -6,18 +6,17 @@ namespace Revolution\Bluesky\Socialite\Key;
 
 use Firebase\JWT\JWT;
 use Illuminate\Support\Str;
-use phpseclib3\Crypt\EC\PrivateKey;
 
 final class JsonWebToken
 {
-    public static function encode(
-        array $head,
-        array $payload,
-        PrivateKey $key,
-    ): string {
+    /**
+     * @param  string  $key  Private key PEM
+     */
+    public static function encode(array $head, array $payload, string $key): string
+    {
         return JWT::encode(
             payload: $payload,
-            key: $key->toString(OAuthKey::TYPE),
+            key: $key,
             alg: JsonWebKey::ALG,
             head: $head,
         );

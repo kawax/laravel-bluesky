@@ -54,7 +54,7 @@ trait WithPAR
             'redirect_uri' => $this->redirectUrl,
             'scope' => $this->formatScopes($this->getScopes(), $this->scopeSeparator),
             'client_assertion_type' => self::CLIENT_ASSERTION_TYPE,
-            'client_assertion' => $this->getClientAssertion($this->authUrl()),
+            'client_assertion' => $this->getClientAssertion(),
             'login_hint' => $this->login_hint,
         ];
     }

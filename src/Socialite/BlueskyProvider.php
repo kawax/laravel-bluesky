@@ -69,7 +69,7 @@ class BlueskyProvider extends AbstractProvider implements ProviderInterface
             throw new InvalidArgumentException('Bluesky requires PKCE.');
         }
 
-        // Generate a new secret key for DPoP when starting a new authentication.
+        // Generate a new private key for DPoP when starting a new authentication.
         $this->request->session()->put(DPoP::SESSION_KEY, DPoP::generate());
 
         $this->updateServiceWithHint();

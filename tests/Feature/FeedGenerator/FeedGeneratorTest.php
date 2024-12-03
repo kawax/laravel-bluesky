@@ -117,7 +117,7 @@ class FeedGeneratorTest extends TestCase
                 'iss' => 'did:plc:alice',
                 'exp' => now()->addDay()->timestamp,
             ],
-            key: OAuthKey::load()->privateKey(),
+            key: OAuthKey::load()->privatePEM(),
         );
 
         $pubkey = OAuthKey::load()->publicPEM();

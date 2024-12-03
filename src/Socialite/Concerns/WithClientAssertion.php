@@ -13,23 +13,23 @@ trait WithClientAssertion
 {
     protected const CLIENT_ASSERTION_TYPE = 'urn:ietf:params:oauth:client-assertion-type:jwt-bearer';
 
-    protected function getClientAssertion(string $auth_url): string
+    protected function getClientAssertion(): string
     {
-        $client_secret_jwk = OAuthKey::load()->toJWK();
+        $key = OAuthKey::load();
 
         $head = [
             'alg' => JsonWebKey::ALG,
-            'kid' => $client_secret_jwk->kid(),
+            'kid' => $key->toJWK()->kid(),
         ];
 
         $payload = [
             'iss' => $this->clientId,
             'sub' => $this->clientId,
-            'aud' => $auth_url,
+            'aud' => $this->authUrl(),
             'jti' => Str::random(40),
             'iat' => now()->timestamp,
         ];
 
-        return JsonWebToken::encode($head, $payload, $client_secret_jwk->key());
+        return JsonWebToken::encode($head, $payload, $key->privatePEM());
     }
 }

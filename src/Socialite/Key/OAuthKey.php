@@ -11,11 +11,14 @@ use phpseclib3\Crypt\EC;
 use phpseclib3\Crypt\EC\PrivateKey;
 use phpseclib3\Crypt\EC\PublicKey;
 
+/**
+ * The key used for OAuth. Curve is secp256r1/P-256/ES256.
+ */
 final class OAuthKey
 {
     protected const CURVE = 'secp256r1';
 
-    public const TYPE = 'PKCS8';
+    public const FORMAT = 'PKCS8';
 
     protected PrivateKey|CommonPrivateKey $key;
 
@@ -55,7 +58,7 @@ final class OAuthKey
 
     public function privatePEM(): string
     {
-        return $this->key->toString(self::TYPE);
+        return $this->key->toString(self::FORMAT);
     }
 
     public function privateB64(): string
@@ -65,7 +68,7 @@ final class OAuthKey
 
     public function publicPEM(): string
     {
-        return $this->key->getPublicKey()->toString(self::TYPE);
+        return $this->key->getPublicKey()->toString(self::FORMAT);
     }
 
     public function publicKey(): PublicKey

@@ -117,7 +117,7 @@ trait WithTokenRequest
             'grant_type' => 'authorization_code',
             'code' => $code,
             'client_assertion_type' => self::CLIENT_ASSERTION_TYPE,
-            'client_assertion' => $this->getClientAssertion($this->authUrl()),
+            'client_assertion' => $this->getClientAssertion(),
         ];
 
         if ($this->usesPKCE()) {
@@ -147,7 +147,7 @@ trait WithTokenRequest
             'refresh_token' => $refreshToken,
             'client_id' => $this->clientId,
             'client_assertion_type' => self::CLIENT_ASSERTION_TYPE,
-            'client_assertion' => $this->getClientAssertion($this->authUrl()),
+            'client_assertion' => $this->getClientAssertion(),
         ];
 
         return $this->sendTokenRequest($token_url, $payload);
