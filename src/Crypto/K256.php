@@ -2,7 +2,7 @@
 
 namespace Revolution\Bluesky\Crypto;
 
-class K256Keypair extends AbstractKeypair
+class K256 extends AbstractKeypair
 {
     public const CURVE = 'secp256k1';
 

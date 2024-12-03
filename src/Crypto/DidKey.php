@@ -27,8 +27,8 @@ class DidKey
     protected const DID_KEY_PREFIX = 'did:key:';
 
     protected const ALGS = [
-        P256Keypair::ALG => P256Keypair::CURVE,
-        K256Keypair::ALG => K256Keypair::CURVE,
+        P256::ALG => P256::CURVE,
+        K256::ALG => K256::CURVE,
     ];
 
     /**
@@ -50,8 +50,8 @@ class DidKey
         $alg_prefix = substr($keyBytes, offset: 0, length: 2);
 
         $alg = match ($alg_prefix) {
-            P256Keypair::MULTIBASE_PREFIX => P256Keypair::ALG,
-            K256Keypair::MULTIBASE_PREFIX => K256Keypair::ALG,
+            P256::MULTIBASE_PREFIX => P256::ALG,
+            K256::MULTIBASE_PREFIX => K256::ALG,
             default => throw new InvalidArgumentException('Unsupported format.'),
         };
 
@@ -98,8 +98,8 @@ class DidKey
         $compressed = $serializer->serialize($pubkey->getPoint());
 
         $prefix = match ($pubkey->getCurve()->getName()) {
-            P256Keypair::CURVE => P256Keypair::MULTIBASE_PREFIX,
-            K256Keypair::CURVE => K256Keypair::MULTIBASE_PREFIX,
+            P256::CURVE => P256::MULTIBASE_PREFIX,
+            K256::CURVE => K256::MULTIBASE_PREFIX,
         };
 
         return Multibase::encode(Multibase::BASE58BTC, $prefix.hex2bin($compressed));

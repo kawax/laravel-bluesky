@@ -5,12 +5,12 @@ declare(strict_types=1);
 namespace Revolution\Bluesky\Socialite\Key;
 
 use InvalidArgumentException;
-use Revolution\Bluesky\Crypto\P256Keypair;
+use Revolution\Bluesky\Crypto\P256;
 
 /**
  * The key used for OAuth. Curve is secp256r1/P-256/ES256.
  */
-class OAuthKey extends P256Keypair
+class OAuthKey extends P256
 {
     /**
      * @param  string|null  $key  url-safe base64 encoded private key

@@ -9,7 +9,7 @@ use Mdanter\Ecc\Serializer\PublicKey\PemPublicKeySerializer;
 use PHPUnit\Framework\Attributes\RequiresMethod;
 use Psy\Util\Json;
 use Revolution\Bluesky\Crypto\DidKey;
-use Revolution\Bluesky\Crypto\K256Keypair;
+use Revolution\Bluesky\Crypto\K256;
 use Revolution\Bluesky\Facades\Bluesky;
 use Revolution\Bluesky\FeedGenerator\FeedGenerator;
 use Revolution\Bluesky\FeedGenerator\ValidateAuth;
@@ -113,16 +113,16 @@ class FeedGeneratorTest extends TestCase
             return ['user' => $user];
         });
 
-        $key = K256Keypair::create();
+        $key = K256::create();
 
         $jwt = JsonWebToken::encode(
-            head: ['typ' => 'JWT', 'alg' => K256Keypair::ALG],
+            head: ['typ' => 'JWT', 'alg' => K256::ALG],
             payload: [
                 'iss' => 'did:plc:alice',
                 'exp' => now()->addDay()->timestamp,
             ],
             key: $key->privatePEM(),
-            alg: K256Keypair::ALG,
+            alg: K256::ALG,
         );
 
         $pubkey = $key->publicPEM();

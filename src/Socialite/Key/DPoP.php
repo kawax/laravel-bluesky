@@ -5,7 +5,7 @@ namespace Revolution\Bluesky\Socialite\Key;
 
 use Firebase\JWT\JWT;
 use Illuminate\Support\Str;
-use Revolution\Bluesky\Crypto\P256Keypair;
+use Revolution\Bluesky\Crypto\P256;
 
 final class DPoP
 {
@@ -43,7 +43,7 @@ final class DPoP
     ): string {
         $head = [
             'typ' => self::TYP,
-            'alg' => P256Keypair::ALG,
+            'alg' => P256::ALG,
             'jwk' => $jwk->asPublic()->toArray(),
         ];
 
@@ -72,7 +72,7 @@ final class DPoP
     ): string {
         $head = [
             'typ' => self::TYP,
-            'alg' => P256Keypair::ALG,
+            'alg' => P256::ALG,
             'jwk' => $jwk->asPublic()->toArray(),
         ];
 

@@ -6,14 +6,14 @@ namespace Revolution\Bluesky\Socialite\Key;
 
 use Firebase\JWT\JWT;
 use Illuminate\Support\Str;
-use Revolution\Bluesky\Crypto\P256Keypair;
+use Revolution\Bluesky\Crypto\P256;
 
 final class JsonWebToken
 {
     /**
      * @param  string  $key  Private key PEM
      */
-    public static function encode(array $head, array $payload, string $key, string $alg = P256Keypair::ALG): string
+    public static function encode(array $head, array $payload, string $key, string $alg = P256::ALG): string
     {
         return JWT::encode(
             payload: $payload,

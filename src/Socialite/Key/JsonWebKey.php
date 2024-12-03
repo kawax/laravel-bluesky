@@ -9,7 +9,7 @@ use Illuminate\Contracts\Support\Jsonable;
 use Illuminate\Support\Traits\Tappable;
 use phpseclib3\Crypt\EC\PrivateKey;
 use phpseclib3\Crypt\EC\PublicKey;
-use Revolution\Bluesky\Crypto\P256Keypair;
+use Revolution\Bluesky\Crypto\P256;
 use Stringable;
 
 final class JsonWebKey implements Arrayable, Jsonable, Stringable
@@ -61,7 +61,7 @@ final class JsonWebKey implements Arrayable, Jsonable, Stringable
     {
         return data_get(json_decode($this->key->toString('JWK', [
             'kid' => $this->kid,
-            'alg' => P256Keypair::ALG,
+            'alg' => P256::ALG,
             'use' => 'sig',
         ]), true), 'keys.0', []);
     }

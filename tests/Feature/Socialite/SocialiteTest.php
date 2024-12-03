@@ -8,7 +8,7 @@ use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Facades\Http;
 use Laravel\Socialite\Facades\Socialite;
 use Mockery as m;
-use Revolution\Bluesky\Crypto\P256Keypair;
+use Revolution\Bluesky\Crypto\P256;
 use Revolution\Bluesky\Events\DPoPNonceReceived;
 use Revolution\Bluesky\Facades\Bluesky;
 use Revolution\Bluesky\Session\OAuthSession;
@@ -372,7 +372,7 @@ class SocialiteTest extends TestCase
     public function test_jwt()
     {
         $jwtStr = JsonWebToken::encode(
-            head: ['typ' => 'JWT', 'alg' => P256Keypair::ALG],
+            head: ['typ' => 'JWT', 'alg' => P256::ALG],
             payload: [
                 'iss' => 'iss',
             ],
