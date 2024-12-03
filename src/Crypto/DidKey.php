@@ -89,6 +89,9 @@ class DidKey
         ];
     }
 
+    /**
+     * @return string `z***`
+     */
     public static function encode(PublicKeyInterface $pubkey): string
     {
         if (! class_exists(EccFactory::class)) {
@@ -105,6 +108,14 @@ class DidKey
         };
 
         return Multibase::encode(Multibase::BASE58BTC, $prefix.hex2bin($compressed));
+    }
+
+    /**
+     * @return string `did:key:z***`
+     */
+    public static function format(PublicKeyInterface $pubkey): string
+    {
+        return self::DID_KEY_PREFIX.self::encode($pubkey);
     }
 
     protected static function k256prefix(): string
