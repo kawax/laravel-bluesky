@@ -20,13 +20,17 @@ Please set this private key in .env
 BLUESKY_OAUTH_PRIVATE_KEY="...url-safe base64 encoded key..."
 ```
 
-### .env
-
-Copy and paste into .env
+Copy and paste into `.env`
 
 ```
+// .env
+
 BLUESKY_OAUTH_PRIVATE_KEY="..."
 ```
+
+This is the only required step, there is no need to register with Bluesky and obtain a `client_id` or `client_secret`.
+
+Strictly speaking, you don't even need your own Bluesky account if you are only providing OAuth login functionality in Laravel.
 
 ## Create callback route
 
