@@ -26,7 +26,7 @@ class OAuthConfig
      */
     public static function clientMetadataUsing(?callable $callback): void
     {
-        static::$metadataUsing = $callback(...);
+        static::$metadataUsing = is_callable($callback) ? $callback(...) : null;
     }
 
     public static function clientMetadata(): mixed
@@ -64,7 +64,7 @@ class OAuthConfig
      */
     public static function jwksUsing(?callable $callback): void
     {
-        static::$jwksUsing = $callback(...);
+        static::$jwksUsing = is_callable($callback) ? $callback(...) : null;
     }
 
     public static function jwks(): mixed
