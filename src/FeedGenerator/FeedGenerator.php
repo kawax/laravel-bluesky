@@ -117,9 +117,6 @@ final class FeedGenerator
         self::$validateAuthUsing = is_callable($callback) ? $callback(...) : null;
     }
 
-    /**
-     * @link https://github.com/bluesky-social/feed-generator/blob/main/src/auth.ts
-     */
     public static function validateAuth(Request $request): ?string
     {
         if (is_callable(self::$validateAuthUsing)) {
