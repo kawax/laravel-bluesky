@@ -44,10 +44,6 @@ final class FeedGenerator
      */
     public static function register(BackedEnum|string $name, callable $algo): void
     {
-        if (! is_callable($algo)) {
-            throw new InvalidArgumentException('algo is not callable.');
-        }
-
         self::$algos[enum_value($name)] = $algo(...);
     }
 
