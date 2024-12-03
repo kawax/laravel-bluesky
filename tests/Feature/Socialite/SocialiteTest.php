@@ -25,6 +25,9 @@ class SocialiteTest extends TestCase
     {
         parent::setUp();
 
+        OAuthConfig::clientMetadataUsing(null);
+        OAuthConfig::jwksUsing(null);
+
         Http::preventStrayRequests();
     }
 
