@@ -12,6 +12,9 @@ use Revolution\Bluesky\Socialite\Key\JsonWebToken;
 use Revolution\Bluesky\Support\DidDocument;
 use Revolution\Bluesky\Support\Identity;
 
+/**
+ * @link https://github.com/bluesky-social/feed-generator/blob/main/src/auth.ts
+ */
 class ValidateAuth
 {
     /**
