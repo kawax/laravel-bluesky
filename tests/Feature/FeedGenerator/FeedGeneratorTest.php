@@ -7,7 +7,9 @@ use Mdanter\Ecc\EccFactory;
 use Mdanter\Ecc\Serializer\PublicKey\DerPublicKeySerializer;
 use Mdanter\Ecc\Serializer\PublicKey\PemPublicKeySerializer;
 use PHPUnit\Framework\Attributes\RequiresMethod;
+use Psy\Util\Json;
 use Revolution\Bluesky\Crypto\DidKey;
+use Revolution\Bluesky\Crypto\K256Keypair;
 use Revolution\Bluesky\Facades\Bluesky;
 use Revolution\Bluesky\FeedGenerator\FeedGenerator;
 use Revolution\Bluesky\FeedGenerator\ValidateAuth;
@@ -111,16 +113,19 @@ class FeedGeneratorTest extends TestCase
             return ['user' => $user];
         });
 
+        $key = K256Keypair::create();
+
         $jwt = JsonWebToken::encode(
-            head: ['typ' => 'JWT', 'alg' => JsonWebKey::ALG],
+            head: ['typ' => 'JWT', 'alg' => K256Keypair::ALG],
             payload: [
                 'iss' => 'did:plc:alice',
                 'exp' => now()->addDay()->timestamp,
             ],
-            key: OAuthKey::load()->privatePEM(),
+            key: $key->privatePEM(),
+            alg: K256Keypair::ALG,
         );
 
-        $pubkey = OAuthKey::load()->publicPEM();
+        $pubkey = $key->publicPEM();
         $derSerializer = new DerPublicKeySerializer(EccFactory::getAdapter());
         $pemSerializer = new PemPublicKeySerializer($derSerializer);
         $key = $pemSerializer->parse($pubkey);

@@ -6,7 +6,6 @@ namespace Revolution\Bluesky\Socialite\Concerns;
 
 use Illuminate\Support\Str;
 use Revolution\Bluesky\Socialite\Key\OAuthKey;
-use Revolution\Bluesky\Socialite\Key\JsonWebKey;
 use Revolution\Bluesky\Socialite\Key\JsonWebToken;
 
 trait WithClientAssertion
@@ -18,7 +17,7 @@ trait WithClientAssertion
         $key = OAuthKey::load();
 
         $head = [
-            'alg' => JsonWebKey::ALG,
+            'alg' => $key::ALG,
             'kid' => $key->toJWK()->kid(),
         ];
 
