@@ -6,6 +6,15 @@ use Closure;
 use Illuminate\Contracts\Validation\ValidationRule;
 use Revolution\Bluesky\Support\Identity;
 
+/**
+ * ```
+ * use Revolution\Bluesky\Validation\AtDID;
+ *
+ * $request->validate([
+ *     'did' => ['required', new AtDID],
+ * ]);
+ * ```
+ */
 class AtDID implements ValidationRule
 {
     /**
