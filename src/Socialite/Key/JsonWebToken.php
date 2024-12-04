@@ -11,7 +11,15 @@ use Revolution\Bluesky\Crypto\P256;
 final class JsonWebToken
 {
     /**
+     * ```
+     * $head = ['type' => 'JWT', 'alg' => 'ES256'];
+     * $payload = ['iss' => '', 'aud' => ''];
+     * $key = 'Private key(PEM format)';
+     * $jwt = JsonWebToken::encode(head: $head, payload: $payload, key: $key, alg: 'ES256');
+     * ```
+     *
      * @param  string  $key  Private key PEM
+     * @return string JWT `****.****.****`
      */
     public static function encode(array $head, array $payload, string $key, string $alg = P256::ALG): string
     {
