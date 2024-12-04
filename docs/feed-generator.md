@@ -151,6 +151,49 @@ $generator2 = Generator::create(did: 'did:web:example.com', displayName: 'Feed 2
 $res = Bluesky::publishFeedGenerator(name: 'feed2', generator: $generator2);
 ```
 
+## Separate algorithm class
+
+Instead of using a Closure, you can also create an independent class.
+
+Create a "callable" class in the location of your choice and register it with the AppServiceProvider.
+
+```php
+// Anywhere
+
+namespace App\FeedGenerator;
+
+use Illuminate\Http\Request;
+use Revolution\Bluesky\Facades\Bluesky;
+
+class ArtisanFeed
+{
+    public function __invoke(?int $limit, ?string $cursor, ?string $user, Request $request): array
+    {
+        $response = Bluesky::searchPosts(q: '#laravel', limit: $limit, cursor: $cursor);
+
+        $cursor = $response->json('cursor');
+        $feed = $response->collect('posts')->map(function (array $post) {
+            return ['post' => data_get($post, 'uri')];
+        })->toArray();
+
+        info('user: '.$user);
+        info('header', $request->header());
+
+        return compact('cursor', 'feed');
+    }
+}
+```
+
+```php
+// AppServiceProvider::boot()
+
+use Revolution\Bluesky\Facades\Bluesky;
+use Revolution\Bluesky\FeedGenerator\FeedGenerator;
+use App\FeedGenerator\ArtisanFeed;
+
+FeedGenerator::register(name: 'artisan', algo: new ArtisanFeed());
+```
+
 ## Authentication (Optional)
 
 To enable the "Authentication" section of the official starter kit, install one of the ecc packages.
