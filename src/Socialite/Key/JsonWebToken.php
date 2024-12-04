@@ -52,7 +52,7 @@ final class JsonWebToken
      * $sig = JWT::urlsafeB64Decode($sig);
      * ```
      *
-     * @return null|array<array{type: string, alg: string}, array{iss: string, aud: string, exp: int}, string>
+     * @return null|array<array, array, string>
      */
     public static function explode(?string $token): ?array
     {
