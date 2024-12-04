@@ -18,7 +18,7 @@ use YOCLIB\Multiformats\Multibase\Multibase;
  * ```
  * // did:key: format
  *
- * |did:key:|(multibase prefix)|(alg prefix)|(compressed public key)|
+ * |did:key:|multibase prefix|(alg prefix|compressed public key)|
  * ```
  * @link https://github.com/bluesky-social/atproto/blob/main/packages/crypto/src/did.ts
  */
