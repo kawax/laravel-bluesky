@@ -62,8 +62,8 @@ final class JsonWebToken
 
         [$header, $payload, $sig] = explode(separator: '.', string: $token, limit: 3);
 
-        $header = json_decode(JWT::urlsafeB64Decode($header), true);
-        $payload = json_decode(JWT::urlsafeB64Decode($payload), true);
+        $header = json_decode(JWT::urlsafeB64Decode($header), associative: true, flags: JSON_BIGINT_AS_STRING);
+        $payload = json_decode(JWT::urlsafeB64Decode($payload), associative: true, flags: JSON_BIGINT_AS_STRING);
         //$sig = JWT::urlsafeB64Decode($sig);
 
         return [$header, $payload, $sig];
