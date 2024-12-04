@@ -55,14 +55,14 @@ abstract class AbstractKeypair
         return JWT::urlsafeB64Encode($this->privatePEM());
     }
 
-    public function publicPEM(): string
-    {
-        return $this->key->getPublicKey()->toString(static::FORMAT);
-    }
-
     public function publicKey(): PublicKey
     {
         return $this->key->getPublicKey();
+    }
+
+    public function publicPEM(): string
+    {
+        return $this->key->getPublicKey()->toString(static::FORMAT);
     }
 
     public function toJWK(): JsonWebKey
