@@ -379,7 +379,7 @@ class SocialiteTest extends TestCase
             key: OAuthKey::create()->privatePEM(),
         );
 
-        [$header, $payload, $sig] = JsonWebToken::explode($jwtStr);
+        [$header, $payload, $sig] = JsonWebToken::explode($jwtStr, decode: true);
 
         $this->assertArrayHasKey('typ', $header);
         $this->assertSame('iss', $payload['iss']);
