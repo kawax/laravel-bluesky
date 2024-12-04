@@ -59,10 +59,14 @@ final class JsonWebToken
      *
      * $sig = JWT::urlsafeB64Decode($sig);
      * ```
+     * If you want to decode `$sig` as well, specify `decode: true`.
+     * ```
+     * [$header, $payload, $sig] = JsonWebToken::explode('****.****.****', decode: true);
+     * ```
      *
      * @return null|array<array, array, string>
      */
-    public static function explode(?string $token): ?array
+    public static function explode(?string $token, bool $decode = false): ?array
     {
         if (Str::substrCount($token, '.') !== 2) {
             return null;
@@ -72,7 +76,9 @@ final class JsonWebToken
 
         $header = json_decode(JWT::urlsafeB64Decode($header), associative: true, flags: JSON_BIGINT_AS_STRING);
         $payload = json_decode(JWT::urlsafeB64Decode($payload), associative: true, flags: JSON_BIGINT_AS_STRING);
-        //$sig = JWT::urlsafeB64Decode($sig);
+        if ($decode) {
+            $sig = JWT::urlsafeB64Decode($sig);
+        }
 
         return [$header, $payload, $sig];
     }
