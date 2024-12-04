@@ -3,18 +3,16 @@
 namespace Tests\Feature\FeedGenerator;
 
 use Illuminate\Http\Request;
+use InvalidArgumentException;
 use Mdanter\Ecc\EccFactory;
 use Mdanter\Ecc\Serializer\PublicKey\DerPublicKeySerializer;
 use Mdanter\Ecc\Serializer\PublicKey\PemPublicKeySerializer;
 use PHPUnit\Framework\Attributes\RequiresMethod;
-use Psy\Util\Json;
 use Revolution\Bluesky\Crypto\DidKey;
 use Revolution\Bluesky\Crypto\K256;
 use Revolution\Bluesky\Facades\Bluesky;
 use Revolution\Bluesky\FeedGenerator\FeedGenerator;
 use Revolution\Bluesky\FeedGenerator\ValidateAuth;
-use Revolution\Bluesky\Socialite\Key\OAuthKey;
-use Revolution\Bluesky\Socialite\Key\JsonWebKey;
 use Revolution\Bluesky\Socialite\Key\JsonWebToken;
 use Tests\TestCase;
 
@@ -33,6 +31,43 @@ class FeedGeneratorTest extends TestCase
         FeedGenerator::register('test', function (?int $limit, ?string $cursor): array {
             return [];
         });
+
+        $this->assertTrue(FeedGenerator::has('test'));
+    }
+
+    public function test_feed_register_callable_class(): void
+    {
+        FeedGenerator::register('test', new TestFeed);
+
+        $this->assertTrue(FeedGenerator::has('test'));
+    }
+
+    public function test_feed_register_class_string(): void
+    {
+        FeedGenerator::register('test', TestFeed::class);
+
+        $this->assertTrue(FeedGenerator::has('test'));
+    }
+
+    public function test_feed_register_class_not_callable(): void
+    {
+        $this->expectException(InvalidArgumentException::class);
+
+        FeedGenerator::register('test', TestFeed2::class);
+
+        $this->assertTrue(FeedGenerator::has('test'));
+    }
+
+    public function test_feed_register_class_callable_array(): void
+    {
+        FeedGenerator::register('test', [new TestFeed2(), 'feed']);
+
+        $this->assertTrue(FeedGenerator::has('test'));
+    }
+
+    public function test_feed_register_first_class_callable_syntax(): void
+    {
+        FeedGenerator::register('test', (new TestFeed2)->feed(...));
 
         $this->assertTrue(FeedGenerator::has('test'));
     }
@@ -144,5 +179,21 @@ class FeedGeneratorTest extends TestCase
 
         $response->assertSuccessful();
         $response->assertJson(['user' => 'did:plc:alice']);
+    }
+}
+
+class TestFeed
+{
+    public function __invoke(?int $limit, ?string $cursor): array
+    {
+        return [];
+    }
+}
+
+class TestFeed2
+{
+    public function feed(?int $limit, ?string $cursor): array
+    {
+        return [];
     }
 }

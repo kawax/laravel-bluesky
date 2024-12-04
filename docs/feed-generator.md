@@ -191,7 +191,7 @@ use Revolution\Bluesky\Facades\Bluesky;
 use Revolution\Bluesky\FeedGenerator\FeedGenerator;
 use App\FeedGenerator\ArtisanFeed;
 
-FeedGenerator::register(name: 'artisan', algo: new ArtisanFeed());
+FeedGenerator::register(name: 'artisan', algo: ArtisanFeed::class);
 ```
 
 ## Authentication (Optional)

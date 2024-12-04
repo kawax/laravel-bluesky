@@ -5,6 +5,7 @@ namespace Revolution\Bluesky\FeedGenerator;
 use BackedEnum;
 use Closure;
 use Illuminate\Http\Request;
+use InvalidArgumentException;
 use Revolution\Bluesky\Support\DID;
 
 use function Illuminate\Support\enum_value;
@@ -39,10 +40,17 @@ final class FeedGenerator
      * ```
      *
      * @param  BackedEnum|string  $name  short name. Used in generator url. `at://did:.../app.bsky.feed.generator/{name}`
-     * @param  callable(?int $limit, ?string $cursor, ?string $user, Request $request): array  $algo
+     * @param  class-string|callable(?int $limit, ?string $cursor, ?string $user, Request $request): array  $algo
      */
-    public static function register(BackedEnum|string $name, callable $algo): void
+    public static function register(BackedEnum|string $name, string|callable $algo): void
     {
+        if (is_string($algo) && class_exists($algo)) {
+            $algo = app($algo);
+            if (! is_callable($algo)) {
+                throw new InvalidArgumentException();
+            }
+        }
+
         self::$algos[enum_value($name)] = $algo(...);
     }
 
