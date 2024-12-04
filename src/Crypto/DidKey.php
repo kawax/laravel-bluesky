@@ -89,10 +89,6 @@ class DidKey
      */
     public static function encode(PublicKeyInterface $pubkey): string
     {
-        if (! class_exists(EccFactory::class)) {
-            throw new RuntimeException('Please install any ecc package.');
-        }
-
         $adapter = EccFactory::getAdapter();
         $serializer = new CompressedPointSerializer($adapter);
         $compressed = $serializer->serialize($pubkey->getPoint());
