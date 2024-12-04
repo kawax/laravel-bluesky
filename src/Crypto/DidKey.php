@@ -96,6 +96,7 @@ class DidKey
         $prefix = match ($pubkey->getCurve()->getName()) {
             P256::CURVE => P256::MULTIBASE_PREFIX,
             K256::CURVE => K256::MULTIBASE_PREFIX,
+            default => throw new InvalidArgumentException(),
         };
 
         return Multibase::encode(Multibase::BASE58BTC, $prefix.hex2bin($compressed));
