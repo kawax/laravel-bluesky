@@ -194,9 +194,11 @@ class ClientTest extends TestCase
             ->push(['id' => 'did:plc:test']);
 
         $response = (new Identity())->resolveDID(did: 'did:plc:test');
+        $response_cache = (new Identity())->resolveDID(did: 'did:plc:test', cache: true);
 
         $this->assertTrue($response->collect()->has('id'));
         $this->assertSame('did:plc:test', $response->json('id'));
+        $this->assertTrue(cache()->has(Identity::CACHE_DID.'did:plc:test'));
 
         Http::assertSent(function (Request $request) {
             return $request->url() === 'https://plc.directory/did:plc:test';
@@ -208,10 +210,11 @@ class ClientTest extends TestCase
         Http::fakeSequence()
             ->push(['id' => 'did:web:localhost']);
 
-        $response = Bluesky::identity()->resolveDID(did: 'did:web:localhost');
+        $response = Bluesky::identity()->resolveDID(did: 'did:web:localhost', cache: false);
 
         $this->assertTrue($response->collect()->has('id'));
         $this->assertSame('did:web:localhost', $response->json('id'));
+        $this->assertFalse(cache()->has(Identity::CACHE_DID.'did:web:localhost'));
 
         Http::assertSent(function (Request $request) {
             return $request->url() === 'https://localhost/.well-known/did.json';
@@ -245,8 +248,10 @@ class ClientTest extends TestCase
         DNS::fake(txt: 'did=did:plc:1234');
 
         $did = Bluesky::identity()->resolveHandle('example.com');
+        $did_cache = Bluesky::identity()->resolveHandle('example.com');
 
         $this->assertSame('did:plc:1234', $did);
+        $this->assertSame('did:plc:1234', $did_cache);
     }
 
     public function test_identity_resolve_handle_wellknown()
