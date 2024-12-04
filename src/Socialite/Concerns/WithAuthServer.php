@@ -15,10 +15,8 @@ trait WithAuthServer
      */
     protected function authServerMeta(?string $key = null, ?string $default = null): array|string|null
     {
-        $auth_url = $this->authUrl();
-
         if (empty($this->auth_server_meta)) {
-            $this->auth_server_meta = Http::baseUrl($auth_url)
+            $this->auth_server_meta = Http::baseUrl($this->authUrl())
                 ->get('/.well-known/oauth-authorization-server')
                 ->json();
         }
