@@ -102,7 +102,7 @@ trait HasHttp
     }
 
     /**
-     * Set any header.
+     * Add any header.
      *
      * ```
      * ->withHeader(name: 'atproto-accept-labelers', value: '')
@@ -116,7 +116,7 @@ trait HasHttp
     }
 
     /**
-     * Set "atproto-proxy" header.
+     * Add "atproto-proxy" header.
      *
      * ```
      * ->withServiceProxy('did:web:api.bsky.chat#bsky_chat')
