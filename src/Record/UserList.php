@@ -43,7 +43,7 @@ final class UserList extends AbstractList implements Arrayable, Recordable
     /**
      * Defines the purpose of the list (aka, moderation-oriented or curration-oriented).
      */
-    public function purpose(#[KnownValues([ListPurpose::Modlist, ListPurpose::Curatelist, ListPurpose::Referencelist])] BackedEnum|string $purpose): self
+    public function purpose(ListPurpose|string $purpose): self
     {
         $this->purpose = enum_value($purpose);
 
