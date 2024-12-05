@@ -64,7 +64,7 @@ class Identity
      */
     public function resolveHandle(?string $handle, bool $cache = true): ?string
     {
-        if (! self::isHandle($handle)) {
+        if (! self::isHandle($handle) || ! Str::isUrl('https://'.$handle, ['https'])) {
             throw new InvalidArgumentException("The handle '$handle' is not a valid handle."); // @codeCoverageIgnore
         }
 
@@ -72,7 +72,7 @@ class Identity
             return cache(self::CACHE_HANDLE.$handle);
         }
 
-        // check DND TXT record
+        // check DNS TXT record
         $record = DNS::record('_atproto.'.$handle);
 
         $did = collect($record)->pluck('txt')->first(function ($txt) {
@@ -90,7 +90,7 @@ class Identity
         }
 
         // check well-known
-        $response = Http::get("https://$handle/.well-known/atproto-did");
+        $response = Http::timeout(5)->get("https://$handle/.well-known/atproto-did");
         $did = trim($response->body());
 
         if (self::isDID($did)) {
