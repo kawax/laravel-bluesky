@@ -149,6 +149,7 @@ class FeedGeneratorTest extends TestCase
         });
 
         $key = K256::create();
+        dump($key->privatePEM());
 
         $jwt = JsonWebToken::encode(
             head: ['typ' => 'JWT', 'alg' => K256::ALG],
@@ -161,10 +162,7 @@ class FeedGeneratorTest extends TestCase
         );
 
         $pubkey = $key->publicPEM();
-        $derSerializer = new DerPublicKeySerializer(EccFactory::getAdapter());
-        $pemSerializer = new PemPublicKeySerializer($derSerializer);
-        $key = $pemSerializer->parse($pubkey);
-        $didkey = DidKey::encode($key);
+        $didkey = DidKey::encode($pubkey);
 
         Bluesky::shouldReceive('identity->resolveDID->json')->once()->andReturn([
             'verificationMethod' => [

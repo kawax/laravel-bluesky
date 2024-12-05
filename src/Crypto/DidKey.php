@@ -5,7 +5,6 @@ namespace Revolution\Bluesky\Crypto;
 use Illuminate\Support\Str;
 use InvalidArgumentException;
 use Mdanter\Ecc\Crypto\Key\PublicKey;
-use Mdanter\Ecc\Crypto\Key\PublicKeyInterface;
 use Mdanter\Ecc\Curves\CurveFactory;
 use Mdanter\Ecc\EccFactory;
 use Mdanter\Ecc\Serializer\Point\CompressedPointSerializer;
@@ -85,15 +84,24 @@ class DidKey
     }
 
     /**
+     * @param  string  $pubkey  Public key PEM
      * @return string `z***`
      */
-    public static function encode(PublicKeyInterface $pubkey): string
+    public static function encode(string $pubkey): string
     {
-        $adapter = EccFactory::getAdapter();
-        $serializer = new CompressedPointSerializer($adapter);
-        $compressed = $serializer->serialize($pubkey->getPoint());
+        if (! class_exists(EccFactory::class)) {
+            throw new RuntimeException('Please install any ecc package.');
+        }
 
-        $prefix = match ($pubkey->getCurve()->getName()) {
+        $adapter = EccFactory::getAdapter();
+        $derSerializer = new DerPublicKeySerializer($adapter);
+        $pemSerializer = new PemPublicKeySerializer($derSerializer);
+        $key = $pemSerializer->parse($pubkey);
+
+        $compSerializer = new CompressedPointSerializer($adapter);
+        $compressed = $compSerializer->serialize($key->getPoint());
+
+        $prefix = match ($key->getCurve()->getName()) {
             P256::CURVE => P256::MULTIBASE_PREFIX,
             K256::CURVE => K256::MULTIBASE_PREFIX,
             default => throw new InvalidArgumentException(),
@@ -103,9 +111,10 @@ class DidKey
     }
 
     /**
+     * @param  string  $pubkey  Public key PEM
      * @return string `did:key:z***`
      */
-    public static function format(PublicKeyInterface $pubkey): string
+    public static function format(string $pubkey): string
     {
         return self::DID_KEY_PREFIX.self::encode($pubkey);
     }

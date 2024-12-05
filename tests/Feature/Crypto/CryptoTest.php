@@ -3,9 +3,9 @@
 namespace Tests\Feature\Crypto;
 
 use Mdanter\Ecc\Curves\CurveFactory;
-use Mdanter\Ecc\Curves\SecgCurve;
 use PHPUnit\Framework\Attributes\RequiresMethod;
 use Revolution\Bluesky\Crypto\DidKey;
+use Revolution\Bluesky\Crypto\K256;
 use Tests\TestCase;
 
 class CryptoTest extends TestCase
@@ -23,10 +23,7 @@ class CryptoTest extends TestCase
     #[RequiresMethod(CurveFactory::class, 'getGeneratorByName')]
     public function test_did_key_encode(): void
     {
-        $generator = CurveFactory::getGeneratorByName(SecgCurve::NAME_SECP_256K1);
-
-        $sk = $generator->createPrivateKey();
-        $pubkey = $sk->getPublicKey();
+        $pubkey = K256::create()->publicPEM();
 
         $b58key = DidKey::encode($pubkey);
         $didkey = DidKey::format($pubkey);
