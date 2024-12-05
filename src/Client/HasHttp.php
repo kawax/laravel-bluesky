@@ -102,6 +102,20 @@ trait HasHttp
     }
 
     /**
+     * Set any header.
+     *
+     * ```
+     * ->withHeader(name: 'atproto-accept-labelers', value: '')
+     * ```
+     */
+    public function withHeader(string $name, mixed $value): static
+    {
+        $this->http->withHeader($name, $value);
+
+        return $this;
+    }
+
+    /**
      * Set "atproto-proxy" header.
      *
      * ```
@@ -110,8 +124,6 @@ trait HasHttp
      */
     public function withServiceProxy(#[Format('did')] string $did): static
     {
-        $this->http->withHeader('atproto-proxy', $did);
-
-        return $this;
+        return $this->withHeader('atproto-proxy', $did);
     }
 }
