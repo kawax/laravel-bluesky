@@ -11,6 +11,7 @@ use Revolution\AtProto\Lexicon\Record\App\Bsky\Feed\AbstractPost;
 use Revolution\Bluesky\Contracts\Recordable;
 use Revolution\Bluesky\RichText\TextBuilder;
 use Revolution\Bluesky\Types\ReplyRef;
+use Revolution\Bluesky\Types\SelfLabels;
 
 final class Post extends AbstractPost implements Arrayable, Recordable
 {
@@ -133,6 +134,13 @@ final class Post extends AbstractPost implements Arrayable, Recordable
     public function reply(?ReplyRef $reply = null): self
     {
         $this->reply = $reply?->toArray();
+
+        return $this;
+    }
+
+    public function labels(?SelfLabels $labels = null): self
+    {
+        $this->labels = $labels?->toArray();
 
         return $this;
     }
