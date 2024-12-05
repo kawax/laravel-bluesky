@@ -88,11 +88,7 @@ trait WithTokenRequest
      */
     public function getAccessTokenResponse($code): array
     {
-        $token_url = $this->getTokenUrl();
-
-        $payload = $this->getTokenFields($code);
-
-        return $this->sendTokenRequest($token_url, $payload);
+        return $this->sendTokenRequest($this->getTokenUrl(), $this->getTokenFields($code));
     }
 
     /**
@@ -118,11 +114,8 @@ trait WithTokenRequest
             'code' => $code,
             'client_assertion_type' => self::CLIENT_ASSERTION_TYPE,
             'client_assertion' => $this->getClientAssertion(),
+            'code_verifier' => $this->request->session()->get('code_verifier'),
         ];
-
-        if ($this->usesPKCE()) {
-            $fields['code_verifier'] = $this->request->session()->get('code_verifier');
-        }
 
         return array_merge($fields, $this->parameters);
     }
@@ -140,8 +133,6 @@ trait WithTokenRequest
     {
         $this->getOAuthSession()->put('old_refresh_token', $refreshToken);
 
-        $token_url = $this->getTokenUrl();
-
         $payload = [
             'grant_type' => 'refresh_token',
             'refresh_token' => $refreshToken,
@@ -150,6 +141,6 @@ trait WithTokenRequest
             'client_assertion' => $this->getClientAssertion(),
         ];
 
-        return $this->sendTokenRequest($token_url, $payload);
+        return $this->sendTokenRequest($this->getTokenUrl(), $payload);
     }
 }
