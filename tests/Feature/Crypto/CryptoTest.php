@@ -17,6 +17,8 @@ class CryptoTest extends TestCase
         $parsed = DidKey::parse('zQ3shunBKsXixLxKtC5qeSG9E4J5RkGN57im31pcTzbNQnm5w');
 
         $this->assertIsString($parsed['key']);
+        $this->assertSame('secp256k1', $parsed['curve']);
+        $this->assertSame('ES256K', $parsed['alg']);
     }
 
     public function test_did_key_encode(): void
