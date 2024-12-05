@@ -94,31 +94,6 @@ final class FeedGenerator
     }
 
     /**
-     * ```
-     * // AppServiceProvider::boot()
-     *
-     * use Illuminate\Http\Request;
-     * use Revolution\Bluesky\FeedGenerator\FeedGenerator;
-     * use Revolution\Bluesky\Socialite\Key\JsonWebToken;
-     * use Firebase\JWT\JWT;
-     *
-     * FeedGenerator::validateAuthUsing(function (?string $jwt, Request $request): ?string {
-     *     $jwt = JsonWebToken::explode($jwt);
-     *     $header = data_get($jwt, 'header');
-     *
-     *     $payload = data_get($jwt, 'payload');
-     *     $did = data_get($payload, 'iss');
-     *
-     *     $sig = data_get($jwt, 'sig');
-     *     $sig = JWT::urlsafeB64Decode($sig);
-     *
-     *     // ...
-     *
-     *     // Returns the user's DID on success, or null on failure.
-     *     return $did;
-     * });
-     * ```
-     *
      * @param  null|callable(?string $jwt, Request $request): ?string  $callback
      */
     public static function validateAuthUsing(?callable $callback = null): void

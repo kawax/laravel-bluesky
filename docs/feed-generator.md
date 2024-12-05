@@ -194,16 +194,22 @@ use App\FeedGenerator\ArtisanFeed;
 FeedGenerator::register(name: 'artisan', algo: ArtisanFeed::class);
 ```
 
-## Authentication (Optional)
+## Authentication
 
-To enable the "Authentication" section of the official starter kit, install one of the ecc packages.
+The "Authentication" section of the official starter kit is enabled by default. To disable it, provide a closure in your AppServiceProvider that simply returns the user did.
 
-There are multiple forked packages, so it's up to you to decide which one to use.
+```php
+// AppServiceProvider::boot()
 
-- https://github.com/1ma/phpecc
-- https://github.com/paragonie/phpecc
+use Illuminate\Http\Request;
+use Revolution\Bluesky\FeedGenerator\FeedGenerator;
+use Revolution\Bluesky\Socialite\Key\JsonWebToken;
 
-If you don't install any of them, the verification will be skipped. You will still get the user's DID.
+FeedGenerator::validateAuthUsing(function (?string $jwt, Request $request): ?string {
+     [, $payload] = JsonWebToken::explode($jwt);
+     return data_get($payload, 'iss');
+});
+```
 
 ## Advanced
 
