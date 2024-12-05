@@ -23,8 +23,7 @@
     "yocto/yoclib-multibase": "^1.2"
   },
   "require-dev": {
-    "orchestra/testbench": "^9.0",
-    "uma/phpecc": "^0.2.0"
+    "orchestra/testbench": "^9.0"
   },
   "autoload": {
     "psr-4": {
@@ -35,10 +34,6 @@
     "psr-4": {
       "Tests\\": "tests/"
     }
-  },
-  "suggest": {
-      "paragonie/ecc": "",
-      "uma/phpecc": ""
   },
   "authors": [
     {

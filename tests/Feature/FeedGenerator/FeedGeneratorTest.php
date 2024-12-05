@@ -4,10 +4,6 @@ namespace Tests\Feature\FeedGenerator;
 
 use Illuminate\Http\Request;
 use InvalidArgumentException;
-use Mdanter\Ecc\EccFactory;
-use Mdanter\Ecc\Serializer\PublicKey\DerPublicKeySerializer;
-use Mdanter\Ecc\Serializer\PublicKey\PemPublicKeySerializer;
-use PHPUnit\Framework\Attributes\RequiresMethod;
 use Revolution\Bluesky\Crypto\DidKey;
 use Revolution\Bluesky\Crypto\K256;
 use Revolution\Bluesky\Facades\Bluesky;
@@ -141,7 +137,6 @@ class FeedGeneratorTest extends TestCase
         $response->assertJson(['feed' => [['post' => 'at://']]]);
     }
 
-    #[RequiresMethod(PemPublicKeySerializer::class, 'parse')]
     public function test_feed_validate_auth(): void
     {
         FeedGenerator::register('test', function (?int $limit, ?string $cursor, ?string $user): array {
