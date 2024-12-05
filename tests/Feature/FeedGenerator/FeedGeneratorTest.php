@@ -149,7 +149,6 @@ class FeedGeneratorTest extends TestCase
         });
 
         $key = K256::create();
-        dump($key->privatePEM());
 
         $jwt = JsonWebToken::encode(
             head: ['typ' => 'JWT', 'alg' => K256::ALG],
