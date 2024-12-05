@@ -2,7 +2,7 @@ Resolve Identity
 ====
 
 - https://docs.bsky.app/docs/advanced-guides/resolving-identities
-- https://atproto.com/ja/guides/identity
+- https://atproto.com/guides/identity
 
 ## Handle to DID
 
