@@ -11,7 +11,9 @@ use Revolution\Bluesky\Crypto\Format\Base58btc;
  *
  * |did:key:|multibase prefix|(alg prefix|compressed public key)|
  * ```
+ *
  * @link https://github.com/bluesky-social/atproto/blob/main/packages/crypto/src/did.ts
+ * @link https://atproto.com/ja/specs/cryptography
  */
 class DidKey
 {
@@ -23,6 +25,18 @@ class DidKey
     ];
 
     /**
+     * ```
+     * use Revolution\Bluesky\Crypto\DidKey;
+     *
+     * $didkey = DidKey::parse('z***');
+     *
+     * [
+     *     'curve' => 'secp256k1',
+     *     'alg' => 'ES256K',
+     *     'key' => 'Public key PEM format',
+     * ]
+     * ```
+     *
      * @param  string  $didkey  `did:key:z***` or `z***`
      * @return array{curve: string, alg: string, key: string}
      */
@@ -42,6 +56,14 @@ class DidKey
     }
 
     /**
+     * ```
+     * use Revolution\Bluesky\Crypto\DidKey;
+     *
+     * $didkey = DidKey::encode('Public key PEM format');
+     *
+     * // z***
+     * ```
+     *
      * @param  string  $pubkey  Public key PEM
      * @return string `z***`
      */
@@ -55,6 +77,14 @@ class DidKey
     }
 
     /**
+     * ```
+     * use Revolution\Bluesky\Crypto\DidKey;
+     *
+     * $didkey = DidKey::format('Public key PEM format');
+     *
+     * // did:key:z***
+     * ```
+     *
      * @param  string  $pubkey  Public key PEM
      * @return string `did:key:z***`
      */
