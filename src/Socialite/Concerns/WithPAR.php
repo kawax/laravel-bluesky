@@ -40,7 +40,7 @@ trait WithPAR
     protected function parRequestFields($state): array
     {
         // Special exception for development only.
-        // https://atproto.com/ja/specs/oauth
+        // https://atproto.com/specs/oauth
         if ($this->clientId === 'http://localhost') {
             $this->scopes = ['atproto'];
         }
