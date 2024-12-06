@@ -2,6 +2,8 @@
 
 namespace Revolution\Bluesky\Crypto;
 
+use Illuminate\Support\Arr;
+use InvalidArgumentException;
 use phpseclib3\Crypt\EC;
 use Revolution\Bluesky\Crypto\Format\Base58btc;
 
@@ -17,7 +19,7 @@ use Revolution\Bluesky\Crypto\Format\Base58btc;
  */
 class DidKey
 {
-    public const DID_KEY_PREFIX = 'did:key:';
+    public const PREFIX = 'did:key:';
 
     protected const ALGS = [
         P256::CURVE => P256::ALG,
@@ -44,9 +46,13 @@ class DidKey
     {
         EC::addFileFormat(Base58btc::class);
 
-        $key = EC::loadPublicKeyFormat('Base58btc', $didkey);
+        $key = EC::loadPublicKeyFormat(class_basename(Base58btc::class), $didkey);
 
         $curve = $key->getCurve();
+
+        if (! Arr::except(self::ALGS, $curve)) {
+            throw new InvalidArgumentException('Unsupported format.');
+        }
 
         return [
             'curve' => $curve,
@@ -73,7 +79,7 @@ class DidKey
 
         $key = EC::loadPublicKey($pubkey);
 
-        return $key->toString('Base58btc');
+        return $key->toString(class_basename(Base58btc::class));
     }
 
     /**
@@ -90,6 +96,6 @@ class DidKey
      */
     public static function format(string $pubkey): string
     {
-        return self::DID_KEY_PREFIX.self::encode($pubkey);
+        return self::PREFIX.self::encode($pubkey);
     }
 }
