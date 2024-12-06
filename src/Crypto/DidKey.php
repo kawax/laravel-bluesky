@@ -50,7 +50,7 @@ class DidKey
 
         $curve = $key->getCurve();
 
-        if (! Arr::except(self::ALGS, $curve)) {
+        if (! Arr::exists(self::ALGS, $curve)) {
             throw new InvalidArgumentException('Unsupported format.');
         }
 
