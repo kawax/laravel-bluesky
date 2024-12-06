@@ -5,6 +5,7 @@ namespace Revolution\Bluesky\Crypto\Format;
 use Illuminate\Support\Str;
 use InvalidArgumentException;
 use phpseclib3\Crypt\EC\BaseCurves\Base;
+use phpseclib3\Crypt\EC\BaseCurves\Prime;
 use phpseclib3\Crypt\EC\Formats\Keys\Common;
 use phpseclib3\Math\PrimeField\Integer;
 use Revolution\Bluesky\Crypto\DidKey;
@@ -58,8 +59,10 @@ final class Base58btc
             throw new InvalidArgumentException('compressed key length must be 33.');
         }
 
+        /** @var Prime $curve */
         $curve = self::loadCurveByParam(['namedCurve' => $curve_name]);
 
+        /** @var array<Integer, Integer> $point */
         $point = self::extractPoint("\0".$keyBytes, $curve);
 
         if (! $curve->verifyPoint($point)) {
