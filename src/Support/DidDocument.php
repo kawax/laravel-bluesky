@@ -7,6 +7,7 @@ namespace Revolution\Bluesky\Support;
 use Illuminate\Contracts\Support\Arrayable;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Str;
+use Revolution\Bluesky\Crypto\DidKey;
 
 /**
  * @link https://plc.directory/did:plc:ewvi7nxzyoun6zhxrhs64oiz
@@ -70,7 +71,7 @@ final readonly class DidDocument implements Arrayable
     /**
      * Get public key.
      *
-     * This key can be decoded with {@link DidKey}.
+     * This key can be decoded with {@link DidKey::parse()}.
      *
      * ```
      * use Revolution\Bluesky\Crypto\DidKey;
