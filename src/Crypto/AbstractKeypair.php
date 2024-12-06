@@ -7,6 +7,7 @@ namespace Revolution\Bluesky\Crypto;
 use Firebase\JWT\JWT;
 use phpseclib3\Crypt\Common\PrivateKey as CommonPrivateKey;
 use phpseclib3\Crypt\EC;
+use phpseclib3\Crypt\EC\Formats\Keys\PKCS8;
 use phpseclib3\Crypt\EC\PrivateKey;
 use phpseclib3\Crypt\EC\PublicKey;
 use Revolution\Bluesky\Socialite\Key\JsonWebKey;
@@ -16,8 +17,6 @@ abstract class AbstractKeypair
     public const CURVE = '';
 
     public const ALG = '';
-
-    protected const FORMAT = 'PKCS8';
 
     protected PrivateKey|CommonPrivateKey $key;
 
@@ -49,7 +48,7 @@ abstract class AbstractKeypair
 
     public function privatePEM(): string
     {
-        return $this->key->toString(static::FORMAT);
+        return $this->key->toString(class_basename(PKCS8::class));
     }
 
     public function privateB64(): string
@@ -64,7 +63,7 @@ abstract class AbstractKeypair
 
     public function publicPEM(): string
     {
-        return $this->key->getPublicKey()->toString(static::FORMAT);
+        return $this->publicKey()->toString(class_basename(PKCS8::class));
     }
 
     public function toJWK(): JsonWebKey
