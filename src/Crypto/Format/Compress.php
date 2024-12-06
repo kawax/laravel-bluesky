@@ -3,7 +3,7 @@
 namespace Revolution\Bluesky\Crypto\Format;
 
 use Illuminate\Support\Str;
-use phpseclib3\Crypt\EC\BaseCurves\Base as BaseCurve;
+use phpseclib3\Crypt\EC\BaseCurves\Base;
 use phpseclib3\Math\PrimeField\Integer;
 
 /**
@@ -14,7 +14,7 @@ final class Compress
     /**
      * @param  array<Integer, Integer>  $publicKey
      */
-    public static function savePublicKey(BaseCurve $curve, array $publicKey, array $options = []): string
+    public static function savePublicKey(Base $curve, array $publicKey, array $options = []): string
     {
         $prefix = $publicKey[1]->isOdd() ? '03' : '02';
 
