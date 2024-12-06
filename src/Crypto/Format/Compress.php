@@ -2,6 +2,7 @@
 
 namespace Revolution\Bluesky\Crypto\Format;
 
+use Illuminate\Support\Str;
 use phpseclib3\Crypt\EC\BaseCurves\Base as BaseCurve;
 use phpseclib3\Math\PrimeField\Integer;
 
@@ -20,7 +21,7 @@ final class Compress
         // 32
         $length = $curve->getLengthInBytes();
 
-        $hexString = str_pad($publicKey[0]->toHex(), $length, '0', STR_PAD_LEFT);
+        $hexString = Str::padLeft($publicKey[0]->toHex(), $length, pad: '0');
 
         return $prefix.$hexString;
     }
