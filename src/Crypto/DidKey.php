@@ -5,6 +5,7 @@ namespace Revolution\Bluesky\Crypto;
 use Illuminate\Support\Arr;
 use InvalidArgumentException;
 use phpseclib3\Crypt\EC;
+use phpseclib3\Crypt\EC\PublicKey;
 use Revolution\Bluesky\Crypto\Format\Base58btc;
 
 /**
@@ -46,6 +47,7 @@ class DidKey
     {
         EC::addFileFormat(Base58btc::class);
 
+        /** @var PublicKey $key */
         $key = EC::loadPublicKeyFormat(class_basename(Base58btc::class), $didkey);
 
         $curve = $key->getCurve();
