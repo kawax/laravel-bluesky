@@ -23,7 +23,7 @@ use Revolution\Bluesky\Crypto\Format\Base58btc;
  * @link https://github.com/bluesky-social/atproto/blob/main/packages/crypto/src/did.ts
  * @link https://atproto.com/specs/cryptography
  */
-class DidKey
+final class DidKey
 {
     public const PREFIX = 'did:key:';
 
