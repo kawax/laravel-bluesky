@@ -9,7 +9,6 @@ use InvalidArgumentException;
 use phpseclib3\Crypt\EC\BaseCurves\Base;
 use phpseclib3\Crypt\EC\BaseCurves\Prime;
 use phpseclib3\Crypt\EC\Formats\Keys\Common;
-use phpseclib3\Math\PrimeField\Integer;
 use Revolution\Bluesky\Crypto\DidKey;
 use Revolution\Bluesky\Crypto\K256;
 use Revolution\Bluesky\Crypto\P256;
