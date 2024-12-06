@@ -25,12 +25,12 @@ final class DPoP
      */
     public static function generate(): string
     {
-        return OAuthKey::create()->privateB64();
+        return P256::create()->privateB64();
     }
 
     public static function load(): JsonWebKey
     {
-        return OAuthKey::load(session()->remember(self::SESSION_KEY, fn () => self::generate()))->toJWK();
+        return P256::load(session()->remember(self::SESSION_KEY, fn () => self::generate()))->toJWK();
     }
 
     /**
