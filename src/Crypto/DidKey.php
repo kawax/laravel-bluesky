@@ -7,6 +7,7 @@ namespace Revolution\Bluesky\Crypto;
 use Illuminate\Support\Arr;
 use InvalidArgumentException;
 use phpseclib3\Crypt\EC;
+use phpseclib3\Crypt\EC\Formats\Keys\PKCS8;
 use phpseclib3\Crypt\EC\PublicKey;
 use Revolution\Bluesky\Crypto\Format\Base58btc;
 
@@ -65,7 +66,7 @@ class DidKey
         return [
             'curve' => $curve,
             'alg' => self::ALGS[$curve],
-            'key' => (string) $key,
+            'key' => $key->toString(class_basename(PKCS8::class)),
         ];
     }
 
