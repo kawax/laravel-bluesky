@@ -2,11 +2,10 @@
 
 declare(strict_types=1);
 
-namespace Revolution\Bluesky\Socialite\Key;
+namespace Revolution\Bluesky\Crypto;
 
 use Firebase\JWT\JWT;
 use Illuminate\Support\Str;
-use Revolution\Bluesky\Crypto\P256;
 
 final class JsonWebToken
 {

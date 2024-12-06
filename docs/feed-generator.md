@@ -202,8 +202,8 @@ The "Authentication" section of the official starter kit is enabled by default. 
 // AppServiceProvider::boot()
 
 use Illuminate\Http\Request;
+use Revolution\Bluesky\Crypto\JsonWebToken;
 use Revolution\Bluesky\FeedGenerator\FeedGenerator;
-use Revolution\Bluesky\Socialite\Key\JsonWebToken;
 
 FeedGenerator::validateAuthUsing(function (?string $jwt, Request $request): ?string {
      [, $payload] = JsonWebToken::explode($jwt);

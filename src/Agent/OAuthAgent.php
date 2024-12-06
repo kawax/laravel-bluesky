@@ -14,12 +14,12 @@ use Laravel\Socialite\Two\Token;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
 use Revolution\Bluesky\Contracts\Agent;
+use Revolution\Bluesky\Crypto\DPoP;
 use Revolution\Bluesky\Events\DPoPNonceReceived;
 use Revolution\Bluesky\Events\OAuthSessionRefreshing;
 use Revolution\Bluesky\Events\OAuthSessionUpdated;
 use Revolution\Bluesky\Facades\Bluesky;
 use Revolution\Bluesky\Session\OAuthSession;
-use Revolution\Bluesky\Socialite\Key\DPoP;
 use Revolution\Bluesky\Support\Identity;
 
 /**
@@ -29,8 +29,6 @@ final class OAuthAgent implements Agent
 {
     use Macroable;
     use Conditionable;
-
-    protected ?string $service_token = null;
 
     public function __construct(
         #[\SensitiveParameter]

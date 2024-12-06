@@ -7,11 +7,11 @@ namespace Tests\Feature\FeedGenerator;
 use Illuminate\Http\Request;
 use InvalidArgumentException;
 use Revolution\Bluesky\Crypto\DidKey;
+use Revolution\Bluesky\Crypto\JsonWebToken;
 use Revolution\Bluesky\Crypto\K256;
 use Revolution\Bluesky\Facades\Bluesky;
 use Revolution\Bluesky\FeedGenerator\FeedGenerator;
 use Revolution\Bluesky\FeedGenerator\ValidateAuth;
-use Revolution\Bluesky\Socialite\Key\JsonWebToken;
 use Tests\TestCase;
 
 class FeedGeneratorTest extends TestCase

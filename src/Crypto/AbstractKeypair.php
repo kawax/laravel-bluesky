@@ -10,7 +10,6 @@ use phpseclib3\Crypt\EC;
 use phpseclib3\Crypt\EC\Formats\Keys\PKCS8;
 use phpseclib3\Crypt\EC\PrivateKey;
 use phpseclib3\Crypt\EC\PublicKey;
-use Revolution\Bluesky\Socialite\Key\JsonWebKey;
 
 abstract class AbstractKeypair
 {

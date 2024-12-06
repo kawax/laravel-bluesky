@@ -8,8 +8,8 @@ use Firebase\JWT\JWT;
 use Firebase\JWT\Key;
 use Illuminate\Http\Request;
 use Revolution\Bluesky\Crypto\DidKey;
+use Revolution\Bluesky\Crypto\JsonWebToken;
 use Revolution\Bluesky\Facades\Bluesky;
-use Revolution\Bluesky\Socialite\Key\JsonWebToken;
 use Revolution\Bluesky\Support\DidDocument;
 use Revolution\Bluesky\Support\Identity;
 

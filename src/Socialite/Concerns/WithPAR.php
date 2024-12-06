@@ -8,7 +8,7 @@ use Illuminate\Http\Client\Response;
 use Illuminate\Support\Facades\Http;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
-use Revolution\Bluesky\Socialite\Key\DPoP;
+use Revolution\Bluesky\Crypto\DPoP;
 
 /**
  * Pushed Authentication Request.

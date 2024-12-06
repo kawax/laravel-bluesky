@@ -10,13 +10,13 @@ use Laravel\Socialite\Two\AbstractProvider;
 use Laravel\Socialite\Two\InvalidStateException;
 use Laravel\Socialite\Two\ProviderInterface;
 use Laravel\Socialite\Two\User;
+use Revolution\Bluesky\Crypto\DPoP;
 use Revolution\Bluesky\Socialite\Concerns\WithAuthServer;
 use Revolution\Bluesky\Socialite\Concerns\WithClientAssertion;
 use Revolution\Bluesky\Socialite\Concerns\WithOAuthSession;
 use Revolution\Bluesky\Socialite\Concerns\WithPAR;
 use Revolution\Bluesky\Socialite\Concerns\WithPDS;
 use Revolution\Bluesky\Socialite\Concerns\WithTokenRequest;
-use Revolution\Bluesky\Socialite\Key\DPoP;
 
 class BlueskyProvider extends AbstractProvider implements ProviderInterface
 {

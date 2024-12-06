@@ -11,9 +11,9 @@ use Illuminate\Http\Client\Response;
 use Illuminate\Support\Facades\Http;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
+use Revolution\Bluesky\Crypto\DPoP;
 use Revolution\Bluesky\Events\DPoPNonceReceived;
 use Revolution\Bluesky\Events\RefreshTokenReplayed;
-use Revolution\Bluesky\Socialite\Key\DPoP;
 
 trait WithTokenRequest
 {

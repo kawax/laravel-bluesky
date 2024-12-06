@@ -6,6 +6,7 @@ namespace Revolution\Bluesky\Socialite\Key;
 
 use Illuminate\Contracts\Support\Arrayable;
 use Illuminate\Contracts\Support\Jsonable;
+use Revolution\Bluesky\Crypto\JsonWebKey;
 use Stringable;
 
 final class JsonWebKeySet implements Arrayable, Jsonable, Stringable

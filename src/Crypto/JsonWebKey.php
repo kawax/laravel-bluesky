@@ -2,14 +2,13 @@
 
 declare(strict_types=1);
 
-namespace Revolution\Bluesky\Socialite\Key;
+namespace Revolution\Bluesky\Crypto;
 
 use Illuminate\Contracts\Support\Arrayable;
 use Illuminate\Contracts\Support\Jsonable;
 use Illuminate\Support\Traits\Tappable;
 use phpseclib3\Crypt\EC\PrivateKey;
 use phpseclib3\Crypt\EC\PublicKey;
-use Revolution\Bluesky\Crypto\P256;
 use Stringable;
 
 final class JsonWebKey implements Arrayable, Jsonable, Stringable
