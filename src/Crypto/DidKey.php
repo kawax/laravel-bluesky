@@ -11,6 +11,8 @@ use phpseclib3\Crypt\EC\PublicKey;
 use Revolution\Bluesky\Crypto\Format\Base58btc;
 
 /**
+ * did key.
+ *
  * ```
  * // did:key: format
  *
@@ -30,6 +32,8 @@ class DidKey
     ];
 
     /**
+     * Did key to Public key.
+     *
      * ```
      * use Revolution\Bluesky\Crypto\DidKey;
      *
@@ -66,6 +70,8 @@ class DidKey
     }
 
     /**
+     * Encode public key.
+     *
      * ```
      * use Revolution\Bluesky\Crypto\DidKey;
      *
@@ -87,6 +93,8 @@ class DidKey
     }
 
     /**
+     * Public key to Did key.
+     *
      * ```
      * use Revolution\Bluesky\Crypto\DidKey;
      *

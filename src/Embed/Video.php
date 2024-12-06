@@ -5,8 +5,8 @@ declare(strict_types=1);
 namespace Revolution\Bluesky\Embed;
 
 use Illuminate\Contracts\Support\Arrayable;
-use Revolution\Bluesky\Types\BlobRef;
 use Revolution\AtProto\Lexicon\Union\App\Bsky\Embed\AbstractVideo;
+use Revolution\Bluesky\Types\BlobRef;
 
 final class Video extends AbstractVideo implements Arrayable
 {

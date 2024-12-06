@@ -54,8 +54,8 @@ trait HasShortHand
 
     /**
      * @param  string|null  $actor  DID or handle.
-     *
      * @return Response{cursor: string, feed: array<array{post: array, reply: array}>}
+     *
      * @throws AuthenticationException
      */
     public function getAuthorFeed(#[Format('at-identifier')] ?string $actor = null, ?int $limit = 50, ?string $cursor = null, #[KnownValues(['posts_with_replies', 'posts_no_replies', 'posts_with_media', 'posts_and_author_threads'])] ?string $filter = 'posts_with_replies', ?bool $includePins = null): Response
@@ -72,6 +72,7 @@ trait HasShortHand
 
     /**
      * @param  string|null  $actor  DID or handle.
+     *
      * @throws AuthenticationException
      */
     public function getActorFeeds(#[Format('at-identifier')] ?string $actor = null, ?int $limit = 50, ?string $cursor = null): Response
@@ -108,6 +109,7 @@ trait HasShortHand
 
     /**
      * @param  string|null  $actor  DID or handle.
+     *
      * @throws AuthenticationException
      */
     public function getProfile(#[Format('at-identifier')] ?string $actor = null): Response
@@ -130,6 +132,8 @@ trait HasShortHand
     }
 
     /**
+     * Upsert Profile.
+     *
      * ```
      * use Revolution\Bluesky\Record\Profile;
      *
@@ -144,6 +148,7 @@ trait HasShortHand
      * ```
      *
      * @param  callable(Profile $profile): Profile  $callback
+     *
      * @throws AuthenticationException
      */
     public function upsertProfile(callable $callback): Response
@@ -170,6 +175,7 @@ trait HasShortHand
      * Create new post.
      *
      * @return Response{uri: string, cid: string, commit: array{cid: string, rev: string}, validationStatus: string}
+     *
      * @throws AuthenticationException
      */
     public function post(Post|string|array $text): Response
@@ -243,6 +249,7 @@ trait HasShortHand
 
     /**
      * @param  string|null  $actor  DID or handle.
+     *
      * @throws AuthenticationException
      */
     public function getActorLikes(#[Format('at-identifier')] ?string $actor = null, ?int $limit = 50, ?string $cursor = null): Response
@@ -337,6 +344,7 @@ trait HasShortHand
 
     /**
      * @param  string|null  $actor  DID or handle.
+     *
      * @throws AuthenticationException
      */
     public function getFollowers(#[Format('at-identifier')] ?string $actor = null, ?int $limit = 50, ?string $cursor = null): Response
@@ -351,6 +359,7 @@ trait HasShortHand
 
     /**
      * @param  string|null  $actor  DID or handle.
+     *
      * @throws AuthenticationException
      */
     public function getFollows(#[Format('at-identifier')] ?string $actor = null, ?int $limit = 50, ?string $cursor = null): Response
@@ -432,6 +441,7 @@ trait HasShortHand
      * @param  StreamInterface|string  $data  Video data
      * @param  string  $type  File mimetype
      * @return Response{did: string, error?: string, jobId: string, message?: string, state: string}
+     *
      * @throws AuthenticationException
      */
     public function uploadVideo(StreamInterface|string $data, #[KnownValues(['video/mp4', 'video/mpeg', 'video/webm', 'video/quicktime', 'image/gif'])] string $type = 'video/mp4'): Response
@@ -482,6 +492,8 @@ trait HasShortHand
     }
 
     /**
+     * Get service auth token.
+     *
      * ```
      * $token = Bluesky::withToken()->getServiceAuth(aud: 'did:web:video.bsky.app', exp: now()->addMinutes(5)->timestamp, lxm: 'app.bsky.video.getUploadLimits')->json('token');
      * ```
@@ -502,6 +514,7 @@ trait HasShortHand
      * Run again to update your Feed Generator information.
      *
      * @param  BackedEnum|string  $name  Generator short name
+     *
      * @throws AuthenticationException
      */
     public function publishFeedGenerator(BackedEnum|string $name, Generator $generator): Response
@@ -567,6 +580,7 @@ trait HasShortHand
 
     /**
      * @param  string  $uri  at://did:plc:.../app.bsky.graph.block/{rkey}
+     *
      * @throws AuthenticationException
      */
     public function unblock(#[Format('at-uri')] string $uri): Response
@@ -624,6 +638,7 @@ trait HasShortHand
 
     /**
      * @param  string  $list  AT-URI
+     *
      * @throws AuthenticationException
      */
     public function blockModList(#[Format('at-uri')] string $list): Response
@@ -641,6 +656,7 @@ trait HasShortHand
 
     /**
      * @param  string  $list  AT-URI
+     *
      * @throws AuthenticationException
      */
     public function unblockModList(#[Format('at-uri')] string $list): Response
@@ -774,6 +790,8 @@ trait HasShortHand
     }
 
     /**
+     * Create ThreadGate.
+     *
      * ```
      * use Revolution\Bluesky\Record\ThreadGate;
      *

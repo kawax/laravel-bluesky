@@ -14,6 +14,8 @@ use ReflectionParameter;
 use Revolution\AtProto\Lexicon\Attributes\Post;
 
 /**
+ * Generate client trait.
+ *
  * ```
  * vendor/bin/testbench bluesky:lexicon-client
  * ```

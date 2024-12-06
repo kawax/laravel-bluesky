@@ -56,6 +56,7 @@ class DownloadBlobsCommand extends Command
 
         if (! Identity::isDID($did)) {
             $this->error('Invalid actor');
+
             return 1;
         }
 

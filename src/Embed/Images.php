@@ -5,8 +5,8 @@ declare(strict_types=1);
 namespace Revolution\Bluesky\Embed;
 
 use Illuminate\Contracts\Support\Arrayable;
-use Revolution\Bluesky\Types\BlobRef;
 use Revolution\AtProto\Lexicon\Union\App\Bsky\Embed\AbstractImages;
+use Revolution\Bluesky\Types\BlobRef;
 
 final class Images extends AbstractImages implements Arrayable
 {
@@ -17,6 +17,7 @@ final class Images extends AbstractImages implements Arrayable
 
     /**
      * Pass an Array or BlobRef.
+     *
      * ```
      * use Revolution\Bluesky\Types\BlobRef;
      *

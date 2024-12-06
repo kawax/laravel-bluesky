@@ -32,8 +32,15 @@ use Revolution\Bluesky\Client\SubClient\VideoClient;
 use Revolution\Bluesky\Contracts\XrpcClient;
 
 class AtpClient implements XrpcClient,
-    Actor, Feed, Graph, Labeler,
-    Identity, Label, Moderation, Repo, Server
+    Actor,
+    Feed,
+    Graph,
+    Labeler,
+    Identity,
+    Label,
+    Moderation,
+    Repo,
+    Server
 {
     use Macroable;
     use Conditionable;
@@ -88,6 +95,8 @@ class AtpClient implements XrpcClient,
     }
 
     /**
+     * AdminClient.
+     *
      * com.atproto.admin
      */
     public function admin(): AdminClient
@@ -96,6 +105,8 @@ class AtpClient implements XrpcClient,
     }
 
     /**
+     * SyncClient.
+     *
      * com.atproto.sync
      */
     public function sync(): SyncClient

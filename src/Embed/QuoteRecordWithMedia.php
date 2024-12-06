@@ -13,8 +13,7 @@ final class QuoteRecordWithMedia extends AbstractRecordWithMedia implements Arra
     public function __construct(
         StrongRef $record,
         Images|Video|External $media,
-    )
-    {
+    ) {
         $this->record = $record->toArray();
         $this->media = $media->toArray();
     }

@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Revolution\Bluesky\Facades;
 
 use BackedEnum;
-use Illuminate\Http\Client\PendingRequest;
 use Illuminate\Http\Client\Response;
 use Illuminate\Support\Facades\Facade;
 use Illuminate\Support\Traits\Conditionable;

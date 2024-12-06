@@ -8,8 +8,8 @@ use Closure;
 use Illuminate\Contracts\Support\Arrayable;
 use Revolution\AtProto\Lexicon\Attributes\Blob;
 use Revolution\AtProto\Lexicon\Attributes\Format;
-use Revolution\Bluesky\Types\BlobRef;
 use Revolution\AtProto\Lexicon\Union\App\Bsky\Embed\AbstractExternal;
+use Revolution\Bluesky\Types\BlobRef;
 
 /**
  * External link / Social card.
