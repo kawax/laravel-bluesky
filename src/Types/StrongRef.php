@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Revolution\Bluesky\Types;
 
 use Illuminate\Contracts\Support\Arrayable;

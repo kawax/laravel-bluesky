@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Tests\Feature\Support;
 
 use Illuminate\Support\Facades\Http;

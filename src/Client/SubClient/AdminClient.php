@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Revolution\Bluesky\Client\SubClient;
 
 use Revolution\AtProto\Lexicon\Contracts\Com\Atproto\Admin;

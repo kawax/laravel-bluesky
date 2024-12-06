@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Tests\Feature\Socialite;
 
 use Illuminate\Http\Request;

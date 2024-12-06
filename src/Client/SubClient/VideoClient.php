@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Revolution\Bluesky\Client\SubClient;
 
 use Illuminate\Http\Client\Response;

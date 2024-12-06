@@ -1,12 +1,13 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Revolution\Bluesky;
 
 use BackedEnum;
 use Illuminate\Auth\AuthenticationException;
 use Illuminate\Http\Client\Response;
 use Illuminate\Support\Facades\Http;
-use Illuminate\Support\Str;
 use InvalidArgumentException;
 use Psr\Http\Message\StreamInterface;
 use Revolution\AtProto\Lexicon\Attributes\Format;

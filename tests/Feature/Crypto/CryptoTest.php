@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Tests\Feature\Crypto;
 
 use phpseclib3\Crypt\EC;

@@ -44,8 +44,8 @@ class Identity
     public function resolveIdentity(?string $id, bool $cache = true): Response
     {
         return match (true) {
-            self::isHandle($id) => $this->resolveDid($this->resolveHandle($id, $cache), $cache),
-            self::isDID($id) => $this->resolveDid($id, $cache),
+            self::isHandle($id) => $this->resolveDID($this->resolveHandle($id, $cache), $cache),
+            self::isDID($id) => $this->resolveDID($id, $cache),
             default => throw new InvalidArgumentException('Invalid ID provided.'),
         };
     }
