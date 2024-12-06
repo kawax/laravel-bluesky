@@ -7,6 +7,7 @@ namespace Revolution\Bluesky\Crypto;
 use Illuminate\Contracts\Support\Arrayable;
 use Illuminate\Contracts\Support\Jsonable;
 use Illuminate\Support\Traits\Tappable;
+use phpseclib3\Crypt\EC\Formats\Keys\PKCS8;
 use phpseclib3\Crypt\EC\PrivateKey;
 use phpseclib3\Crypt\EC\PublicKey;
 use Stringable;
@@ -53,7 +54,7 @@ final class JsonWebKey implements Arrayable, Jsonable, Stringable
 
     public function toPEM(): string
     {
-        return (string) $this->key;
+        return $this->key->toString(class_basename(PKCS8::class));
     }
 
     public function toArray(): array
