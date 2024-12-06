@@ -9,6 +9,7 @@ use InvalidArgumentException;
 use phpseclib3\Crypt\EC\BaseCurves\Base;
 use phpseclib3\Crypt\EC\BaseCurves\Prime;
 use phpseclib3\Crypt\EC\Formats\Keys\Common;
+use phpseclib3\Math\PrimeField\Integer as PrimeInteger;
 use Revolution\Bluesky\Crypto\DidKey;
 use Revolution\Bluesky\Crypto\K256;
 use Revolution\Bluesky\Crypto\P256;
@@ -22,7 +23,7 @@ final class Base58btc
     use Common;
 
     /**
-     * @param  array<\phpseclib3\Math\PrimeField\Integer, \phpseclib3\Math\PrimeField\Integer>  $publicKey
+     * @param  array<PrimeInteger, PrimeInteger>  $publicKey
      */
     public static function savePublicKey(Base $curve, array $publicKey, array $options = []): string
     {
@@ -63,7 +64,7 @@ final class Base58btc
         /** @var Prime $curve */
         $curve = self::loadCurveByParam(['namedCurve' => $curve_name]);
 
-        /** @var array<\phpseclib3\Math\PrimeField\Integer, \phpseclib3\Math\PrimeField\Integer> $point */
+        /** @var array<PrimeInteger, PrimeInteger> $point */
         $point = self::extractPoint("\0".$keyBytes, $curve);
 
         if (! $curve->verifyPoint($point)) {
