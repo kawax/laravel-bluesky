@@ -14,7 +14,7 @@ use phpseclib3\Math\PrimeField\Integer;
 final class Compress
 {
     /**
-     * @param  array<Integer, Integer>  $publicKey
+     * @param  array<\phpseclib3\Math\PrimeField\Integer, \phpseclib3\Math\PrimeField\Integer>  $publicKey
      */
     public static function savePublicKey(Base $curve, array $publicKey, array $options = []): string
     {

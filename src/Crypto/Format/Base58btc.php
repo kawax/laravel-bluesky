@@ -23,7 +23,7 @@ final class Base58btc
     use Common;
 
     /**
-     * @param  array<Integer, Integer>  $publicKey
+     * @param  array<\phpseclib3\Math\PrimeField\Integer, \phpseclib3\Math\PrimeField\Integer>  $publicKey
      */
     public static function savePublicKey(Base $curve, array $publicKey, array $options = []): string
     {
@@ -64,7 +64,7 @@ final class Base58btc
         /** @var Prime $curve */
         $curve = self::loadCurveByParam(['namedCurve' => $curve_name]);
 
-        /** @var array<Integer, Integer> $point */
+        /** @var array<\phpseclib3\Math\PrimeField\Integer, \phpseclib3\Math\PrimeField\Integer> $point */
         $point = self::extractPoint("\0".$keyBytes, $curve);
 
         if (! $curve->verifyPoint($point)) {
