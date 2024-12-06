@@ -4,7 +4,7 @@ namespace Revolution\Bluesky\Crypto\Format;
 
 use Illuminate\Support\Str;
 use InvalidArgumentException;
-use phpseclib3\Crypt\EC\BaseCurves\Base as BaseCurve;
+use phpseclib3\Crypt\EC\BaseCurves\Base;
 use phpseclib3\Crypt\EC\Formats\Keys\Common;
 use phpseclib3\Math\PrimeField\Integer;
 use Revolution\Bluesky\Crypto\DidKey;
@@ -22,7 +22,7 @@ final class Base58btc
     /**
      * @param  array<Integer, Integer>  $publicKey
      */
-    public static function savePublicKey(BaseCurve $curve, array $publicKey, array $options = []): string
+    public static function savePublicKey(Base $curve, array $publicKey, array $options = []): string
     {
         $compressed = Compress::savePublicKey($curve, $publicKey);
 
