@@ -50,7 +50,8 @@ class VideoClient implements XrpcClient, Video
 
         return $this->http()
             ->withBody($data, $type)
-            ->post(Video::uploadVideo.'?'.http_build_query([
+            ->post(Video::uploadVideo.'?'.
+                http_build_query([
                     'did' => $did,
                     'name' => $name,
                 ]),

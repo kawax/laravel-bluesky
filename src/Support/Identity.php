@@ -105,12 +105,15 @@ class Identity
     }
 
     /**
+     * resolveDID.
+     *
      * ```
      * $didDoc = Bluesky::identity()->resolveDID('did:plc:***')->json();
      * ```
      *
      * @param  string|null  $did  e.g. "did:plc:1234..." "did:web:alice.test"
      * @return Response{id: string, alsoKnownAs: array, verificationMethod: array, service: array} didDoc
+     *
      * @link https://plc.directory/did:plc:ewvi7nxzyoun6zhxrhs64oiz
      */
     public function resolveDID(?string $did, bool $cache = true): Response

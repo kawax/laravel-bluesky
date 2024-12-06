@@ -6,14 +6,12 @@ namespace Revolution\Bluesky\Socialite\Concerns;
 
 use Illuminate\Http\Client\Response;
 use Illuminate\Support\Facades\Http;
-use Illuminate\Support\Str;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
-use Revolution\Bluesky\Events\DPoPNonceReceived;
 use Revolution\Bluesky\Socialite\Key\DPoP;
 
 /**
- * Pushed Authentication Request
+ * Pushed Authentication Request.
  */
 trait WithPAR
 {

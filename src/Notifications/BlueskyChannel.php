@@ -21,7 +21,6 @@ class BlueskyChannel
     {
         /**
          * @var Post $post
-         * @phpstan-ignore-next-line
          */
         $post = $notification->toBluesky($notifiable);
 

@@ -4,10 +4,9 @@ declare(strict_types=1);
 
 namespace Revolution\Bluesky\Socialite\Concerns;
 
-use Illuminate\Support\Arr;
+use InvalidArgumentException;
 use Revolution\Bluesky\Facades\Bluesky;
 use Revolution\Bluesky\Session\OAuthSession;
-use InvalidArgumentException;
 use Revolution\Bluesky\Support\DidDocument;
 use Revolution\Bluesky\Support\Identity;
 

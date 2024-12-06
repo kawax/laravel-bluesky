@@ -45,6 +45,8 @@ final readonly class AtUri implements Stringable
     }
 
     /**
+     * parse.
+     *
      * ```
      * $at = AtUri::parse('at://did:plc:+++/app.bsky.feed.post/+++');
      * $at->repo();
@@ -60,6 +62,8 @@ final readonly class AtUri implements Stringable
     }
 
     /**
+     * make.
+     *
      * ```
      * $at = AtUri::make(repo: 'did:plc:+++', collection: 'app.bsky.feed.post', rkey: '+++');
      * $uri = $at->__toString();// 'at://did:plc:+++/app.bsky.feed.post/+++'
@@ -102,6 +106,8 @@ final readonly class AtUri implements Stringable
     }
 
     /**
+     * toString.
+     *
      * ```
      * $at = AtUri::parse('at://did:plc:+++/app.bsky.feed.post/+++');
      * $uri = (string) $at;

@@ -6,9 +6,9 @@ namespace Revolution\Bluesky\Record;
 
 use Illuminate\Contracts\Support\Arrayable;
 use Revolution\AtProto\Lexicon\Attributes\Format;
+use Revolution\AtProto\Lexicon\Enum\ThreadGateRule;
 use Revolution\AtProto\Lexicon\Record\App\Bsky\Feed\AbstractThreadgate;
 use Revolution\Bluesky\Contracts\Recordable;
-use Revolution\AtProto\Lexicon\Enum\ThreadGateRule;
 use Revolution\Bluesky\Types\BlankUnion;
 
 final class ThreadGate extends AbstractThreadgate implements Arrayable, Recordable
@@ -22,6 +22,8 @@ final class ThreadGate extends AbstractThreadgate implements Arrayable, Recordab
     }
 
     /**
+     * create.
+     *
      * ```
      * use Revolution\Bluesky\Record\ThreadGate;
      *

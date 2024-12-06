@@ -16,6 +16,7 @@ class OAuthConfig
 
     /**
      * Overrides the `client-metadata.json` response.
+     *
      * ```
      * // AppServiceProvider::boot()
      *
@@ -54,6 +55,7 @@ class OAuthConfig
 
     /**
      * Overrides the `jwks.json` response.
+     *
      * ```
      * // AppServiceProvider::boot()
      *

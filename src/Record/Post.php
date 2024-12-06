@@ -26,6 +26,8 @@ final class Post extends AbstractPost implements Arrayable, Recordable
     }
 
     /**
+     * create.
+     *
      * ```
      * use Revolution\Bluesky\Record\Post;
      *
@@ -49,6 +51,8 @@ final class Post extends AbstractPost implements Arrayable, Recordable
     }
 
     /**
+     * build.
+     *
      * ```
      * use Revolution\Bluesky\Record\Post;
      * use Revolution\Bluesky\RichText\TextBuilder;
@@ -90,6 +94,8 @@ final class Post extends AbstractPost implements Arrayable, Recordable
     }
 
     /**
+     * embed.
+     *
      * ```
      * use Revolution\Bluesky\Embed\External;
      *
@@ -110,6 +116,8 @@ final class Post extends AbstractPost implements Arrayable, Recordable
     }
 
     /**
+     * langs.
+     *
      * ```
      * $post->langs(['en-US']);
      * ```
@@ -122,6 +130,8 @@ final class Post extends AbstractPost implements Arrayable, Recordable
     }
 
     /**
+     * reply.
+     *
      * ```
      * use Revolution\Bluesky\Types\ReplyRef;
      * use Revolution\Bluesky\Types\StrongRef;

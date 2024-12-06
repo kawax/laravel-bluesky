@@ -11,6 +11,8 @@ use Revolution\Bluesky\Crypto\P256;
 final class JsonWebToken
 {
     /**
+     * encode.
+     *
      * ```
      * $head = ['type' => 'JWT', 'alg' => 'ES256'];
      * $payload = ['iss' => '', 'aud' => ''];

@@ -36,7 +36,7 @@ class SupportTest extends TestCase
                     'type' => 'Multikey',
                     'controller' => '',
                     'publicKeyMultibase' => 'ztest',
-                ]
+                ],
             ],
             'service' => [
                 [

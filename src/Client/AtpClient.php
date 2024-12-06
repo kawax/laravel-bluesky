@@ -31,7 +31,8 @@ use Revolution\Bluesky\Client\SubClient\SyncClient;
 use Revolution\Bluesky\Client\SubClient\VideoClient;
 use Revolution\Bluesky\Contracts\XrpcClient;
 
-class AtpClient implements XrpcClient,
+class AtpClient implements
+    XrpcClient,
     Actor,
     Feed,
     Graph,

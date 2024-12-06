@@ -22,6 +22,8 @@ final class StrongRef extends AbstractStrongRef implements Arrayable
     }
 
     /**
+     * to.
+     *
      * ```
      * StrongRef::to(uri: 'at://', cid: '...');
      * ```

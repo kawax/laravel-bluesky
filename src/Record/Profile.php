@@ -149,6 +149,8 @@ final class Profile extends AbstractProfile implements Arrayable, Recordable
     }
 
     /**
+     * pinnedPost.
+     *
      * ```
      * use Revolution\Bluesky\Types\StrongRef;
      *

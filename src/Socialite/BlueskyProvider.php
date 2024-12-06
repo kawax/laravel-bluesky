@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Revolution\Bluesky\Socialite;
 
 use Illuminate\Support\Str;
+use InvalidArgumentException;
 use Laravel\Socialite\Two\AbstractProvider;
 use Laravel\Socialite\Two\InvalidStateException;
 use Laravel\Socialite\Two\ProviderInterface;
@@ -15,7 +16,6 @@ use Revolution\Bluesky\Socialite\Concerns\WithOAuthSession;
 use Revolution\Bluesky\Socialite\Concerns\WithPAR;
 use Revolution\Bluesky\Socialite\Concerns\WithPDS;
 use Revolution\Bluesky\Socialite\Concerns\WithTokenRequest;
-use InvalidArgumentException;
 use Revolution\Bluesky\Socialite\Key\DPoP;
 
 class BlueskyProvider extends AbstractProvider implements ProviderInterface
@@ -78,7 +78,8 @@ class BlueskyProvider extends AbstractProvider implements ProviderInterface
 
         $authorize_url = $this->authServerMeta('authorization_endpoint');
 
-        return $authorize_url.'?'.http_build_query([
+        return $authorize_url.'?'.
+            http_build_query([
                 'client_id' => $this->clientId,
                 'request_uri' => $par_request_uri,
             ]);
@@ -132,7 +133,9 @@ class BlueskyProvider extends AbstractProvider implements ProviderInterface
     }
 
     /**
-     * Set service/auth server/issuer. e.g. "https://bsky.social" "http://localhost:2583"
+     * Set service/auth server/issuer.
+     *
+     * e.g. "https://bsky.social" "http://localhost:2583"
      */
     public function service(string $service): self
     {
@@ -146,7 +149,9 @@ class BlueskyProvider extends AbstractProvider implements ProviderInterface
     }
 
     /**
-     * Set service/auth server/issuer. e.g. "https://bsky.social" "http://localhost:2583"
+     * Set service/auth server/issuer.
+     *
+     * e.g. "https://bsky.social" "http://localhost:2583"
      */
     public function issuer(string $iss): self
     {

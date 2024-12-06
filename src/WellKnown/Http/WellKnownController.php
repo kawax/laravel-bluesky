@@ -9,7 +9,7 @@ use Revolution\Bluesky\WellKnown\WellKnownConfig;
 class WellKnownController
 {
     /**
-     * `/.well-known/did.json`
+     * `/.well-known/did.json`.
      */
     public function did()
     {
@@ -17,7 +17,7 @@ class WellKnownController
     }
 
     /**
-     * `/.well-known/atproto-did`
+     * `/.well-known/atproto-did`.
      */
     public function atproto()
     {

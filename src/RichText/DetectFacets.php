@@ -11,6 +11,7 @@ use Revolution\Bluesky\Support\Identity;
 
 /**
  * @internal
+ *
  * @link https://github.com/bluesky-social/atproto/blob/main/packages/api/src/rich-text/detection.ts
  */
 final class DetectFacets

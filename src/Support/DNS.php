@@ -18,7 +18,7 @@ class DNS
             ];
         }
 
-        return dns_get_record($hostname, $type) ?: [];// @codeCoverageIgnore
+        return dns_get_record($hostname, $type) ?: []; // @codeCoverageIgnore
     }
 
     /**

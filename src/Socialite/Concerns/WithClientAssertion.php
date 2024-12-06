@@ -5,8 +5,8 @@ declare(strict_types=1);
 namespace Revolution\Bluesky\Socialite\Concerns;
 
 use Illuminate\Support\Str;
-use Revolution\Bluesky\Socialite\Key\OAuthKey;
 use Revolution\Bluesky\Socialite\Key\JsonWebToken;
+use Revolution\Bluesky\Socialite\Key\OAuthKey;
 
 trait WithClientAssertion
 {

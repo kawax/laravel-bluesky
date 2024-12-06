@@ -10,8 +10,8 @@ use Illuminate\Support\Traits\Macroable;
 use Revolution\AtProto\Lexicon\Attributes\NSID;
 use Revolution\AtProto\Lexicon\Attributes\Ref;
 use Revolution\AtProto\Lexicon\Attributes\Union;
-use Revolution\Bluesky\RichText\TextBuilder;
 use Revolution\Bluesky\Record\Post;
+use Revolution\Bluesky\RichText\TextBuilder;
 
 /**
  * Message for Chat / DM / Private Channel. Almost the same as {@link Post} but with less features.
@@ -40,6 +40,8 @@ final class BlueskyPrivateMessage implements Arrayable
     }
 
     /**
+     * create.
+     *
      * ```
      * use Revolution\Bluesky\Notifications\BlueskyPrivateMessage;
      *
@@ -63,6 +65,8 @@ final class BlueskyPrivateMessage implements Arrayable
     }
 
     /**
+     * build.
+     *
      * ```
      * use Revolution\Bluesky\Notifications\BlueskyPrivateMessage;
      * use Revolution\Bluesky\RichText\TextBuilder;
@@ -105,6 +109,7 @@ final class BlueskyPrivateMessage implements Arrayable
 
     /**
      * Unlike {@link Post}, only {@link QuoteRecord} Embed is supported.
+     *
      * ```
      * use Revolution\Bluesky\Embed\QuoteRecord;
      *

@@ -4,10 +4,8 @@ declare(strict_types=1);
 
 namespace Revolution\Bluesky\Record;
 
-use BackedEnum;
 use Illuminate\Contracts\Support\Arrayable;
 use Illuminate\Support\Collection;
-use Revolution\AtProto\Lexicon\Attributes\KnownValues;
 use Revolution\AtProto\Lexicon\Enum\ListPurpose;
 use Revolution\AtProto\Lexicon\Record\App\Bsky\Graph\AbstractList;
 use Revolution\Bluesky\Contracts\Recordable;
@@ -75,6 +73,8 @@ final class UserList extends AbstractList implements Arrayable, Recordable
     }
 
     /**
+     * avatar.
+     *
      * accept: ['image/png', 'image/jpeg']
      * maxSize: 1000000
      *
@@ -108,6 +108,8 @@ final class UserList extends AbstractList implements Arrayable, Recordable
     }
 
     /**
+     * SelfLabels.
+     *
      * ```
      * use Revolution\Bluesky\Types\SelfLabels;
      *

@@ -9,6 +9,8 @@ use Illuminate\Contracts\Validation\ValidationRule;
 use Revolution\Bluesky\Support\Identity;
 
 /**
+ * AtDID.
+ *
  * ```
  * use Revolution\Bluesky\Validation\AtDID;
  *

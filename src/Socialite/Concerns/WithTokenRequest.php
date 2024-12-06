@@ -82,6 +82,7 @@ trait WithTokenRequest
      *
      * @param  string  $code
      * @return array
+     *
      * @throws RequestException
      * @throws ConnectionException
      * @throws AuthenticationException
@@ -125,6 +126,7 @@ trait WithTokenRequest
      *
      * @param  string  $refreshToken
      * @return array
+     *
      * @throws RequestException
      * @throws ConnectionException
      * @throws AuthenticationException
