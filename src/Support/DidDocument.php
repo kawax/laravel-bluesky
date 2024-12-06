@@ -69,6 +69,17 @@ final readonly class DidDocument implements Arrayable
 
     /**
      * Get public key.
+     *
+     * This key can be decoded with {@link DidKey}.
+     *
+     * ```
+     * use Revolution\Bluesky\Crypto\DidKey;
+     *
+     * $pubkey = $didDoc->publicKey();
+     *
+     * $parsed = DidKey::parse($pubkey);
+     * $pubkey_pem = $parsed['key'];
+     * ```
      */
     public function publicKey(?string $default = null): ?string
     {
