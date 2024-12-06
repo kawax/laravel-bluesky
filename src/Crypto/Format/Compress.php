@@ -6,7 +6,6 @@ namespace Revolution\Bluesky\Crypto\Format;
 
 use Illuminate\Support\Str;
 use phpseclib3\Crypt\EC\BaseCurves\Base;
-use phpseclib3\Math\PrimeField\Integer;
 
 /**
  * phpseclib custom key format.

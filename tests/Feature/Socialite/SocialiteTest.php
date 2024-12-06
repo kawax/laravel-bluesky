@@ -14,10 +14,10 @@ use Revolution\Bluesky\Events\DPoPNonceReceived;
 use Revolution\Bluesky\Facades\Bluesky;
 use Revolution\Bluesky\Session\OAuthSession;
 use Revolution\Bluesky\Socialite\BlueskyProvider;
-use Revolution\Bluesky\Socialite\Key\OAuthKey;
 use Revolution\Bluesky\Socialite\Key\JsonWebKey;
 use Revolution\Bluesky\Socialite\Key\JsonWebKeySet;
 use Revolution\Bluesky\Socialite\Key\JsonWebToken;
+use Revolution\Bluesky\Socialite\Key\OAuthKey;
 use Revolution\Bluesky\Socialite\OAuthConfig;
 use Tests\TestCase;
 

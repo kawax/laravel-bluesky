@@ -364,7 +364,8 @@ class ClientTest extends TestCase
 
     public function test_with_bluesky_trait()
     {
-        $user = new class {
+        $user = new class
+        {
             use WithBluesky;
 
             protected function tokenForBluesky(): OAuthSession
