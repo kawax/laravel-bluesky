@@ -9,10 +9,9 @@ use Illuminate\Http\Client\PendingRequest;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Traits\Conditionable;
 use Illuminate\Support\Traits\Macroable;
-use Revolution\Bluesky\Contracts\Agent;
 use Revolution\AtProto\Lexicon\Contracts\Com\Atproto\Server;
+use Revolution\Bluesky\Contracts\Agent;
 use Revolution\Bluesky\Session\LegacySession;
-use Revolution\Bluesky\Support\DidDocument;
 
 /**
  * App password based agent.
