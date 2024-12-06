@@ -6,6 +6,7 @@ namespace Revolution\Bluesky\Crypto\Format;
 
 use Illuminate\Support\Str;
 use phpseclib3\Crypt\EC\BaseCurves\Base;
+use phpseclib3\Math\PrimeField\Integer as PrimeInteger;
 
 /**
  * phpseclib custom key format.
@@ -13,7 +14,7 @@ use phpseclib3\Crypt\EC\BaseCurves\Base;
 final class Compress
 {
     /**
-     * @param  array<\phpseclib3\Math\PrimeField\Integer, \phpseclib3\Math\PrimeField\Integer>  $publicKey
+     * @param  array<PrimeInteger, PrimeInteger>  $publicKey
      */
     public static function savePublicKey(Base $curve, array $publicKey, array $options = []): string
     {
