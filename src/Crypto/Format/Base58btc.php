@@ -29,7 +29,7 @@ final class Base58btc
         $alg_prefix = match (class_basename($curve::class)) {
             P256::CURVE => P256::MULTIBASE_PREFIX,
             K256::CURVE => K256::MULTIBASE_PREFIX,
-            default => throw new InvalidArgumentException(),
+            default => throw new InvalidArgumentException('Unsupported format.'),
         };
 
         return Multibase::encode(Multibase::BASE58BTC, $alg_prefix.hex2bin($compressed));
@@ -38,7 +38,7 @@ final class Base58btc
     public static function load($key, $password = ''): array
     {
         // did:key:z***
-        $key = Str::chopStart($key, DidKey::DID_KEY_PREFIX);
+        $key = Str::chopStart($key, DidKey::PREFIX);
 
         // decode base58btc
         $keyBytes = Multibase::decode($key);
@@ -54,9 +54,8 @@ final class Base58btc
         // remove alg prefix
         $keyBytes = substr($keyBytes, offset: 2, length: null);
 
-        // compressed key length must be 33.
         if (strlen($keyBytes) !== 33) {
-            throw new InvalidArgumentException();
+            throw new InvalidArgumentException('compressed key length must be 33.');
         }
 
         $curve = self::loadCurveByParam(['namedCurve' => $curve_name]);
