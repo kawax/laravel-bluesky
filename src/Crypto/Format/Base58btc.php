@@ -17,6 +17,8 @@ use YOCLIB\Multiformats\Multibase\Multibase;
 
 /**
  * phpseclib custom key format.
+ *
+ * Supports both loading and saving base58btc encoded public key.
  */
 final class Base58btc
 {
