@@ -2,7 +2,6 @@
 
 namespace Tests\Feature\Socialite;
 
-use Illuminate\Http\Client\Response;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Facades\Http;
