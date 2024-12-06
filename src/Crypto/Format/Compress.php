@@ -10,6 +10,8 @@ use phpseclib3\Math\PrimeField\Integer as PrimeInteger;
 
 /**
  * phpseclib custom key format.
+ *
+ * Save as compressed public key.
  */
 final class Compress
 {
