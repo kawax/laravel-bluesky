@@ -20,7 +20,6 @@ jobs:
         uses: shivammathur/setup-php@v2 #https://github.com/shivammathur/setup-php
         with:
           php-version: ${{ matrix.php-versions }}
-          extensions: mbstring, bcmath
           coverage: xdebug
       - name: Install Composer dependencies
         run: composer install -q
