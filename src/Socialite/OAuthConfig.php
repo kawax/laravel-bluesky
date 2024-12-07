@@ -75,6 +75,6 @@ class OAuthConfig
             return call_user_func(static::$jwksUsing);
         }
 
-        return JsonWebKeySet::load();
+        return JsonWebKeySet::load()->toArray();
     }
 }
