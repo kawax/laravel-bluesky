@@ -3,7 +3,7 @@ Routes defined in the package
 
 Some routes are defined in the package. You can disable a route by setting it in config or `.env`.
 
-| path                                        | name                            |
+| path                                        | route name                      |
 |---------------------------------------------|---------------------------------|
 | `/bluesky/oauth/client-metadata.json`       | `bluesky.oauth.client-metadata` |
 | `/bluesky/oauth/jwks.json`                  | `bluesky.oauth.jwks`            |
