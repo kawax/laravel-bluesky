@@ -1,6 +1,8 @@
 Resolve Identity
 ====
 
+In Bluesky, mutual resolution of Handle, DID, etc. is often required.
+
 - https://docs.bsky.app/docs/advanced-guides/resolving-identities
 - https://atproto.com/guides/identity
 
