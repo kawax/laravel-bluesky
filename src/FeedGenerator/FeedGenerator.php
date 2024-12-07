@@ -30,9 +30,10 @@ final class FeedGenerator
      * FeedGenerator::register(name: 'artisan', algo: function (?int $limit, ?string $cursor, ?string $user, Request $request): array {
      *     // The implementation is entirely up to you.
      *
-     *     $response = Bluesky::searchPosts(q: '#laravel', limit: $limit, cursor: $cursor);
+     *     $response = Bluesky::searchPosts(q: '#laravel', until: $cursor, limit: $limit);
      *
-     *     $cursor = $response->json('cursor');
+     *     $cursor = data_get($response->collect('posts')->last(), 'indexedAt');
+     *
      *     $feed = $response->collect('posts')->map(function(array $post) {
      *         return ['post' => data_get($post, 'uri')];
      *     })->toArray();
