@@ -10,6 +10,7 @@ use Illuminate\Http\Client\Response;
 use Illuminate\Notifications\Notification;
 use Revolution\Bluesky\Facades\Bluesky;
 use Revolution\Bluesky\Record\Post;
+use RuntimeException;
 
 class BlueskyChannel
 {
@@ -24,6 +25,7 @@ class BlueskyChannel
          */
         $post = $notification->toBluesky($notifiable);
 
+        // @phpstan-ignore-next-line
         if (! $post instanceof Post) {
             return null; // @codeCoverageIgnore
         }
@@ -31,6 +33,7 @@ class BlueskyChannel
         /** @var BlueskyRoute $route */
         $route = $notifiable->routeNotificationFor('bluesky', $notification);
 
+        // @phpstan-ignore-next-line
         if (! $route instanceof BlueskyRoute) {
             return null; // @codeCoverageIgnore
         }
@@ -41,6 +44,7 @@ class BlueskyChannel
                 ->post($post),
             $route->isLegacy() => Bluesky::login($route->identifier, $route->password)
                 ->post($post),
+            default => throw new RuntimeException(),
         };
     }
 }
