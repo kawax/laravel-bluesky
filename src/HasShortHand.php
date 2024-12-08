@@ -13,7 +13,9 @@ use JetBrains\PhpStorm\ArrayShape;
 use Psr\Http\Message\StreamInterface;
 use Revolution\AtProto\Lexicon\Attributes\Format;
 use Revolution\AtProto\Lexicon\Attributes\KnownValues;
+use Revolution\AtProto\Lexicon\Contracts\App\Bsky\Actor as BskyActor;
 use Revolution\AtProto\Lexicon\Contracts\App\Bsky\Feed as BskyFeed;
+use Revolution\AtProto\Lexicon\Contracts\App\Bsky\Notification as BskyNotification;
 use Revolution\AtProto\Lexicon\Contracts\App\Bsky\Video as BskyVideo;
 use Revolution\AtProto\Lexicon\Contracts\Com\Atproto\Identity as AtprotoIdentity;
 use Revolution\AtProto\Lexicon\Contracts\Com\Atproto\Repo as AtprotoRepo;
@@ -115,6 +117,7 @@ trait HasShortHand
      *
      * @throws AuthenticationException
      */
+    #[ArrayShape(BskyActor::getProfileResponse)]
     public function getProfile(#[Format('at-identifier')] ?string $actor = null): Response
     {
         return $this->client(auth: true)
@@ -154,6 +157,7 @@ trait HasShortHand
      *
      * @throws AuthenticationException
      */
+    #[ArrayShape(AtprotoRepo::putRecordResponse)]
     public function upsertProfile(callable $callback): Response
     {
         $response = $this->getRecord(
@@ -267,6 +271,7 @@ trait HasShortHand
     /**
      * @throws AuthenticationException
      */
+    #[ArrayShape(AtprotoRepo::createRecordResponse)]
     public function like(Like|StrongRef $subject): Response
     {
         $like = $subject instanceof Like ? $subject : Like::create($subject);
@@ -301,6 +306,7 @@ trait HasShortHand
     /**
      * @throws AuthenticationException
      */
+    #[ArrayShape(AtprotoRepo::createRecordResponse)]
     public function repost(Repost|StrongRef $subject): Response
     {
         $repost = $subject instanceof Repost ? $subject : Repost::create($subject);
@@ -377,6 +383,7 @@ trait HasShortHand
     /**
      * @throws AuthenticationException
      */
+    #[ArrayShape(AtprotoRepo::createRecordResponse)]
     public function follow(Follow|string $did): Response
     {
         $follow = $did instanceof Follow ? $did : Follow::create(did: $did);
@@ -515,6 +522,7 @@ trait HasShortHand
      *
      * @throws AuthenticationException
      */
+    #[ArrayShape(AtprotoRepo::putRecordResponse)]
     public function publishFeedGenerator(BackedEnum|string $name, Generator $generator): Response
     {
         return $this->putRecord(
@@ -837,6 +845,7 @@ trait HasShortHand
             );
     }
 
+    #[ArrayShape(BskyNotification::listNotificationsResponse)]
     public function listNotifications(?int $limit = 50, ?bool $priority = null, ?string $cursor = null, ?string $seenAt = null): Response
     {
         return $this->client(auth: true)
@@ -849,6 +858,7 @@ trait HasShortHand
             );
     }
 
+    #[ArrayShape(BskyNotification::getUnreadCountResponse)]
     public function countUnreadNotifications(?bool $priority = null, ?string $seenAt = null): Response
     {
         return $this->client(auth: true)
