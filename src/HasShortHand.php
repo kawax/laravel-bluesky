@@ -45,9 +45,6 @@ use function Illuminate\Support\enum_value;
  */
 trait HasShortHand
 {
-    /**
-     * Get actor's timeline.
-     */
     #[ArrayShape(AtFeed::getTimelineResponse)]
     public function getTimeline(?string $algorithm = null, ?int $limit = 50, ?string $cursor = null): Response
     {
