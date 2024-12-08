@@ -19,7 +19,7 @@ abstract class AbstractSession implements Arrayable
 
     protected Collection $session;
 
-    public function __construct(array|Collection|AbstractSession|null $session = null)
+    final public function __construct(array|Collection|AbstractSession|null $session = null)
     {
         $this->session = $session instanceof AbstractSession ? $session->collect() : Collection::wrap($session);
     }
