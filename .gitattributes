@@ -13,3 +13,5 @@ phpunit.xml export-ignore
 /src/Console/LexiconClientCommand.php export-ignore
 /src/Console/stubs export-ignore
 /workbench export-ignore
+testbench.yaml export-ignore
+phpstan.neon export-ignore
