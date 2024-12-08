@@ -25,7 +25,7 @@ final class Base58btc
     use Common;
 
     /**
-     * @param  array<PrimeInteger, PrimeInteger>  $publicKey
+     * @param  array{0: PrimeInteger, 1: PrimeInteger}  $publicKey
      */
     public static function savePublicKey(Base $curve, array $publicKey, array $options = []): string
     {
