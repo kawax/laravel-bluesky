@@ -22,7 +22,7 @@ final readonly class ReplyRef implements Arrayable
     }
 
     /**
-     * @return array{root: array{uri: string, cid: string}, paret: array{uri: string, cid: string}}
+     * @return array{root: array{uri: string, cid: string}, parent: array{uri: string, cid: string}}
      */
     public function toArray(): array
     {
