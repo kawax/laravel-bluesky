@@ -22,7 +22,10 @@
     "yocto/yoclib-multibase": "^1.2"
   },
   "require-dev": {
-    "orchestra/testbench": "^9.0"
+    "orchestra/testbench": "^9.0",
+    "larastan/larastan": "^3.0",
+    "phpstan/phpstan-webmozart-assert": "^2.0",
+    "phpstan/extension-installer": "^1.4"
   },
   "autoload": {
     "psr-4": {
@@ -51,5 +54,10 @@
       ]
     }
   },
-  "minimum-stability": "stable"
+  "minimum-stability": "stable",
+  "config": {
+    "allow-plugins": {
+      "phpstan/extension-installer": true
+    }
+  }
 }
