@@ -111,6 +111,7 @@ class Identity
      * ```
      *
      * @param  string|null  $did  e.g. "did:plc:1234..." "did:web:alice.test"
+     *
      * @link https://plc.directory/did:plc:ewvi7nxzyoun6zhxrhs64oiz
      */
     public function resolveDID(?string $did, bool $cache = true): Response
