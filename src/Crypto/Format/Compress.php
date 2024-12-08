@@ -16,7 +16,7 @@ use phpseclib3\Math\PrimeField\Integer as PrimeInteger;
 final class Compress
 {
     /**
-     * @param  array<PrimeInteger, PrimeInteger>  $publicKey
+     * @param  array{0: PrimeInteger, 1: PrimeInteger}  $publicKey
      */
     public static function savePublicKey(Base $curve, array $publicKey, array $options = []): string
     {
