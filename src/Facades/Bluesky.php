@@ -7,13 +7,10 @@ namespace Revolution\Bluesky\Facades;
 use BackedEnum;
 use Illuminate\Http\Client\Response;
 use Illuminate\Support\Facades\Facade;
-use Illuminate\Support\Traits\Conditionable;
-use Illuminate\Support\Traits\Macroable;
 use Revolution\Bluesky\Client\AtpClient;
 use Revolution\Bluesky\Contracts\Agent;
 use Revolution\Bluesky\Contracts\Factory;
 use Revolution\Bluesky\Contracts\XrpcClient;
-use Revolution\Bluesky\HasShortHand;
 use Revolution\Bluesky\Session\OAuthSession;
 use Revolution\Bluesky\Support\Identity;
 use Revolution\Bluesky\Support\PDS;
@@ -32,9 +29,6 @@ use Revolution\Bluesky\Support\PDS;
  * @method static string entryway()
  *
  * @mixin \Revolution\Bluesky\BlueskyManager
- * @mixin HasShortHand
- * @mixin Conditionable
- * @mixin Macroable
  */
 class Bluesky extends Facade
 {
