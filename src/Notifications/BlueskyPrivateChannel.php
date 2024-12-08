@@ -11,6 +11,7 @@ use Illuminate\Notifications\Notification;
 use Illuminate\Support\Arr;
 use Revolution\Bluesky\Facades\Bluesky;
 use Revolution\Bluesky\Support\Identity;
+use RuntimeException;
 
 class BlueskyPrivateChannel
 {
@@ -25,6 +26,7 @@ class BlueskyPrivateChannel
          */
         $message = $notification->toBlueskyPrivate($notifiable);
 
+        // @phpstan-ignore-next-line
         if (! $message instanceof BlueskyPrivateMessage) {
             return null; // @codeCoverageIgnore
         }
@@ -32,6 +34,7 @@ class BlueskyPrivateChannel
         /** @var BlueskyRoute $route */
         $route = $notifiable->routeNotificationFor('bluesky-private', $notification);
 
+        // @phpstan-ignore-next-line
         if (! $route instanceof BlueskyRoute || empty($route->receiver)) {
             return null; // @codeCoverageIgnore
         }
@@ -39,6 +42,7 @@ class BlueskyPrivateChannel
         $id = match (true) {
             $route->isOAuth() => $this->oauth($route),
             $route->isLegacy() => $this->legacy($route),
+            default => throw new RuntimeException(),
         };
 
         return Bluesky::client(auth: true)
