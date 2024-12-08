@@ -93,7 +93,9 @@ class WebSocketServeCommand extends Command
             dd($ws);
         }
 
-        $this->trap(SIGTERM, fn () => $this->running = false);
+        $this->trap(SIGTERM, function () {
+            $this->running = false;
+        });
 
         $payload = [
             'type' => 'options_update',
