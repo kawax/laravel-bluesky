@@ -13,8 +13,11 @@ use JetBrains\PhpStorm\ArrayShape;
 use Psr\Http\Message\StreamInterface;
 use Revolution\AtProto\Lexicon\Attributes\Format;
 use Revolution\AtProto\Lexicon\Attributes\KnownValues;
-use Revolution\AtProto\Lexicon\Contracts\App\Bsky\Video;
-use Revolution\AtProto\Lexicon\Contracts\Com\Atproto\Repo;
+use Revolution\AtProto\Lexicon\Contracts\App\Bsky\Video as BskyVideo;
+use Revolution\AtProto\Lexicon\Contracts\App\Bsky\Feed as BskyFeed;
+use Revolution\AtProto\Lexicon\Contracts\Com\Atproto\Identity as AtprotoIdentity;
+use Revolution\AtProto\Lexicon\Contracts\Com\Atproto\Repo as AtprotoRepo;
+use Revolution\AtProto\Lexicon\Contracts\Com\Atproto\Server as AtprotoServer;
 use Revolution\AtProto\Lexicon\Enum\Feed;
 use Revolution\AtProto\Lexicon\Enum\Graph;
 use Revolution\Bluesky\Client\SubClient\VideoClient;
@@ -43,7 +46,7 @@ trait HasShortHand
     /**
      * Get actor's timeline.
      */
-    #[ArrayShape(['cursor' => 'string', 'feed' => [['post' => 'array', 'reply' => 'string']]])]
+    #[ArrayShape(BskyFeed::getTimelineResponse)]
     public function getTimeline(?string $algorithm = null, ?int $limit = 50, ?string $cursor = null): Response
     {
         return $this->client(auth: true)
@@ -59,7 +62,7 @@ trait HasShortHand
      *
      * @throws AuthenticationException
      */
-    #[ArrayShape(['cursor' => 'string', 'feed' => [['post' => 'array', 'reply' => 'string']]])]
+    #[ArrayShape(BskyFeed::getAuthorFeedResponse)]
     public function getAuthorFeed(#[Format('at-identifier')] ?string $actor = null, ?int $limit = 50, ?string $cursor = null, #[KnownValues(['posts_with_replies', 'posts_no_replies', 'posts_with_media', 'posts_and_author_threads'])] ?string $filter = 'posts_with_replies', ?bool $includePins = null): Response
     {
         return $this->client(auth: true)
@@ -87,7 +90,7 @@ trait HasShortHand
             );
     }
 
-    #[ArrayShape(['cursor' => 'string', 'hitsTotal' => 'int', 'posts' => [[]]])]
+    #[ArrayShape(BskyFeed::searchPostsResponse)]
     public function searchPosts(string $q, #[KnownValues(['top', 'latest'])] ?string $sort = 'latest', ?string $since = null, ?string $until = null, #[Format('at-identifier')] ?string $mentions = null, #[Format('at-identifier')] ?string $author = null, #[Format('language')] ?string $lang = null, ?string $domain = null, #[Format('uri')] ?string $url = null, ?array $tag = null, ?int $limit = 25, ?string $cursor = null): Response
     {
         return $this->client(auth: true)
@@ -176,7 +179,7 @@ trait HasShortHand
      *
      * @throws AuthenticationException
      */
-    #[ArrayShape(['uri' => 'string', 'cid' => 'string', 'commit' => ['cid' => 'string', 'rev' => 'string'], 'validationStatus' => 'string'])]
+    #[ArrayShape(AtprotoRepo::createRecordResponse)]
     public function post(Post|string|array $text): Response
     {
         $post = is_string($text) ? Post::create($text) : $text;
@@ -408,7 +411,7 @@ trait HasShortHand
     /**
      * Upload blob.
      */
-    #[ArrayShape(['blob' => 'array'])]
+    #[ArrayShape(AtprotoRepo::uploadBlobResponse)]
     public function uploadBlob(StreamInterface|string $data, string $type = 'image/png'): Response
     {
         return $this->client(auth: true)
@@ -447,7 +450,7 @@ trait HasShortHand
         //Service auth is required to use the video upload features.
         $aud = $this->agent()->session()->didDoc()->serviceAuthAud();
 
-        $token = $this->getServiceAuth(aud: $aud, exp: now()->addMinutes(30)->timestamp, lxm: Repo::uploadBlob)
+        $token = $this->getServiceAuth(aud: $aud, exp: now()->addMinutes(30)->timestamp, lxm: AtprotoRepo::uploadBlob)
             ->json('token');
 
         return $this->client(auth: true)
@@ -462,12 +465,12 @@ trait HasShortHand
     /**
      * This will get you the "blob" of the video you uploaded.
      */
-    #[ArrayShape(['jobStatus' => ['blob' => 'array', 'did' => 'string', 'error' => 'string', 'jobId' => 'string', 'message' => 'string', 'state' => 'string', 'progress' => 'int']])]
+    #[ArrayShape(BskyVideo::getJobStatusResponse)]
     public function getJobStatus(string $jobId): Response
     {
         $aud = $this->agent()->session()->didDoc()->serviceAuthAud();
 
-        $token = $this->getServiceAuth(aud: $aud, lxm: Video::getJobStatus)
+        $token = $this->getServiceAuth(aud: $aud, lxm: BskyVideo::getJobStatus)
             ->json('token');
 
         return $this->client(auth: true)
@@ -475,10 +478,10 @@ trait HasShortHand
             ->getJobStatus($jobId);
     }
 
-    #[ArrayShape(['canUpload' => 'bool', 'error' => 'string', 'jobId' => 'string', 'message' => 'string', 'remainingDailyBytes' => 'int', 'remainingDailyVideos' => 'int'])]
+    #[ArrayShape(BskyVideo::getUploadLimitsResponse)]
     public function getUploadLimits(): Response
     {
-        $token = $this->getServiceAuth(aud: VideoClient::VIDEO_SERVICE_DID, lxm: Video::getUploadLimits)
+        $token = $this->getServiceAuth(aud: VideoClient::VIDEO_SERVICE_DID, lxm: BskyVideo::getUploadLimits)
             ->json('token');
 
         return $this->client(auth: true)
@@ -497,7 +500,7 @@ trait HasShortHand
      * @param  int|null  $exp  The time in Unix Epoch seconds that the JWT expires. Defaults to 60 seconds in the future. The service may enforce certain time bounds on tokens depending on the requested scope.
      * @param  string|null  $lxm  Lexicon (XRPC) method to bind the requested token to
      */
-    #[ArrayShape(['token' => 'string'])]
+    #[ArrayShape(AtprotoServer::getServiceAuthResponse)]
     public function getServiceAuth(#[Format('did')] string $aud, ?int $exp = null, #[Format('nsid')] ?string $lxm = null): Response
     {
         return $this->client(auth: true)
@@ -816,7 +819,7 @@ trait HasShortHand
     /**
      * @param  string  $handle  `***.bsky.social` `alice.test`
      */
-    #[ArrayShape(['did' => 'string'])]
+    #[ArrayShape(AtprotoIdentity::resolveHandleResponse)]
     public function resolveHandle(#[Format('handle')] string $handle): Response
     {
         return $this->client(auth: false)
