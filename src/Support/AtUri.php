@@ -37,8 +37,8 @@ final readonly class AtUri implements Stringable
             throw new InvalidArgumentException();
         }
 
-        $this->protocol = $matches[1] ?? null;
-        $this->host = $matches[2] ?? null;
+        $this->protocol = $matches[1];
+        $this->host = $matches[2];
         $this->pathname = $matches[3] ?? null;
         $this->searchParams = $matches[4] ?? null;
         $this->hash = $matches[5] ?? null;
