@@ -5,12 +5,10 @@ declare(strict_types=1);
 namespace Revolution\Bluesky\Crypto;
 
 use Firebase\JWT\JWT;
-use InvalidArgumentException;
 use phpseclib3\Crypt\EC;
 use phpseclib3\Crypt\EC\Formats\Keys\PKCS8;
 use phpseclib3\Crypt\EC\PrivateKey;
 use phpseclib3\Crypt\EC\PublicKey;
-use Webmozart\Assert\Assert;
 
 abstract class AbstractKeypair
 {
