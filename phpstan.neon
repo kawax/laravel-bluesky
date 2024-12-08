@@ -11,7 +11,7 @@ parameters:
         #- identifier: trait.unused
         - identifier: method.notFound
         #- identifier: return.unusedType
-        - identifier: phpDoc.parseError
+        #- identifier: phpDoc.parseError
 
     excludePaths:
         - ./src/Client/Concerns/*.php
