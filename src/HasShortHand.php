@@ -13,13 +13,13 @@ use JetBrains\PhpStorm\ArrayShape;
 use Psr\Http\Message\StreamInterface;
 use Revolution\AtProto\Lexicon\Attributes\Format;
 use Revolution\AtProto\Lexicon\Attributes\KnownValues;
-use Revolution\AtProto\Lexicon\Contracts\App\Bsky\Actor as BskyActor;
-use Revolution\AtProto\Lexicon\Contracts\App\Bsky\Feed as BskyFeed;
-use Revolution\AtProto\Lexicon\Contracts\App\Bsky\Notification as BskyNotification;
-use Revolution\AtProto\Lexicon\Contracts\App\Bsky\Video as BskyVideo;
-use Revolution\AtProto\Lexicon\Contracts\Com\Atproto\Identity as AtprotoIdentity;
-use Revolution\AtProto\Lexicon\Contracts\Com\Atproto\Repo as AtprotoRepo;
-use Revolution\AtProto\Lexicon\Contracts\Com\Atproto\Server as AtprotoServer;
+use Revolution\AtProto\Lexicon\Contracts\App\Bsky\Actor as AtActor;
+use Revolution\AtProto\Lexicon\Contracts\App\Bsky\Feed as AtFeed;
+use Revolution\AtProto\Lexicon\Contracts\App\Bsky\Notification as AtNotification;
+use Revolution\AtProto\Lexicon\Contracts\App\Bsky\Video as AtVideo;
+use Revolution\AtProto\Lexicon\Contracts\Com\Atproto\Identity as AtIdentity;
+use Revolution\AtProto\Lexicon\Contracts\Com\Atproto\Repo as AtRepo;
+use Revolution\AtProto\Lexicon\Contracts\Com\Atproto\Server as AtServer;
 use Revolution\AtProto\Lexicon\Enum\Feed;
 use Revolution\AtProto\Lexicon\Enum\Graph;
 use Revolution\Bluesky\Client\SubClient\VideoClient;
@@ -48,7 +48,7 @@ trait HasShortHand
     /**
      * Get actor's timeline.
      */
-    #[ArrayShape(BskyFeed::getTimelineResponse)]
+    #[ArrayShape(AtFeed::getTimelineResponse)]
     public function getTimeline(?string $algorithm = null, ?int $limit = 50, ?string $cursor = null): Response
     {
         return $this->client(auth: true)
@@ -64,7 +64,7 @@ trait HasShortHand
      *
      * @throws AuthenticationException
      */
-    #[ArrayShape(BskyFeed::getAuthorFeedResponse)]
+    #[ArrayShape(AtFeed::getAuthorFeedResponse)]
     public function getAuthorFeed(#[Format('at-identifier')] ?string $actor = null, ?int $limit = 50, ?string $cursor = null, #[KnownValues(['posts_with_replies', 'posts_no_replies', 'posts_with_media', 'posts_and_author_threads'])] ?string $filter = 'posts_with_replies', ?bool $includePins = null): Response
     {
         return $this->client(auth: true)
@@ -92,7 +92,7 @@ trait HasShortHand
             );
     }
 
-    #[ArrayShape(BskyFeed::searchPostsResponse)]
+    #[ArrayShape(AtFeed::searchPostsResponse)]
     public function searchPosts(string $q, #[KnownValues(['top', 'latest'])] ?string $sort = 'latest', ?string $since = null, ?string $until = null, #[Format('at-identifier')] ?string $mentions = null, #[Format('at-identifier')] ?string $author = null, #[Format('language')] ?string $lang = null, ?string $domain = null, #[Format('uri')] ?string $url = null, ?array $tag = null, ?int $limit = 25, ?string $cursor = null): Response
     {
         return $this->client(auth: true)
@@ -117,7 +117,7 @@ trait HasShortHand
      *
      * @throws AuthenticationException
      */
-    #[ArrayShape(BskyActor::getProfileResponse)]
+    #[ArrayShape(AtActor::getProfileResponse)]
     public function getProfile(#[Format('at-identifier')] ?string $actor = null): Response
     {
         return $this->client(auth: true)
@@ -157,7 +157,7 @@ trait HasShortHand
      *
      * @throws AuthenticationException
      */
-    #[ArrayShape(AtprotoRepo::putRecordResponse)]
+    #[ArrayShape(AtRepo::putRecordResponse)]
     public function upsertProfile(callable $callback): Response
     {
         $response = $this->getRecord(
@@ -183,7 +183,7 @@ trait HasShortHand
      *
      * @throws AuthenticationException
      */
-    #[ArrayShape(AtprotoRepo::createRecordResponse)]
+    #[ArrayShape(AtRepo::createRecordResponse)]
     public function post(Post|string|array $text): Response
     {
         $post = is_string($text) ? Post::create($text) : $text;
@@ -271,7 +271,7 @@ trait HasShortHand
     /**
      * @throws AuthenticationException
      */
-    #[ArrayShape(AtprotoRepo::createRecordResponse)]
+    #[ArrayShape(AtRepo::createRecordResponse)]
     public function like(Like|StrongRef $subject): Response
     {
         $like = $subject instanceof Like ? $subject : Like::create($subject);
@@ -306,7 +306,7 @@ trait HasShortHand
     /**
      * @throws AuthenticationException
      */
-    #[ArrayShape(AtprotoRepo::createRecordResponse)]
+    #[ArrayShape(AtRepo::createRecordResponse)]
     public function repost(Repost|StrongRef $subject): Response
     {
         $repost = $subject instanceof Repost ? $subject : Repost::create($subject);
@@ -383,7 +383,7 @@ trait HasShortHand
     /**
      * @throws AuthenticationException
      */
-    #[ArrayShape(AtprotoRepo::createRecordResponse)]
+    #[ArrayShape(AtRepo::createRecordResponse)]
     public function follow(Follow|string $did): Response
     {
         $follow = $did instanceof Follow ? $did : Follow::create(did: $did);
@@ -418,7 +418,7 @@ trait HasShortHand
     /**
      * Upload blob.
      */
-    #[ArrayShape(AtprotoRepo::uploadBlobResponse)]
+    #[ArrayShape(AtRepo::uploadBlobResponse)]
     public function uploadBlob(StreamInterface|string $data, string $type = 'image/png'): Response
     {
         return $this->client(auth: true)
@@ -457,7 +457,7 @@ trait HasShortHand
         //Service auth is required to use the video upload features.
         $aud = $this->agent()->session()->didDoc()->serviceAuthAud();
 
-        $token = $this->getServiceAuth(aud: $aud, exp: now()->addMinutes(30)->timestamp, lxm: AtprotoRepo::uploadBlob)
+        $token = $this->getServiceAuth(aud: $aud, exp: now()->addMinutes(30)->timestamp, lxm: AtRepo::uploadBlob)
             ->json('token');
 
         return $this->client(auth: true)
@@ -472,12 +472,12 @@ trait HasShortHand
     /**
      * This will get you the "blob" of the video you uploaded.
      */
-    #[ArrayShape(BskyVideo::getJobStatusResponse)]
+    #[ArrayShape(AtVideo::getJobStatusResponse)]
     public function getJobStatus(string $jobId): Response
     {
         $aud = $this->agent()->session()->didDoc()->serviceAuthAud();
 
-        $token = $this->getServiceAuth(aud: $aud, lxm: BskyVideo::getJobStatus)
+        $token = $this->getServiceAuth(aud: $aud, lxm: AtVideo::getJobStatus)
             ->json('token');
 
         return $this->client(auth: true)
@@ -485,10 +485,10 @@ trait HasShortHand
             ->getJobStatus($jobId);
     }
 
-    #[ArrayShape(BskyVideo::getUploadLimitsResponse)]
+    #[ArrayShape(AtVideo::getUploadLimitsResponse)]
     public function getUploadLimits(): Response
     {
-        $token = $this->getServiceAuth(aud: VideoClient::VIDEO_SERVICE_DID, lxm: BskyVideo::getUploadLimits)
+        $token = $this->getServiceAuth(aud: VideoClient::VIDEO_SERVICE_DID, lxm: AtVideo::getUploadLimits)
             ->json('token');
 
         return $this->client(auth: true)
@@ -507,7 +507,7 @@ trait HasShortHand
      * @param  int|null  $exp  The time in Unix Epoch seconds that the JWT expires. Defaults to 60 seconds in the future. The service may enforce certain time bounds on tokens depending on the requested scope.
      * @param  string|null  $lxm  Lexicon (XRPC) method to bind the requested token to
      */
-    #[ArrayShape(AtprotoServer::getServiceAuthResponse)]
+    #[ArrayShape(AtServer::getServiceAuthResponse)]
     public function getServiceAuth(#[Format('did')] string $aud, ?int $exp = null, #[Format('nsid')] ?string $lxm = null): Response
     {
         return $this->client(auth: true)
@@ -522,7 +522,7 @@ trait HasShortHand
      *
      * @throws AuthenticationException
      */
-    #[ArrayShape(AtprotoRepo::putRecordResponse)]
+    #[ArrayShape(AtRepo::putRecordResponse)]
     public function publishFeedGenerator(BackedEnum|string $name, Generator $generator): Response
     {
         return $this->putRecord(
@@ -827,7 +827,7 @@ trait HasShortHand
     /**
      * @param  string  $handle  `***.bsky.social` `alice.test`
      */
-    #[ArrayShape(AtprotoIdentity::resolveHandleResponse)]
+    #[ArrayShape(AtIdentity::resolveHandleResponse)]
     public function resolveHandle(#[Format('handle')] string $handle): Response
     {
         return $this->client(auth: false)
@@ -845,7 +845,7 @@ trait HasShortHand
             );
     }
 
-    #[ArrayShape(BskyNotification::listNotificationsResponse)]
+    #[ArrayShape(AtNotification::listNotificationsResponse)]
     public function listNotifications(?int $limit = 50, ?bool $priority = null, ?string $cursor = null, ?string $seenAt = null): Response
     {
         return $this->client(auth: true)
@@ -858,7 +858,7 @@ trait HasShortHand
             );
     }
 
-    #[ArrayShape(BskyNotification::getUnreadCountResponse)]
+    #[ArrayShape(AtNotification::getUnreadCountResponse)]
     public function countUnreadNotifications(?bool $priority = null, ?string $seenAt = null): Response
     {
         return $this->client(auth: true)
