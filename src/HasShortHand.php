@@ -9,6 +9,7 @@ use Illuminate\Auth\AuthenticationException;
 use Illuminate\Http\Client\Response;
 use Illuminate\Support\Facades\Http;
 use InvalidArgumentException;
+use JetBrains\PhpStorm\ArrayShape;
 use Psr\Http\Message\StreamInterface;
 use Revolution\AtProto\Lexicon\Attributes\Format;
 use Revolution\AtProto\Lexicon\Attributes\KnownValues;
@@ -40,8 +41,9 @@ use function Illuminate\Support\enum_value;
 trait HasShortHand
 {
     /**
-     * @return Response{cursor: string, feed: array<array{post: array, reply: array}>}
+     * Get actor's timeline.
      */
+    #[ArrayShape(['cursor' => 'string', 'feed' => [['post' => 'array', 'reply' => 'string']]])]
     public function getTimeline(?string $algorithm = null, ?int $limit = 50, ?string $cursor = null): Response
     {
         return $this->client(auth: true)
@@ -54,10 +56,10 @@ trait HasShortHand
 
     /**
      * @param  string|null  $actor  DID or handle.
-     * @return Response{cursor: string, feed: array<array{post: array, reply: array}>}
      *
      * @throws AuthenticationException
      */
+    #[ArrayShape(['cursor' => 'string', 'feed' => [['post' => 'array', 'reply' => 'string']]])]
     public function getAuthorFeed(#[Format('at-identifier')] ?string $actor = null, ?int $limit = 50, ?string $cursor = null, #[KnownValues(['posts_with_replies', 'posts_no_replies', 'posts_with_media', 'posts_and_author_threads'])] ?string $filter = 'posts_with_replies', ?bool $includePins = null): Response
     {
         return $this->client(auth: true)
@@ -85,9 +87,7 @@ trait HasShortHand
             );
     }
 
-    /**
-     * @return Response{cursor: string, hitsTotal: int, posts: array<array>}
-     */
+    #[ArrayShape(['cursor' => 'string', 'hitsTotal' => 'int', 'posts' => [[]]])]
     public function searchPosts(string $q, #[KnownValues(['top', 'latest'])] ?string $sort = 'latest', ?string $since = null, ?string $until = null, #[Format('at-identifier')] ?string $mentions = null, #[Format('at-identifier')] ?string $author = null, #[Format('language')] ?string $lang = null, ?string $domain = null, #[Format('uri')] ?string $url = null, ?array $tag = null, ?int $limit = 25, ?string $cursor = null): Response
     {
         return $this->client(auth: true)
@@ -174,10 +174,9 @@ trait HasShortHand
     /**
      * Create new post.
      *
-     * @return Response{uri: string, cid: string, commit: array{cid: string, rev: string}, validationStatus: string}
-     *
      * @throws AuthenticationException
      */
+    #[ArrayShape(['uri' => 'string', 'cid' => 'string', 'commit' => ['cid' => 'string', 'rev' => 'string'], 'validationStatus' => 'string'])]
     public function post(Post|string|array $text): Response
     {
         $post = is_string($text) ? Post::create($text) : $text;
@@ -408,9 +407,8 @@ trait HasShortHand
 
     /**
      * Upload blob.
-     *
-     * @return Response{blob: array}
      */
+    #[ArrayShape(['blob' => 'array'])]
     public function uploadBlob(StreamInterface|string $data, string $type = 'image/png'): Response
     {
         return $this->client(auth: true)
@@ -440,10 +438,10 @@ trait HasShortHand
      *
      * @param  StreamInterface|string  $data  Video data
      * @param  string  $type  File mimetype
-     * @return Response{did: string, error?: string, jobId: string, message?: string, state: string}
      *
      * @throws AuthenticationException
      */
+    #[ArrayShape(['did' => 'string', 'error' => 'string', 'jobId' => 'string', 'message' => 'string', 'state' => 'string'])]
     public function uploadVideo(StreamInterface|string $data, #[KnownValues(['video/mp4', 'video/mpeg', 'video/webm', 'video/quicktime', 'image/gif'])] string $type = 'video/mp4'): Response
     {
         //Service auth is required to use the video upload features.
@@ -463,9 +461,8 @@ trait HasShortHand
 
     /**
      * This will get you the "blob" of the video you uploaded.
-     *
-     * @return Response{jobStatus: array{blob?: array, did: string, error?: string, jobId: string, message?: string, state: string, progress?: int}}
      */
+    #[ArrayShape(['jobStatus' => ['blob' => 'array', 'did' => 'string', 'error' => 'string', 'jobId' => 'string', 'message' => 'string', 'state' => 'string', 'progress' => 'int']])]
     public function getJobStatus(string $jobId): Response
     {
         $aud = $this->agent()->session()->didDoc()->serviceAuthAud();
@@ -478,9 +475,7 @@ trait HasShortHand
             ->getJobStatus($jobId);
     }
 
-    /**
-     * @return Response{canUpload: bool, error?: string, message?: string, remainingDailyBytes?: int, remainingDailyVideos?: int}
-     */
+    #[ArrayShape(['canUpload' => 'bool', 'error' => 'string', 'jobId' => 'string', 'message' => 'string', 'remainingDailyBytes' => 'int', 'remainingDailyVideos' => 'int'])]
     public function getUploadLimits(): Response
     {
         $token = $this->getServiceAuth(aud: VideoClient::VIDEO_SERVICE_DID, lxm: Video::getUploadLimits)
@@ -501,8 +496,8 @@ trait HasShortHand
      * @param  string  $aud  The DID of the service that the token will be used to authenticate with
      * @param  int|null  $exp  The time in Unix Epoch seconds that the JWT expires. Defaults to 60 seconds in the future. The service may enforce certain time bounds on tokens depending on the requested scope.
      * @param  string|null  $lxm  Lexicon (XRPC) method to bind the requested token to
-     * @return Response{token: string}
      */
+    #[ArrayShape(['token' => 'string'])]
     public function getServiceAuth(#[Format('did')] string $aud, ?int $exp = null, #[Format('nsid')] ?string $lxm = null): Response
     {
         return $this->client(auth: true)
@@ -820,8 +815,8 @@ trait HasShortHand
 
     /**
      * @param  string  $handle  `***.bsky.social` `alice.test`
-     * @return Response{did: string}
      */
+    #[ArrayShape(['did' => 'string'])]
     public function resolveHandle(#[Format('handle')] string $handle): Response
     {
         return $this->client(auth: false)
