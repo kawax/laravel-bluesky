@@ -65,7 +65,7 @@ final class JsonWebToken
      * [$header, $payload, $sig] = JsonWebToken::explode('****.****.****', decode: true);
      * ```
      *
-     * @return null|array<array, array, string>
+     * @return null|list<array, array, string>
      */
     public static function explode(?string $token, bool $decode = false): ?array
     {
