@@ -33,14 +33,14 @@ final readonly class DidDocument implements Arrayable
         return new self($didDoc);
     }
 
-    public function id(): ?string
+    public function id(): string
     {
-        return data_get($this->didDoc, 'id');
+        return data_get($this->didDoc, 'id', '');
     }
 
-    public function handle(): ?string
+    public function handle(): string
     {
-        $handle = data_get($this->didDoc, 'alsoKnownAs.{first}');
+        $handle = data_get($this->didDoc, 'alsoKnownAs.{first}', '');
 
         return Str::chopStart($handle, 'at://');
     }
