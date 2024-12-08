@@ -25,7 +25,8 @@
     "orchestra/testbench": "^9.0",
     "larastan/larastan": "^3.0",
     "phpstan/phpstan-webmozart-assert": "^2.0",
-    "phpstan/extension-installer": "^1.4"
+    "phpstan/extension-installer": "^1.4",
+    "jetbrains/phpstorm-attributes": "^1.2"
   },
   "autoload": {
     "psr-4": {
