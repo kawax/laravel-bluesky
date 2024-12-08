@@ -91,7 +91,6 @@ class LexiconClientCommand extends Command
                     ];
                 }
             })
-            ->reject(fn ($file) => is_null($file))
             ->map(function (array $file) {
                 $methods = collect($file['methods'])
                     ->map(function (ReflectionMethod $method) {
