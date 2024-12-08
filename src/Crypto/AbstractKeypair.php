@@ -5,11 +5,12 @@ declare(strict_types=1);
 namespace Revolution\Bluesky\Crypto;
 
 use Firebase\JWT\JWT;
-use phpseclib3\Crypt\Common\PrivateKey as CommonPrivateKey;
+use InvalidArgumentException;
 use phpseclib3\Crypt\EC;
 use phpseclib3\Crypt\EC\Formats\Keys\PKCS8;
 use phpseclib3\Crypt\EC\PrivateKey;
 use phpseclib3\Crypt\EC\PublicKey;
+use Webmozart\Assert\Assert;
 
 abstract class AbstractKeypair
 {
@@ -17,7 +18,11 @@ abstract class AbstractKeypair
 
     public const ALG = '';
 
-    protected PrivateKey|CommonPrivateKey $key;
+    protected PrivateKey $key;
+
+    final public function __construct()
+    {
+    }
 
     /**
      * @param  string  $key  url-safe base64 encoded private key
@@ -26,7 +31,10 @@ abstract class AbstractKeypair
     {
         $self = new static();
 
-        $self->key = EC::loadPrivateKey(JWT::urlsafeB64Decode($key));
+        /** @var PrivateKey $sk */
+        $sk = EC::loadPrivateKey(JWT::urlsafeB64Decode($key));
+
+        $self->key = $sk;
 
         return $self;
     }
