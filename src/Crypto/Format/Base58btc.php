@@ -66,7 +66,7 @@ final class Base58btc
         /** @var Prime $curve */
         $curve = self::loadCurveByParam(['namedCurve' => $curve_name]);
 
-        /** @var array<PrimeInteger, PrimeInteger> $point */
+        /** @var array{0: PrimeInteger, 1: PrimeInteger} $point */
         $point = self::extractPoint("\0".$keyBytes, $curve);
 
         if (! $curve->verifyPoint($point)) {
