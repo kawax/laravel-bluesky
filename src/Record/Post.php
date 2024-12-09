@@ -64,7 +64,7 @@ final class Post extends AbstractPost implements Arrayable, Recordable
      *  });
      * ```
      *
-     * @param  callable(TextBuilder $builder): TextBuilder  $callback
+     * @param  callable(TextBuilder $builder): mixed  $callback
      */
     public static function build(callable $callback): self
     {
