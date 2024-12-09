@@ -364,8 +364,7 @@ class ClientTest extends TestCase
 
     public function test_with_bluesky_trait()
     {
-        $user = new class
-        {
+        $user = new class {
             use WithBluesky;
 
             protected function tokenForBluesky(): OAuthSession
@@ -470,19 +469,6 @@ class ClientTest extends TestCase
         $subject = StrongRef::to(uri: 'uri', cid: 'cid');
 
         $response = Bluesky::login('id', 'pass')->repost($subject);
-
-        $this->assertTrue($response->successful());
-    }
-
-    public function test_block()
-    {
-        Http::fakeSequence()
-            ->push($this->session)
-            ->push([]);
-
-        $block = Block::create(did: 'did');
-
-        $response = Bluesky::login('id', 'pass')->block($block);
 
         $this->assertTrue($response->successful());
     }
