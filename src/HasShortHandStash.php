@@ -36,6 +36,40 @@ trait HasShortHandStash
     }
 
     /**
+     * @param  string|null  $actor  DID or handle.
+     *
+     * @throws AuthenticationException
+     */
+    public function getActorFeeds(#[Format('at-identifier')] ?string $actor = null, ?int $limit = 50, ?string $cursor = null): Response
+    {
+        return $this->client(auth: true)
+            ->getActorFeeds(
+                actor: $actor ?? $this->assertDid(),
+                limit: $limit,
+                cursor: $cursor,
+            );
+    }
+
+    /**
+     * @param  string  $uri  at://did:plc:.../app.bsky.feed.post/{rkey}
+     */
+    public function getPost(#[Format('at-uri')] string $uri, ?string $cid = null): Response
+    {
+        $at = AtUri::parse($uri);
+
+        if ($at->collection() !== Feed::Post->value) {
+            throw new InvalidArgumentException();
+        }
+
+        return $this->getRecord(
+            repo: $at->repo(),
+            collection: $at->collection(),
+            rkey: $at->rkey(),
+            cid: $cid,
+        );
+    }
+
+    /**
      * @param  string  $list  AT-URI
      */
     public function muteModList(#[Format('at-uri')] string $list): Response
