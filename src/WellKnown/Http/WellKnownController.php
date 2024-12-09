@@ -11,7 +11,7 @@ class WellKnownController
     /**
      * `/.well-known/did.json`.
      */
-    public function did()
+    public function did(): mixed
     {
         return WellKnownConfig::did();
     }
@@ -19,7 +19,7 @@ class WellKnownController
     /**
      * `/.well-known/atproto-did`.
      */
-    public function atproto()
+    public function atproto(): mixed
     {
         return WellKnownConfig::atprotoDid();
     }
