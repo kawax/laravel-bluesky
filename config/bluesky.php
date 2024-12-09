@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 return [
     // service / PDS / Entryway url
     'service' => env('BLUESKY_SERVICE', 'https://bsky.social'),
