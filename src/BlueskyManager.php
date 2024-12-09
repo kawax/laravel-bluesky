@@ -13,16 +13,13 @@ use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Str;
 use Illuminate\Support\Traits\Conditionable;
 use Illuminate\Support\Traits\Macroable;
-use JetBrains\PhpStorm\ArrayShape;
 use Revolution\AtProto\Lexicon\Attributes\Format;
 use Revolution\AtProto\Lexicon\Attributes\KnownValues;
-use Revolution\AtProto\Lexicon\Contracts\Com\Atproto\Repo as AtRepo;
 use Revolution\Bluesky\Agent\LegacyAgent;
 use Revolution\Bluesky\Agent\OAuthAgent;
 use Revolution\Bluesky\Client\AtpClient;
 use Revolution\Bluesky\Contracts\Agent;
 use Revolution\Bluesky\Contracts\Factory;
-use Revolution\Bluesky\Contracts\Recordable;
 use Revolution\Bluesky\Contracts\XrpcClient;
 use Revolution\Bluesky\Session\LegacySession;
 use Revolution\Bluesky\Session\OAuthSession;
@@ -118,77 +115,6 @@ class BlueskyManager implements Factory
         $this->agent = $agent;
 
         return $this;
-    }
-
-    #[ArrayShape(AtRepo::createRecordResponse)]
-    public function createRecord(#[Format('at-identifier')] string $repo, #[Format('nsid')] string $collection, Recordable|array $record, ?string $rkey = null, ?bool $validate = null, ?string $swapCommit = null): Response
-    {
-        $record = $record instanceof Recordable ? $record->toRecord() : $record;
-
-        return $this->client(auth: true)
-            ->createRecord(
-                repo: $repo,
-                collection: $collection,
-                record: $record,
-                rkey: $rkey,
-                validate: $validate,
-                swapCommit: $swapCommit,
-            );
-    }
-
-    #[ArrayShape(AtRepo::getRecordResponse)]
-    public function getRecord(#[Format('at-identifier')] string $repo, #[Format('nsid')] string $collection, string $rkey, #[Format('cid')] ?string $cid = null): Response
-    {
-        return $this->client(auth: true)
-            ->getRecord(
-                repo: $repo,
-                collection: $collection,
-                rkey: $rkey,
-                cid: $cid,
-            );
-    }
-
-    #[ArrayShape(AtRepo::listRecordsResponse)]
-    public function listRecords(#[Format('at-identifier')] string $repo, #[Format('nsid')] string $collection, ?int $limit = 50, ?string $cursor = null, ?bool $reverse = null): Response
-    {
-        return $this->client(auth: true)
-            ->listRecords(
-                repo: $repo,
-                collection: $collection,
-                limit: $limit,
-                cursor: $cursor,
-                reverse: $reverse,
-            );
-    }
-
-    #[ArrayShape(AtRepo::putRecordResponse)]
-    public function putRecord(#[Format('at-identifier')] string $repo, #[Format('nsid')] string $collection, string $rkey, Recordable|array $record, ?bool $validate = null, #[Format('cid')] ?string $swapRecord = null, #[Format('cid')] ?string $swapCommit = null): Response
-    {
-        $record = $record instanceof Recordable ? $record->toRecord() : $record;
-
-        return $this->client(auth: true)
-            ->putRecord(
-                repo: $repo,
-                collection: $collection,
-                rkey: $rkey,
-                record: $record,
-                validate: $validate,
-                swapRecord: $swapRecord,
-                swapCommit: $swapCommit,
-            );
-    }
-
-    #[ArrayShape(AtRepo::deleteRecordResponse)]
-    public function deleteRecord(#[Format('at-identifier')] string $repo, #[Format('nsid')] string $collection, string $rkey, #[Format('cid')] ?string $swapRecord = null, #[Format('cid')] ?string $swapCommit = null): Response
-    {
-        return $this->client(auth: true)
-            ->deleteRecord(
-                repo: $repo,
-                collection: $collection,
-                rkey: $rkey,
-                swapRecord: $swapRecord,
-                swapCommit: $swapCommit,
-            );
     }
 
     public function refreshSession(): Factory
