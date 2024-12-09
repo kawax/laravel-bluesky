@@ -2,6 +2,7 @@ parameters:
 
     paths:
         - src/
+        - config/
 
     # Level 10 is the highest level
     level: 5
@@ -12,6 +13,7 @@ parameters:
         - identifier: method.notFound
         #- identifier: return.unusedType
         #- identifier: phpDoc.parseError
+        - identifier: larastan.noEnvCallsOutsideOfConfig
 
     excludePaths:
         - ./src/Client/Concerns/*.php
