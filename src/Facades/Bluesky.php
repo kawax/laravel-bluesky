@@ -10,14 +10,13 @@ use Illuminate\Support\Facades\Facade;
 use Revolution\Bluesky\Client\AtpClient;
 use Revolution\Bluesky\Contracts\Agent;
 use Revolution\Bluesky\Contracts\Factory;
-use Revolution\Bluesky\Contracts\XrpcClient;
 use Revolution\Bluesky\Session\OAuthSession;
 use Revolution\Bluesky\Support\Identity;
 use Revolution\Bluesky\Support\PDS;
 
 /**
  * @method static static withToken(?OAuthSession $token)
- * @method static XrpcClient|AtpClient client(bool $auth = true)
+ * @method static AtpClient client(bool $auth = true)
  * @method static Response send(BackedEnum|string $api, string $method = 'get', bool $auth = true, ?array $params = null, ?callable $callback = null)
  * @method static Agent agent()
  * @method static static withAgent(?Agent $agent)
