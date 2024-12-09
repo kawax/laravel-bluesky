@@ -14,7 +14,6 @@ use Revolution\AtProto\Lexicon\Enum\ListPurpose;
 use Revolution\Bluesky\Agent\OAuthAgent;
 use Revolution\Bluesky\BlueskyManager;
 use Revolution\Bluesky\Facades\Bluesky;
-use Revolution\Bluesky\Record\Block;
 use Revolution\Bluesky\Record\Follow;
 use Revolution\Bluesky\Record\Like;
 use Revolution\Bluesky\Record\Post;
@@ -364,7 +363,8 @@ class ClientTest extends TestCase
 
     public function test_with_bluesky_trait()
     {
-        $user = new class {
+        $user = new class
+        {
             use WithBluesky;
 
             protected function tokenForBluesky(): OAuthSession
