@@ -20,7 +20,6 @@ use Revolution\Bluesky\Agent\OAuthAgent;
 use Revolution\Bluesky\Client\AtpClient;
 use Revolution\Bluesky\Contracts\Agent;
 use Revolution\Bluesky\Contracts\Factory;
-use Revolution\Bluesky\Contracts\XrpcClient;
 use Revolution\Bluesky\Session\LegacySession;
 use Revolution\Bluesky\Session\OAuthSession;
 use Revolution\Bluesky\Support\Identity;
