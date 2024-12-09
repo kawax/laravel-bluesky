@@ -9,7 +9,6 @@ use Illuminate\Support\ServiceProvider;
 use Laravel\Socialite\Facades\Socialite;
 use Revolution\AtProto\Lexicon\Contracts\App\Bsky\Feed;
 use Revolution\Bluesky\BlueskyManager;
-use Revolution\Bluesky\Client\AtpClient;
 use Revolution\Bluesky\Console\DownloadBlobsCommand;
 use Revolution\Bluesky\Console\DownloadRecordCommand;
 use Revolution\Bluesky\Console\DownloadRepoCommand;
@@ -17,7 +16,6 @@ use Revolution\Bluesky\Console\LexiconClientCommand;
 use Revolution\Bluesky\Console\NewPrivateKeyCommand;
 use Revolution\Bluesky\Console\WebSocketServeCommand;
 use Revolution\Bluesky\Contracts\Factory;
-use Revolution\Bluesky\Contracts\XrpcClient;
 use Revolution\Bluesky\FeedGenerator\Http\DescribeFeedController;
 use Revolution\Bluesky\FeedGenerator\Http\FeedSkeletonController;
 use Revolution\Bluesky\Socialite\BlueskyProvider;
@@ -31,7 +29,6 @@ class BlueskyServiceProvider extends ServiceProvider
         $this->mergeConfigFrom(__DIR__.'/../../config/bluesky.php', 'bluesky');
 
         $this->app->scoped(Factory::class, BlueskyManager::class);
-        $this->app->scoped(XrpcClient::class, AtpClient::class);
     }
 
     public function boot(): void
