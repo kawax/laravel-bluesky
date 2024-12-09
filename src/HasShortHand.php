@@ -29,8 +29,6 @@ use Revolution\Bluesky\Record\Post;
 use Revolution\Bluesky\Record\Profile;
 use Revolution\Bluesky\Record\Repost;
 use Revolution\Bluesky\Record\ThreadGate;
-use Revolution\Bluesky\Record\UserList;
-use Revolution\Bluesky\Record\UserListItem;
 use Revolution\Bluesky\Support\AtUri;
 use Revolution\Bluesky\Types\StrongRef;
 
@@ -447,89 +445,6 @@ trait HasShortHand
             collection: Feed::Generator->value,
             rkey: enum_value($name),
             record: $generator,
-        );
-    }
-
-    /**
-     * Create a user list.
-     *
-     * ```
-     * use Revolution\Bluesky\Record\UserList;
-     * use Revolution\Bluesky\RichText\TextBuilder;
-     * use Revolution\AtProto\Lexicon\Enum\ListPurpose;
-     *
-     * $description = TextBuilder::make(text: 'description')
-     *                           ->newLine(2)
-     *                           ->link(text: 'https://', uri: 'https://');
-     *
-     * $list = UserList::create()
-     *                 ->name('name')
-     *                 ->purpose(ListPurpose::Curatelist)
-     *                 ->description($description->text)
-     *                 ->descriptionFacets($description->facets);
-     *
-     * Bluesky::createList($list);
-     * ```
-     *
-     * @throws AuthenticationException
-     */
-    public function createList(UserList $list): Response
-    {
-        return $this->createRecord(
-            repo: $this->assertDid(),
-            collection: Graph::List->value,
-            record: $list,
-        );
-    }
-
-    /**
-     * Get created lists.
-     *
-     * @throws AuthenticationException
-     */
-    public function getLists(#[Format('at-identifier')] ?string $actor = null, ?int $limit = 50, ?string $cursor = null): Response
-    {
-        return $this->client(auth: true)
-            ->getLists(
-                actor: $actor ?? $this->assertDid(),
-                limit: $limit,
-                cursor: $cursor,
-            );
-    }
-
-    /**
-     * Viewing a list.
-     *
-     * @param  string  $list  URI
-     */
-    public function getList(#[Format('at-uri')] string $list, ?int $limit = 50, ?string $cursor = null): Response
-    {
-        return $this->client(auth: true)
-            ->getList(
-                list: $list,
-                limit: $limit,
-                cursor: $cursor,
-            );
-    }
-
-    /**
-     * Add a user to a list.
-     *
-     * ```
-     * use Revolution\Bluesky\Record\UserListItem;
-     *
-     * $item = UserListItem::create(did: 'did', list: 'at://');
-     * Bluesky::createListItem($item);
-     * ```
-     *
-     * @throws AuthenticationException
-     */
-    public function createListItem(UserListItem $item): Response
-    {
-        return $this->createRecord(
-            repo: $this->assertDid(),
-            collection: Graph::Listitem->value,
-            record: $item,
         );
     }
 
