@@ -61,10 +61,10 @@ class BlueskyManager implements Factory
         return $this;
     }
 
-    public function client(bool $auth = true): XrpcClient|AtpClient
+    public function client(bool $auth = true): AtpClient
     {
         return Container::getInstance()
-            ->make(XrpcClient::class)
+            ->make(AtpClient::class)
             ->withHttp($this->http($auth));
     }
 
