@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 use Illuminate\Foundation\Inspiring;
@@ -6,7 +7,6 @@ use Illuminate\Support\Facades\Artisan;
 use Revolution\Bluesky\Facades\Bluesky;
 
 /** @var \Illuminate\Console\Command $this */
-
 Artisan::command('inspire', function () {
     /** @var \Illuminate\Console\Command $this */
     $this->comment(Inspiring::quote());
