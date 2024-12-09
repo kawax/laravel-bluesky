@@ -7,7 +7,6 @@ namespace Revolution\Bluesky;
 use BackedEnum;
 use Illuminate\Auth\AuthenticationException;
 use Illuminate\Http\Client\Response;
-use Illuminate\Support\Facades\Http;
 use InvalidArgumentException;
 use JetBrains\PhpStorm\ArrayShape;
 use Psr\Http\Message\StreamInterface;
@@ -23,7 +22,6 @@ use Revolution\AtProto\Lexicon\Contracts\Com\Atproto\Server as AtServer;
 use Revolution\AtProto\Lexicon\Enum\Feed;
 use Revolution\AtProto\Lexicon\Enum\Graph;
 use Revolution\Bluesky\Client\SubClient\VideoClient;
-use Revolution\Bluesky\Record\Block;
 use Revolution\Bluesky\Record\Follow;
 use Revolution\Bluesky\Record\Generator;
 use Revolution\Bluesky\Record\Like;
@@ -45,6 +43,8 @@ use function Illuminate\Support\enum_value;
  */
 trait HasShortHand
 {
+    use HasShortHandStash;
+
     #[ArrayShape(AtFeed::getTimelineResponse)]
     public function getTimeline(?string $algorithm = null, ?int $limit = 50, ?string $cursor = null): Response
     {
@@ -124,17 +124,6 @@ trait HasShortHand
     }
 
     /**
-     * @param  array<string>  $actors
-     */
-    public function getProfiles(array $actors): Response
-    {
-        return $this->client(auth: true)
-            ->getProfiles(
-                actors: $actors,
-            );
-    }
-
-    /**
      * Upsert Profile.
      *
      * ```
@@ -150,7 +139,7 @@ trait HasShortHand
      * })
      * ```
      *
-     * @param  callable(Profile $profile): Profile  $callback
+     * @param  callable(Profile $profile): mixed  $callback
      *
      * @throws AuthenticationException
      */
@@ -210,16 +199,6 @@ trait HasShortHand
         );
     }
 
-    public function getPostThread(#[Format('at-uri')] string $uri, ?int $depth = 6, ?int $parentHeight = 80): Response
-    {
-        return $this->client(auth: true)
-            ->getPostThread(
-                uri: $uri,
-                depth: $depth,
-                parentHeight: $parentHeight,
-            );
-    }
-
     /**
      * @param  string  $uri  at://did:plc:.../app.bsky.feed.post/{rkey}
      */
@@ -237,17 +216,6 @@ trait HasShortHand
             rkey: $at->rkey(),
             cid: $cid,
         );
-    }
-
-    /**
-     * @param  array<string>  $uris  AT-URI
-     */
-    public function getPosts(array $uris): Response
-    {
-        return $this->client(auth: true)
-            ->getPosts(
-                uris: $uris,
-            );
     }
 
     /**
@@ -331,20 +299,6 @@ trait HasShortHand
             collection: $at->collection(),
             rkey: $at->rkey(),
         );
-    }
-
-    /**
-     * @param  string  $uri  at://did:plc:.../app.bsky.feed.post/{rkey}
-     */
-    public function getRepostedBy(#[Format('at-uri')] string $uri, ?string $cid = null, ?int $limit = 50, ?string $cursor = null): Response
-    {
-        return $this->client(auth: true)
-            ->getRepostedBy(
-                uri: $uri,
-                cid: $cid,
-                limit: $limit,
-                cursor: $cursor,
-            );
     }
 
     /**
@@ -530,158 +484,6 @@ trait HasShortHand
         );
     }
 
-    public function unpublishFeedGenerator(BackedEnum|string $name): Response
-    {
-        return $this->deleteRecord(
-            repo: $this->assertDid(),
-            collection: Feed::Generator->value,
-            rkey: enum_value($name),
-        );
-    }
-
-    public function getSuggestions(?int $limit = 50, ?string $cursor = null): Response
-    {
-        return $this->client(auth: true)
-            ->getSuggestions(
-                limit: $limit,
-                cursor: $cursor,
-            );
-    }
-
-    public function searchActors(?string $q = null, ?int $limit = 25, ?string $cursor = null): Response
-    {
-        return $this->client(auth: true)
-            ->searchActors(
-                q: $q,
-                limit: $limit,
-                cursor: $cursor,
-            );
-    }
-
-    public function searchActorsTypeahead(?string $q = null, ?int $limit = 10): Response
-    {
-        return $this->client(auth: true)
-            ->searchActorsTypeahead(
-                q: $q,
-                limit: $limit,
-            );
-    }
-
-    /**
-     * @throws AuthenticationException
-     */
-    public function block(Block|string $did): Response
-    {
-        $block = $did instanceof Block ? $did : Block::create(did: $did);
-
-        return $this->createRecord(
-            repo: $this->assertDid(),
-            collection: Graph::Block->value,
-            record: $block,
-        );
-    }
-
-    /**
-     * @param  string  $uri  at://did:plc:.../app.bsky.graph.block/{rkey}
-     *
-     * @throws AuthenticationException
-     */
-    public function unblock(#[Format('at-uri')] string $uri): Response
-    {
-        $at = AtUri::parse($uri);
-
-        if ($at->collection() !== Graph::Block->value) {
-            throw new InvalidArgumentException();
-        }
-
-        return $this->deleteRecord(
-            repo: $this->assertDid(),
-            collection: $at->collection(),
-            rkey: $at->rkey(),
-        );
-    }
-
-    public function mute(#[Format('at-identifier')] string $actor): Response
-    {
-        return $this->client(auth: true)
-            ->muteActor(
-                actor: $actor,
-            );
-    }
-
-    public function unmute(#[Format('at-identifier')] string $actor): Response
-    {
-        return $this->client(auth: true)
-            ->unmuteActor(
-                actor: $actor,
-            );
-    }
-
-    /**
-     * @param  string  $list  AT-URI
-     */
-    public function muteModList(#[Format('at-uri')] string $list): Response
-    {
-        return $this->client(auth: true)
-            ->muteActorList(
-                list: $list,
-            );
-    }
-
-    /**
-     * @param  string  $list  AT-URI
-     */
-    public function unmuteModList(#[Format('at-uri')] string $list): Response
-    {
-        return $this->client(auth: true)
-            ->unmuteActorList(
-                list: $list,
-            );
-    }
-
-    /**
-     * @param  string  $list  AT-URI
-     *
-     * @throws AuthenticationException
-     */
-    public function blockModList(#[Format('at-uri')] string $list): Response
-    {
-        return $this->createRecord(
-            repo: $this->assertDid(),
-            collection: Graph::Listblock->value,
-            record: [
-                '$type' => Graph::Listblock->value,
-                'subject' => $list,
-                'createdAt' => now()->toISOString(),
-            ],
-        );
-    }
-
-    /**
-     * @param  string  $list  AT-URI
-     *
-     * @throws AuthenticationException
-     */
-    public function unblockModList(#[Format('at-uri')] string $list): Response
-    {
-        $blocked = $this->getList(
-            list: $list,
-            limit: 1,
-        )->json('list.viewer.blocked');
-
-        if (empty($blocked)) {
-            return new Response(Http::response([], 404)->wait());
-        }
-
-        $at = AtUri::parse($blocked);
-
-        return $this->deleteRecord(
-            repo: $this->assertDid(),
-            collection: $at->collection(),
-            rkey: $at->rkey(),
-        );
-    }
-
     /**
      * Create a user list.
      *
@@ -766,33 +568,6 @@ trait HasShortHand
     }
 
     /**
-     * Remove a user from a list.
-     */
-    public function deleteListItem(#[Format('at-uri')] string $uri): Response
-    {
-        $at = AtUri::parse($uri);
-
-        if ($at->collection() !== Graph::Listitem->value) {
-            throw new InvalidArgumentException();
-        }
-
-        return $this->deleteRecord(
-            repo: $at->repo(),
-            collection: $at->collection(),
-            rkey: $at->rkey(),
-        );
-    }
-
-    public function getListMutes(?int $limit = 50, ?string $cursor = null): Response
-    {
-        return $this->client(auth: true)
-            ->getListMutes(
-                limit: $limit,
-                cursor: $cursor,
-            );
-    }
-
-    /**
      * Create ThreadGate.
      *
      * ```
@@ -829,17 +604,6 @@ trait HasShortHand
     {
         return $this->client(auth: false)
             ->resolveHandle(handle: $handle);
-    }
-
-    /**
-     * @param  string  $handle  `***.bsky.social` `alice.test`
-     */
-    public function updateHandle(#[Format('handle')] string $handle): Response
-    {
-        return $this->client(auth: true)
-            ->updateHandle(
-                handle: $handle,
-            );
     }
 
     #[ArrayShape(AtNotification::listNotificationsResponse)]
