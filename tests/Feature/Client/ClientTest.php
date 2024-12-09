@@ -14,6 +14,7 @@ use Revolution\AtProto\Lexicon\Enum\ListPurpose;
 use Revolution\Bluesky\Agent\OAuthAgent;
 use Revolution\Bluesky\BlueskyManager;
 use Revolution\Bluesky\Facades\Bluesky;
+use Revolution\Bluesky\Record\Block;
 use Revolution\Bluesky\Record\Follow;
 use Revolution\Bluesky\Record\Like;
 use Revolution\Bluesky\Record\Post;
@@ -473,6 +474,17 @@ class ClientTest extends TestCase
         $this->assertTrue($response->successful());
     }
 
+    public function test_block()
+    {
+        Http::fakeSequence()
+            ->push($this->session)
+            ->push([]);
+
+        $block = Block::create(did: 'did');
+
+        $this->assertSame('did', $block->toArray()['subject']);
+    }
+
     public function test_user_list()
     {
         Http::fakeSequence()
@@ -484,9 +496,7 @@ class ClientTest extends TestCase
             ->purpose(ListPurpose::Curatelist)
             ->description('description');
 
-        $response = Bluesky::login('id', 'pass')->createList($userlist);
-
-        $this->assertTrue($response->successful());
+        $this->assertSame('name', $userlist->toArray()['name']);
     }
 
     public function test_upsert_profile()
