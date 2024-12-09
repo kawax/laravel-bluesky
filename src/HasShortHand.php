@@ -74,21 +74,6 @@ trait HasShortHand
             );
     }
 
-    /**
-     * @param  string|null  $actor  DID or handle.
-     *
-     * @throws AuthenticationException
-     */
-    public function getActorFeeds(#[Format('at-identifier')] ?string $actor = null, ?int $limit = 50, ?string $cursor = null): Response
-    {
-        return $this->client(auth: true)
-            ->getActorFeeds(
-                actor: $actor ?? $this->assertDid(),
-                limit: $limit,
-                cursor: $cursor,
-            );
-    }
-
     #[ArrayShape(AtFeed::searchPostsResponse)]
     public function searchPosts(string $q, #[KnownValues(['top', 'latest'])] ?string $sort = 'latest', ?string $since = null, ?string $until = null, #[Format('at-identifier')] ?string $mentions = null, #[Format('at-identifier')] ?string $author = null, #[Format('language')] ?string $lang = null, ?string $domain = null, #[Format('uri')] ?string $url = null, ?array $tag = null, ?int $limit = 25, ?string $cursor = null): Response
     {
@@ -196,25 +181,6 @@ trait HasShortHand
             repo: $at->repo(),
             collection: $at->collection(),
             rkey: $at->rkey(),
-        );
-    }
-
-    /**
-     * @param  string  $uri  at://did:plc:.../app.bsky.feed.post/{rkey}
-     */
-    public function getPost(#[Format('at-uri')] string $uri, ?string $cid = null): Response
-    {
-        $at = AtUri::parse($uri);
-
-        if ($at->collection() !== Feed::Post->value) {
-            throw new InvalidArgumentException();
-        }
-
-        return $this->getRecord(
-            repo: $at->repo(),
-            collection: $at->collection(),
-            rkey: $at->rkey(),
-            cid: $cid,
         );
     }
 
