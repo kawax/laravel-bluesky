@@ -22,6 +22,7 @@ use Revolution\AtProto\Lexicon\Contracts\Com\Atproto\Server as AtServer;
 use Revolution\AtProto\Lexicon\Enum\Feed;
 use Revolution\AtProto\Lexicon\Enum\Graph;
 use Revolution\Bluesky\Client\SubClient\VideoClient;
+use Revolution\Bluesky\Contracts\Recordable;
 use Revolution\Bluesky\Record\Follow;
 use Revolution\Bluesky\Record\Generator;
 use Revolution\Bluesky\Record\Like;
@@ -42,6 +43,77 @@ use function Illuminate\Support\enum_value;
 trait HasShortHand
 {
     use HasShortHandStash;
+
+    #[ArrayShape(AtRepo::createRecordResponse)]
+    public function createRecord(#[Format('at-identifier')] string $repo, #[Format('nsid')] string $collection, Recordable|array $record, ?string $rkey = null, ?bool $validate = null, ?string $swapCommit = null): Response
+    {
+        $record = $record instanceof Recordable ? $record->toRecord() : $record;
+
+        return $this->client(auth: true)
+            ->createRecord(
+                repo: $repo,
+                collection: $collection,
+                record: $record,
+                rkey: $rkey,
+                validate: $validate,
+                swapCommit: $swapCommit,
+            );
+    }
+
+    #[ArrayShape(AtRepo::getRecordResponse)]
+    public function getRecord(#[Format('at-identifier')] string $repo, #[Format('nsid')] string $collection, string $rkey, #[Format('cid')] ?string $cid = null): Response
+    {
+        return $this->client(auth: true)
+            ->getRecord(
+                repo: $repo,
+                collection: $collection,
+                rkey: $rkey,
+                cid: $cid,
+            );
+    }
+
+    #[ArrayShape(AtRepo::listRecordsResponse)]
+    public function listRecords(#[Format('at-identifier')] string $repo, #[Format('nsid')] string $collection, ?int $limit = 50, ?string $cursor = null, ?bool $reverse = null): Response
+    {
+        return $this->client(auth: true)
+            ->listRecords(
+                repo: $repo,
+                collection: $collection,
+                limit: $limit,
+                cursor: $cursor,
+                reverse: $reverse,
+            );
+    }
+
+    #[ArrayShape(AtRepo::putRecordResponse)]
+    public function putRecord(#[Format('at-identifier')] string $repo, #[Format('nsid')] string $collection, string $rkey, Recordable|array $record, ?bool $validate = null, #[Format('cid')] ?string $swapRecord = null, #[Format('cid')] ?string $swapCommit = null): Response
+    {
+        $record = $record instanceof Recordable ? $record->toRecord() : $record;
+
+        return $this->client(auth: true)
+            ->putRecord(
+                repo: $repo,
+                collection: $collection,
+                rkey: $rkey,
+                record: $record,
+                validate: $validate,
+                swapRecord: $swapRecord,
+                swapCommit: $swapCommit,
+            );
+    }
+
+    #[ArrayShape(AtRepo::deleteRecordResponse)]
+    public function deleteRecord(#[Format('at-identifier')] string $repo, #[Format('nsid')] string $collection, string $rkey, #[Format('cid')] ?string $swapRecord = null, #[Format('cid')] ?string $swapCommit = null): Response
+    {
+        return $this->client(auth: true)
+            ->deleteRecord(
+                repo: $repo,
+                collection: $collection,
+                rkey: $rkey,
+                swapRecord: $swapRecord,
+                swapCommit: $swapCommit,
+            );
+    }
 
     #[ArrayShape(AtFeed::getTimelineResponse)]
     public function getTimeline(?string $algorithm = null, ?int $limit = 50, ?string $cursor = null): Response
