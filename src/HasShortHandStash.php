@@ -19,6 +19,7 @@ use function Illuminate\Support\enum_value;
 
 /**
  * Separate the excessive shorthands. Will delete them in the future.
+ *
  * @deprecated
  */
 trait HasShortHandStash
