@@ -24,23 +24,15 @@ final class TID implements Stringable
 
     public const FORMAT = '/^[234567abcdefghij][234567abcdefghijklmnopqrstuvwxyz]{12}$/';
 
-    protected string $str;
-
     protected static int $lastTimestamp = 0;
 
     protected static ?int $clockId = null;
 
-    public function __construct(string $str)
+    public function __construct(protected string $str)
     {
-        if (strlen($str) !== self::TID_LEN) {
-            throw new InvalidArgumentException('Poorly formatted TID: '.self::TID_LEN.' length');
-        }
-
-        if (! Str::match(self::FORMAT, $str)) {
+        if (! self::is($this->str)) {
             throw new InvalidArgumentException('Invalid TID format');
         }
-
-        $this->str = $str;
     }
 
     /**
@@ -76,7 +68,7 @@ final class TID implements Stringable
      */
     public static function nextStr(?string $prev = null): string
     {
-        return self::next($prev ? new self($prev) : null)->toString();
+        return self::next(self::is($prev) ? new self($prev) : null)->toString();
     }
 
     /**
@@ -93,6 +85,11 @@ final class TID implements Stringable
     public static function fromStr(string $str): self
     {
         return new self($str);
+    }
+
+    public static function is(?string $str): bool
+    {
+        return (Str::length($str) === self::TID_LEN) && Str::match(self::FORMAT, $str);
     }
 
     /**
