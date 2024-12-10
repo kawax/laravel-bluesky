@@ -65,6 +65,14 @@ final class TID implements Stringable
 
     /**
      * Create new TID as string.
+     *
+     * ```
+     * $rkey = TID::nextStr();
+     * ```
+     *
+     * As seen in the Statusphere tutorial, we use this method to create a new time-based record key.
+     *
+     * @link https://atproto.com/guides/applications
      */
     public static function nextStr(?string $prev = null): string
     {
