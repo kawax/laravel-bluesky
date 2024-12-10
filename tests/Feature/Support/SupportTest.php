@@ -10,6 +10,7 @@ use Revolution\Bluesky\Facades\Bluesky;
 use Revolution\Bluesky\Support\AtUri;
 use Revolution\Bluesky\Support\DID;
 use Revolution\Bluesky\Support\DidDocument;
+use Revolution\Bluesky\Support\TID;
 use Tests\TestCase;
 
 class SupportTest extends TestCase
