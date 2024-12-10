@@ -12,7 +12,7 @@ use Stringable;
 /**
  * Timestamp ID.
  *
- * @link https://atproto.com/ja/specs/tid
+ * @link https://atproto.com/specs/tid
  * @link https://github.com/bluesky-social/atproto/blob/main/packages/common-web/src/tid.ts
  * @link https://github.com/bluesky-social/atproto/blob/main/packages/common-web/src/util.ts
  */
