@@ -29,13 +29,9 @@ final readonly class AtUri implements Stringable
      */
     public function __construct(protected string $uri)
     {
-        if (! Str::startsWith($this->uri, self::ATP)) {
-            throw new InvalidArgumentException();
-        }
+        throw_unless(Str::startsWith($this->uri, self::ATP), InvalidArgumentException::class);
 
-        if (preg_match(self::ATP_URI_REGEX, $this->uri, $matches) === false) {
-            throw new InvalidArgumentException();
-        }
+        throw_if(preg_match(self::ATP_URI_REGEX, $this->uri, $matches) === false, InvalidArgumentException::class);
 
         $this->protocol = $matches[1];
         $this->host = $matches[2];
