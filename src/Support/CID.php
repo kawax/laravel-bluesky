@@ -18,18 +18,20 @@ class CID
 
     protected const SHA256 = "\x12";
 
-    protected const RAW = "\x55";
+    public const RAW = "\x55";
+
+    public const DAG_CBOR = "\x71";
 
     /**
      * Encode to a specific format.
      *
      * ```
      * CIDv1
-     * multicodec: raw
-     * multihash: sha256
+     * multi codec: raw or dag-cbor
+     * multi hash: sha256
      * ```
      */
-    public static function encode(string $data): string
+    public static function encode(string $data, string $codec = self::RAW): string
     {
         $hash = hash(algo: 'sha256', data: $data, binary: true);
         $hash_length = strlen($hash);
@@ -38,14 +40,14 @@ class CID
         $varint_length = (string) Varint::fromInteger($hash_length)->toByteArray();
         $varint = $varint_hash.$varint_length;
 
-        $bytes = self::CID_V1.self::RAW.$varint.$hash;
+        $bytes = self::CID_V1.$codec.$varint.$hash;
 
         return Multibase::encode(Multibase::BASE32, $bytes);
     }
 
-    public static function verify(string $data, string $cid): bool
+    public static function verify(string $data, string $cid, string $codec = self::RAW): bool
     {
-        return self::encode($data) === $cid;
+        return self::encode(data: $data, codec: $codec) === $cid;
     }
 
     /**
