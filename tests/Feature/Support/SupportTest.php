@@ -298,8 +298,8 @@ class SupportTest extends TestCase
     public function test_cid_varint()
     {
         $this->assertSame("\x80\x01", CID::varint(0x80));
-        $this->assertSame("\xff\x01", CID::varint(0xff));
-        $this->assertSame("\xac\x02", CID::varint(0x012c));
+        $this->assertSame("\xFF\x01", CID::varint(0xFF));
+        $this->assertSame("\xAC\x02", CID::varint(0x012C));
         $this->assertSame("\x80\x80\x01", CID::varint(0x4000));
     }
 }
