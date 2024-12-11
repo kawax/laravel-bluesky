@@ -243,9 +243,7 @@ trait HasShortHand
     {
         $at = AtUri::parse($uri);
 
-        if ($at->collection() !== Feed::Post->value) {
-            throw new InvalidArgumentException();
-        }
+        throw_if($at->collection() !== enum_value(Feed::Post), InvalidArgumentException::class);
 
         return $this->deleteRecord(
             repo: $at->repo(),
@@ -293,9 +291,7 @@ trait HasShortHand
     {
         $at = AtUri::parse($uri);
 
-        if ($at->collection() !== Feed::Like->value) {
-            throw new InvalidArgumentException();
-        }
+        throw_if($at->collection() !== enum_value(Feed::Like), InvalidArgumentException::class);
 
         return $this->deleteRecord(
             repo: $at->repo(),
@@ -326,9 +322,7 @@ trait HasShortHand
     {
         $at = AtUri::parse($uri);
 
-        if ($at->collection() !== Feed::Repost->value) {
-            throw new InvalidArgumentException();
-        }
+        throw_if($at->collection() !== enum_value(Feed::Repost), InvalidArgumentException::class);
 
         return $this->deleteRecord(
             repo: $at->repo(),
@@ -391,9 +385,7 @@ trait HasShortHand
     {
         $at = AtUri::parse($uri);
 
-        if ($at->collection() !== Graph::Follow->value) {
-            throw new InvalidArgumentException();
-        }
+        throw_if($at->collection() !== enum_value(Graph::Follow), InvalidArgumentException::class);
 
         return $this->deleteRecord(
             repo: $at->repo(),
@@ -535,9 +527,7 @@ trait HasShortHand
     {
         $at = AtUri::parse($post);
 
-        if ($at->collection() !== Feed::Post->value) {
-            throw new InvalidArgumentException();
-        }
+        throw_if($at->collection() !== enum_value(Feed::Post), InvalidArgumentException::class);
 
         $gate = ThreadGate::create($post, $allow);
 
