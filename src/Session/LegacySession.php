@@ -6,11 +6,13 @@ namespace Revolution\Bluesky\Session;
 
 class LegacySession extends AbstractSession
 {
+    #[\Override]
     public function token(string $default = ''): string
     {
         return $this->get('accessJwt', $default);
     }
 
+    #[\Override]
     public function refresh(string $default = ''): string
     {
         return $this->get('refreshJwt', $default);
