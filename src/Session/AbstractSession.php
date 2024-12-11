@@ -82,6 +82,16 @@ abstract class AbstractSession implements Arrayable
         return $this->get('handle', $default);
     }
 
+    public function token(string $default = ''): string
+    {
+        return $this->get('access_token', $default);
+    }
+
+    public function refresh(string $default = ''): string
+    {
+        return $this->get('refresh_token', $default);
+    }
+
     public function collect(): Collection
     {
         return $this->session;
