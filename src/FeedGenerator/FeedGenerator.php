@@ -51,9 +51,7 @@ final class FeedGenerator
             $algo = app($algo);
         }
 
-        if (! is_callable($algo)) {
-            throw new InvalidArgumentException();
-        }
+        throw_unless(is_callable($algo), InvalidArgumentException::class);
 
         self::$algos[enum_value($name)] = $algo(...);
     }
