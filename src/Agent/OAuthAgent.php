@@ -89,9 +89,9 @@ final class OAuthAgent implements Agent
      */
     public function refreshSession(): self
     {
-        if (empty($refresh = $this->session()->refresh())) {
-            throw new AuthenticationException();
-        }
+        $refresh = $this->session()->refresh();
+
+        throw_if(empty($refresh), AuthenticationException::class);
 
         // Since refresh_token can only be used once, delete it here.
         // If an error occurs while refreshing the token, you will
