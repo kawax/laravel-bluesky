@@ -94,9 +94,7 @@ class BlueskyProvider extends AbstractProvider implements ProviderInterface
             return $this->user;
         }
 
-        if ($this->hasInvalidState()) {
-            throw new InvalidStateException;
-        }
+        throw_if($this->hasInvalidState(), InvalidStateException::class);
 
         $this->updateServiceWithHint();
 
