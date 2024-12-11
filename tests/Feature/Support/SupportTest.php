@@ -274,7 +274,9 @@ class SupportTest extends TestCase
 
         $hash = hash('sha256', 'test');
 
-        $this->assertSame(CID::CID_V1, $cid['version']);
+        $ver = unpack('C*', $cid['version'])[1];
+
+        $this->assertSame(CID::CID_V1, $ver);
         $this->assertSame($hash, $cid['hash']);
     }
 
@@ -288,6 +290,16 @@ class SupportTest extends TestCase
 
         $decode = CID::decode($cid);
 
-        $this->assertSame(CID::DAG_CBOR, $decode['codec']);
+        $codec = unpack('C*', $decode['codec'])[1];
+
+        $this->assertSame(CID::DAG_CBOR, $codec);
+    }
+
+    public function test_cid_varint()
+    {
+        $this->assertSame("\x80\x01", CID::varint(0x80));
+        $this->assertSame("\xff\x01", CID::varint(0xff));
+        $this->assertSame("\xac\x02", CID::varint(0x012c));
+        $this->assertSame("\x80\x80\x01", CID::varint(0x4000));
     }
 }
