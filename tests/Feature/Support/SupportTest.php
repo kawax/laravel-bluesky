@@ -277,4 +277,17 @@ class SupportTest extends TestCase
         $this->assertSame(CID::CID_V1, $cid['version']);
         $this->assertSame($hash, $cid['hash']);
     }
+
+    public function test_cid_encode_dag_cbor()
+    {
+        $cid = CID::encode('test', codec: CID::DAG_CBOR);
+
+        $this->assertSame('bafyreie7q3iidccmpvszul7kudcvvuavuo7u6gzlbobczuk5nqk3b4akba', $cid);
+
+        $this->assertTrue(CID::verify('test', $cid, codec: CID::DAG_CBOR));
+
+        $decode = CID::decode($cid);
+
+        $this->assertSame(CID::DAG_CBOR, $decode['codec']);
+    }
 }
