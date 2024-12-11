@@ -8,6 +8,7 @@ use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 use Revolution\Bluesky\Facades\Bluesky;
+use Revolution\Bluesky\Support\CID;
 use Revolution\Bluesky\Support\DidDocument;
 use Revolution\Bluesky\Support\Identity;
 use Symfony\Component\Mime\MimeTypes;
@@ -62,7 +63,7 @@ class DownloadBlobsCommand extends Command
 
         $this->warn('DID: '.$did);
 
-        $pds = DidDocument::make(Bluesky::identity()->resolveDID($did)->json())->pdsUrl();
+        $pds = DidDocument::make(Bluesky::identity()->resolveDID($did, cache: false)->json())->pdsUrl();
 
         $this->warn('PDS: '.$pds);
 
@@ -82,6 +83,12 @@ class DownloadBlobsCommand extends Command
                     ->getBlob(did: $did, cid: $cid)
                     ->throw()
                     ->body();
+
+                if (! CID::verify(data: $content, cid: $cid)) {
+                    $this->error('Invalid cid: '.$cid);
+
+                    return;
+                }
 
                 $name = Str::slug($actor, dictionary: ['.' => '-', ':' => '-']);
 

@@ -20,7 +20,8 @@
         "revolution/atproto-lexicon-contracts": "1.0.36",
         "valtzu/guzzle-websocket-middleware": "^0.2.0",
         "yocto/yoclib-multibase": "^1.2",
-        "jetbrains/phpstorm-attributes": "^1.2"
+        "jetbrains/phpstorm-attributes": "^1.2",
+        "team-acaisia/php-varint": "^1.0"
     },
     "require-dev": {
         "orchestra/testbench": "^9.0",
