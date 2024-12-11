@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Revolution\Bluesky\Support;
 
-use Acaisia\Multiformats\Varint\Varint;
 use YOCLIB\Multiformats\Multibase\Multibase;
 
 /**
@@ -16,7 +15,7 @@ class CID
 {
     public const CID_V1 = "\x01";
 
-    protected const SHA256 = "\x12";
+    protected const SHA2_256 = "\x12";
 
     public const RAW = "\x55";
 
@@ -36,8 +35,8 @@ class CID
         $hash = hash(algo: 'sha256', data: $data, binary: true);
         $hash_length = strlen($hash);
 
-        $varint_hash = (string) Varint::fromInteger(intval(bin2hex(self::SHA256), 16))->toByteArray();
-        $varint_length = (string) Varint::fromInteger($hash_length)->toByteArray();
+        $varint_hash = self::varint(intval(bin2hex(self::SHA2_256), 16));
+        $varint_length = self::varint($hash_length);
         $varint = $varint_hash.$varint_length;
 
         $bytes = self::CID_V1.$codec.$varint.$hash;
@@ -87,5 +86,21 @@ class CID
             'hash_length',
             'hash',
         );
+    }
+
+    protected static function varint(int $x): string
+    {
+        $buf = [];
+        $i = 0;
+
+        while ($x >= 0x80) {
+            $buf[$i] = $x & 0xFF | 0x80;
+            $x = $x >> 7;
+            $i++;
+        }
+
+        $buf[$i] = $x & 0xFF;
+
+        return pack("C*", ...$buf);
     }
 }
