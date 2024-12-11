@@ -13,13 +13,13 @@ use YOCLIB\Multiformats\Multibase\Multibase;
  */
 class CID
 {
-    public const CID_V1 = "\x01";
+    public const CID_V1 = 0x01;
 
-    protected const SHA2_256 = "\x12";
+    protected const SHA2_256 = 0x12;
 
-    public const RAW = "\x55";
+    public const RAW = 0x55;
 
-    public const DAG_CBOR = "\x71";
+    public const DAG_CBOR = 0x71;
 
     /**
      * Encode to a specific format.
@@ -30,21 +30,22 @@ class CID
      * multi hash: sha256
      * ```
      */
-    public static function encode(string $data, string $codec = self::RAW): string
+    public static function encode(string $data, int $codec = self::RAW): string
     {
         $hash = hash(algo: 'sha256', data: $data, binary: true);
         $hash_length = strlen($hash);
 
-        $varint_hash = self::varint(intval(bin2hex(self::SHA2_256), 16));
-        $varint_length = self::varint($hash_length);
-        $varint = $varint_hash.$varint_length;
+        $version = self::varint(self::CID_V1);
+        $code = self::varint($codec);
+        $type = self::varint(self::SHA2_256);
+        $length = self::varint($hash_length);
 
-        $bytes = self::CID_V1.$codec.$varint.$hash;
+        $bytes = $version.$code.$type.$length.$hash;
 
         return Multibase::encode(Multibase::BASE32, $bytes);
     }
 
-    public static function verify(string $data, string $cid, string $codec = self::RAW): bool
+    public static function verify(string $data, string $cid, int $codec = self::RAW): bool
     {
         return self::encode(data: $data, codec: $codec) === $cid;
     }
@@ -59,7 +60,7 @@ class CID
      * $decode = CID::decode('b***');
      *
      * [
-     *     'version' => 'bin',
+     *     'version' => 'varint bin',
      *     'codec' => 'bin',
      *     'hash_algo' => 'bin',
      *     'hash_length' => 'bin',
@@ -77,7 +78,7 @@ class CID
         $codec = substr($bytes, 1, 1);
         $hash_algo = substr($bytes, 2, 1);
         $hash_length = substr($bytes, 3, 1);
-        $hash = bin2hex(substr($bytes, 4, intval(bin2hex($hash_length), 16)));
+        $hash = bin2hex(substr($bytes, 4));
 
         return compact(
             'version',
@@ -88,7 +89,7 @@ class CID
         );
     }
 
-    protected static function varint(int $x): string
+    public static function varint(int $x): string
     {
         $buf = [];
         $i = 0;
@@ -101,6 +102,6 @@ class CID
 
         $buf[$i] = $x & 0xFF;
 
-        return pack("C*", ...$buf);
+        return pack('C*', ...$buf);
     }
 }
