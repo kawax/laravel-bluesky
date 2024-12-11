@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\Http;
 use InvalidArgumentException;
 use Revolution\Bluesky\Facades\Bluesky;
 use Revolution\Bluesky\Support\AtUri;
+use Revolution\Bluesky\Support\CID;
 use Revolution\Bluesky\Support\DID;
 use Revolution\Bluesky\Support\DidDocument;
 use Revolution\Bluesky\Support\TID;
@@ -252,5 +253,28 @@ class SupportTest extends TestCase
         $this->assertFalse(TID::is('3jzf-cij-pj2z-2a'));
         $this->assertFalse(TID::is('zzzzzzzzzzzzz'));
         $this->assertFalse(TID::is('kjzfcijpj2z2a'));
+    }
+
+    public function test_cid_encode()
+    {
+        $cid = CID::encode('test');
+
+        $this->assertSame('bafkreie7q3iidccmpvszul7kudcvvuavuo7u6gzlbobczuk5nqk3b4akba', $cid);
+    }
+
+    public function test_cid_verify()
+    {
+        $this->assertTrue(CID::verify('test', 'bafkreie7q3iidccmpvszul7kudcvvuavuo7u6gzlbobczuk5nqk3b4akba'));
+        $this->assertFalse(CID::verify('test2', 'bafkreie7q3iidccmpvszul7kudcvvuavuo7u6gzlbobczuk5nqk3b4akba'));
+    }
+
+    public function test_cid_decode()
+    {
+        $cid = CID::decode('bafkreie7q3iidccmpvszul7kudcvvuavuo7u6gzlbobczuk5nqk3b4akba');
+
+        $hash = hash('sha256', 'test');
+
+        $this->assertSame(CID::CID_V1, $cid['version']);
+        $this->assertSame($hash, $cid['hash']);
     }
 }
