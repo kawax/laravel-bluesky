@@ -43,16 +43,6 @@ class OAuthSession extends AbstractSession
         return $this->get('profile.avatar', $this->get('avatar', $default));
     }
 
-    public function token(string $default = ''): string
-    {
-        return $this->get('access_token', $default);
-    }
-
-    public function refresh(string $default = ''): string
-    {
-        return $this->get('refresh_token', $default);
-    }
-
     public function tokenExpired(): bool
     {
         $token_created_at = $this->get('token_created_at');
