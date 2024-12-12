@@ -46,8 +46,13 @@ final class CID
         return Multibase::encode(Multibase::BASE32, $bytes);
     }
 
-    public static function verify(string $data, string $cid, int $codec = self::RAW): bool
+    public static function verify(string $data, string $cid, ?int $codec = null): bool
     {
+        // Detect codec
+        if (is_null($codec)) {
+            $codec = self::decode($cid)['codec'];
+        }
+
         return self::encode(data: $data, codec: $codec) === $cid;
     }
 
