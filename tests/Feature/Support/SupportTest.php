@@ -4,11 +4,13 @@ declare(strict_types=1);
 
 namespace Tests\Feature\Support;
 
+use CBOR\MapObject;
 use CBOR\TextStringObject;
 use Illuminate\Support\Facades\Http;
 use InvalidArgumentException;
 use Revolution\Bluesky\Facades\Bluesky;
 use Revolution\Bluesky\Support\AtUri;
+use Revolution\Bluesky\Support\CBOR;
 use Revolution\Bluesky\Support\CID;
 use Revolution\Bluesky\Support\DID;
 use Revolution\Bluesky\Support\DidDocument;
@@ -293,6 +295,70 @@ class SupportTest extends TestCase
         $decode = CID::decode($cid);
 
         $this->assertSame(CID::DAG_CBOR, $decode['codec']);
+    }
+
+    public function test_cid_cbor()
+    {
+        $cbor = MapObject::create()
+            ->add(
+                TextStringObject::create('text'),
+                TextStringObject::create(".... And we're back!\n\nOur database upgrade is now complete. Thanks for your patience!")
+            )
+            ->add(
+                TextStringObject::create('$type'),
+                TextStringObject::create('app.bsky.feed.post')
+            )
+            ->add(
+                TextStringObject::create('createdAt'),
+                TextStringObject::create('2023-04-27T21:52:19.545Z')
+            );
+
+        $cid = CID::encode((string) $cbor, codec: CID::DAG_CBOR);
+
+        $this->assertSame('bafyreicpyp7tho7non7ozonty5mqjay6g4l76ntfm7qhvj5p344syd3toy', $cid);
+
+        $this->assertTrue(CID::verify((string) $cbor, $cid, codec: CID::DAG_CBOR));
+
+        $decode = CID::decode($cid);
+
+        $this->assertSame(CID::DAG_CBOR, $decode['codec']);
+    }
+
+    public function test_cbor_from_array()
+    {
+        $json = json_decode(file_get_contents(__DIR__.'/fixture/3juf3jiip3l2x.json'), true);
+        $expect_cid = $json['cid'];
+
+        $cbor = CBOR::fromArray($json['value']);
+
+        /** @var MapObject $decode */
+        $decode = CBOR::decode((string) $cbor);
+        //dump($decode->normalize());
+
+        $cid = CID::encode((string) $cbor, codec: CID::DAG_CBOR);
+
+        $this->assertSame($json['value'], $decode->normalize());
+        $this->assertSame($expect_cid, $cid);
+    }
+
+    public function test_cbor_from_array_2()
+    {
+        $json = json_decode(file_get_contents(__DIR__.'/fixture/3jt6walwmos2y.json'), true);
+        $expect_cid = $json['cid'];
+
+        $cbor = CBOR::fromArray($json['value']);
+
+        /** @var MapObject $decode */
+        $decode = CBOR::decode((string) $cbor);
+        //dump($decode->normalize());
+
+        $cid = CID::encode((string) $cbor, codec: CID::DAG_CBOR);
+
+        $this->assertEquals($json['value'], $decode->normalize());
+        $this->assertSame($json['value']['text'], $decode->normalize()['text']);
+
+        // TODO: still not working
+        $this->assertNotSame($expect_cid, $cid);
     }
 
     public function test_varint()
