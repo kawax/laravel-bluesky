@@ -12,6 +12,7 @@ use Revolution\Bluesky\Support\CID;
 use Revolution\Bluesky\Support\DID;
 use Revolution\Bluesky\Support\DidDocument;
 use Revolution\Bluesky\Support\TID;
+use Revolution\Bluesky\Support\Varint;
 use Tests\TestCase;
 
 class SupportTest extends TestCase
@@ -274,9 +275,7 @@ class SupportTest extends TestCase
 
         $hash = hash('sha256', 'test');
 
-        $ver = unpack('C*', $cid['version'])[1];
-
-        $this->assertSame(CID::CID_V1, $ver);
+        $this->assertSame(CID::CID_V1, $cid['version']);
         $this->assertSame($hash, $cid['hash']);
     }
 
@@ -290,16 +289,19 @@ class SupportTest extends TestCase
 
         $decode = CID::decode($cid);
 
-        $codec = unpack('C*', $decode['codec'])[1];
-
-        $this->assertSame(CID::DAG_CBOR, $codec);
+        $this->assertSame(CID::DAG_CBOR, $decode['codec']);
     }
 
-    public function test_cid_varint()
+    public function test_varint()
     {
-        $this->assertSame("\x80\x01", CID::varint(0x80));
-        $this->assertSame("\xFF\x01", CID::varint(0xFF));
-        $this->assertSame("\xAC\x02", CID::varint(0x012C));
-        $this->assertSame("\x80\x80\x01", CID::varint(0x4000));
+        $this->assertSame("\x80\x01", Varint::encode(0x80));
+        $this->assertSame("\xFF\x01", Varint::encode(0xFF));
+        $this->assertSame("\xAC\x02", Varint::encode(0x012C));
+        $this->assertSame("\x80\x80\x01", Varint::encode(0x4000));
+
+        $this->assertSame(0x80, Varint::decode("\x80\x01"));
+        $this->assertSame(0xFF, Varint::decode("\xFF\x01"));
+        $this->assertSame(0x012C, Varint::decode("\xAC\x02"));
+        $this->assertSame(0x4000, Varint::decode("\x80\x80\x01"));
     }
 }
