@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Tests\Feature\Support;
 
+use CBOR\TextStringObject;
 use Illuminate\Support\Facades\Http;
 use InvalidArgumentException;
 use Revolution\Bluesky\Facades\Bluesky;
@@ -282,11 +283,12 @@ class SupportTest extends TestCase
 
     public function test_cid_encode_dag_cbor()
     {
-        $cid = CID::encode('test', codec: CID::DAG_CBOR);
+        $cbor = TextStringObject::create('test');
+        $cid = CID::encode((string) $cbor, codec: CID::DAG_CBOR);
 
-        $this->assertSame('bafyreie7q3iidccmpvszul7kudcvvuavuo7u6gzlbobczuk5nqk3b4akba', $cid);
+        $this->assertSame('bafyreidp4mma64aasbuxfbnmdyhi3raaewjxhv53styldknqq3t3uiw4hu', $cid);
 
-        $this->assertTrue(CID::verify('test', $cid, codec: CID::DAG_CBOR));
+        $this->assertTrue(CID::verify((string) $cbor, $cid, codec: CID::DAG_CBOR));
 
         $decode = CID::decode($cid);
 
