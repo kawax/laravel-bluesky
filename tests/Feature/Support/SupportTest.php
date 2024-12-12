@@ -13,6 +13,7 @@ use Revolution\Bluesky\Support\DID;
 use Revolution\Bluesky\Support\DidDocument;
 use Revolution\Bluesky\Support\TID;
 use Revolution\Bluesky\Support\Varint;
+use RuntimeException;
 use Tests\TestCase;
 
 class SupportTest extends TestCase
@@ -106,7 +107,7 @@ class SupportTest extends TestCase
 
     public function test_at_uri_invalid()
     {
-        $this->expectException(InvalidArgumentException::class);
+        $this->expectException(RuntimeException::class);
 
         $at = AtUri::parse('http://did:plc:test/app.bsky.feed.post/abcde');
     }
