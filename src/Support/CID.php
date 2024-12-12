@@ -53,7 +53,7 @@ final class CID
             $codec = self::decode($cid)['codec'];
         }
 
-        return self::encode(data: $data, codec: $codec) === $cid;
+        return hash_equals($cid, self::encode(data: $data, codec: $codec));
     }
 
     /**
@@ -83,8 +83,6 @@ final class CID
         $bytes = Multibase::decode($cid);
 
         $version = Varint::decode(substr($bytes, 0, 1));
-        throw_unless(self::CID_V1 === $version);
-
         $codec = Varint::decode(substr($bytes, 1, 1));
         $hash_algo = Varint::decode(substr($bytes, 2, 1));
         $hash_length = Varint::decode(substr($bytes, 3, 1));
