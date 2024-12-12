@@ -84,6 +84,7 @@ class DownloadBlobsCommand extends Command
                     ->throw()
                     ->body();
 
+                // The CID of the blob can be verified since it is a raw codec.
                 if (! CID::verify(data: $content, cid: $cid)) {
                     $this->error('Invalid cid: '.$cid);
 
