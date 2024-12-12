@@ -286,7 +286,7 @@ class SupportTest extends TestCase
 
         $this->assertSame('bafyreie7q3iidccmpvszul7kudcvvuavuo7u6gzlbobczuk5nqk3b4akba', $cid);
 
-        $this->assertTrue(CID::verify('test', $cid, codec: CID::DAG_CBOR));
+        $this->assertTrue(CID::verify('test', $cid));
 
         $decode = CID::decode($cid);
 
