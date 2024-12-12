@@ -9,6 +9,7 @@ use phpseclib3\Math\BigInteger;
 use Throwable;
 
 /**
+ * @internal
  * @link https://github.com/multiformats/unsigned-varint
  */
 final class Varint
