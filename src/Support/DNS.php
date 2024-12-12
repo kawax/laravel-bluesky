@@ -4,16 +4,16 @@ declare(strict_types=1);
 
 namespace Revolution\Bluesky\Support;
 
-class DNS
+final class DNS
 {
     protected static ?string $fake = null;
 
     public static function record(string $hostname, int $type = DNS_TXT): array
     {
-        if (! is_null(static::$fake)) {
+        if (! is_null(self::$fake)) {
             return [
                 [
-                    'txt' => static::$fake,
+                    'txt' => self::$fake,
                 ],
             ];
         }
@@ -26,6 +26,6 @@ class DNS
      */
     public static function fake(?string $txt = null): void
     {
-        static::$fake = $txt;
+        self::$fake = $txt;
     }
 }
