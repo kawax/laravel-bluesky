@@ -60,6 +60,9 @@ class DownloadRecordCommand extends Command
             $response->collect('records')->each(function (array $record) use ($actor, $collection) {
                 $at = AtUri::parse(data_get($record, 'uri'));
 
+                // The record's CID is the DAG-CBOR codec, so it cannot be verified yet.
+                // $cid = data_get($record, 'cid');
+
                 $name = Str::slug($actor, dictionary: ['.' => '-', ':' => '-']);
 
                 $file = collect(['bluesky', 'download', $name, $collection, $at->rkey().'.json'])
