@@ -50,7 +50,7 @@ final class CID
     {
         // Detect codec
         if (is_null($codec)) {
-            $codec = self::decode($cid)['codec'];
+            $codec = data_get(self::decode($cid), 'codec', self::RAW);
         }
 
         return hash_equals($cid, self::encode(data: $data, codec: $codec));
