@@ -70,6 +70,7 @@ final class CID
      * ```
      *
      * @return array{version: int, codec: int, hash_algo: int, hash_length: int, hash: string}
+     *
      * @throws Throwable
      */
     public static function decode(string $cid): array
