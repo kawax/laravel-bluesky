@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Revolution\Bluesky\Support;
 
+use Throwable;
 use YOCLIB\Multiformats\Multibase\Multibase;
 
 /**
@@ -35,10 +36,10 @@ class CID
         $hash = hash(algo: 'sha256', data: $data, binary: true);
         $hash_length = strlen($hash);
 
-        $version = self::varint(self::CID_V1);
-        $code = self::varint($codec);
-        $type = self::varint(self::SHA2_256);
-        $length = self::varint($hash_length);
+        $version = Varint::encode(self::CID_V1);
+        $code = Varint::encode($codec);
+        $type = Varint::encode(self::SHA2_256);
+        $length = Varint::encode($hash_length);
 
         $bytes = $version.$code.$type.$length.$hash;
 
@@ -60,25 +61,28 @@ class CID
      * $decode = CID::decode('b***');
      *
      * [
-     *     'version' => 'varint bin',
-     *     'codec' => 'bin',
-     *     'hash_algo' => 'bin',
-     *     'hash_length' => 'bin',
+     *     'version' => int,
+     *     'codec' => int,
+     *     'hash_algo' => int,
+     *     'hash_length' => int,
      *     'hash' => 'hex',
      * ]
      * ```
      *
-     * @return array{version: string, codec: string, hash_algo: string, hash_length: string, hash: string}
+     * @return array{version: int, codec: int, hash_algo: int, hash_length: int, hash: string}
+     * @throws Throwable
      */
     public static function decode(string $cid): array
     {
         $bytes = Multibase::decode($cid);
 
-        $version = substr($bytes, 0, 1);
-        $codec = substr($bytes, 1, 1);
-        $hash_algo = substr($bytes, 2, 1);
-        $hash_length = substr($bytes, 3, 1);
-        $hash = bin2hex(substr($bytes, 4));
+        $version = Varint::decode(substr($bytes, 0, 1));
+        throw_unless(self::CID_V1 === $version);
+
+        $codec = Varint::decode(substr($bytes, 1, 1));
+        $hash_algo = Varint::decode(substr($bytes, 2, 1));
+        $hash_length = Varint::decode(substr($bytes, 3, 1));
+        $hash = bin2hex(substr($bytes, 4, $hash_length));
 
         return compact(
             'version',
@@ -87,21 +91,5 @@ class CID
             'hash_length',
             'hash',
         );
-    }
-
-    public static function varint(int $x): string
-    {
-        $buf = [];
-        $i = 0;
-
-        while ($x >= 0x80) {
-            $buf[$i] = $x & 0xFF | 0x80;
-            $x = $x >> 7;
-            $i++;
-        }
-
-        $buf[$i] = $x & 0xFF;
-
-        return pack('C*', ...$buf);
     }
 }
