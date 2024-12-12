@@ -21,7 +21,7 @@ class FeedSkeletonController
 
         return FeedGenerator::getFeedSkeleton(
             name: $at->rkey(),
-            limit: $request->integer('limit'),
+            limit: $request->integer('limit', 30),
             cursor: $request->input('cursor'),
             user: $this->userDid($request),
             request: $request,

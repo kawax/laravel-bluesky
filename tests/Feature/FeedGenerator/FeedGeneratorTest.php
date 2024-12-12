@@ -26,7 +26,7 @@ class FeedGeneratorTest extends TestCase
 
     public function test_feed_register(): void
     {
-        FeedGenerator::register('test', function (?int $limit, ?string $cursor): array {
+        FeedGenerator::register('test', function (int $limit, ?string $cursor): array {
             return [];
         });
 
@@ -72,7 +72,7 @@ class FeedGeneratorTest extends TestCase
 
     public function test_feed_http(): void
     {
-        FeedGenerator::register('test', function (?int $limit, ?string $cursor): array {
+        FeedGenerator::register('test', function (int $limit, ?string $cursor): array {
             return ['feed' => [['post' => 'at://']]];
         });
 
@@ -88,7 +88,7 @@ class FeedGeneratorTest extends TestCase
 
     public function test_feed_http_missing(): void
     {
-        FeedGenerator::register('test', function (?int $limit, ?string $cursor): array {
+        FeedGenerator::register('test', function (int $limit, ?string $cursor): array {
             return ['feed' => [['post' => 'at://']]];
         });
 
@@ -99,7 +99,7 @@ class FeedGeneratorTest extends TestCase
 
     public function test_feed_describe(): void
     {
-        FeedGenerator::register('test', function (?int $limit, ?string $cursor): array {
+        FeedGenerator::register('test', function (int $limit, ?string $cursor): array {
             return ['feed' => [['post' => 'at://']]];
         });
 
@@ -129,7 +129,7 @@ class FeedGeneratorTest extends TestCase
             return 'did';
         });
 
-        FeedGenerator::register('test', function (?int $limit, ?string $cursor): array {
+        FeedGenerator::register('test', function (int $limit, ?string $cursor): array {
             return ['feed' => [['post' => 'at://']]];
         });
 
@@ -141,7 +141,7 @@ class FeedGeneratorTest extends TestCase
 
     public function test_feed_validate_auth(): void
     {
-        FeedGenerator::register('test', function (?int $limit, ?string $cursor, ?string $user): array {
+        FeedGenerator::register('test', function (int $limit, ?string $cursor, ?string $user): array {
             return ['user' => $user];
         });
 
@@ -178,7 +178,7 @@ class FeedGeneratorTest extends TestCase
 
 class TestFeed
 {
-    public function __invoke(?int $limit, ?string $cursor): array
+    public function __invoke(int $limit, ?string $cursor): array
     {
         return [];
     }
@@ -186,7 +186,7 @@ class TestFeed
 
 class TestFeed2
 {
-    public function feed(?int $limit, ?string $cursor): array
+    public function feed(int $limit, ?string $cursor): array
     {
         return [];
     }

@@ -18,7 +18,7 @@ use Illuminate\Http\Request;
 use Revolution\Bluesky\Facades\Bluesky;
 use Revolution\Bluesky\FeedGenerator\FeedGenerator;
 
-FeedGenerator::register(name: 'artisan', algo: function(?int $limit, ?string $cursor, ?string $user, Request $request): array {
+FeedGenerator::register(name: 'artisan', algo: function(int $limit, ?string $cursor, ?string $user, Request $request): array {
     // The implementation is entirely up to you.
 
     $response = Bluesky::searchPosts(q: '#laravel', until: $cursor, limit: $limit);
@@ -168,7 +168,7 @@ use Revolution\Bluesky\Facades\Bluesky;
 
 class ArtisanFeed
 {
-    public function __invoke(?int $limit, ?string $cursor, ?string $user, Request $request): array
+    public function __invoke(int $limit, ?string $cursor, ?string $user, Request $request): array
     {
         $response = Bluesky::searchPosts(q: '#laravel', until: $cursor, limit: $limit);
 

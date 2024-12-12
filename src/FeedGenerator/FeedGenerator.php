@@ -27,7 +27,7 @@ final class FeedGenerator
      * use Illuminate\Http\Request;
      * use Revolution\Bluesky\FeedGenerator\FeedGenerator;
      *
-     * FeedGenerator::register(name: 'artisan', algo: function (?int $limit, ?string $cursor, ?string $user, Request $request): array {
+     * FeedGenerator::register(name: 'artisan', algo: function (int $limit, ?string $cursor, ?string $user, Request $request): array {
      *     // The implementation is entirely up to you.
      *
      *     $response = Bluesky::searchPosts(q: '#laravel', until: $cursor, limit: $limit);
@@ -43,7 +43,7 @@ final class FeedGenerator
      * ```
      *
      * @param  BackedEnum|string  $name  short name. Used in generator url. `at://did:.../app.bsky.feed.generator/{name}`
-     * @param  class-string|callable(?int $limit, ?string $cursor, ?string $user, Request $request): array  $algo
+     * @param  class-string|callable(int $limit, ?string $cursor, ?string $user, Request $request): array  $algo
      */
     public static function register(BackedEnum|string $name, string|callable $algo): void
     {
@@ -56,7 +56,7 @@ final class FeedGenerator
         self::$algos[enum_value($name)] = $algo(...);
     }
 
-    public static function getFeedSkeleton(string $name, ?int $limit, ?string $cursor, ?string $user, Request $request): mixed
+    public static function getFeedSkeleton(string $name, int $limit, ?string $cursor, ?string $user, Request $request): mixed
     {
         return call_user_func(self::$algos[$name], $limit, $cursor, $user, $request);
     }
