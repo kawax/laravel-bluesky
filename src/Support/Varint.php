@@ -11,7 +11,7 @@ use Throwable;
 /**
  * @link https://github.com/multiformats/unsigned-varint
  */
-class Varint
+final class Varint
 {
     public static function encode(int $x): string
     {
