@@ -8,6 +8,7 @@ use Illuminate\Support\Str;
 use InvalidArgumentException;
 use Revolution\AtProto\Lexicon\Attributes\Format;
 use Stringable;
+use Throwable;
 
 /**
  * @link https://github.com/bluesky-social/atproto/blob/main/packages/syntax/src/aturi.ts
@@ -25,13 +26,13 @@ final readonly class AtUri implements Stringable
     protected ?string $hash;
 
     /**
-     * @throw InvalidArgumentException
+     * @throws Throwable
      */
     public function __construct(protected string $uri)
     {
-        throw_unless(Str::startsWith($this->uri, self::ATP), InvalidArgumentException::class);
+        throw_unless(Str::startsWith($this->uri, self::ATP));
 
-        throw_if(preg_match(self::ATP_URI_REGEX, $this->uri, $matches) === false, InvalidArgumentException::class);
+        throw_if(preg_match(self::ATP_URI_REGEX, $this->uri, $matches) === false);
 
         $this->protocol = $matches[1];
         $this->host = $matches[2];
@@ -50,7 +51,7 @@ final readonly class AtUri implements Stringable
      * $at->rkey();
      * ```
      *
-     * @throw InvalidArgumentException
+     * @throws Throwable
      */
     public static function parse(#[Format('at-uri')] string $uri): self
     {
