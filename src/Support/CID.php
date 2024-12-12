@@ -12,7 +12,7 @@ use YOCLIB\Multiformats\Multibase\Multibase;
  *
  * @link https://atproto.com/specs/data-model#link-and-cid-formats
  */
-class CID
+final class CID
 {
     public const CID_V1 = 0x01;
 
