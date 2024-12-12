@@ -27,7 +27,7 @@ final class CID
      *
      * ```
      * CIDv1
-     * multi codec: raw or dag-cbor
+     * multi codec: raw
      * multi hash: sha256
      * ```
      */
@@ -46,7 +46,7 @@ final class CID
         return Multibase::encode(Multibase::BASE32, $bytes);
     }
 
-    public static function verify(string $data, string $cid, ?int $codec = null): bool
+    public static function verify(string $data, string $cid, ?int $codec = self::RAW): bool
     {
         // Detect codec
         if (is_null($codec)) {
