@@ -332,10 +332,10 @@ class SupportTest extends TestCase
         $cbor = CBOR::fromArray($json['value']);
 
         /** @var MapObject $decode */
-        $decode = CBOR::decode((string) $cbor);
+        $decode = CBOR::decode($cbor);
         //dump($decode->normalize());
 
-        $cid = CID::encode((string) $cbor, codec: CID::DAG_CBOR);
+        $cid = CID::encode($cbor, codec: CID::DAG_CBOR);
 
         $this->assertSame($json['value'], $decode->normalize());
         $this->assertSame($expect_cid, $cid);
@@ -349,10 +349,10 @@ class SupportTest extends TestCase
         $cbor = CBOR::fromArray($json['value']);
 
         /** @var MapObject $decode */
-        $decode = CBOR::decode((string) $cbor);
+        $decode = CBOR::decode($cbor);
         //dump($decode->normalize());
 
-        $cid = CID::encode((string) $cbor, codec: CID::DAG_CBOR);
+        $cid = CID::encode($cbor, codec: CID::DAG_CBOR);
 
         $this->assertEquals($json['value'], $decode->normalize());
         $this->assertSame($json['value']['text'], $decode->normalize()['text']);
