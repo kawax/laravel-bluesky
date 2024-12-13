@@ -9,7 +9,7 @@ use YOCLIB\Multiformats\Multibase\Multibase;
 /**
  * @link https://ipld.io/specs/transport/car/carv1/
  */
-class CAR
+final class CAR
 {
     /**
      * Decode CAR data.
