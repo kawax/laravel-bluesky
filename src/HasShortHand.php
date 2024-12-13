@@ -550,11 +550,12 @@ trait HasShortHand
     }
 
     #[ArrayShape(AtNotification::listNotificationsResponse)]
-    public function listNotifications(?int $limit = 50, ?bool $priority = null, ?string $cursor = null, ?string $seenAt = null): Response
+    public function listNotifications(?array $reasons = null, ?int $limit = 50, ?bool $priority = null, ?string $cursor = null, ?string $seenAt = null): Response
     {
         return $this->client(auth: true)
             ->notification()
             ->listNotifications(
+                reasons: $reasons,
                 limit: $limit,
                 priority: $priority,
                 cursor: $cursor,
