@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\Http;
 use InvalidArgumentException;
 use Revolution\Bluesky\Facades\Bluesky;
 use Revolution\Bluesky\Support\AtUri;
+use Revolution\Bluesky\Support\CAR;
 use Revolution\Bluesky\Support\CBOR;
 use Revolution\Bluesky\Support\CID;
 use Revolution\Bluesky\Support\DID;
@@ -372,5 +373,13 @@ class SupportTest extends TestCase
         $this->assertSame(0xFF, Varint::decode("\xFF\x01"));
         $this->assertSame(0x012C, Varint::decode("\xAC\x02"));
         $this->assertSame(0x4000, Varint::decode("\x80\x80\x01"));
+    }
+
+    public function test_car()
+    {
+        [$roots, $blocks] = CAR::decode(file_get_contents(__DIR__.'/fixture/carv1-basic.car'));
+
+        $this->assertCount(2, $roots);
+        $this->assertArrayHasKey('bafyreihyrpefhacm6kkp4ql6j6udakdit7g3dmkzfriqfykhjw6cad5lrm', $blocks);
     }
 }
