@@ -11,6 +11,7 @@ use GuzzleHttp\HandlerStack;
 use Illuminate\Console\Command;
 use Illuminate\Support\Arr;
 use Revolution\Bluesky\Events\FirehoseMessageReceived;
+use Revolution\Bluesky\Support\CAR;
 use Revolution\Bluesky\Support\CBOR;
 use Valtzu\WebSocketMiddleware\WebSocketMiddleware;
 use Valtzu\WebSocketMiddleware\WebSocketStream;
@@ -87,14 +88,27 @@ class FirehoseServeCommand extends Command
             $header = $header->normalize();
             $payload = rescue(fn () => CBOR::decode($payload)->normalize());
 
+            $records = data_get($payload, 'blocks');
+            $roots = [];
+            $blocks = [];
+            if (filled($records)) {
+                [$roots, $blocks] = CAR::decode($records);
+            }
+
             if ($this->output->isVeryVerbose()) {
                 //dump($header);
-                dump($payload);
+                //dump($payload);
+                if (filled($roots)) {
+                    dump($roots);
+                }
+                if (filled($blocks)) {
+                    dump($blocks);
+                }
                 $this->newLine();
             }
 
             if (Arr::has($header, ['t']) && is_array($payload)) {
-                event(new FirehoseMessageReceived($header, $payload, $host, $event));
+                event(new FirehoseMessageReceived($header, $payload, $roots, $blocks, $host, $event));
                 $event = null;
             }
         }

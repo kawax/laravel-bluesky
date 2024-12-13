@@ -5,9 +5,11 @@ declare(strict_types=1);
 namespace Revolution\Bluesky\Console;
 
 use Illuminate\Console\Command;
+use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 use Revolution\Bluesky\Facades\Bluesky;
+use Revolution\Bluesky\Support\CAR;
 use Revolution\Bluesky\Support\DidDocument;
 use Revolution\Bluesky\Support\Identity;
 
@@ -61,7 +63,7 @@ class DownloadRepoCommand extends Command
 
         $this->warn('DID: '.$did);
 
-        $pds = DidDocument::make(Bluesky::identity()->resolveDID($did)->json())->pdsUrl();
+        $pds = DidDocument::make(Bluesky::identity()->resolveDID($did, cache: false)->json())->pdsUrl();
 
         $this->warn('PDS: '.$pds);
 
@@ -79,6 +81,13 @@ class DownloadRepoCommand extends Command
         Storage::put($file, $response->body());
 
         $this->line('Download: '.Storage::path($file));
+
+        [$roots, $blocks] = CAR::decode(Storage::get($file));
+
+        if (Arr::exists($blocks, $roots[0])) {
+            $signed_commit = data_get($blocks, $roots[0]);
+            dump($signed_commit);
+        }
 
         $this->info('Download successful');
 

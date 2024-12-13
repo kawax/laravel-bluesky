@@ -13,6 +13,8 @@ class FirehoseMessageReceived
     public function __construct(
         public array $header,
         public array $payload,
+        public array $roots,
+        public array $blocks,
         public string $host,
         public string $raw,
     ) {

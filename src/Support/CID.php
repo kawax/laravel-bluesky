@@ -16,7 +16,7 @@ final class CID
 {
     public const CID_V1 = 0x01;
 
-    protected const SHA2_256 = 0x12;
+    public const SHA2_256 = 0x12;
 
     public const RAW = 0x55;
 
@@ -33,8 +33,6 @@ final class CID
      */
     public static function encode(string $data, int $codec = self::RAW): string
     {
-        // TODO: Any codec other than "raw" needs to be encoded here.
-
         $hash = hash(algo: 'sha256', data: $data, binary: true);
         $hash_length = strlen($hash);
 
