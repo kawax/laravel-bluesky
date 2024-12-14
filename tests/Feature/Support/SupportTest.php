@@ -375,11 +375,31 @@ class SupportTest extends TestCase
         $this->assertSame(0x4000, Varint::decode("\x80\x80\x01"));
     }
 
-    public function test_car()
+    public function test_car_basic()
     {
         [$roots, $blocks] = CAR::decode(file_get_contents(__DIR__.'/fixture/carv1-basic.car'));
 
         $this->assertCount(2, $roots);
         $this->assertArrayHasKey('bafyreihyrpefhacm6kkp4ql6j6udakdit7g3dmkzfriqfykhjw6cad5lrm', $blocks);
+    }
+
+    public function test_car_download_repo()
+    {
+        $data = file_get_contents(__DIR__.'/fixture/bsky-app.car');
+
+        $roots = CAR::decodeRoots($data);
+        $this->assertCount(1, $roots);
+
+        $i = 0;
+
+        foreach (CAR::blockIterator($data) as $cid => $block) {
+            //dump($cid, $block);
+            $this->assertIsString($cid);
+            $this->assertIsArray($block);
+            $i++;
+            if ($i > 5) {
+                break;
+            }
+        }
     }
 }
