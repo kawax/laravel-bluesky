@@ -41,14 +41,12 @@ final class Varint
      */
     public static function decode(string $str): int
     {
-        $buf = str_split($str);
+        $buf = unpack('C*', $str);
         $x = new BigInteger(0);
         $s = 0;
 
         foreach ($buf as $i => $b) {
-            $b = intval(bin2hex($b), 16);
-
-            throw_if($i >= 9);
+            throw_if($i >= 10);
 
             if ($b < 0x80) {
                 throw_if($b === 0 && $s > 0);
