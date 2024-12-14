@@ -6,6 +6,7 @@ namespace Revolution\Bluesky\Support;
 
 use InvalidArgumentException;
 use phpseclib3\Math\BigInteger;
+use Psr\Http\Message\StreamInterface;
 use Throwable;
 
 /**
@@ -46,7 +47,7 @@ final class Varint
         $s = 0;
 
         foreach ($buf as $i => $b) {
-            throw_if($i >= 10);
+            throw_if($i >= 9);
 
             if ($b < 0x80) {
                 throw_if($b === 0 && $s > 0);
@@ -59,5 +60,18 @@ final class Varint
         }
 
         throw new InvalidArgumentException(); // @codeCoverageIgnore
+    }
+
+    /**
+     * Decode the beginning of the stream and move the position.
+     */
+    public static function decodeStream(StreamInterface $stream): int
+    {
+        $str = $stream->read(8);
+        $int = self::decode($str);
+        $len = strlen(self::encode($int));
+        $stream->seek($len - 8, SEEK_CUR);
+
+        return $int;
     }
 }
