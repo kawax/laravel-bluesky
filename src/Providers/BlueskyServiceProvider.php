@@ -15,6 +15,7 @@ use Revolution\Bluesky\Console\DownloadRepoCommand;
 use Revolution\Bluesky\Console\FirehoseServeCommand;
 use Revolution\Bluesky\Console\LexiconClientCommand;
 use Revolution\Bluesky\Console\NewPrivateKeyCommand;
+use Revolution\Bluesky\Console\UnpackRepoCommand;
 use Revolution\Bluesky\Console\WebSocketServeCommand;
 use Revolution\Bluesky\Contracts\Factory;
 use Revolution\Bluesky\FeedGenerator\Http\DescribeFeedController;
@@ -43,6 +44,7 @@ class BlueskyServiceProvider extends ServiceProvider
                 NewPrivateKeyCommand::class,
                 WebSocketServeCommand::class,
                 DownloadRepoCommand::class,
+                UnpackRepoCommand::class,
                 DownloadBlobsCommand::class,
                 DownloadRecordCommand::class,
                 FirehoseServeCommand::class,
