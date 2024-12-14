@@ -5,12 +5,15 @@ declare(strict_types=1);
 namespace Revolution\Bluesky\Support;
 
 use GuzzleHttp\Psr7\Utils;
+use Illuminate\Support\Str;
 use InvalidArgumentException;
 use Psr\Http\Message\StreamInterface;
 use YOCLIB\Multiformats\Multibase\Multibase;
 
 /**
  * @link https://ipld.io/specs/transport/car/carv1/
+ * @link https://github.com/ipld/go-car
+ * @link https://github.com/ipld/js-car
  */
 final class CAR
 {
@@ -32,7 +35,7 @@ final class CAR
      * $blocks
      * [
      *     'cid base32' => [],
-     *     'cid base32' => [Contains CBORObject],
+     *     'cid base32' => [],
      * ]
      * ```
      *
@@ -56,11 +59,11 @@ final class CAR
     }
 
     /**
-     * Decode roots.
+     * Decode header.
      *
-     * @return list<string>
+     * @return array{rootes: array, version: string}
      */
-    public static function decodeRoots(StreamInterface|string $data): array
+    public static function decodeHeader(StreamInterface|string $data): array
     {
         if (! $data instanceof StreamInterface) {
             $data = Utils::streamFor($data);
@@ -68,17 +71,27 @@ final class CAR
 
         $data->rewind();
 
-        $header_length = Varint::decode($data->read(8));
-        $varint_len = strlen(Varint::encode($header_length));
-        $data->seek($varint_len);
+        $header_length = Varint::decodeStream($data);
 
         $header_bytes = $data->read($header_length);
-        $header = CBOR::decode($header_bytes)->normalize();
+
+        return CBOR::decode($header_bytes)->normalize();
+    }
+
+    /**
+     * Decode roots.
+     *
+     * @return list<string>
+     */
+    public static function decodeRoots(StreamInterface|string $data): array
+    {
+        $header = self::decodeHeader($data);
 
         $roots = data_get($header, 'roots');
+
         $roots = collect($roots)->map(function ($root) {
             $cid = $root->getValue()->getValue();
-            $cid = substr($cid, 1); // remove first 0x00
+            $cid = Str::ltrim($cid, "\00"); // remove first 0x00
 
             return Multibase::encode(Multibase::BASE32, $cid);
         });
@@ -111,60 +124,54 @@ final class CAR
 
         $data->rewind();
 
-        $header_length = Varint::decode($data->read(1));
+        $header_length = Varint::decodeStream($data);
+        $data->seek($header_length, SEEK_CUR);
 
-        $offset = 1 + $header_length;
+        while ($data->tell() < $data->getSize()) {
+            $block_varint = Varint::decodeStream($data);
 
-        while ($offset < $data->getSize()) {
-            $data->seek($offset);
-
-            $block_varint = Varint::decode($data->read(8));
-            $varint_len = strlen(Varint::encode($block_varint));
-
-            $data->seek($offset + $varint_len);
+            $start = $data->tell();
 
             // CIDv0 is not supported
             $cid_0 = $data->read(2) === "\x12\x20";
             if ($cid_0) {
-                $offset += $varint_len + $block_varint;
-
+                $data->seek($start + $block_varint);
                 continue;
             }
-
             $data->seek(-2, SEEK_CUR);
 
-            $cid_version = rescue(fn () => Varint::decode($data->read(1)));
+            $cid_version = rescue(fn () => Varint::decodeStream($data));
 
             if ($cid_version !== CID::CID_V1) {
                 throw new InvalidArgumentException('Invalid CAR.');
             }
 
-            $cid_codec = rescue(fn () => Varint::decode($data->read(1)));
+            $cid_codec = rescue(fn () => Varint::decodeStream($data));
 
             // DAG-PB is not supported
             if ($cid_codec === CID::DAG_PB) {
-                $offset += $varint_len + $block_varint;
+                $data->seek($start + $block_varint);
 
                 continue;
             }
 
-            $cid_hash_type = rescue(fn () => Varint::decode($data->read(1)));
-            $cid_hash_length = rescue(fn () => Varint::decode($data->read(1)));
+            $cid_hash_type = rescue(fn () => Varint::decodeStream($data));
+            $cid_hash_length = rescue(fn () => Varint::decodeStream($data));
 
-            $data->seek($offset + $varint_len);
-            $cid_bytes = $data->read(4 + $cid_hash_length);
+            $cid_length = $data->tell() - $start;
+
+            $data->seek(-$cid_length, SEEK_CUR);
+            $cid_bytes = $data->read($cid_length + $cid_hash_length);
             $cid = Multibase::encode(Multibase::BASE32, $cid_bytes);
 
-            $block_length = $block_varint - 4 - $cid_hash_length;
+            $block_length = $block_varint - $cid_length - $cid_hash_length;
             $block_bytes = $data->read($block_length);
 
             if ($cid_codec === CID::RAW) {
                 $block = $block_bytes;
             } else {
-                $block = rescue(fn () => CBOR::decode($block_bytes)->normalize());
+                $block = rescue(fn () => CBOR::normalize(CBOR::decode($block_bytes)->normalize()));
             }
-
-            $offset += $varint_len + $block_varint;
 
             if (! empty($block)) {
                 yield $cid => $block;
