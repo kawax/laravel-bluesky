@@ -18,9 +18,12 @@ use CBOR\OtherObject\FalseObject;
 use CBOR\OtherObject\NullObject;
 use CBOR\OtherObject\TrueObject;
 use CBOR\StringStream;
+use CBOR\Tag\GenericTag;
 use CBOR\TextStringObject;
 use CBOR\UnsignedIntegerObject;
+use Illuminate\Support\Str;
 use InvalidArgumentException;
+use YOCLIB\Multiformats\Multibase\Multibase;
 
 final class CBOR
 {
@@ -44,6 +47,32 @@ final class CBOR
         $decoder = Decoder::create();
 
         return $decoder->decode(StringStream::create($data));
+    }
+
+    /**
+     * @todo
+     */
+    public static function normalize(mixed $data): mixed
+    {
+        if (is_array($data)) {
+            return collect($data)->map(function ($item) {
+                return self::normalize($item);
+            })->toArray();
+        }
+
+        if ($data instanceof GenericTag) {
+            $cid = $data->getValue();
+            if ($cid instanceof ByteStringObject) {
+                $cid = $cid->normalize();
+                $cid = Str::ltrim($cid, "\x00");
+
+                return Multibase::encode(Multibase::BASE32, $cid);
+            }
+
+            dump($data);
+        }
+
+        return $data;
     }
 
     /**
