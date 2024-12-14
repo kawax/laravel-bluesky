@@ -6,6 +6,8 @@ namespace Tests\Feature\Support;
 
 use CBOR\MapObject;
 use CBOR\TextStringObject;
+use Firebase\JWT\JWT;
+use GuzzleHttp\Psr7\Utils;
 use Illuminate\Support\Facades\Http;
 use InvalidArgumentException;
 use Revolution\Bluesky\Facades\Bluesky;
@@ -19,6 +21,7 @@ use Revolution\Bluesky\Support\TID;
 use Revolution\Bluesky\Support\Varint;
 use RuntimeException;
 use Tests\TestCase;
+use YOCLIB\Multiformats\Multibase\Multibase;
 
 class SupportTest extends TestCase
 {
@@ -368,19 +371,55 @@ class SupportTest extends TestCase
         $this->assertSame("\xFF\x01", Varint::encode(0xFF));
         $this->assertSame("\xAC\x02", Varint::encode(0x012C));
         $this->assertSame("\x80\x80\x01", Varint::encode(0x4000));
+        $this->assertSame("\x83\x01", Varint::encode(131));
 
         $this->assertSame(0x80, Varint::decode("\x80\x01"));
         $this->assertSame(0xFF, Varint::decode("\xFF\x01"));
         $this->assertSame(0x012C, Varint::decode("\xAC\x02"));
         $this->assertSame(0x4000, Varint::decode("\x80\x80\x01"));
+        $this->assertSame(131, Varint::decode("\x83\x01"));
     }
 
     public function test_car_basic()
     {
         [$roots, $blocks] = CAR::decode(file_get_contents(__DIR__.'/fixture/carv1-basic.car'));
 
+        //dump($blocks);
         $this->assertCount(2, $roots);
         $this->assertArrayHasKey('bafyreihyrpefhacm6kkp4ql6j6udakdit7g3dmkzfriqfykhjw6cad5lrm', $blocks);
+    }
+
+    public function test_car_basic_stream()
+    {
+        $data = Utils::streamFor(Utils::tryFopen(__DIR__.'/fixture/carv1-basic.car', 'rb'));
+
+        $data->seek(100);
+        $block_len = Varint::decode($data->read(8));
+        $pos = strlen(Varint::encode($block_len));
+        $data->seek(100 + $pos);
+        $this->assertSame(91, $block_len);
+        $ver1 = Varint::decode($data->read(1));
+        $ver0 = $data->read(2);
+        $this->assertSame(CID::CID_V1, $ver1);
+        $this->assertNotSame("\x12\x20", $ver0);
+
+        $data->seek(192);
+        $block_len = Varint::decode($data->read(8));
+        $pos = strlen(Varint::encode($block_len));
+        $data->seek(192 + $pos);
+        $this->assertSame(131, $block_len);
+        $ver0 = $data->read(2);
+        $this->assertSame("\x12\x20", $ver0);
+
+        $data->seek(100);
+        $block = $data->read(92);
+        $this->assertSame(91, Varint::decode(substr($block, 0, 1)));
+
+        $data->seek(325);
+        $this->assertSame(40, Varint::decode($data->read(1)));
+
+        $data->seek(362);
+        $this->assertSame('Y2NjYw', JWT::urlsafeB64Encode($data->read(4)));
     }
 
     public function test_car_download_repo()
@@ -390,16 +429,111 @@ class SupportTest extends TestCase
         $roots = CAR::decodeRoots($data);
         $this->assertCount(1, $roots);
 
-        $i = 0;
+        $blocks = iterator_to_array(CAR::blockIterator($data));
+        $this->assertArrayHasKey($roots[0], $blocks);
+    }
+
+    public function test_car_download_repo_stream()
+    {
+        $data = Utils::streamFor(utils::tryFopen(__DIR__.'/fixture/bsky-app.car', 'rb'));
+
+        $roots = CAR::decodeRoots($data);
+        $this->assertCount(1, $roots);
 
         foreach (CAR::blockIterator($data) as $cid => $block) {
             //dump($cid, $block);
-            $this->assertIsString($cid);
-            $this->assertIsArray($block);
-            $i++;
-            if ($i > 5) {
-                break;
-            }
+            $this->assertNotEmpty($cid);
+            $this->assertNotEmpty($block);
         }
+    }
+
+    public function test_car_download_file_stream()
+    {
+        $data = Utils::streamFor(Utils::tryFopen(__DIR__.'/fixture/bsky-app.car', 'rb'));
+
+        $header_len = Varint::decode($data->read(1));
+        //dump($header_len);
+        $header = CBOR::decode($data->read($header_len))->normalize();
+        //dump($header);
+
+        $data->seek(1 + $header_len);
+
+        $data_len = Varint::decode($data->read(8));
+        $pos = strlen(Varint::encode($data_len));
+        $data->seek(1 + $header_len + $pos);
+        $this->assertSame(209, $data_len);
+        $this->assertSame(2, $pos);
+
+        $ver1 = Varint::decode($data->read(1));
+        $this->assertSame(CID::CID_V1, $ver1);
+
+        $codec = Varint::decode($data->read(1));
+        $this->assertSame(CID::DAG_CBOR, $codec);
+
+        $hash_algo = Varint::decode($data->read(1));
+        $this->assertSame(CID::SHA2_256, $hash_algo);
+
+        $hash_len = Varint::decode($data->read(1));
+        $this->assertSame(32, $hash_len);
+
+        $data->seek(-4, SEEK_CUR);
+        $hash = $data->read(4 + $hash_len);
+        $this->assertSame('bafyreig7gxhfmvwk4qzo2aliqytgdiflw6xwi4dkkqwjlgt7zjlvfbptcy', Multibase::encode(Multibase::BASE32, $hash));
+
+        $block_len = $data_len - 4 - $hash_len;
+
+        $block = $data->read($block_len);
+        $this->assertIsArray(CBOR::decode($block)->normalize());
+
+        $current = $data->tell();
+
+        //2
+        $data_len = Varint::decode($data->read(8));
+        $pos = strlen(Varint::encode($data_len));
+        $data->seek($current + $pos);
+        $this->assertSame(1733, $data_len);
+        $this->assertSame(2, $pos);
+
+        $ver1 = Varint::decode($data->read(1));
+        $this->assertSame(CID::CID_V1, $ver1);
+
+        $codec = Varint::decode($data->read(1));
+        $this->assertSame(CID::DAG_CBOR, $codec);
+
+        $hash_algo = Varint::decode($data->read(1));
+        $this->assertSame(CID::SHA2_256, $hash_algo);
+
+        $hash_len = Varint::decode($data->read(1));
+        $this->assertSame(32, $hash_len);
+
+        $data->seek(-4, SEEK_CUR);
+        $hash = $data->read(4 + $hash_len);
+        $this->assertSame('bafyreiejo5hn2rjcihcfz3txibzg3f7z5cmoxpdmloxamwlrrkgllafqy4', Multibase::encode(Multibase::BASE32, $hash));
+
+        $block_len = $data_len - 4 - $hash_len;
+
+        $block = $data->read($block_len);
+        $this->assertIsArray(CBOR::decode($block)->normalize());
+
+        $current = $data->tell();
+
+        //3
+        $data_len = Varint::decode($data->read(8));
+        $pos = strlen(Varint::encode($data_len));
+        $data->seek($current + $pos);
+        $this->assertSame(224, $data_len);
+        $this->assertSame(2, $pos);
+
+        $ver1 = Varint::decode($data->read(1));
+        $this->assertSame(CID::CID_V1, $ver1);
+
+        $codec = Varint::decode($data->read(1));
+        $this->assertSame(CID::DAG_CBOR, $codec);
+
+        $hash_algo = Varint::decode($data->read(1));
+        $this->assertSame(CID::SHA2_256, $hash_algo);
+
+        $hash_len = Varint::decode($data->read(1));
+        $this->assertSame(32, $hash_len);
     }
 }

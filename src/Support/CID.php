@@ -22,6 +22,8 @@ final class CID
 
     public const DAG_CBOR = 0x71;
 
+    public const DAG_PB = 0x20;
+
     /**
      * Encode to a specific format.
      *
