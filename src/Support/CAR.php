@@ -32,14 +32,28 @@ final class CAR
      *     'cid base32' => [Contains CBORObject],
      * ]
      * ```
+     *
+     * @return array<list<string>, array<string, array>>
      */
     public static function decode(string $data): array
     {
+        $roots = self::decodeRoots($data);
+
+        $blocks = iterator_to_array(self::blockIterator($data));
+
+        return [$roots, $blocks];
+    }
+
+    /**
+     * @return list<string>
+     */
+    public static function decodeRoots(string $data): array
+    {
         $header_length = Varint::decode(substr($data, 0, 1));
         $header_bytes = substr($data, 1, $header_length);
-        $header = CBOR::decode($header_bytes);
+        $header = CBOR::decode($header_bytes)->normalize();
 
-        $roots = data_get($header->normalize(), 'roots');
+        $roots = data_get($header, 'roots');
         $roots = collect($roots)->map(function ($root) {
             $cid = $root->getValue()->getValue();
             $cid = substr($cid, 1); // remove first 0x00
@@ -47,9 +61,17 @@ final class CAR
             return Multibase::encode(Multibase::BASE32, $cid);
         });
 
-        $offset = 1 + $header_length;
+        return $roots->toArray();
+    }
 
-        $blocks = [];
+    /**
+     * @return iterable<string, array>
+     */
+    public static function blockIterator(string $data): iterable
+    {
+        $header_length = Varint::decode(substr($data, 0, 1));
+
+        $offset = 1 + $header_length;
 
         while ($offset < strlen($data)) {
             $block_varint = rescue(fn () => Varint::decode(substr($data, $offset, 1)));
@@ -68,15 +90,13 @@ final class CAR
 
             $block_length = $block_varint - 4 - $cid_hash_length;
             $block_bytes = substr($data, $offset + 1 + 4 + $cid_hash_length, $block_length);
-            $block = rescue(fn () => CBOR::decode($block_bytes));
-
-            if (! empty($block)) {
-                $blocks[$cid] = $block->normalize();
-            }
+            $block = rescue(fn () => CBOR::decode($block_bytes)->normalize());
 
             $offset = $offset + 1 + $block_varint;
-        }
 
-        return [$roots->toArray(), $blocks];
+            if (! empty($block) && is_array($block)) {
+                yield $cid => $block;
+            }
+        }
     }
 }
