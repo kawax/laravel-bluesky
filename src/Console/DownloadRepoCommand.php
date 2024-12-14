@@ -14,7 +14,7 @@ use Revolution\Bluesky\Support\DidDocument;
 use Revolution\Bluesky\Support\Identity;
 
 /**
- * Sample command to download the actor's "CAR" file. Does not include parsing the Car file.
+ * Sample command to download the actor's "CAR" file.
  *
  * ```
  * php artisan bluesky:download-repo ***.bsky.social
