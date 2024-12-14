@@ -36,7 +36,7 @@ final class CAR
      * ]
      * ```
      *
-     * @return array{0: list<string>, 1: array<string, array>}
+     * @return array{0: list<string>, 1: array<string, mixed>}
      */
     public static function decode(StreamInterface|string $data): array
     {
