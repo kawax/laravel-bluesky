@@ -67,6 +67,7 @@ final class CBOR
                 if (in_array($key, ['v', 't', 'l', 'data'], true) && $item instanceof CidTag) {
                     return $item->mst();
                 }
+
                 return self::normalize($item);
             })->toArray();
         }
