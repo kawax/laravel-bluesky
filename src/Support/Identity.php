@@ -40,7 +40,7 @@ class Identity
     /**
      * @param  string|null  $id  handle or DID.  e.g. "alice.test" "did:plc:1234..." "did:web:alice.test"
      */
-    public function resolveIdentity(?string $id, bool $cache = true): Response
+    public function resolveIdentity(?string $id, bool $cache = false): Response
     {
         return match (true) {
             self::isHandle($id) => $this->resolveDID($this->resolveHandle($id, $cache), $cache),
@@ -61,7 +61,7 @@ class Identity
      * @param  string|null  $handle  e.g. "alice.test"
      * @return string|null DID
      */
-    public function resolveHandle(?string $handle, bool $cache = true): ?string
+    public function resolveHandle(?string $handle, bool $cache = false): ?string
     {
         if (! self::isHandle($handle) || ! Str::isUrl('https://'.$handle, ['https'])) {
             throw new InvalidArgumentException("The handle '$handle' is not a valid handle."); // @codeCoverageIgnore
@@ -114,7 +114,7 @@ class Identity
      *
      * @link https://plc.directory/did:plc:ewvi7nxzyoun6zhxrhs64oiz
      */
-    public function resolveDID(?string $did, bool $cache = true): Response
+    public function resolveDID(?string $did, bool $cache = false): Response
     {
         if (! self::isDID($did)) {
             throw new InvalidArgumentException("The did '$did' is not a valid DID.");
