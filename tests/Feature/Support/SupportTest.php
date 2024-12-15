@@ -306,15 +306,15 @@ class SupportTest extends TestCase
         $cbor = MapObject::create()
             ->add(
                 TextStringObject::create('text'),
-                TextStringObject::create(".... And we're back!\n\nOur database upgrade is now complete. Thanks for your patience!")
+                TextStringObject::create(".... And we're back!\n\nOur database upgrade is now complete. Thanks for your patience!"),
             )
             ->add(
                 TextStringObject::create('$type'),
-                TextStringObject::create('app.bsky.feed.post')
+                TextStringObject::create('app.bsky.feed.post'),
             )
             ->add(
                 TextStringObject::create('createdAt'),
-                TextStringObject::create('2023-04-27T21:52:19.545Z')
+                TextStringObject::create('2023-04-27T21:52:19.545Z'),
             );
 
         $cid = CID::encode((string) $cbor, codec: CID::DAG_CBOR);
@@ -352,14 +352,14 @@ class SupportTest extends TestCase
 
         $cbor = CBOR::fromArray($json['value']);
 
-        /** @var MapObject $decode */
-        $decode = CBOR::decode($cbor);
-        //dump($decode->normalize());
+        $decode = CBOR::decode($cbor)->normalize();
+        $decode = CBOR::normalize($decode);
 
-        $cid = CID::encode($cbor, codec: CID::DAG_CBOR);
+        $cbor_encoded = CBOR::fromArray($decode);
+        $cid = CID::encode($cbor_encoded, codec: CID::DAG_CBOR);
 
-        $this->assertEquals($json['value'], $decode->normalize());
-        $this->assertSame($json['value']['text'], $decode->normalize()['text']);
+        $this->assertEquals($json['value'], $decode);
+        $this->assertSame($json['value']['text'], $decode['text']);
 
         // TODO: still not working
         $this->assertNotSame($expect_cid, $cid);
