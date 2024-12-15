@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Revolution\Bluesky\Support;
 
 use GuzzleHttp\Psr7\Utils;
-use Throwable;
 use YOCLIB\Multiformats\Multibase\Multibase;
 
 /**
