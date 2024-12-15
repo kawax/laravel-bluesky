@@ -23,18 +23,16 @@ final class Varint
         $x80 = new BigInteger(0x80);
         $xFF = new BigInteger(0xFF);
 
-        $bytes = [];
-        $i = 0;
+        $bytes = '';
 
         while ($x->compare($x80) >= 0) {
-            $bytes[$i] = $x->bitwise_and($xFF)->bitwise_or($x80)->toBytes();
+            $bytes .= $x->bitwise_and($xFF)->bitwise_or($x80)->toBytes();
             $x = $x->bitwise_rightShift(7);
-            $i++;
         }
 
-        $bytes[$i] = $x->bitwise_and($xFF)->toBytes();
+        $bytes .= $x->bitwise_and($xFF)->toBytes();
 
-        return implode('', $bytes);
+        return $bytes;
     }
 
     /**
