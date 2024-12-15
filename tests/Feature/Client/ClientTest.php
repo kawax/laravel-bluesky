@@ -193,7 +193,7 @@ class ClientTest extends TestCase
         Http::fakeSequence()
             ->push(['id' => 'did:plc:test']);
 
-        $response = (new Identity())->resolveDID(did: 'did:plc:test');
+        $response = (new Identity())->resolveDID(did: 'did:plc:test', cache: true);
         $response_cache = (new Identity())->resolveDID(did: 'did:plc:test', cache: true);
 
         $this->assertTrue($response->collect()->has('id'));
