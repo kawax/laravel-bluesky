@@ -18,12 +18,11 @@ use CBOR\OtherObject\FalseObject;
 use CBOR\OtherObject\NullObject;
 use CBOR\OtherObject\TrueObject;
 use CBOR\StringStream;
-use CBOR\Tag\GenericTag;
+use CBOR\Tag\TagManager;
 use CBOR\TextStringObject;
 use CBOR\UnsignedIntegerObject;
-use Illuminate\Support\Str;
 use InvalidArgumentException;
-use YOCLIB\Multiformats\Multibase\Multibase;
+use Revolution\Bluesky\Support\CBOR\CidTag;
 
 final class CBOR
 {
@@ -44,7 +43,10 @@ final class CBOR
 
     public static function decode(string $data): CBORObject
     {
-        $decoder = Decoder::create();
+        $tagManager = TagManager::create()
+            ->add(CidTag::class);
+
+        $decoder = Decoder::create($tagManager);
 
         return $decoder->decode(StringStream::create($data));
     }
@@ -55,21 +57,18 @@ final class CBOR
     public static function normalize(mixed $data): mixed
     {
         if (is_array($data)) {
-            return collect($data)->map(function ($item) {
+            return collect($data)->map(function ($item, $key) {
+                if (is_numeric($item)) {
+                    return (int) $item;
+                }
+                if ($key === 'ref' && $item instanceof CidTag) {
+                    return $item->link();
+                }
+                if (in_array($key, ['v', 't', 'l', 'data'], true) && $item instanceof CidTag) {
+                    return $item->mst();
+                }
                 return self::normalize($item);
             })->toArray();
-        }
-
-        if ($data instanceof GenericTag) {
-            $cid = $data->getValue();
-            if ($cid instanceof ByteStringObject) {
-                $cid = $cid->normalize();
-                $cid = Str::ltrim($cid, "\x00");
-
-                return Multibase::encode(Multibase::BASE32, $cid);
-            }
-
-            dump($data);
         }
 
         return $data;
@@ -92,11 +91,11 @@ final class CBOR
             $data instanceof CBORObject => $data,
             is_string($data) => preg_match('//u', $data) === 1 ? $this->processTextString(
                 $data,
-                $option
+                $option,
             ) : $this->processByteString($data, $option),
             is_array($data) => array_is_list($data) ? $this->processList($data, $option) : $this->processMap(
                 $data,
-                $option
+                $option,
             ),
             is_int($data) => $data < 0 ? NegativeIntegerObject::create($data) : UnsignedIntegerObject::create($data),
             //is_float($data) => $this->processFloat($data, $option),
