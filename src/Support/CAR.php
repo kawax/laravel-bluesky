@@ -127,7 +127,7 @@ final class CAR
         $header_length = Varint::decodeStream($data);
         $data->seek($header_length, SEEK_CUR);
 
-        while ($data->tell() < $data->getSize()) {
+        while ($data->getSize() > $data->tell()) {
             $block_varint = Varint::decodeStream($data);
 
             $start = $data->tell();
@@ -169,11 +169,13 @@ final class CAR
 
             if ($cid_codec === CID::RAW) {
                 $block = $block_bytes;
-            } else {
+            } elseif ($cid_codec === CID::DAG_CBOR) {
                 $block = rescue(fn () => CBOR::normalize(CBOR::decode($block_bytes)->normalize()));
+            } else {
+                throw new InvalidArgumentException('Invalid CAR.');
             }
 
-            if (! empty($block)) {
+            if (! is_null($block)) {
                 yield $cid => $block;
             }
         }
