@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Revolution\Bluesky\Console;
 
+use GuzzleHttp\Psr7\Utils;
 use Illuminate\Console\Command;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Storage;
@@ -63,7 +64,8 @@ class DownloadRepoCommand extends Command
 
         $this->warn('DID: '.$did);
 
-        $pds = DidDocument::make(Bluesky::identity()->resolveDID($did, cache: false)->json())->pdsUrl();
+        $didDoc = DidDocument::make(Bluesky::identity()->resolveDID($did, cache: false)->json());
+        $pds = $didDoc->pdsUrl();
 
         $this->warn('PDS: '.$pds);
 
@@ -82,7 +84,7 @@ class DownloadRepoCommand extends Command
 
         $this->line('Download: '.Storage::path($file));
 
-        [$roots, $blocks] = CAR::decode(Storage::get($file));
+        [$roots, $blocks] = CAR::decode(Utils::streamFor(Storage::readStream($file)));
 
         if (Arr::exists($blocks, $roots[0])) {
             $signed_commit = data_get($blocks, $roots[0]);
