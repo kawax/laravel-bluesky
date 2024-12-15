@@ -69,8 +69,7 @@ final class Varint
     {
         $str = $stream->read(8);
         $int = self::decode($str);
-        $len = strlen(self::encode($int));
-        $stream->seek($len - 8, SEEK_CUR);
+        $stream->seek(strlen(self::encode($int)) - 8, SEEK_CUR);
 
         return $int;
     }
