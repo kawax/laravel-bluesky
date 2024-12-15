@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Revolution\Bluesky\Support;
 
+use GuzzleHttp\Psr7\Utils;
 use Throwable;
 use YOCLIB\Multiformats\Multibase\Multibase;
 
@@ -77,18 +78,16 @@ final class CID
      * ```
      *
      * @return array{version: int, codec: int, hash_algo: int, hash_length: int, hash: string}
-     *
-     * @throws Throwable
      */
     public static function decode(string $cid): array
     {
-        $bytes = Multibase::decode($cid);
+        $stream = Utils::streamFor(Multibase::decode($cid));
 
-        $version = Varint::decode(substr($bytes, 0, 1));
-        $codec = Varint::decode(substr($bytes, 1, 1));
-        $hash_algo = Varint::decode(substr($bytes, 2, 1));
-        $hash_length = Varint::decode(substr($bytes, 3, 1));
-        $hash = bin2hex(substr($bytes, 4, $hash_length));
+        $version = Varint::decodeStream($stream);
+        $codec = Varint::decodeStream($stream);
+        $hash_algo = Varint::decodeStream($stream);
+        $hash_length = Varint::decodeStream($stream);
+        $hash = bin2hex($stream->read($hash_length));
 
         return compact(
             'version',
