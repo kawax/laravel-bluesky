@@ -75,7 +75,7 @@ final class CAR
 
         $header_bytes = $data->read($header_length);
 
-        return CBOR::decode($header_bytes)->normalize();
+        return CBOR::normalize(CBOR::decode($header_bytes)->normalize());
     }
 
     /**
@@ -87,16 +87,7 @@ final class CAR
     {
         $header = self::decodeHeader($data);
 
-        $roots = data_get($header, 'roots');
-
-        $roots = collect($roots)->map(function ($root) {
-            $cid = $root->getValue()->getValue();
-            $cid = Str::ltrim($cid, "\x00"); // remove first 0x00
-
-            return Multibase::encode(Multibase::BASE32, $cid);
-        });
-
-        return $roots->toArray();
+        return data_get($header, 'roots', []);
     }
 
     /**
