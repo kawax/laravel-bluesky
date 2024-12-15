@@ -29,7 +29,7 @@ final class CID
      *
      * ```
      * CIDv1
-     * multi codec: raw
+     * multi codec: RAW or DAG-CBOR
      * multi hash: sha256
      * ```
      */
@@ -40,10 +40,10 @@ final class CID
 
         $version = Varint::encode(self::CID_V1);
         $code = Varint::encode($codec);
-        $type = Varint::encode(self::SHA2_256);
+        $algo = Varint::encode(self::SHA2_256);
         $length = Varint::encode($hash_length);
 
-        $bytes = $version.$code.$type.$length.$hash;
+        $bytes = $version.$code.$algo.$length.$hash;
 
         return Multibase::encode(Multibase::BASE32, $bytes);
     }
