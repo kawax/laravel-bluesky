@@ -68,12 +68,9 @@ class FirehoseServeCommand extends Command
 
         $this->info('Host : '.$host);
 
-        $event = null;
-
         while (! $ws->eof() || $this->running) {
-            $event .= $ws->read();
+            $event = $ws->read();
 
-            // Firehose often receives incorrect data.
             $header = rescue(fn () => CBOR::decode($event));
             if (blank($header) || ! $header instanceof MapObject) {
                 if ($this->output->isVerbose()) {
@@ -109,7 +106,6 @@ class FirehoseServeCommand extends Command
 
             if (Arr::has($header, ['t']) && is_array($payload)) {
                 event(new FirehoseMessageReceived($header, $payload, $roots, $blocks, $host, $event));
-                $event = null;
             }
         }
 
