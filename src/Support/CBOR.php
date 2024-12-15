@@ -69,6 +69,9 @@ final class CBOR
                 if (in_array($key, ['v', 't', 'l', 'data'], true) && $item instanceof CidTag) {
                     return $item->mst();
                 }
+                if ($item instanceof CidTag) {
+                    return $item->normalize();
+                }
                 if ($key === 'sig') {
                     return base64_encode($item);
                 }
