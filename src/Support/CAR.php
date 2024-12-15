@@ -91,7 +91,7 @@ final class CAR
 
         $roots = collect($roots)->map(function ($root) {
             $cid = $root->getValue()->getValue();
-            $cid = Str::ltrim($cid, "\00"); // remove first 0x00
+            $cid = Str::ltrim($cid, "\x00"); // remove first 0x00
 
             return Multibase::encode(Multibase::BASE32, $cid);
         });
