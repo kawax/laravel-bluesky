@@ -62,7 +62,7 @@ final class Protobuf
     {
         $v = 0;
 
-        for ($shift = 0; ; $shift += 7) {
+        for ($shift = 0; $shift <= 64; $shift += 7) {
             throw_if($shift >= 64);
             throw_if($stream->eof());
 
