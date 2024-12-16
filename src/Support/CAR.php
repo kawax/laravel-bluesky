@@ -118,56 +118,77 @@ final class CAR
         $data->seek($header_length, SEEK_CUR);
 
         while ($data->getSize() > $data->tell()) {
-            $block_varint = Varint::decodeStream($data);
-
             $start = $data->tell();
 
-            // CIDv0 is not supported
-            $cid_0 = $data->read(2) === "\x12\x20";
+            $block_varint = Varint::decodeStream($data);
+
+            $cid_0 = $data->read(2) === CID::V0_LEADING;
+
+            $data->seek($start);
+
             if ($cid_0) {
-                $data->seek($start + $block_varint);
-                continue;
-            }
-            $data->seek(-2, SEEK_CUR);
-
-            $cid_version = rescue(fn () => Varint::decodeStream($data));
-
-            if ($cid_version !== CID::CID_V1) {
-                throw new InvalidArgumentException('Invalid CAR.');
-            }
-
-            $cid_codec = rescue(fn () => Varint::decodeStream($data));
-
-            // DAG-PB is not supported
-            if ($cid_codec === CID::DAG_PB) {
-                $data->seek($start + $block_varint);
-
-                continue;
-            }
-
-            $cid_hash_type = rescue(fn () => Varint::decodeStream($data));
-            $cid_hash_length = rescue(fn () => Varint::decodeStream($data));
-
-            $cid_length = $data->tell() - $start;
-
-            $data->seek(-$cid_length, SEEK_CUR);
-            $cid_bytes = $data->read($cid_length + $cid_hash_length);
-            $cid = Multibase::encode(Multibase::BASE32, $cid_bytes);
-
-            $block_length = $block_varint - $cid_length - $cid_hash_length;
-            $block_bytes = $data->read($block_length);
-
-            if ($cid_codec === CID::RAW) {
-                $block = $block_bytes;
-            } elseif ($cid_codec === CID::DAG_CBOR) {
-                $block = rescue(fn () => CBOR::normalize(CBOR::decode($block_bytes)->normalize()));
+                // CID v0
+                [$cid, $block] = self::decodeBlockV0($data);
             } else {
-                throw new InvalidArgumentException('Invalid CAR.');
+                // CID v1
+                [$cid, $block] = self::decodeBlockV1($data);
             }
 
             if (! is_null($block)) {
                 yield $cid => $block;
             }
         }
+    }
+
+    private static function decodeBlockV1(StreamInterface $data): array
+    {
+        $block_varint = Varint::decodeStream($data);
+
+        $start = $data->tell();
+
+        $cid_version = Varint::decodeStream($data);
+
+        if ($cid_version !== CID::CID_V1) {
+            throw new InvalidArgumentException('Invalid CAR.');
+        }
+
+        $cid_codec = Varint::decodeStream($data);
+        $cid_hash_type = Varint::decodeStream($data);
+        $cid_hash_length = Varint::decodeStream($data);
+
+        $cid_length = $data->tell() - $start;
+
+        $data->seek(-$cid_length, SEEK_CUR);
+        $cid_bytes = $data->read($cid_length + $cid_hash_length);
+        $cid = Multibase::encode(Multibase::BASE32, $cid_bytes);
+
+        $block_length = $block_varint - $cid_length - $cid_hash_length;
+        $block_bytes = $data->read($block_length);
+
+        if ($cid_codec === CID::RAW) {
+            $block = $block_bytes;
+        } elseif ($cid_codec === CID::DAG_CBOR) {
+            $block = rescue(fn () => CBOR::normalize(CBOR::decode($block_bytes)->normalize()));
+        } else {
+            throw new InvalidArgumentException('Invalid CAR.');
+        }
+
+        return [$cid, $block];
+    }
+
+    private static function decodeBlockV0(StreamInterface $data): array
+    {
+        $block_varint = Varint::decodeStream($data);
+
+        // $cid_codec = CID::DAG_PB;
+        // $cid_hash_type = CID::SHA2_256;
+        // $cid_hash_length = 32;
+
+        $cid_bytes = $data->read(34);
+        $cid = Multibase::encode(Multibase::BASE58BTC, $cid_bytes, false);
+        $block_bytes = $data->read($block_varint - 34);
+        $block = Protobuf::decode(Utils::streamFor($block_bytes));
+
+        return [$cid, $block];
     }
 }
