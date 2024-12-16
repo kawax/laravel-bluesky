@@ -15,6 +15,7 @@ class FirehoseMessageReceived
         public array $payload,
         public array $roots,
         public array $blocks,
+        public array $record,
         public string $host,
         public string $raw,
     ) {
