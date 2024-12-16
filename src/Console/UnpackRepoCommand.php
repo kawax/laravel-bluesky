@@ -56,6 +56,12 @@ class UnpackRepoCommand extends Command
         $file = collect(['bluesky', 'download', $name, $name.'.car'])
             ->implode(DIRECTORY_SEPARATOR);
 
+        if (! Storage::exists($file)) {
+            $this->error('File not found: '.$file);
+
+            return 1;
+        }
+
         foreach (CAR::blockIterator(Utils::streamFor(Storage::readStream($file))) as $cid => $block) {
             //dump($cid, $block);
 
