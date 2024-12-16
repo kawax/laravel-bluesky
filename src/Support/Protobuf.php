@@ -6,6 +6,7 @@ use GuzzleHttp\Psr7\Utils;
 use Illuminate\Support\Arr;
 use Psr\Http\Message\StreamInterface;
 use RuntimeException;
+use Throwable;
 use YOCLIB\Multiformats\Multibase\Multibase;
 
 /**
@@ -19,6 +20,9 @@ use YOCLIB\Multiformats\Multibase\Multibase;
  */
 final class Protobuf
 {
+    /**
+     * @throws Throwable
+     */
     public static function decode(StreamInterface $stream): array
     {
         $links = [];
@@ -75,6 +79,9 @@ final class Protobuf
         return $stream->read($varint);
     }
 
+    /**
+     * @throws Throwable
+     */
     private static function decodeLink(StreamInterface $stream): array
     {
         $link = [];
