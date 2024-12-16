@@ -132,7 +132,7 @@ class FirehoseServeCommand extends Command
                 }
             }
 
-            if (Arr::has($header, ['t']) && is_array($payload)) {
+            if (Arr::has($header, ['t'])) {
                 event(new FirehoseMessageReceived($header, $payload, $roots, $blocks, $record, $host, $event));
 
                 $event = null;
