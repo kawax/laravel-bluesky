@@ -21,6 +21,7 @@ use Revolution\Bluesky\Support\TID;
 use Revolution\Bluesky\Support\Varint;
 use RuntimeException;
 use Tests\TestCase;
+use Throwable;
 use YOCLIB\Multiformats\Multibase\Multibase;
 
 class SupportTest extends TestCase
@@ -304,6 +305,9 @@ class SupportTest extends TestCase
 
     public function test_cid_decode_v0()
     {
+        // If v0 is specified, "zQm" is also allowed.
+        $decode = CID::decodeV0('zQmNX6Tffavsya4xgBi2VJQnSuqy9GsxongxZZ9uZBqp16d');
+        // When automatic detection is used, "zQm" is not allowed.
         $decode = CID::decode('QmNX6Tffavsya4xgBi2VJQnSuqy9GsxongxZZ9uZBqp16d');
 
         $this->assertSame(CID::V0, $decode['version']);
@@ -316,6 +320,13 @@ class SupportTest extends TestCase
     {
         $this->assertSame(CID::V0, CID::detect('QmNX6Tffavsya4xgBi2VJQnSuqy9GsxongxZZ9uZBqp16d'));
         $this->assertSame(CID::V1, CID::detect('bafyreib3h3z3a5jwjcthjojoqjpzrlzly53ycpctnmfsijdk3qb5m3qcdq'));
+    }
+
+    public function test_cid_detect_throw()
+    {
+        $this->expectException(Throwable::class);
+
+        $this->assertSame(CID::V0, CID::detect('zQmNX6Tffavsya4xgBi2VJQnSuqy9GsxongxZZ9uZBqp16d'));
     }
 
     public function test_cid_encode_dag_cbor()
