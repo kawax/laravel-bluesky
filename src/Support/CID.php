@@ -93,6 +93,15 @@ final class CID
 
     /**
      * Verify CID.
+     *
+     * ```
+     * if (CID::verify($raw_data, $cid, codec: CID::RAW) {
+     *
+     * }
+     * ```
+     *
+     * @param  string  $data  Target encoded bytes data. RAW, DAG-CBOR or DAG-PG
+     * @param  string  $cid  CIDv1 or v0
      */
     public static function verify(string $data, string $cid, ?int $codec = self::RAW): bool
     {
