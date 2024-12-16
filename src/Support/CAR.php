@@ -146,7 +146,7 @@ final class CAR
 
         $cid_version = Varint::decodeStream($data);
 
-        if ($cid_version !== CID::CID_V1) {
+        if ($cid_version !== CID::V1) {
             throw new InvalidArgumentException('Invalid CAR.');
         }
 
