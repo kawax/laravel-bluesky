@@ -9,6 +9,7 @@ use CBOR\TextStringObject;
 use Firebase\JWT\JWT;
 use GuzzleHttp\Psr7\Utils;
 use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Str;
 use InvalidArgumentException;
 use Revolution\Bluesky\Facades\Bluesky;
 use Revolution\Bluesky\Support\AtUri;
@@ -386,7 +387,9 @@ class SupportTest extends TestCase
 
         //dump($blocks);
         $this->assertCount(2, $roots);
+        $this->assertCount(8, $blocks);
         $this->assertArrayHasKey('bafyreihyrpefhacm6kkp4ql6j6udakdit7g3dmkzfriqfykhjw6cad5lrm', $blocks);
+        $this->assertArrayHasKey('QmNX6Tffavsya4xgBi2VJQnSuqy9GsxongxZZ9uZBqp16d', $blocks);
     }
 
     public function test_car_basic_stream()
