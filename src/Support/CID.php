@@ -15,11 +15,11 @@ use YOCLIB\Multiformats\Multibase\Multibase;
  */
 final class CID
 {
-    public const CID_V0 = 0x00;
+    public const V0 = 0x00;
 
     public const V0_LEADING = "\x12\x20";
 
-    public const CID_V1 = 0x01;
+    public const V1 = 0x01;
 
     public const SHA2_256 = 0x12;
 
@@ -28,6 +28,30 @@ final class CID
     public const DAG_CBOR = 0x71;
 
     public const DAG_PB = 0x20;
+
+    /**
+     * Encode CIDv1 or v0.
+     *
+     * ```
+     * $cid_v1_raw = CID::encode($raw_bytes);
+     * $cid_v1_cbor = CID::encode($cbor_bytes, CID::DAG_CBOR);
+     * $cid_v1 = CID::encode(data: $raw_bytes, codec: CID::RAW, ver: CID::V1);
+     *
+     * // "b..."
+     * ```
+     * ```
+     * $cid_v0 = CID::encode(data: $pb_bytes, ver: CID::V0);
+     *
+     * // "Qm..."
+     * ```
+     */
+    public static function encode(string $data, int $codec = self::RAW, int $ver = self::V1): string
+    {
+        return match ($ver) {
+            self::V0 => self::encodeV0($data),
+            default => self::encodeV1($data, $codec),
+        };
+    }
 
     /**
      * Encode CIDv1.
@@ -40,12 +64,12 @@ final class CID
      *
      * @param  string  $data  Raw data, or DAG-CBOR encoded data.
      */
-    public static function encode(string $data, int $codec = self::RAW): string
+    public static function encodeV1(string $data, int $codec = self::RAW): string
     {
         $hash = hash(algo: 'sha256', data: $data, binary: true);
         $hash_length = strlen($hash);
 
-        $version = Varint::encode(self::CID_V1);
+        $version = Varint::encode(self::V1);
         $code = Varint::encode($codec);
         $algo = Varint::encode(self::SHA2_256);
         $length = Varint::encode($hash_length);
@@ -89,7 +113,7 @@ final class CID
      */
     public static function verifyV0(string $data, string $cid): bool
     {
-        return hash_equals($cid, self::encodeV0(data: $data));
+        return hash_equals($cid, self::encode(data: $data, ver: self::V0));
     }
 
     /**
