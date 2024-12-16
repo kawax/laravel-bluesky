@@ -304,12 +304,18 @@ class SupportTest extends TestCase
 
     public function test_cid_decode_v0()
     {
-        $decode = CID::decodeV0('zQmNX6Tffavsya4xgBi2VJQnSuqy9GsxongxZZ9uZBqp16d');
+        $decode = CID::decode('QmNX6Tffavsya4xgBi2VJQnSuqy9GsxongxZZ9uZBqp16d');
 
         $this->assertSame(CID::V0, $decode['version']);
         $this->assertSame(CID::DAG_PB, $decode['codec']);
         $this->assertSame(CID::SHA2_256, $decode['hash_algo']);
         $this->assertSame('02acecc5de2438ea4126a3010ecb1f8a599c8eff22fff1a1dcffe999b27fd3de', $decode['hash']);
+    }
+
+    public function test_cid_detect()
+    {
+        $this->assertSame(CID::V0, CID::detect('QmNX6Tffavsya4xgBi2VJQnSuqy9GsxongxZZ9uZBqp16d'));
+        $this->assertSame(CID::V1, CID::detect('bafyreib3h3z3a5jwjcthjojoqjpzrlzly53ycpctnmfsijdk3qb5m3qcdq'));
     }
 
     public function test_cid_encode_dag_cbor()
