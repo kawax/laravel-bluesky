@@ -8,6 +8,7 @@ use CBOR\IndefiniteLengthByteStringObject;
 use CBOR\Tag;
 use Illuminate\Support\Str;
 use InvalidArgumentException;
+use Revolution\Bluesky\Support\CID;
 use YOCLIB\Multiformats\Multibase\Multibase;
 
 class CidTag extends Tag
@@ -48,7 +49,11 @@ class CidTag extends Tag
         $cid = $object->normalize();
         $cid = Str::ltrim($cid, "\x00");
 
-        return Multibase::encode(Multibase::BASE32, $cid);
+        if (str_starts_with($cid, CID::V0_LEADING)) {
+            return Multibase::encode(Multibase::BASE58BTC, $cid, false);
+        } else {
+            return Multibase::encode(Multibase::BASE32, $cid);
+        }
     }
 
     public function link(): array
