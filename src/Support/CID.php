@@ -82,7 +82,7 @@ final class CID
     /**
      * Encode CIDv0.
      *
-     * @param  string  $data  DAG-PB encoded data. Starts with "Qm"
+     * @param  string  $data  DAG-PB encoded data.
      */
     public static function encodeV0(string $data): string
     {
@@ -92,11 +92,22 @@ final class CID
     }
 
     /**
+     * Verify CID.
+     */
+    public static function verify(string $data, string $cid, ?int $codec = self::RAW): bool
+    {
+        return match (self::detect($cid)) {
+            self::V0 => self::verifyV0($data, $cid),
+            default => self::verifyV1($data, $cid, $codec),
+        };
+    }
+
+    /**
      * Verify CIDv1.
      *
      * @param  string  $data  Raw data, or DAG-CBOR encoded data.
      */
-    public static function verify(string $data, string $cid, ?int $codec = self::RAW): bool
+    public static function verifyV1(string $data, string $cid, ?int $codec = self::RAW): bool
     {
         // Detect codec
         if (is_null($codec)) {
@@ -114,6 +125,19 @@ final class CID
     public static function verifyV0(string $data, string $cid): bool
     {
         return hash_equals($cid, self::encode(data: $data, ver: self::V0));
+    }
+
+    /**
+     * Decode CIDv1 or v0.
+     *
+     * @return array{version: int, codec: int, hash_algo: int, hash_length: int, hash: string}
+     */
+    public static function decode(string $cid): array
+    {
+        return match (self::detect($cid)) {
+            self::V0 => self::decodeV0($cid),
+            default => self::decodeV1($cid),
+        };
     }
 
     /**
@@ -136,7 +160,7 @@ final class CID
      *
      * @return array{version: int, codec: int, hash_algo: int, hash_length: int, hash: string}
      */
-    public static function decode(string $cid): array
+    public static function decodeV1(string $cid): array
     {
         $stream = Utils::streamFor(Multibase::decode($cid));
 
@@ -171,6 +195,7 @@ final class CID
      * ```
      *
      * @param  string  $cid  CID starting with "Qm"
+     *
      * @return array{version: int, codec: int, hash_algo: int, hash_length: int, hash: string}
      */
     public static function decodeV0(string $cid): array
@@ -194,5 +219,26 @@ final class CID
             'hash_length',
             'hash',
         );
+    }
+
+    /**
+     * Detect CID version.
+     *
+     * @return int 0: CIDv0, 1: CIDv1
+     */
+    public static function detect(string $cid): int
+    {
+        if (strlen($cid) === 46 && Str::startsWith($cid, 'Qm')) {
+            return self::V0;
+        }
+
+        $bytes = Multibase::decode($cid);
+        throw_if(str_starts_with($bytes, "\x12"));
+
+        if (strlen($bytes) === 34 && str_starts_with($bytes, self::V0_LEADING)) {
+            return self::V0;
+        }
+
+        return ord($bytes);
     }
 }
