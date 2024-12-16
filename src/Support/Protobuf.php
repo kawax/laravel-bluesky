@@ -58,27 +58,9 @@ final class Protobuf
         return $node;
     }
 
-    private static function decodeVarint(StreamInterface $stream): int
-    {
-        $v = 0;
-
-        for ($shift = 0; $shift <= 64; $shift += 7) {
-            throw_if($shift >= 64);
-            throw_if($stream->eof());
-
-            $b = intval(bin2hex($stream->read(1)), 16);
-            $v += $shift < 28 ? ($b & 0x7F) << $shift : ($b & 0x7F) * (2 ** $shift);
-            if ($b < 0x80) {
-                break;
-            }
-        }
-
-        return $v;
-    }
-
     private static function decodeKey(StreamInterface $stream): array
     {
-        $varint = self::decodeVarint($stream);
+        $varint = Varint::decodeStream($stream);
 
         $wireType = $varint & 0x7;
         $fieldNum = $varint >> 3;
@@ -88,7 +70,7 @@ final class Protobuf
 
     private static function decodeBytes(StreamInterface $stream): string
     {
-        $varint = self::decodeVarint($stream);
+        $varint = Varint::decodeStream($stream);
 
         return $stream->read($varint);
     }
@@ -114,7 +96,7 @@ final class Protobuf
                 throw_if(Arr::has($link, ['tsize']));
                 throw_unless($wireType === 0);
 
-                $link['tsize'] = self::decodeVarint($stream);
+                $link['tsize'] = Varint::decodeStream($stream);
             } else {
                 throw new RuntimeException();
             }
