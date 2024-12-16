@@ -9,7 +9,6 @@ use CBOR\TextStringObject;
 use Firebase\JWT\JWT;
 use GuzzleHttp\Psr7\Utils;
 use Illuminate\Support\Facades\Http;
-use Illuminate\Support\Str;
 use InvalidArgumentException;
 use Revolution\Bluesky\Facades\Bluesky;
 use Revolution\Bluesky\Support\AtUri;
