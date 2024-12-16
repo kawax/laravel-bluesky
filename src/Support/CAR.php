@@ -40,9 +40,7 @@ final class CAR
      */
     public static function decode(StreamInterface|string $data): array
     {
-        if (! $data instanceof StreamInterface) {
-            $data = Utils::streamFor($data);
-        }
+        $data = Utils::streamFor($data);
 
         $data->rewind();
 
@@ -62,9 +60,7 @@ final class CAR
      */
     public static function decodeHeader(StreamInterface|string $data): array
     {
-        if (! $data instanceof StreamInterface) {
-            $data = Utils::streamFor($data);
-        }
+        $data = Utils::streamFor($data);
 
         $data->rewind();
 
@@ -106,9 +102,7 @@ final class CAR
      */
     public static function blockIterator(StreamInterface|string $data): iterable
     {
-        if (! $data instanceof StreamInterface) {
-            $data = Utils::streamFor($data);
-        }
+        $data = Utils::streamFor($data);
 
         $data->rewind();
 
