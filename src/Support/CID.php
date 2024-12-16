@@ -195,7 +195,6 @@ final class CID
      * ```
      *
      * @param  string  $cid  CID starting with "Qm"
-     *
      * @return array{version: int, codec: int, hash_algo: int, hash_length: int, hash: string}
      */
     public static function decodeV0(string $cid): array
