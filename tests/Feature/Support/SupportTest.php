@@ -290,7 +290,7 @@ class SupportTest extends TestCase
 
         $hash = hash('sha256', 'test');
 
-        $this->assertSame(CID::CID_V1, $cid['version']);
+        $this->assertSame(CID::V1, $cid['version']);
         $this->assertSame($hash, $cid['hash']);
     }
 
@@ -298,7 +298,7 @@ class SupportTest extends TestCase
     {
         $cid = CID::decode('bafyreib3h3z3a5jwjcthjojoqjpzrlzly53ycpctnmfsijdk3qb5m3qcdq');
 
-        $this->assertSame(CID::CID_V1, $cid['version']);
+        $this->assertSame(CID::V1, $cid['version']);
         $this->assertSame(CID::DAG_CBOR, $cid['codec']);
     }
 
@@ -306,7 +306,7 @@ class SupportTest extends TestCase
     {
         $decode = CID::decodeV0('zQmNX6Tffavsya4xgBi2VJQnSuqy9GsxongxZZ9uZBqp16d');
 
-        $this->assertSame(CID::CID_V0, $decode['version']);
+        $this->assertSame(CID::V0, $decode['version']);
         $this->assertSame(CID::DAG_PB, $decode['codec']);
         $this->assertSame(CID::SHA2_256, $decode['hash_algo']);
         $this->assertSame('02acecc5de2438ea4126a3010ecb1f8a599c8eff22fff1a1dcffe999b27fd3de', $decode['hash']);
@@ -429,7 +429,7 @@ class SupportTest extends TestCase
         $this->assertSame(91, $block_len);
         $ver1 = Varint::decode($data->read(1));
         $ver0 = $data->read(2);
-        $this->assertSame(CID::CID_V1, $ver1);
+        $this->assertSame(CID::V1, $ver1);
         $this->assertNotSame("\x12\x20", $ver0);
 
         $data->seek(192);
@@ -494,7 +494,7 @@ class SupportTest extends TestCase
         $this->assertSame(2, $pos);
 
         $ver1 = Varint::decode($data->read(1));
-        $this->assertSame(CID::CID_V1, $ver1);
+        $this->assertSame(CID::V1, $ver1);
 
         $codec = Varint::decode($data->read(1));
         $this->assertSame(CID::DAG_CBOR, $codec);
@@ -524,7 +524,7 @@ class SupportTest extends TestCase
         $this->assertSame(2, $pos);
 
         $ver1 = Varint::decode($data->read(1));
-        $this->assertSame(CID::CID_V1, $ver1);
+        $this->assertSame(CID::V1, $ver1);
 
         $codec = Varint::decode($data->read(1));
         $this->assertSame(CID::DAG_CBOR, $codec);
@@ -554,7 +554,7 @@ class SupportTest extends TestCase
         $this->assertSame(2, $pos);
 
         $ver1 = Varint::decode($data->read(1));
-        $this->assertSame(CID::CID_V1, $ver1);
+        $this->assertSame(CID::V1, $ver1);
 
         $codec = Varint::decode($data->read(1));
         $this->assertSame(CID::DAG_CBOR, $codec);
