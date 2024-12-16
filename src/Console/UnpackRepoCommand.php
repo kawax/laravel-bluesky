@@ -11,6 +11,7 @@ use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 use Revolution\Bluesky\Support\CAR;
 use Revolution\Bluesky\Support\CBOR;
+use Revolution\Bluesky\Support\CID;
 
 /**
  * Sample command to unpack the actor's "CAR" file.
@@ -68,6 +69,12 @@ class UnpackRepoCommand extends Command
 
             // TODO
             $block = CBOR::normalize($block);
+
+            if (CID::verify(CBOR::fromArray($block), $cid, codec: CID::DAG_CBOR)) {
+                $this->info('Verified');
+            } else {
+                $this->error('Verify failed');
+            }
 
             $path = collect(['bluesky', 'download', $name, 'repo', $collection, $cid.'.json'])
                 ->implode(DIRECTORY_SEPARATOR);
