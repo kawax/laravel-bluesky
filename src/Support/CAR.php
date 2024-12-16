@@ -21,20 +21,18 @@ final class CAR
      *
      * Limited implementation, can be used to decode downloaded CAR files and Firehose.
      *
-     * Only CIDv1, DAG-CBOR/RAW, and SHA2-256 format are supported.
-     *
      * ```
      * [$roots, $blocks] = CAR::decode('data');
      *
      * $roots
      * [
-     *     0 => 'cid base32',
+     *     0 => 'cid',
      * ]
      *
      * $blocks
      * [
-     *     'cid base32' => [],
-     *     'cid base32' => [],
+     *     'cid' => [],
+     *     'cid' => [],
      * ]
      * ```
      *
@@ -166,8 +164,12 @@ final class CAR
         $block_bytes = $data->read($block_length);
 
         if ($cid_codec === CID::RAW) {
+            throw_unless(CID::verify($block_bytes, $cid, codec: CID::RAW));
+
             $block = $block_bytes;
         } elseif ($cid_codec === CID::DAG_CBOR) {
+            throw_unless(CID::verify($block_bytes, $cid, codec: CID::DAG_CBOR));
+
             $block = rescue(fn () => CBOR::normalize(CBOR::decode($block_bytes)->normalize()));
         } else {
             throw new InvalidArgumentException('Invalid CAR.');
@@ -187,6 +189,9 @@ final class CAR
         $cid_bytes = $data->read(34);
         $cid = Multibase::encode(Multibase::BASE58BTC, $cid_bytes, false);
         $block_bytes = $data->read($block_varint - 34);
+
+        throw_unless(CID::verifyV0($block_bytes, $cid));
+
         $block = Protobuf::decode(Utils::streamFor($block_bytes));
 
         return [$cid, $block];
