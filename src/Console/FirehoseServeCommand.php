@@ -13,9 +13,16 @@ use Illuminate\Support\Arr;
 use Revolution\Bluesky\Events\FirehoseMessageReceived;
 use Revolution\Bluesky\Support\CAR;
 use Revolution\Bluesky\Support\CBOR;
+use Revolution\Bluesky\Support\CID;
 use Valtzu\WebSocketMiddleware\WebSocketMiddleware;
 use Valtzu\WebSocketMiddleware\WebSocketStream;
 
+/**
+ * Firehose is even more difficult than Jetstream WebSocket ({@link WebSocketServeCommand}) and is not expected to be commonly used, so there is no documentation.
+ *
+ * @link https://docs.bsky.app/docs/advanced-guides/firehose
+ * @link https://atproto.com/ja/specs/event-stream
+ */
 class FirehoseServeCommand extends Command
 {
     /**
@@ -68,9 +75,12 @@ class FirehoseServeCommand extends Command
 
         $this->info('Host : '.$host);
 
-        while (! $ws->eof() || $this->running) {
-            $event = $ws->read();
+        $event = null;
 
+        while (! $ws->eof() || $this->running) {
+            $event .= $ws->read();
+
+            // Firehose often receives incorrect data.
             $header = rescue(fn () => CBOR::decode($event));
             if (blank($header) || ! $header instanceof MapObject) {
                 if ($this->output->isVerbose()) {
@@ -80,10 +90,13 @@ class FirehoseServeCommand extends Command
                 continue;
             }
 
-            $payload = substr($event, strlen((string) $header));
+            $payload_bytes = substr($event, strlen((string) $header));
 
             $header = $header->normalize();
-            $payload = rescue(fn () => CBOR::decode($payload)->normalize());
+            $payload = rescue(fn () => CBOR::normalize(CBOR::decode($payload_bytes)->normalize()));
+            if (blank($payload) || ! is_array($payload)) {
+                continue;
+            }
 
             $records = data_get($payload, 'blocks');
             $roots = [];
@@ -92,20 +105,37 @@ class FirehoseServeCommand extends Command
                 [$roots, $blocks] = CAR::decode($records);
             }
 
+            $record = collect($blocks)->firstWhere('$type') ?? [];
+
             if ($this->output->isVeryVerbose()) {
                 //dump($header);
                 //dump($payload);
-                if (filled($roots)) {
-                    dump($roots);
+
+//                if (filled($roots)) {
+//                    dump($roots);
+//                }
+
+//                if (filled($blocks)) {
+//                    dump($blocks);
+//                }
+
+                if (filled($record) && data_get($record, '$type') === 'app.bsky.feed.post') {
+                    dump($record);
+
+                    // Verification fails if ref link is included
+                    $payload_cid = data_get($payload, 'ops.0.cid');
+                    if (CID::verify(CBOR::fromArray($record), $payload_cid, codec: CID::DAG_CBOR)) {
+                        dump('Verified: '.$payload_cid);
+                    } else {
+                        dump('Failed: '.$payload_cid, CID::encode(CBOR::fromArray($record), codec: CID::DAG_CBOR));
+                    }
                 }
-                if (filled($blocks)) {
-                    dump($blocks);
-                }
-                $this->newLine();
             }
 
             if (Arr::has($header, ['t']) && is_array($payload)) {
-                event(new FirehoseMessageReceived($header, $payload, $roots, $blocks, $host, $event));
+                event(new FirehoseMessageReceived($header, $payload, $roots, $blocks, $record, $host, $event));
+
+                $event = null;
             }
         }
 
