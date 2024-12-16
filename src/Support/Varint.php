@@ -38,9 +38,9 @@ final class Varint
     /**
      * @throws Throwable
      */
-    public static function decode(string $str): int
+    public static function decode(string $bytes): int
     {
-        $buf = unpack('C*', $str);
+        $buf = unpack('C*', $bytes);
         $x = new BigInteger(0);
         $s = 0;
 
@@ -65,10 +65,12 @@ final class Varint
      */
     public static function decodeStream(StreamInterface $stream): int
     {
-        $str = $stream->read(8);
-        $int = self::decode($str);
-        $stream->seek(strlen(self::encode($int)) - 8, SEEK_CUR);
+        $start = $stream->tell();
 
-        return $int;
+        $bytes = $stream->read(8);
+        $x = self::decode($bytes);
+        $stream->seek($start + strlen(self::encode($x)));
+
+        return $x;
     }
 }
