@@ -21,10 +21,8 @@ use CBOR\StringStream;
 use CBOR\Tag\TagManager;
 use CBOR\TextStringObject;
 use CBOR\UnsignedIntegerObject;
-use Illuminate\Support\Arr;
 use InvalidArgumentException;
 use Revolution\Bluesky\Support\CBOR\CidTag;
-use YOCLIB\Multiformats\Multibase\Multibase;
 
 final class CBOR
 {
@@ -60,7 +58,7 @@ final class CBOR
     {
         if (is_array($data)) {
             return collect($data)->map(function ($item, $key) {
-                if (is_numeric($item)) {
+                if ($key !== 'text' && is_numeric($item)) {
                     return (int) $item;
                 }
                 if ($key === 'ref' && $item instanceof CidTag) {
@@ -137,16 +135,6 @@ final class CBOR
         $isIndefinite = 0 !== ($option & self::INDEFINITE_MAP_LENGTH);
         $map = $isIndefinite ? IndefiniteLengthMapObject::create() : MapObject::create();
         foreach ($data as $key => $value) {
-            if ($key === 'ref' && Arr::exists($value, '$link')) {
-                $cid = Multibase::decode($value['$link']);
-                $cid = ByteStringObject::create($cid);
-
-                $tag = CidTag::create($cid);
-                $map->add($this->processData($key, $option), $tag);
-
-                continue;
-            }
-
             $map->add($this->processData($key, $option), $this->processData($value, $option));
         }
 
