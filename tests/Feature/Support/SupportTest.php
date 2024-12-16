@@ -403,6 +403,8 @@ class SupportTest extends TestCase
         $this->assertSame(0x012C, Varint::decode("\xAC\x02"));
         $this->assertSame(0x4000, Varint::decode("\x80\x80\x01"));
         $this->assertSame(131, Varint::decode("\x83\x01"));
+
+        $this->assertSame(0x4000, Varint::decodeStream(Utils::streamFor("\x80\x80\x01")));
     }
 
     public function test_car_basic()
