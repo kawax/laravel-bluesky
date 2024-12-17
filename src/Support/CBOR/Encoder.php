@@ -16,7 +16,9 @@ use YOCLIB\Multiformats\Multibase\Multibase;
  */
 final class Encoder
 {
-    protected const CHUNK_SIZE = 1024;
+    private const CHUNK_SIZE = 1024;
+
+    private const ZERO = "\x00";
 
     private array $chunks = [];
 
@@ -36,7 +38,7 @@ final class Encoder
     private function createState(): void
     {
         $this->chunks = [];
-        $this->buffer = str_repeat("\0", self::CHUNK_SIZE);
+        $this->buffer = str_repeat(self::ZERO, self::CHUNK_SIZE);
         $this->pos = 0;
     }
 
@@ -56,7 +58,7 @@ final class Encoder
             }
 
             $newSize = max(self::CHUNK_SIZE, $needed);
-            $this->buffer = str_repeat("\0", $newSize);
+            $this->buffer = str_repeat(self::ZERO, $newSize);
             $this->pos = 0;
         }
     }
@@ -198,7 +200,7 @@ final class Encoder
         $this->writeTypeAndArgument(2, $len);
 
         $this->resizeIfNeeded($len);
-        $this->buffer[$this->pos] = "\0";
+        $this->buffer[$this->pos] = self::ZERO;
         $this->pos += 1;
         $this->writeRaw($buf);
     }
@@ -288,7 +290,7 @@ final class Encoder
             return;
         }
 
-        throw new InvalidArgumentException('unsupported type: '.gettype($val));
+        throw new InvalidArgumentException();
     }
 
     private function compareKeys(string $a, string $b): int
