@@ -11,7 +11,7 @@ namespace Revolution\Bluesky\Support\CBOR;
  *
  * @todo
  */
-class Normalizer
+final class Normalizer
 {
     public function __invoke(mixed $data): mixed
     {
