@@ -32,12 +32,12 @@ final class CAR
      *
      * $blocks
      * [
-     *     'cid' => [],
-     *     'cid' => [],
+     *     '<collection>/<rkey>' => [record],
+     *     '<collection>/<rkey>' => [record],
      * ]
      * ```
      *
-     * @return array{0: list<string>, 1: array<string, mixed>}
+     * @return array{0: list<string>, 1: array<string, array>}
      */
     public static function decode(StreamInterface|string $data): array
     {
@@ -47,9 +47,7 @@ final class CAR
 
         $roots = self::decodeRoots($data);
 
-        $blocks = iterator_to_array(self::blockIterator($data));
-
-        rescue(fn () => $data->close());
+        $blocks = iterator_to_array(self::blockMap($data));
 
         return [$roots, $blocks];
     }
@@ -199,6 +197,8 @@ final class CAR
     /**
      * Unlike {@link CAR::blockIterator()}, this is an iterator for `<collection>/<rkey>` key and record array.
      *
+     * Works only Bluesky/AtProto CAR.
+     *
      * ```
      * foreach (CAR::blockMap($data) as $key => $record) {
      *     [$collection, $rkey] = explode('/', $key);
@@ -220,13 +220,15 @@ final class CAR
         $commit = data_get($blockmap, $roots[0]);
         $did = data_get($commit, 'did');
 
-        yield from self::walkEntries($blockmap, data_get($commit, 'data./'), $did);
+        if (Identity::isDID($did)) {
+            yield from self::walkEntries($blockmap, data_get($commit, 'data./'), $did);
+        }
     }
 
     private static function walkEntries(array $blockmap, string $pointer, string $did): iterable
     {
         $data = data_get($blockmap, $pointer);
-        $entries = data_get($data, 'e');
+        $entries = data_get($data, 'e', []);
 
         $lastKey = '';
 
@@ -246,7 +248,11 @@ final class CAR
             $value = data_get($blockmap, $cid);
 
             // Match the format of getRecord and listRecords.
-            yield $key => compact('uri', 'cid', 'value');
+            $record = compact('uri', 'cid');
+            if (! is_null($value)) {
+                $record['value'] = $value;
+            }
+            yield $key => $record;
 
             if (filled(data_get($entry, 't./'))) {
                 yield from self::walkEntries($blockmap, data_get($entry, 't./'), $did);
