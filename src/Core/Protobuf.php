@@ -52,11 +52,11 @@ final class Protobuf
         }
 
         $node = [
-            'links' => $links,
+            'Links' => $links,
         ];
 
         if (! is_null($data)) {
-            $node['data'] = $data;
+            $node['Data'] = $data;
         }
 
         rescue(fn () => $stream->close());
@@ -92,20 +92,20 @@ final class Protobuf
             [$wireType, $fieldNum] = self::decodeKey($stream);
 
             if ($fieldNum === 1) {
-                throw_if(Arr::has($link, ['hash', 'name', 'tsize']));
+                throw_if(Arr::has($link, ['Hash', 'Name', 'Tsize']));
                 throw_unless($wireType === 2);
 
-                $link['hash'] = Multibase::encode(Multibase::BASE32, self::decodeBytes($stream));
+                $link['Hash'] = Multibase::encode(Multibase::BASE32, self::decodeBytes($stream));
             } elseif ($fieldNum === 2) {
-                throw_if(Arr::has($link, ['name', 'tsize']));
+                throw_if(Arr::has($link, ['Name', 'Tsize']));
                 throw_unless($wireType === 2);
 
-                $link['name'] = self::decodeBytes($stream);
+                $link['Name'] = self::decodeBytes($stream);
             } elseif ($fieldNum === 3) {
-                throw_if(Arr::has($link, ['tsize']));
+                throw_if(Arr::has($link, ['Tsize']));
                 throw_unless($wireType === 0);
 
-                $link['tsize'] = Varint::decodeStream($stream);
+                $link['Tsize'] = Varint::decodeStream($stream);
             } else {
                 throw new RuntimeException();
             }
