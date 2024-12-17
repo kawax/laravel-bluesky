@@ -89,7 +89,7 @@ final class Decoder
         $hi = $arr[1];
         $lo = $arr[2];
 
-        if ($hi > 0x1fffff) {
+        if ($hi > 0x1FFFFF) {
             throw new InvalidArgumentException();
         }
 
@@ -118,7 +118,7 @@ final class Decoder
     {
         $prelude = $this->readUint8();
         $type = $prelude >> 5;
-        $info = $prelude & 0x1f;
+        $info = $prelude & 0x1F;
 
         if ($type === 0) {
             return $this->readArgument($info);
@@ -126,6 +126,7 @@ final class Decoder
 
         if ($type === 1) {
             $value = $this->readArgument($info);
+
             return -1 - $value;
         }
 
@@ -141,7 +142,7 @@ final class Decoder
             $len = $this->readArgument($info);
             $arr = [];
 
-            for ($i = 0; $i < $len; ++$i) {
+            for ($i = 0; $i < $len; $i++) {
                 $arr[] = $this->readValue();
             }
 
@@ -152,7 +153,7 @@ final class Decoder
             $len = $this->readArgument($info);
             $arr = [];
 
-            for ($i = 0; $i < $len; ++$i) {
+            for ($i = 0; $i < $len; $i++) {
                 $key = $this->readValue();
                 $arr[$key] = $this->readValue();
             }
@@ -167,7 +168,7 @@ final class Decoder
 
             $prelude = $this->readUint8();
             $type = $prelude >> 5;
-            $info = $prelude & 0x1f;
+            $info = $prelude & 0x1F;
 
             throw_unless($type === 2);
 

@@ -4,8 +4,6 @@ declare(strict_types=1);
 
 namespace Tests\Feature\Support;
 
-use CBOR\MapObject;
-use CBOR\TextStringObject;
 use Firebase\JWT\JWT;
 use GuzzleHttp\Psr7\Utils;
 use Illuminate\Support\Facades\Http;
