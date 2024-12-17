@@ -8,6 +8,7 @@ use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 use Revolution\Bluesky\Facades\Bluesky;
+use Revolution\Bluesky\Support\CBOR;
 use Revolution\Bluesky\Support\CID;
 use Revolution\Bluesky\Support\DidDocument;
 use Revolution\Bluesky\Support\Identity;
@@ -84,11 +85,10 @@ class DownloadBlobsCommand extends Command
                     ->throw()
                     ->body();
 
-                // The CID of the blob can be verified since it is a raw codec.
-                if (! CID::verify(data: $content, cid: $cid)) {
-                    $this->error('Invalid cid: '.$cid);
-
-                    return;
+                if (CID::verify(data: $content, cid: $cid, codec: CID::RAW)) {
+                    $this->info('Verified');
+                } else {
+                    $this->error('Verify failed');
                 }
 
                 $name = Str::slug($actor, dictionary: ['.' => '-', ':' => '-']);
