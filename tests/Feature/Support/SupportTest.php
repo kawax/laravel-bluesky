@@ -365,7 +365,7 @@ class SupportTest extends TestCase
 
         $cbor = CBOR::encode($json['value']);
 
-        $decode = CBOR::decode($cbor);
+        [$decode] = CBOR::decodeFirst($cbor);
 
         $cbor_encoded = CBOR::encode($decode);
         $cid = CID::encode($cbor_encoded, codec: CID::DAG_CBOR);
