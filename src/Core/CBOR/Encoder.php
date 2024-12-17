@@ -8,7 +8,6 @@ use Illuminate\Contracts\Support\Arrayable;
 use Illuminate\Support\Arr;
 use InvalidArgumentException;
 use Revolution\Bluesky\Core\CID;
-use YOCLIB\Multiformats\Multibase\Multibase;
 
 /**
  * @internal
@@ -188,7 +187,7 @@ final class Encoder
 
     private function writeCid(string $val): void
     {
-        $buf = Multibase::decode($val);
+        $buf = CID::decodeBytes($val);
         $len = strlen($buf) + 1;
 
         $this->writeTypeAndArgument(6, 42);
