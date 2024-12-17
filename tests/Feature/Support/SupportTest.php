@@ -481,7 +481,7 @@ class SupportTest extends TestCase
 
         [$roots, $blocks] = CAR::decode($data);
         $this->assertCount(1, $roots);
-        $this->assertCount(604, $blocks);
+        $this->assertCount(744, $blocks);
     }
 
     public function test_car_block_iterator()
