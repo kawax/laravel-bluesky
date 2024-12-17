@@ -13,21 +13,17 @@ final class CBOR
 {
     public static function encode(mixed $data): string
     {
-        return (new Encoder())->encode($data);
+        return app(Encoder::class)->encode($data);
     }
 
     public static function decodeFirst(string $data): array
     {
-        $decoder = new Decoder(Utils::streamFor($data));
-
-        return $decoder->decodeFirst();
+        return app(Decoder::class, ['stream' => Utils::streamFor($data)])->decodeFirst();
     }
 
     public static function decode(string $data): mixed
     {
-        $decoder = new Decoder(Utils::streamFor($data));
-
-        return $decoder->decode();
+        return app(Decoder::class, ['stream' => Utils::streamFor($data)])->decode();
     }
 
     public static function normalize(mixed $data): mixed
