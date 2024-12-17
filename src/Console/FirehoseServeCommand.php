@@ -9,6 +9,7 @@ use GuzzleHttp\Handler\StreamHandler;
 use GuzzleHttp\HandlerStack;
 use Illuminate\Console\Command;
 use Illuminate\Support\Arr;
+use Illuminate\Support\Number;
 use Revolution\Bluesky\Events\FirehoseMessageReceived;
 use Revolution\Bluesky\Support\CAR;
 use Revolution\Bluesky\Support\CBOR;
@@ -20,7 +21,7 @@ use Valtzu\WebSocketMiddleware\WebSocketStream;
  * Firehose is even more difficult than Jetstream WebSocket ({@link WebSocketServeCommand}) and is not expected to be commonly used, so there is no documentation.
  *
  * @link https://docs.bsky.app/docs/advanced-guides/firehose
- * @link https://atproto.com/ja/specs/event-stream
+ * @link https://atproto.com/specs/event-stream
  */
 class FirehoseServeCommand extends Command
 {
@@ -39,6 +40,8 @@ class FirehoseServeCommand extends Command
     protected $description = 'Connect to Firehose websocket server';
 
     protected bool $running = true;
+
+    protected const MAX_SIZE = 1024 * 1024 * 5;
 
     /**
      * Execute the console command.
@@ -75,7 +78,7 @@ class FirehoseServeCommand extends Command
         $this->info('Host : '.$host);
 
         while ($this->running) {
-            $event = $ws->read();
+            $event = $ws->read(self::MAX_SIZE);
 
             // Firehose often receives incorrect data.
             [$header, $remainder] = rescue(fn () => CBOR::decodeFirst($event));
@@ -83,6 +86,9 @@ class FirehoseServeCommand extends Command
 
             if (blank($header) || ! is_array($header)) {
                 if ($this->output->isVerbose()) {
+                    // Frequent memory errors
+                    dump(Number::abbreviate(memory_get_usage(), 2));
+
                     dump($header);
                 }
 
