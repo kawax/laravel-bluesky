@@ -105,7 +105,7 @@ final class CID
      * @param  string  $data  Target encoded bytes data. RAW, DAG-CBOR or DAG-PG
      * @param  string  $cid  CIDv1 or v0
      */
-    public static function verify(string $data, string $cid, ?int $codec = self::RAW): bool
+    public static function verify(string $data, string $cid, ?int $codec = null): bool
     {
         return match (self::detect($cid)) {
             self::V0 => self::verifyV0($data, $cid),
@@ -118,11 +118,11 @@ final class CID
      *
      * @param  string  $data  Raw data, or DAG-CBOR encoded data.
      */
-    public static function verifyV1(string $data, string $cid, ?int $codec = self::RAW): bool
+    public static function verifyV1(string $data, string $cid, ?int $codec = null): bool
     {
         // Detect codec
         if (is_null($codec)) {
-            $codec = data_get(self::decode($cid), 'codec', self::RAW);
+            $codec = data_get(self::decode($cid), 'codec', self::DAG_CBOR);
         }
 
         return hash_equals($cid, self::encode(data: $data, codec: $codec));
