@@ -74,7 +74,7 @@ class FirehoseServeCommand extends Command
 
         $this->info('Host : '.$host);
 
-        while (! $ws->eof() || $this->running) {
+        while ($this->running) {
             $event = $ws->read();
 
             // Firehose often receives incorrect data.
