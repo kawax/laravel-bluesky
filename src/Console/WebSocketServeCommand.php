@@ -10,6 +10,8 @@ use GuzzleHttp\HandlerStack;
 use Illuminate\Console\Command;
 use Illuminate\Support\Arr;
 use Revolution\Bluesky\Events\WebSocketMessageReceived;
+use Revolution\Bluesky\Support\CBOR;
+use Revolution\Bluesky\Support\CID;
 use Valtzu\WebSocketMiddleware\WebSocketMiddleware;
 use Valtzu\WebSocketMiddleware\WebSocketStream;
 
@@ -111,15 +113,21 @@ class WebSocketServeCommand extends Command
         $this->info('Host : '.$host);
         $this->info('Payload : '.$options);
 
-        while (! $ws->eof() || $this->running) {
+        while ($this->running) {
             $event = $ws->read();
 
-            if ($this->output->isVerbose()) {
-                $this->line($event);
-                $this->newLine();
-            }
-
             $message = json_decode($event, true);
+
+            if ($this->output->isVerbose()) {
+                dump($message);
+                $record = data_get($message, 'commit.record');
+                $cid = data_get($message, 'commit.cid');
+                if (! is_null($record) && ! is_null($cid)) {
+                    if (CID::verify(CBOR::encode($record), $cid)) {
+                        $this->info('Verified: '.$cid);
+                    }
+                }
+            }
 
             if (is_array($message) && Arr::has($message, ['did', 'kind'])) {
                 WebSocketMessageReceived::dispatch($message, $host, $payload);
