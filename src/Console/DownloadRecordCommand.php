@@ -9,6 +9,8 @@ use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 use Revolution\Bluesky\Facades\Bluesky;
 use Revolution\Bluesky\Support\AtUri;
+use Revolution\Bluesky\Support\CBOR;
+use Revolution\Bluesky\Support\CID;
 
 /**
  * Sample command to download the actor's Record. Download json directly instead of parsing CAR file.
@@ -60,8 +62,14 @@ class DownloadRecordCommand extends Command
             $response->collect('records')->each(function (array $record) use ($actor, $collection) {
                 $at = AtUri::parse(data_get($record, 'uri'));
 
-                // The record's CID is the DAG-CBOR codec, so it cannot be verified yet.
-                // $cid = data_get($record, 'cid');
+                $cid = data_get($record, 'cid');
+                $block = data_get($record, 'value');
+
+                if (CID::verify(CBOR::encode($block), $cid)) {
+                    $this->info('Verified');
+                } else {
+                    $this->error('Verify failed');
+                }
 
                 $name = Str::slug($actor, dictionary: ['.' => '-', ':' => '-']);
 
