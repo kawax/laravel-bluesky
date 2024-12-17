@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Revolution\Bluesky\Console;
 
-use CBOR\MapObject;
 use GuzzleHttp\Client;
 use GuzzleHttp\Handler\StreamHandler;
 use GuzzleHttp\HandlerStack;

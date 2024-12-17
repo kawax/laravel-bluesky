@@ -146,7 +146,7 @@ final class Encoder
 
     private function writeFloat(float $val): void
     {
-        $this->writeUint8(0xfb);
+        $this->writeUint8(0xFB);
         $this->writeFloat64($val);
     }
 
@@ -206,27 +206,32 @@ final class Encoder
     private function writeValue(mixed $val): void
     {
         if ($val === null) {
-            $this->writeUint8(0xf6);
+            $this->writeUint8(0xF6);
+
             return;
         }
 
         if ($val === false) {
-            $this->writeUint8(0xf4);
+            $this->writeUint8(0xF4);
+
             return;
         }
 
         if ($val === true) {
-            $this->writeUint8(0xf5);
+            $this->writeUint8(0xF5);
+
             return;
         }
 
-        if (is_float($val) || (is_int($val))) {
+        if (is_float($val) || is_int($val)) {
             $this->writeNumber($val);
+
             return;
         }
 
         if (is_string($val)) {
             $this->writeString($val);
+
             return;
         }
 
@@ -240,6 +245,7 @@ final class Encoder
             foreach ($val as $v) {
                 $this->writeValue($v);
             }
+
             return;
         }
 
@@ -250,16 +256,19 @@ final class Encoder
         if (Arr::isAssoc($val)) {
             if (Arr::exists($val, '$link')) {
                 $this->writeCid(data_get($val, '$link'));
+
                 return;
             }
 
             if (Arr::exists($val, '/')) {
                 $this->writeCid(data_get($val, '/'));
+
                 return;
             }
 
             if (Arr::exists($val, '$bytes')) {
                 $this->writeBytes(data_get($val, '$bytes'));
+
                 return;
             }
 
@@ -275,6 +284,7 @@ final class Encoder
                 $this->writeString($key);
                 $this->writeValue($filtered[$key]);
             }
+
             return;
         }
 
