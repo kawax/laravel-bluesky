@@ -7,6 +7,7 @@ namespace Revolution\Bluesky\Support\CBOR;
 use Illuminate\Contracts\Support\Arrayable;
 use Illuminate\Support\Arr;
 use InvalidArgumentException;
+use Revolution\Bluesky\Support\CID;
 use YOCLIB\Multiformats\Multibase\Multibase;
 
 /**
@@ -17,8 +18,6 @@ use YOCLIB\Multiformats\Multibase\Multibase;
 final class Encoder
 {
     private const CHUNK_SIZE = 1024;
-
-    private const ZERO = "\x00";
 
     private array $chunks = [];
 
@@ -38,7 +37,7 @@ final class Encoder
     private function createState(): void
     {
         $this->chunks = [];
-        $this->buffer = str_repeat(self::ZERO, self::CHUNK_SIZE);
+        $this->buffer = str_repeat(CID::ZERO, self::CHUNK_SIZE);
         $this->pos = 0;
     }
 
@@ -58,7 +57,7 @@ final class Encoder
             }
 
             $newSize = max(self::CHUNK_SIZE, $needed);
-            $this->buffer = str_repeat(self::ZERO, $newSize);
+            $this->buffer = str_repeat(CID::ZERO, $newSize);
             $this->pos = 0;
         }
     }
@@ -196,7 +195,7 @@ final class Encoder
         $this->writeTypeAndArgument(2, $len);
 
         $this->resizeIfNeeded($len);
-        $this->buffer[$this->pos] = self::ZERO;
+        $this->buffer[$this->pos] = CID::ZERO;
         $this->pos += 1;
         $this->writeRaw($buf);
     }
