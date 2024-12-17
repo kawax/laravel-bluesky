@@ -34,8 +34,8 @@ final class CAR
      *
      * $blocks
      * [
-     *     '<collection>/<rkey>' => [record],
-     *     '<collection>/<rkey>' => [record],
+     *     'cid' => [],
+     *     'cid' => [],
      * ]
      * ```
      *
@@ -49,7 +49,7 @@ final class CAR
 
         $roots = self::decodeRoots($data);
 
-        $blocks = iterator_to_array(self::blockMap($data));
+        $blocks = iterator_to_array(self::blockIterator($data));
 
         return [$roots, $blocks];
     }
@@ -216,8 +216,7 @@ final class CAR
     {
         $data = Utils::streamFor($data);
 
-        $roots = self::decodeRoots($data);
-        $blockmap = iterator_to_array(self::blockIterator($data));
+        [$roots, $blockmap] = self::decode($data);
 
         $commit = data_get($blockmap, $roots[0]);
         $did = data_get($commit, 'did');
