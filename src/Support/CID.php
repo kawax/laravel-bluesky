@@ -179,6 +179,8 @@ final class CID
         $hash_length = Varint::decodeStream($stream);
         $hash = bin2hex($stream->read($hash_length));
 
+        rescue(fn () => $stream->close());
+
         return compact(
             'version',
             'codec',
@@ -219,6 +221,8 @@ final class CID
         $codec = Varint::decodeStream($stream);
         $hash_length = 32;
         $hash = bin2hex($stream->read($hash_length));
+
+        rescue(fn () => $stream->close());
 
         return compact(
             'version',

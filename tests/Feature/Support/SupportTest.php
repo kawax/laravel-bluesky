@@ -274,7 +274,7 @@ class SupportTest extends TestCase
 
     public function test_cid_encode_cbor()
     {
-        $cid = CID::encode(CBOR::fromArray(['test' => 'test']), codec: CID::DAG_CBOR);
+        $cid = CID::encode(CBOR::encode(['test' => 'test']), codec: CID::DAG_CBOR);
 
         $this->assertSame('bafyreib3h3z3a5jwjcthjojoqjpzrlzly53ycpctnmfsijdk3qb5m3qcdq', $cid);
     }
@@ -331,8 +331,8 @@ class SupportTest extends TestCase
 
     public function test_cid_encode_dag_cbor()
     {
-        $cbor = TextStringObject::create('test');
-        $cid = CID::encode((string) $cbor, codec: CID::DAG_CBOR);
+        $cbor = CBOR::encode('test');
+        $cid = CID::encode($cbor, codec: CID::DAG_CBOR);
 
         $this->assertSame('bafyreidp4mma64aasbuxfbnmdyhi3raaewjxhv53styldknqq3t3uiw4hu', $cid);
 
@@ -343,47 +343,20 @@ class SupportTest extends TestCase
         $this->assertSame(CID::DAG_CBOR, $decode['codec']);
     }
 
-    public function test_cid_cbor()
-    {
-        $cbor = MapObject::create()
-            ->add(
-                TextStringObject::create('text'),
-                TextStringObject::create(".... And we're back!\n\nOur database upgrade is now complete. Thanks for your patience!"),
-            )
-            ->add(
-                TextStringObject::create('$type'),
-                TextStringObject::create('app.bsky.feed.post'),
-            )
-            ->add(
-                TextStringObject::create('createdAt'),
-                TextStringObject::create('2023-04-27T21:52:19.545Z'),
-            );
-
-        $cid = CID::encode((string) $cbor, codec: CID::DAG_CBOR);
-
-        $this->assertSame('bafyreicpyp7tho7non7ozonty5mqjay6g4l76ntfm7qhvj5p344syd3toy', $cid);
-
-        $this->assertTrue(CID::verify((string) $cbor, $cid, codec: CID::DAG_CBOR));
-
-        $decode = CID::decode($cid);
-
-        $this->assertSame(CID::DAG_CBOR, $decode['codec']);
-    }
-
-    public function test_cbor_from_array()
+    public function test_cbor_encode()
     {
         $json = json_decode(file_get_contents(__DIR__.'/fixture/3juf3jiip3l2x.json'), true);
         $expect_cid = $json['cid'];
 
-        $cbor = CBOR::fromArray($json['value']);
+        $cbor = CBOR::encode($json['value']);
 
-        /** @var MapObject $decode */
         $decode = CBOR::decode($cbor);
-        //dump($decode->normalize());
+
+        $cbor = CBOR::encode($decode);
 
         $cid = CID::encode($cbor, codec: CID::DAG_CBOR);
 
-        $this->assertSame($json['value'], $decode->normalize());
+        $this->assertSame($json['value'], $decode);
         $this->assertSame($expect_cid, $cid);
     }
 
@@ -392,19 +365,22 @@ class SupportTest extends TestCase
         $json = json_decode(file_get_contents(__DIR__.'/fixture/3jt6walwmos2y.json'), true);
         $expect_cid = $json['cid'];
 
-        $cbor = CBOR::fromArray($json['value']);
+        $cbor = CBOR::encode($json['value']);
 
-        $decode = CBOR::decode($cbor)->normalize();
-        $decode = CBOR::normalize($decode);
+        $decode = CBOR::decode($cbor);
 
-        $cbor_encoded = CBOR::fromArray($decode);
+        $cbor_encoded = CBOR::encode($decode);
         $cid = CID::encode($cbor_encoded, codec: CID::DAG_CBOR);
 
         $this->assertEquals($json['value'], $decode);
         $this->assertSame($json['value']['text'], $decode['text']);
+        $this->assertSame($cbor, $cbor_encoded);
+        $this->assertSame(225, strlen($cbor));
+        $this->assertSame(225, strlen($cbor_encoded));
 
-        // TODO: still not working
-        $this->assertNotSame($expect_cid, $cid);
+        $this->assertSame($expect_cid, $cid);
+
+        $this->assertTrue(CID::verify($cbor_encoded, $cid, codec: CID::DAG_CBOR));
     }
 
     public function test_varint()
@@ -499,7 +475,7 @@ class SupportTest extends TestCase
 
         $header_len = Varint::decode($data->read(1));
         //dump($header_len);
-        $header = CBOR::decode($data->read($header_len))->normalize();
+        $header = CBOR::decode($data->read($header_len));
         //dump($header);
 
         $data->seek(1 + $header_len);
@@ -529,7 +505,7 @@ class SupportTest extends TestCase
         $block_len = $data_len - 4 - $hash_len;
 
         $block = $data->read($block_len);
-        $this->assertIsArray(CBOR::decode($block)->normalize());
+        $this->assertIsArray(CBOR::decode($block));
 
         $current = $data->tell();
 
@@ -559,7 +535,7 @@ class SupportTest extends TestCase
         $block_len = $data_len - 4 - $hash_len;
 
         $block = $data->read($block_len);
-        $this->assertIsArray(CBOR::decode($block)->normalize());
+        $this->assertIsArray(CBOR::decode($block));
 
         $current = $data->tell();
 

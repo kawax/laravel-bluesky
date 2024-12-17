@@ -75,14 +75,14 @@ class FirehoseServeCommand extends Command
 
         $this->info('Host : '.$host);
 
-        $event = null;
-
         while (! $ws->eof() || $this->running) {
-            $event .= $ws->read();
+            $event = $ws->read();
 
             // Firehose often receives incorrect data.
-            $header = rescue(fn () => CBOR::decode($event));
-            if (blank($header) || ! $header instanceof MapObject) {
+            [$header, $remainder] = rescue(fn () => CBOR::decodeFirst($event));
+            [$payload, $remainder] = rescue(fn () => CBOR::decodeFirst($remainder));
+
+            if (blank($header) || ! is_array($header)) {
                 if ($this->output->isVerbose()) {
                     dump($header);
                 }
@@ -90,11 +90,17 @@ class FirehoseServeCommand extends Command
                 continue;
             }
 
-            $payload_bytes = substr($event, strlen((string) $header));
-
-            $header = $header->normalize();
-            $payload = rescue(fn () => CBOR::normalize(CBOR::decode($payload_bytes)->normalize()));
             if (blank($payload) || ! is_array($payload)) {
+                if ($this->output->isVerbose()) {
+                    dump($payload);
+                }
+                continue;
+            }
+
+            if (strlen($remainder) !== 0) {
+                if ($this->output->isVerbose()) {
+                    dump($remainder);
+                }
                 continue;
             }
 
@@ -102,7 +108,11 @@ class FirehoseServeCommand extends Command
             $roots = [];
             $blocks = [];
             if (filled($records)) {
-                [$roots, $blocks] = CAR::decode($records);
+                [$roots, $blocks] = rescue(fn () => CAR::decode($records), fn () => [null, null]);
+
+                if (empty($roots)) {
+                    continue;
+                }
             }
 
             $record = collect($blocks)->firstWhere('$type') ?? [];
@@ -122,20 +132,17 @@ class FirehoseServeCommand extends Command
                 if (filled($record) && data_get($record, '$type') === 'app.bsky.feed.post') {
                     dump($record);
 
-                    // Verification fails if ref link is included
                     $payload_cid = data_get($payload, 'ops.0.cid');
-                    if (CID::verify(CBOR::fromArray($record), $payload_cid, codec: CID::DAG_CBOR)) {
+                    if (CID::verify(CBOR::encode($record), $payload_cid, codec: CID::DAG_CBOR)) {
                         dump('Verified: '.$payload_cid);
                     } else {
-                        dump('Failed: '.$payload_cid, CID::encode(CBOR::fromArray($record), codec: CID::DAG_CBOR));
+                        dump('Failed: '.$payload_cid, CID::encode(CBOR::encode($record), codec: CID::DAG_CBOR));
                     }
                 }
             }
 
             if (Arr::has($header, ['t'])) {
                 event(new FirehoseMessageReceived($header, $payload, $roots, $blocks, $record, $host, $event));
-
-                $event = null;
             }
         }
 

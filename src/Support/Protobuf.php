@@ -59,6 +59,8 @@ final class Protobuf
             $node['data'] = $data;
         }
 
+        rescue(fn () => $stream->close());
+
         return $node;
     }
 

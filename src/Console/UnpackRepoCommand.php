@@ -69,17 +69,19 @@ class UnpackRepoCommand extends Command
                 $collection = data_get($block, '$type');
             } elseif (Arr::exists($block, 'e')) {
                 $collection = '_mst';
+            } elseif (Arr::exists($block, 'sig')) {
+                $collection = '_commit';
             } else {
+                dump($block);
                 continue;
             }
 
-            // TODO
-            $block = CBOR::normalize($block);
-
-            if (CID::verify(CBOR::fromArray($block), $cid, codec: CID::DAG_CBOR)) {
-                $this->info('Verified');
-            } else {
-                $this->error('Verify failed');
+            if (Arr::exists($block, '$type')) {
+                if (CID::verify(CBOR::encode($block), $cid, codec: CID::DAG_CBOR)) {
+                    $this->info('Verified');
+                } else {
+                    $this->error('Verify failed');
+                }
             }
 
             $path = collect(['bluesky', 'download', $name, 'repo', $collection, $cid.'.json'])

@@ -68,7 +68,7 @@ final class CAR
 
         $header_bytes = $data->read($header_length);
 
-        return CBOR::normalize(CBOR::decode($header_bytes)->normalize());
+        return CBOR::decode($header_bytes);
     }
 
     /**
@@ -158,13 +158,17 @@ final class CAR
         $block_bytes = $data->read($block_length);
 
         if ($cid_codec === CID::RAW) {
-            throw_unless(CID::verify($block_bytes, $cid, codec: CID::RAW));
+            if (! CID::verify($block_bytes, $cid, codec: CID::RAW)) {
+                return [null, null];
+            }
 
             $block = $block_bytes;
         } elseif ($cid_codec === CID::DAG_CBOR) {
-            throw_unless(CID::verify($block_bytes, $cid, codec: CID::DAG_CBOR));
+            if (! CID::verify($block_bytes, $cid, codec: CID::DAG_CBOR)) {
+                return [null, null];
+            }
 
-            $block = rescue(fn () => CBOR::normalize(CBOR::decode($block_bytes)->normalize()));
+            $block = CBOR::decode($block_bytes);
         } else {
             throw new InvalidArgumentException('Invalid CAR.');
         }
