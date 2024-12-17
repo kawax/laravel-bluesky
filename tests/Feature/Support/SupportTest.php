@@ -6,7 +6,9 @@ namespace Tests\Feature\Support;
 
 use Firebase\JWT\JWT;
 use GuzzleHttp\Psr7\Utils;
+use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Str;
 use InvalidArgumentException;
 use Revolution\Bluesky\Facades\Bluesky;
 use Revolution\Bluesky\Support\AtUri;
@@ -409,13 +411,24 @@ class SupportTest extends TestCase
 
     public function test_car_basic()
     {
-        [$roots, $blocks] = CAR::decode(file_get_contents(__DIR__.'/fixture/carv1-basic.car'));
+        $data = file_get_contents(__DIR__.'/fixture/carv1-basic.car');
+        $roots = iterator_to_array(CAR::decodeRoots($data));
+        $blocks = iterator_to_array(CAR::blockIterator($data));
 
         //dump($blocks);
         $this->assertCount(2, $roots);
         $this->assertCount(8, $blocks);
         $this->assertArrayHasKey('bafyreihyrpefhacm6kkp4ql6j6udakdit7g3dmkzfriqfykhjw6cad5lrm', $blocks);
         $this->assertArrayHasKey('QmNX6Tffavsya4xgBi2VJQnSuqy9GsxongxZZ9uZBqp16d', $blocks);
+    }
+
+    public function test_car_basic_map()
+    {
+        $data = Utils::streamFor(Utils::tryFopen(__DIR__.'/fixture/carv1-basic.car', 'rb'));
+
+        $blocks = iterator_to_array(CAR::blockMap($data));
+
+        $this->assertEmpty($blocks);
     }
 
     public function test_car_basic_stream()
@@ -464,10 +477,16 @@ class SupportTest extends TestCase
 
     public function test_car_download_repo_stream()
     {
-        $data = Utils::streamFor(utils::tryFopen(__DIR__.'/fixture/bsky-app.car', 'rb'));
+        $data = Utils::streamFor(Utils::tryFopen(__DIR__.'/fixture/bsky-app.car', 'rb'));
 
-        $roots = CAR::decodeRoots($data);
+        [$roots, $blocks] = CAR::decode($data);
         $this->assertCount(1, $roots);
+        $this->assertCount(604, $blocks);
+    }
+
+    public function test_car_block_iterator()
+    {
+        $data = Utils::streamFor(Utils::tryFopen(__DIR__.'/fixture/bsky-app.car', 'rb'));
 
         foreach (CAR::blockIterator($data) as $cid => $block) {
             //dump($cid, $block);
@@ -572,5 +591,11 @@ class SupportTest extends TestCase
 
         $this->assertCount(604, iterator_to_array(CAR::blockMap($data)));
         $this->assertCount(744, iterator_to_array(CAR::blockIterator($data)));
+
+        foreach (CAR::blockMap($data) as $key => $record) {
+            //dump($key, $record);
+            $this->assertTrue(Str::contains($key, '/'));
+            $this->assertTrue(Arr::exists($record, 'uri'));
+        }
     }
 }
