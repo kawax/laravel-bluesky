@@ -17,21 +17,21 @@ use Revolution\Bluesky\Support\CID;
  */
 final class Decoder
 {
-    public function __construct(protected StreamInterface $stream)
-    {
-    }
+    protected StreamInterface $stream;
 
-    public function decodeFirst(): array
+    public function decodeFirst(StreamInterface $stream): array
     {
+        $this->stream = $stream;
+
         $value = $this->readValue();
         $remainder = $this->stream->getContents();
 
         return [CBOR::normalize($value), $remainder];
     }
 
-    public function decode(): mixed
+    public function decode(StreamInterface $stream): mixed
     {
-        [$value, $remainder] = $this->decodeFirst();
+        [$value, $remainder] = $this->decodeFirst($stream);
 
         throw_unless(strlen($remainder) === 0);
 
