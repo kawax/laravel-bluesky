@@ -17,6 +17,8 @@ use Revolution\Bluesky\Support\CID;
  */
 final class Decoder
 {
+    protected const MAX_SIZE = 1024 * 1024 * 5;
+
     protected StreamInterface $stream;
 
     public function decodeFirst(StreamInterface $stream): array
@@ -99,17 +101,17 @@ final class Decoder
 
     private function readString(int $length): string
     {
-        return $this->stream->read($length);
+        return $this->stream->read(min($length, self::MAX_SIZE));
     }
 
     private function readBytes(int $length): BytesWrapper
     {
-        return new BytesWrapper($this->stream->read($length));
+        return new BytesWrapper($this->stream->read(min($length, self::MAX_SIZE)));
     }
 
     private function readCid(int $length): CIDLinkWrapper
     {
-        $cid = $this->stream->read($length);
+        $cid = $this->stream->read(min($length, self::MAX_SIZE));
         $cid = Str::ltrim($cid, CID::ZERO);
 
         return new CIDLinkWrapper($cid);
