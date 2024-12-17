@@ -97,7 +97,7 @@ final class TID implements Stringable
 
     public static function is(?string $str): bool
     {
-        return (Str::length($str) === self::TID_LEN) && Str::match(self::FORMAT, $str);
+        return (Str::length($str) === self::TID_LEN) && Str::of($str)->test(self::FORMAT);
     }
 
     /**
@@ -112,6 +112,11 @@ final class TID implements Stringable
         return self::s32decode(Str::substr($this->str, start: 0, length: 11));
     }
 
+    public function clockId(): int
+    {
+        return self::s32decode(Str::substr($this->str, start: 11, length: 13));
+    }
+
     /**
      * Get timestamp as Carbon.
      */
@@ -120,11 +125,6 @@ final class TID implements Stringable
         // Pass the timestamp divided by 1000000.
         // 1234567899.123456
         return Carbon::createFromTimestamp($this->timestamp() / 1_000_000);
-    }
-
-    public function clockId(): int
-    {
-        return self::s32decode(Str::substr($this->str, start: 11, length: 13));
     }
 
     public function compareTo(TID $other): int
