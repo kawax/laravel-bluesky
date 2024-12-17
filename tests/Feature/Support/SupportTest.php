@@ -263,6 +263,15 @@ class SupportTest extends TestCase
         $this->assertFalse(TID::is('kjzfcijpj2z2a'));
     }
 
+    public function test_tid_parse()
+    {
+        $tid = TID::fromStr('3jt6walwmos2y');
+
+        $this->assertSame(1681321002683032, $tid->timestamp());
+        $this->assertSame(30, $tid->clockId());
+        $this->assertSame('3jt6walwmos2y', TID::fromTime($tid->timestamp(), $tid->clockId())->toString());
+    }
+
     public function test_cid_encode()
     {
         $cid = CID::encode('test');
