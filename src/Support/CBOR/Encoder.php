@@ -269,7 +269,9 @@ final class Encoder
                 return;
             }
 
-            $filtered = array_filter($val, fn ($v) => $v !== null);
+            $filtered = collect($val)
+                ->reject(fn ($val, $key) => $key !== 'prev' && is_null($val))
+                ->toArray();
 
             $keys = array_keys($filtered);
             usort($keys, [$this, 'compareKeys']);
