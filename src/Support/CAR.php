@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Revolution\Bluesky\Support;
 
 use GuzzleHttp\Psr7\Utils;
-use Illuminate\Support\Str;
 use InvalidArgumentException;
 use Psr\Http\Message\StreamInterface;
 use YOCLIB\Multiformats\Multibase\Multibase;
