@@ -8,6 +8,7 @@ use Illuminate\Support\Str;
 use InvalidArgumentException;
 use Psr\Http\Message\StreamInterface;
 use Revolution\Bluesky\Support\CBOR;
+use Revolution\Bluesky\Support\CID;
 
 /**
  * @internal
@@ -109,7 +110,7 @@ final class Decoder
     private function readCid(int $length): CIDLinkWrapper
     {
         $cid = $this->stream->read($length);
-        $cid = Str::ltrim($cid, "\x00");
+        $cid = Str::ltrim($cid, CID::ZERO);
 
         return new CIDLinkWrapper($cid);
     }
