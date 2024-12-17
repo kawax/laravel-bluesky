@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Revolution\Bluesky\Support;
 
 use GuzzleHttp\Psr7\Utils;
+use Illuminate\Support\Str;
 use InvalidArgumentException;
 use Psr\Http\Message\StreamInterface;
 use YOCLIB\Multiformats\Multibase\Multibase;
@@ -13,6 +14,7 @@ use YOCLIB\Multiformats\Multibase\Multibase;
  * @link https://ipld.io/specs/transport/car/carv1/
  * @link https://github.com/ipld/go-car
  * @link https://github.com/ipld/js-car
+ * @link https://github.com/mary-ext/atcute/blob/trunk/packages/utilities/car/lib/atproto-repo.ts
  */
 final class CAR
 {
@@ -193,5 +195,63 @@ final class CAR
         $block = Protobuf::decode(Utils::streamFor($block_bytes));
 
         return [$cid, $block];
+    }
+
+    /**
+     * Unlike {@link CAR::blockIterator()}, this is an iterator for `<collection>/<rkey>` key and record array.
+     *
+     * ```
+     * foreach (CAR::blockMap($data) as $key => $record) {
+     *     [$collection, $rkey] = explode('/', $key);
+     *     $block = data_get($record, 'value');
+     *     $cid = data_get($record, 'cid');
+     *
+     * }
+     * ```
+     *
+     * @return iterable<string, array>
+     */
+    public static function blockMap(StreamInterface|string $data): iterable
+    {
+        $data = Utils::streamFor($data);
+
+        $roots = self::decodeRoots($data);
+        $blockmap = iterator_to_array(self::blockIterator($data));
+
+        $commit = data_get($blockmap, $roots[0]);
+        $did = data_get($commit, 'did');
+
+        yield from self::walkEntries($blockmap, data_get($commit, 'data./'), $did);
+    }
+
+    private static function walkEntries(array $blockmap, string $pointer, string $did): iterable
+    {
+        $data = data_get($blockmap, $pointer);
+        $entries = data_get($data, 'e');
+
+        $lastKey = '';
+
+        if (filled(data_get($data, 'l./'))) {
+            yield from self::walkEntries($blockmap, data_get($data, 'l./'), $did);
+        }
+
+        foreach ($entries as $entry) {
+            $key_str = data_get($entry, 'k');
+            $key = substr($lastKey, 0, data_get($entry, 'p')).$key_str;
+
+            $lastKey = $key;
+
+            [$collection, $rkey] = explode('/', $key);
+            $uri = (string) AtUri::make(repo: $did, collection: $collection, rkey: $rkey);
+            $cid = data_get($entry, 'v./');
+            $value = data_get($blockmap, $cid);
+
+            // Match the format of getRecord and listRecords.
+            yield $key => compact('uri', 'cid', 'value');
+
+            if (filled(data_get($entry, 't./'))) {
+                yield from self::walkEntries($blockmap, data_get($entry, 't./'), $did);
+            }
+        }
     }
 }

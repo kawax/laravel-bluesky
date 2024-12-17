@@ -62,6 +62,39 @@ class UnpackRepoCommand extends Command
             return 1;
         }
 
+        // Unpack only record data for all collections
+        foreach (CAR::blockMap(Utils::streamFor(Storage::readStream($file))) as $key => $record) {
+            [$collection, $rkey] = explode('/', $key);
+            $block = data_get($record, 'value');
+            $cid = data_get($record, 'cid');
+
+            if (CID::verify(CBOR::encode($block), $cid)) {
+                $this->info('Verified');
+            } else {
+                $this->error('Verify failed');
+            }
+
+            $path = collect(['bluesky', 'download', $name, 'repo', $collection, $rkey.'.json'])
+                ->implode(DIRECTORY_SEPARATOR);
+
+            Storage::put($path, json_encode($record, JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES));
+
+            $this->line('Unpack: '.Storage::path($path));
+        }
+
+        // $this->blockIterator($name, $file);
+
+        $this->info('Unpack successful');
+
+        return 0;
+    }
+
+    /**
+     * A different version using CAR::blockIterator().
+     * Use this if you need _mst or _commit.
+     */
+    private function blockIterator($name, $file): void
+    {
         foreach (CAR::blockIterator(Utils::streamFor(Storage::readStream($file))) as $cid => $block) {
             //dump($cid, $block);
 
@@ -77,7 +110,7 @@ class UnpackRepoCommand extends Command
             }
 
             if (Arr::exists($block, '$type')) {
-                if (CID::verify(CBOR::encode($block), $cid, codec: CID::DAG_CBOR)) {
+                if (CID::verify(CBOR::encode($block), $cid)) {
                     $this->info('Verified');
                 } else {
                     $this->error('Verify failed');
@@ -91,9 +124,5 @@ class UnpackRepoCommand extends Command
 
             $this->line('Unpack: '.Storage::path($path));
         }
-
-        $this->info('Unpack successful');
-
-        return 0;
     }
 }
