@@ -236,6 +236,17 @@ final class CID
     }
 
     /**
+     * Decode to bytes.
+     */
+    public static function decodeBytes(string $cid): string
+    {
+        return match (self::detect($cid)) {
+            self::V0 => Multibase::decode($cid, Multibase::BASE58BTC),
+            default => Multibase::decode($cid),
+        };
+    }
+
+    /**
      * Detect CID version.
      *
      * @return int 0: CIDv0, 1: CIDv1
