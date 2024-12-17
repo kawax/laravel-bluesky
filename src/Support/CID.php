@@ -19,6 +19,8 @@ final class CID
 
     public const V0_LEADING = "\x12\x20";
 
+    public const ZERO = "\x00";
+
     public const V1 = 0x01;
 
     public const SHA2_256 = 0x12;
