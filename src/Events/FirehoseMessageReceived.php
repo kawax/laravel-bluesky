@@ -11,11 +11,12 @@ class FirehoseMessageReceived
     use Dispatchable;
 
     public function __construct(
-        public array $header,
-        public array $payload,
-        public array $roots,
-        public array $blocks,
+        public string $did,
+        public string $kind,
+        public string $action,
+        public string $cid,
         public array $record,
+        public array $payload,
         public string $host,
         public string $raw,
     ) {
