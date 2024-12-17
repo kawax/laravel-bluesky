@@ -65,17 +65,13 @@ final class Encoder
 
     private function getInfo(int $arg): int
     {
-        if ($arg < 24) {
-            return $arg;
-        } elseif ($arg < 0x100) {
-            return 24;
-        } elseif ($arg < 0x10000) {
-            return 25;
-        } elseif ($arg < 0x100000000) {
-            return 26;
-        } else {
-            return 27;
-        }
+        return match (true) {
+            $arg < 24 => $arg,
+            $arg < 0x100 => 24,
+            $arg < 0x10000 => 25,
+            $arg < 0x100000000 => 26,
+            default => 27,
+        };
     }
 
     private function writeFloat64(float $val): void
