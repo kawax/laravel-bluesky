@@ -43,6 +43,18 @@ class FirehoseServeCommand extends Command
 
     protected const MAX_SIZE = 1024 * 1024 * 5;
 
+    protected const KINDS = [
+        '#commit',
+        '#identity',
+        '#account',
+    ];
+
+    protected const ACTIONS = [
+        'create',
+        'update',
+        'delete',
+    ];
+
     /**
      * Execute the console command.
      *
@@ -84,6 +96,15 @@ class FirehoseServeCommand extends Command
             [$header, $remainder] = rescue(fn () => CBOR::decodeFirst($event));
             [$payload, $remainder] = rescue(fn () => CBOR::decodeFirst($remainder));
 
+            if (data_get($header, 'op') !== 1) {
+                continue;
+            }
+
+            $kind = data_get($header, 't');
+            if (! in_array($kind, self::KINDS, true)) {
+                continue;
+            }
+
             if (blank($header) || ! is_array($header)) {
                 if ($this->output->isVerbose()) {
                     // Frequent memory errors
@@ -113,14 +134,26 @@ class FirehoseServeCommand extends Command
             $roots = [];
             $blocks = [];
             if (filled($records)) {
-                [$roots, $blocks] = rescue(fn () => CAR::decode($records), fn () => [null, null]);
+                [$roots, $blocks] = rescue(fn () => CAR::decode($records));
 
-                if (empty($roots)) {
+                if (empty($blocks)) {
+                    //dump($blocks);
                     continue;
                 }
             }
 
-            $record = collect($blocks)->firstWhere('$type') ?? [];
+            $action = data_get($payload, 'ops.0.action');
+            if (! in_array($action, self::ACTIONS, true)) {
+                continue;
+            }
+
+            $did = data_get($payload, 'repo') ?? '';
+            $rev = data_get($payload, 'rev') ?? '';
+            $cid = data_get($payload, 'ops.0.cid') ?? '';
+            $path = data_get($payload, 'ops.0.path') ?? '';
+            [$collection, $rkey] = explode('/', $path);
+
+            $record = collect($blocks)->get($path) ?? [];
 
             if ($this->output->isVeryVerbose()) {
                 //dump($header);
@@ -129,25 +162,35 @@ class FirehoseServeCommand extends Command
 //                if (filled($roots)) {
 //                    dump($roots);
 //                }
-
+//
 //                if (filled($blocks)) {
 //                    dump($blocks);
 //                }
 
-                if (filled($record) && data_get($record, '$type') === 'app.bsky.feed.post') {
+                $block = data_get($record, 'value');
+
+                if (filled($block) && data_get($block, '$type') === 'app.bsky.feed.post') {
                     dump($record);
 
-                    $payload_cid = data_get($payload, 'ops.0.cid');
-                    if (CID::verify(CBOR::encode($record), $payload_cid, codec: CID::DAG_CBOR)) {
-                        dump('Verified: '.$payload_cid);
+                    if (CID::verify(CBOR::encode($block), $cid, codec: CID::DAG_CBOR)) {
+                        dump('Verified: '.$cid);
                     } else {
-                        dump('Failed: '.$payload_cid, CID::encode(CBOR::encode($record), codec: CID::DAG_CBOR));
+                        dump('Failed: '.$cid, CID::encode(CBOR::encode($record), codec: CID::DAG_CBOR));
                     }
                 }
             }
 
             if (Arr::has($header, ['t'])) {
-                event(new FirehoseMessageReceived($header, $payload, $roots, $blocks, $record, $host, $event));
+                event(new FirehoseMessageReceived(
+                    $did,
+                    $kind,
+                    $action,
+                    $cid,
+                    $record,
+                    $payload,
+                    $host,
+                    $event,
+                ));
             }
         }
 
