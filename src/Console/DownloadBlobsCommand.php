@@ -8,7 +8,6 @@ use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 use Revolution\Bluesky\Facades\Bluesky;
-use Revolution\Bluesky\Support\CBOR;
 use Revolution\Bluesky\Support\CID;
 use Revolution\Bluesky\Support\DidDocument;
 use Revolution\Bluesky\Support\Identity;
