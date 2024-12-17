@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Revolution\Bluesky\Support;
+namespace Revolution\Bluesky\Core;
 
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Str;

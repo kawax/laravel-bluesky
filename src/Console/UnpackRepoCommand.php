@@ -9,9 +9,9 @@ use Illuminate\Console\Command;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
-use Revolution\Bluesky\Support\CAR;
-use Revolution\Bluesky\Support\CBOR;
-use Revolution\Bluesky\Support\CID;
+use Revolution\Bluesky\Core\CAR;
+use Revolution\Bluesky\Core\CBOR;
+use Revolution\Bluesky\Core\CID;
 
 /**
  * Sample command to unpack the actor's "CAR" file.

@@ -2,13 +2,13 @@
 
 declare(strict_types=1);
 
-namespace Revolution\Bluesky\Support\CBOR;
+namespace Revolution\Bluesky\Core\CBOR;
 
 use Illuminate\Support\Str;
 use InvalidArgumentException;
 use Psr\Http\Message\StreamInterface;
-use Revolution\Bluesky\Support\CBOR;
-use Revolution\Bluesky\Support\CID;
+use Revolution\Bluesky\Core\CBOR;
+use Revolution\Bluesky\Core\CID;
 
 /**
  * @internal

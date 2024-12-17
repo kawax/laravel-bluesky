@@ -2,11 +2,13 @@
 
 declare(strict_types=1);
 
-namespace Revolution\Bluesky\Support;
+namespace Revolution\Bluesky\Core;
 
 use GuzzleHttp\Psr7\Utils;
 use InvalidArgumentException;
 use Psr\Http\Message\StreamInterface;
+use Revolution\Bluesky\Support\AtUri;
+use Revolution\Bluesky\Support\Identity;
 use YOCLIB\Multiformats\Multibase\Multibase;
 
 /**

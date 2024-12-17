@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Revolution\Bluesky\Support;
+namespace Revolution\Bluesky\Core;
 
 use InvalidArgumentException;
 use phpseclib3\Math\BigInteger;

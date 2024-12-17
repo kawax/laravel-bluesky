@@ -7,10 +7,10 @@ namespace Revolution\Bluesky\Console;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
+use Revolution\Bluesky\Core\CBOR;
+use Revolution\Bluesky\Core\CID;
 use Revolution\Bluesky\Facades\Bluesky;
 use Revolution\Bluesky\Support\AtUri;
-use Revolution\Bluesky\Support\CBOR;
-use Revolution\Bluesky\Support\CID;
 
 /**
  * Sample command to download the actor's Record. Download json directly instead of parsing CAR file.

@@ -10,10 +10,10 @@ use GuzzleHttp\HandlerStack;
 use Illuminate\Console\Command;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Number;
+use Revolution\Bluesky\Core\CAR;
+use Revolution\Bluesky\Core\CBOR;
+use Revolution\Bluesky\Core\CID;
 use Revolution\Bluesky\Events\FirehoseMessageReceived;
-use Revolution\Bluesky\Support\CAR;
-use Revolution\Bluesky\Support\CBOR;
-use Revolution\Bluesky\Support\CID;
 use Valtzu\WebSocketMiddleware\WebSocketMiddleware;
 use Valtzu\WebSocketMiddleware\WebSocketStream;
 

@@ -2,13 +2,13 @@
 
 declare(strict_types=1);
 
-namespace Revolution\Bluesky\Support;
+namespace Revolution\Bluesky\Core;
 
 use GuzzleHttp\Psr7\Utils;
 use Psr\Http\Message\StreamInterface;
-use Revolution\Bluesky\Support\CBOR\Decoder;
-use Revolution\Bluesky\Support\CBOR\Encoder;
-use Revolution\Bluesky\Support\CBOR\Normalizer;
+use Revolution\Bluesky\Core\CBOR\Decoder;
+use Revolution\Bluesky\Core\CBOR\Encoder;
+use Revolution\Bluesky\Core\CBOR\Normalizer;
 
 final class CBOR
 {

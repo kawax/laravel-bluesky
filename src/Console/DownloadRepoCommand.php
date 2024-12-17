@@ -9,8 +9,8 @@ use Illuminate\Console\Command;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
+use Revolution\Bluesky\Core\CAR;
 use Revolution\Bluesky\Facades\Bluesky;
-use Revolution\Bluesky\Support\CAR;
 use Revolution\Bluesky\Support\DidDocument;
 use Revolution\Bluesky\Support\Identity;
 

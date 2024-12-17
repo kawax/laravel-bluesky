@@ -9,9 +9,9 @@ use GuzzleHttp\Handler\StreamHandler;
 use GuzzleHttp\HandlerStack;
 use Illuminate\Console\Command;
 use Illuminate\Support\Arr;
+use Revolution\Bluesky\Core\CBOR;
+use Revolution\Bluesky\Core\CID;
 use Revolution\Bluesky\Events\WebSocketMessageReceived;
-use Revolution\Bluesky\Support\CBOR;
-use Revolution\Bluesky\Support\CID;
 use Valtzu\WebSocketMiddleware\WebSocketMiddleware;
 use Valtzu\WebSocketMiddleware\WebSocketStream;
 

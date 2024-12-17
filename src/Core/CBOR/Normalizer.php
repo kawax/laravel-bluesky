@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Revolution\Bluesky\Support\CBOR;
+namespace Revolution\Bluesky\Core\CBOR;
 
 /**
  * Match the official go-repo-export output.

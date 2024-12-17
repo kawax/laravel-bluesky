@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Revolution\Bluesky\Support;
+namespace Revolution\Bluesky\Core;
 
 use GuzzleHttp\Psr7\Utils;
 use Illuminate\Support\Str;

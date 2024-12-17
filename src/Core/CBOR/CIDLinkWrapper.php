@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace Revolution\Bluesky\Support\CBOR;
+namespace Revolution\Bluesky\Core\CBOR;
 
 use Illuminate\Contracts\Support\Arrayable;
 use Illuminate\Contracts\Support\Jsonable;
-use Revolution\Bluesky\Support\CID;
+use Revolution\Bluesky\Core\CID;
 use Stringable;
 use YOCLIB\Multiformats\Multibase\Multibase;
 
