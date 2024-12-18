@@ -10,6 +10,8 @@ use Psr\Http\Message\StreamInterface;
 use Throwable;
 
 /**
+ * unsigned varint (VARiable INTeger).
+ *
  * @internal
  *
  * @link https://github.com/multiformats/unsigned-varint
