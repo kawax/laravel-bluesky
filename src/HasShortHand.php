@@ -127,7 +127,7 @@ trait HasShortHand
     }
 
     /**
-     * @param  string|null  $actor  DID or handle.
+     * @param  string|null  $actor  DID or handle
      *
      * @throws AuthenticationException
      */
@@ -165,7 +165,7 @@ trait HasShortHand
     }
 
     /**
-     * @param  string|null  $actor  DID or handle.
+     * @param  string|null  $actor  DID or handle
      *
      * @throws AuthenticationException
      */
@@ -253,7 +253,7 @@ trait HasShortHand
     }
 
     /**
-     * @param  string|null  $actor  DID or handle.
+     * @param  string|null  $actor  DID or handle
      *
      * @throws AuthenticationException
      */
@@ -332,7 +332,7 @@ trait HasShortHand
     }
 
     /**
-     * @param  string|null  $actor  DID or handle.
+     * @param  string|null  $actor  DID or handle
      *
      * @throws AuthenticationException
      */
@@ -347,7 +347,7 @@ trait HasShortHand
     }
 
     /**
-     * @param  string|null  $actor  DID or handle.
+     * @param  string|null  $actor  DID or handle
      *
      * @throws AuthenticationException
      */

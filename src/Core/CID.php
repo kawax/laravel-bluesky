@@ -66,7 +66,7 @@ final class CID
      * multi hash: sha256
      * ```
      *
-     * @param  string  $data  Raw data, or DAG-CBOR encoded data.
+     * @param  string  $data  raw data, or DAG-CBOR encoded data
      */
     public static function encodeV1(string $data, int $codec = self::RAW): string
     {
@@ -86,7 +86,7 @@ final class CID
     /**
      * Encode CIDv0.
      *
-     * @param  string  $data  DAG-PB encoded data.
+     * @param  string  $data  DAG-PB encoded data
      */
     public static function encodeV0(string $data): string
     {
@@ -118,7 +118,7 @@ final class CID
     /**
      * Verify CIDv1.
      *
-     * @param  string  $data  Raw data, or DAG-CBOR encoded data.
+     * @param  string  $data  raw data, or DAG-CBOR encoded data
      */
     public static function verifyV1(string $data, string $cid, ?int $codec = null): bool
     {
@@ -133,7 +133,7 @@ final class CID
     /**
      * Verify CIDv0.
      *
-     * @param  string  $data  DAG-PB encoded data.
+     * @param  string  $data  DAG-PB encoded data
      */
     public static function verifyV0(string $data, string $cid): bool
     {
