@@ -1,0 +1,26 @@
+{
+    "@context": [
+        "https://www.w3.org/ns/did/v1",
+        "https://w3id.org/security/multikey/v1",
+        "https://w3id.org/security/suites/secp256k1-2019/v1"
+    ],
+    "id": "did:plc:z72i7hdynmk6r22z27h6tvur",
+    "alsoKnownAs": [
+        "at://bsky.app"
+    ],
+    "verificationMethod": [
+        {
+            "id": "did:plc:z72i7hdynmk6r22z27h6tvur#atproto",
+            "type": "Multikey",
+            "controller": "did:plc:z72i7hdynmk6r22z27h6tvur",
+            "publicKeyMultibase": "zQ3shQo6TF2moaqMTrUZEM1jeuYRQXeHEx4evX9751y2qPqRA"
+        }
+    ],
+    "service": [
+        {
+            "id": "#atproto_pds",
+            "type": "AtprotoPersonalDataServer",
+            "serviceEndpoint": "https://puffball.us-east.host.bsky.network"
+        }
+    ]
+}
