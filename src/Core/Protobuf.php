@@ -16,6 +16,7 @@ use Revolution\Bluesky\Core\Protobuf\Encoder;
  *
  * @internal
  *
+ * @link https://ipld.io/specs/codecs/dag-pb/spec/
  * @link https://github.com/ipld/js-dag-pb
  */
 final class Protobuf
