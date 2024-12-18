@@ -258,7 +258,13 @@ class CarTest extends TestCase
         $sk = OAuthKey::load();
 
         $unsigned = [
+            'int' => -100,
             'data' => 'test',
+            'float' => 3.14,
+            'uint8' => 0x100,
+            'uint16' => 0x10000,
+            'uint32' => 0x100000000,
+            'uint64' => 0x100000001,
         ];
 
         $unsigned_cbor = CBOR::encode($unsigned);
