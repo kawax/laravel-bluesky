@@ -1,11 +1,11 @@
-Laravel Bluesky(AT Protocol)
+Bluesky(AT Protocol) package for Laravel
 ====
 
 **Work in progress**
 
 ## Requirements
 - PHP >= 8.2
-- Laravel >= 11.0
+- Laravel >= 11.x
 
 ## Installation
 
