@@ -13,6 +13,7 @@ use InvalidArgumentException;
 use Revolution\Bluesky\Core\CAR;
 use Revolution\Bluesky\Core\CBOR;
 use Revolution\Bluesky\Core\CID;
+use Revolution\Bluesky\Core\Protobuf;
 use Revolution\Bluesky\Core\TID;
 use Revolution\Bluesky\Core\Varint;
 use Revolution\Bluesky\Facades\Bluesky;
@@ -429,6 +430,23 @@ class SupportTest extends TestCase
         $blocks = iterator_to_array(CAR::blockMap($data));
 
         $this->assertEmpty($blocks);
+    }
+
+    public function test_car_basic_protobuf()
+    {
+        $data = Utils::streamFor(Utils::tryFopen(__DIR__.'/fixture/carv1-basic.car', 'rb'));
+        $blocks = iterator_to_array(CAR::blockIterator($data));
+
+        $expect_cid = 'QmNX6Tffavsya4xgBi2VJQnSuqy9GsxongxZZ9uZBqp16d';
+        $block = $blocks[$expect_cid];
+
+        $encode = Protobuf::encode($block);
+        $cid = CID::encodeV0($encode);
+
+        $decode = Protobuf::decode($encode);
+
+        $this->assertSame($expect_cid, $cid);
+        $this->assertSame($block, $decode);
     }
 
     public function test_car_basic_stream()
