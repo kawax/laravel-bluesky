@@ -1,1 +1,4 @@
 preset: laravel
+
+enabled:
+  - phpdoc_annotation_without_dot
