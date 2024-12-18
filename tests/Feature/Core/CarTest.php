@@ -7,6 +7,7 @@ namespace Tests\Feature\Core;
 use Firebase\JWT\JWT;
 use GuzzleHttp\Psr7\Utils;
 use Illuminate\Support\Arr;
+use Illuminate\Support\Facades\File;
 use Illuminate\Support\Str;
 use Revolution\Bluesky\Core\CAR;
 use Revolution\Bluesky\Core\CBOR;
@@ -15,6 +16,7 @@ use Revolution\Bluesky\Core\Protobuf;
 use Revolution\Bluesky\Core\Varint;
 use Revolution\Bluesky\Crypto\DidKey;
 use Revolution\Bluesky\Socialite\Key\OAuthKey;
+use Revolution\Bluesky\Support\DidDocument;
 use Tests\TestCase;
 use YOCLIB\Multiformats\Multibase\Multibase;
 
@@ -233,8 +235,9 @@ class CarTest extends TestCase
 
         $signed = CAR::signedCommit($data);
 
-        $bsky_app = 'zQ3shQo6TF2moaqMTrUZEM1jeuYRQXeHEx4evX9751y2qPqRA';
-        $pk = DidKey::parse($bsky_app)['key'];
+        $didDoc = DidDocument::make(File::json(__DIR__.'/fixture/bsky-app-did.json'));
+
+        $pk = DidKey::parse($didDoc->publicKey())['key'];
 
         $this->assertTrue(CAR::verifySignedCommit($signed, $pk));
     }
