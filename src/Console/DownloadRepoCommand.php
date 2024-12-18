@@ -6,7 +6,6 @@ namespace Revolution\Bluesky\Console;
 
 use GuzzleHttp\Psr7\Utils;
 use Illuminate\Console\Command;
-use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 use Revolution\Bluesky\Core\CAR;
