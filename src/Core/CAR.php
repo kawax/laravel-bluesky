@@ -159,7 +159,7 @@ final class CAR
 
         $data->seek(-$cid_length, SEEK_CUR);
         $cid_bytes = $data->read($cid_length + $cid_hash_length);
-        $cid = Multibase::encode(Multibase::BASE32, $cid_bytes);
+        $cid = CID::encodeBytes($cid_bytes);
 
         $block_length = $block_varint - $cid_length - $cid_hash_length;
         $block_bytes = $data->read($block_length);
@@ -192,7 +192,7 @@ final class CAR
         // $cid_hash_length = 32;
 
         $cid_bytes = $data->read(34);
-        $cid = Multibase::encode(Multibase::BASE58BTC, $cid_bytes, false);
+        $cid = CID::encodeBytes($cid_bytes);
         $block_bytes = $data->read($block_varint - 34);
 
         throw_unless(CID::verifyV0($block_bytes, $cid));
