@@ -12,6 +12,8 @@ use YOCLIB\Multiformats\Multibase\Multibase;
  * Content ID.
  *
  * @link https://atproto.com/specs/data-model#link-and-cid-formats
+ * @link https://docs.ipfs.tech/concepts/content-addressing/
+ * @link https://github.com/multiformats/cid
  */
 final class CID
 {
