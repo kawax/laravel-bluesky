@@ -10,6 +10,7 @@ use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 use Revolution\Bluesky\Core\CAR;
+use Revolution\Bluesky\Crypto\DidKey;
 use Revolution\Bluesky\Facades\Bluesky;
 use Revolution\Bluesky\Support\DidDocument;
 use Revolution\Bluesky\Support\Identity;
@@ -77,9 +78,9 @@ class DownloadRepoCommand extends Command
 
         $name = Str::slug($actor, dictionary: ['.' => '-', ':' => '-']);
 
-        $dic_file = collect(['bluesky', 'download', $name, $name.'-did.json'])
+        $did_doc_file = collect(['bluesky', 'download', $name, $name.'-did.json'])
             ->implode(DIRECTORY_SEPARATOR);
-        Storage::put($dic_file, json_encode($didDoc->toArray(), JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES));
+        Storage::put($did_doc_file, json_encode($didDoc->toArray(), JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES));
 
         $file = collect(['bluesky', 'download', $name, $name.'.car'])
             ->implode(DIRECTORY_SEPARATOR);
@@ -88,11 +89,17 @@ class DownloadRepoCommand extends Command
 
         $this->line('Download: '.Storage::path($file));
 
-        [$roots, $blocks] = CAR::decode(Utils::streamFor(Storage::readStream($file)));
+        $signed = CAR::signedCommit(Utils::streamFor(Storage::readStream($file)));
+        //dump($signed);
 
-        if (Arr::exists($blocks, $roots[0])) {
-            $signed_commit = data_get($blocks, $roots[0]);
-            dump($signed_commit);
+        $pk = DidKey::parse($didDoc->publicKey())['key'];
+
+        if (CAR::verifySignedCommit($signed, $pk)) {
+            $this->info('Verified');
+        } else {
+            $this->error('Verify failed');
+
+            return 1;
         }
 
         $this->info('Download successful');
