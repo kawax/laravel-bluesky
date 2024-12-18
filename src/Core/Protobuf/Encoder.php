@@ -14,9 +14,9 @@ use Revolution\Bluesky\Core\CID;
  */
 final class Encoder
 {
-    private const MAX_INT32 = 4294967296; // 2**32
+    private const MAX_INT32 = 2147483647; // 2**31 - 1
 
-    private const MAX_UINT32 = 2147483648; // 2**31
+    private const MAX_UINT32 = 4294967295; // 2**32 - 1
 
     private const LEN8TAB = [
         0, 1, 2, 2, 3, 3, 3, 3, 4, 4, 4, 4, 4, 4, 4, 4,
@@ -119,12 +119,8 @@ final class Encoder
         return $start - $i;
     }
 
-    private function asLink($link): array
+    private function asLink(array $link): array
     {
-        if (! is_array($link)) {
-            throw new InvalidArgumentException('Invalid DAG-PB');
-        }
-
         $pbl = [];
 
         if (isset($link['Hash'])) {
@@ -134,13 +130,13 @@ final class Encoder
             }
             $hash_bytes = CID::decodeBytes($hash);
 
-            if (filled($hash_bytes)) {
+            if (! empty($hash_bytes)) {
                 $pbl['Hash'] = $this->encodeText($hash_bytes);
             }
         }
 
         if (! isset($pbl['Hash'])) {
-            throw new InvalidArgumentException('Invalid DAG-PB');
+            throw new InvalidArgumentException('Invalid DAG-PB: link must have a Hash');
         }
 
         if (isset($link['Name']) && is_string($link['Name'])) {
@@ -161,7 +157,7 @@ final class Encoder
         }
 
         if (! is_array($node)) {
-            throw new InvalidArgumentException('Invalid DAG-PB');
+            throw new InvalidArgumentException('Invalid DAG-PB: node must be an array');
         }
 
         $pbn = [];
@@ -172,7 +168,7 @@ final class Encoder
             } elseif (is_array($node['Data'])) {
                 $pbn['Data'] = $node['Data'];
             } else {
-                throw new InvalidArgumentException('Invalid DAG-PB');
+                throw new InvalidArgumentException('Invalid DAG-PB: Data must be a string or array');
             }
         }
 
@@ -185,7 +181,7 @@ final class Encoder
 
                 usort($pbn['Links'], [$this, 'linkComparator']);
             } else {
-                throw new InvalidArgumentException('Invalid DAG-PB');
+                throw new InvalidArgumentException('Invalid DAG-PB: Links must be an array');
             }
         } else {
             $pbn['Links'] = [];
@@ -194,22 +190,22 @@ final class Encoder
         return $pbn;
     }
 
-    private function validate($node): void
+    private function validate(array $node): void
     {
-        if (! is_array($node) || isset($node['/']) && $node['/'] === $node['bytes']) {
+        if (isset($node['/']) && $node['/'] === $node['bytes']) {
             throw new InvalidArgumentException('Invalid DAG-PB form');
         }
 
         if (! $this->hasOnlyProperties($node, self::NODE)) {
-            throw new InvalidArgumentException('Invalid DAG-PB form (extraneous properties)');
+            throw new InvalidArgumentException('Invalid DAG-PB form: extraneous properties');
         }
 
         if (isset($node['Data']) && ! is_array($node['Data'])) {
-            throw new InvalidArgumentException('Invalid DAG-PB form (Data must be bytes)');
+            throw new InvalidArgumentException('Invalid DAG-PB form: Data must be bytes');
         }
 
         if (! isset($node['Links']) || ! is_array($node['Links'])) {
-            throw new InvalidArgumentException('Invalid DAG-PB form (Links must be a list)');
+            throw new InvalidArgumentException('Invalid DAG-PB form: Links must be a list');
         }
 
         for ($i = 0; $i < count($node['Links']); $i++) {
@@ -218,35 +214,35 @@ final class Encoder
             $this->validateLink($link);
 
             if ($i > 0 && $this->linkComparator($link, $node['Links'][$i - 1]) === -1) {
-                throw new InvalidArgumentException('Invalid DAG-PB form (links must be sorted by Name bytes)');
+                throw new InvalidArgumentException('Invalid DAG-PB form: links must be sorted by Name bytes');
             }
         }
     }
 
-    private function validateLink($link): void
+    private function validateLink(array $link): void
     {
-        if (! is_array($link) || isset($link['/']) && $link['/'] === $link['bytes']) {
-            throw new InvalidArgumentException('Invalid DAG-PB form (bad link)');
+        if (isset($link['/']) && $link['/'] === $link['bytes']) {
+            throw new InvalidArgumentException('Invalid DAG-PB form: bad link');
         }
 
         if (! $this->hasOnlyProperties($link, self::LINK)) {
-            throw new InvalidArgumentException('Invalid DAG-PB form (extraneous properties on link)');
+            throw new InvalidArgumentException('Invalid DAG-PB form: extraneous properties on link');
         }
 
         if (! isset($link['Hash'])) {
-            throw new InvalidArgumentException('Invalid DAG-PB form (link must have a Hash)');
+            throw new InvalidArgumentException('Invalid DAG-PB form: link must have a Hash');
         }
 
         if (isset($link['Name']) && ! is_string($link['Name'])) {
-            throw new InvalidArgumentException('Invalid DAG-PB form (link Name must be a string)');
+            throw new InvalidArgumentException('Invalid DAG-PB form: link Name must be a string');
         }
 
         if (isset($link['Tsize'])) {
             if (! is_int($link['Tsize'])) {
-                throw new InvalidArgumentException('Invalid DAG-PB form (link Tsize must be an integer)');
+                throw new InvalidArgumentException('Invalid DAG-PB form: link Tsize must be an integer');
             }
             if ($link['Tsize'] < 0) {
-                throw new InvalidArgumentException('Invalid DAG-PB form (link Tsize cannot be negative)');
+                throw new InvalidArgumentException('Invalid DAG-PB form: link Tsize cannot be negative');
             }
         }
     }
@@ -297,7 +293,7 @@ final class Encoder
         $base = $offset;
         $val = $v;
 
-        while ($val >= self::MAX_UINT32) {
+        while ($val >= self::MAX_INT32) {
             $bytes[$offset++] = ($val & 0x7F) | 0x80;
             $val = intdiv($val, 128);
         }
@@ -325,8 +321,8 @@ final class Encoder
     {
         $n = 0;
         $val = $x;
-        if ($val >= self::MAX_INT32) {
-            $val = (int) ($val / self::MAX_INT32);
+        if ($val >= self::MAX_UINT32) {
+            $val = (int) ($val / self::MAX_UINT32);
             $n = 32;
         }
         if ($val >= (1 << 16)) {
@@ -342,18 +338,12 @@ final class Encoder
         return $n;
     }
 
-    private function encodeText($str): array
+    private function encodeText(string $str): array
     {
-        $arr = [];
-
-        for ($i = 0, $len = strlen($str); $i < $len; $i++) {
-            $arr[] = ord($str[$i]);
-        }
-
-        return $arr;
+        return array_map('ord', str_split($str));
     }
 
-    private function linkComparator($a, $b): int
+    private function linkComparator(array $a, array $b): int
     {
         if ($a === $b) {
             return 0;
@@ -377,12 +367,8 @@ final class Encoder
         return $x < $y ? -1 : ($y < $x ? 1 : 0);
     }
 
-    private function hasOnlyProperties($node, $properties): bool
+    private function hasOnlyProperties(array $node, array $properties): bool
     {
-        if (! is_array($node)) {
-            return false;
-        }
-
         foreach (array_keys($node) as $p) {
             if (! in_array($p, $properties, true)) {
                 return false;
