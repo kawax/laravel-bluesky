@@ -298,12 +298,12 @@ final class Encoder
         $val = $v;
 
         while ($val >= self::MAX_UINT32) {
-            $bytes[$offset++] = ($val & 0x7f) | 0x80;
+            $bytes[$offset++] = ($val & 0x7F) | 0x80;
             $val = intdiv($val, 128);
         }
 
         while ($val >= 128) {
-            $bytes[$offset++] = ($val & 0x7f) | 0x80;
+            $bytes[$offset++] = ($val & 0x7F) | 0x80;
             $val >>= 7;
         }
 
