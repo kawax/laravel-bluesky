@@ -270,6 +270,8 @@ final class CAR
     /**
      * Get signed commit.
      *
+     * Works only Bluesky/AtProto CAR.
+     *
      * @return array{did: string, rev: string, sig: array{"$bytes": string}, data: array{"/": string}, prev: null, version: int}
      */
     public static function signedCommit(StreamInterface|string $data): array
