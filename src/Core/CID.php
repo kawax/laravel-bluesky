@@ -239,7 +239,19 @@ final class CID
     }
 
     /**
-     * Decode to bytes.
+     * Encode from bytes to CID.
+     */
+    public static function encodeBytes(string $bytes): string
+    {
+        if (str_starts_with($bytes, CID::V0_LEADING)) {
+            return Multibase::encode(Multibase::BASE58BTC, $bytes, false);
+        } else {
+            return Multibase::encode(Multibase::BASE32, $bytes);
+        }
+    }
+
+    /**
+     * Decode from CID to bytes.
      */
     public static function decodeBytes(string $cid): string
     {
