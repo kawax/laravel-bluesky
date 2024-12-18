@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Revolution\Bluesky\Support;
 
 use Illuminate\Support\Str;
-use InvalidArgumentException;
 use Revolution\AtProto\Lexicon\Attributes\Format;
 use Stringable;
 use Throwable;
@@ -25,9 +24,6 @@ final readonly class AtUri implements Stringable
     protected ?string $searchParams;
     protected ?string $hash;
 
-    /**
-     * @throws Throwable
-     */
     public function __construct(protected string $uri)
     {
         throw_unless(Str::startsWith($this->uri, self::ATP));
@@ -50,8 +46,6 @@ final readonly class AtUri implements Stringable
      * $at->collection();
      * $at->rkey();
      * ```
-     *
-     * @throws Throwable
      */
     public static function parse(#[Format('at-uri')] string $uri): self
     {
@@ -63,10 +57,8 @@ final readonly class AtUri implements Stringable
      *
      * ```
      * $at = AtUri::make(repo: 'did:plc:+++', collection: 'app.bsky.feed.post', rkey: '+++');
-     * $uri = $at->__toString();// 'at://did:plc:+++/app.bsky.feed.post/+++'
+     * $uri = $at->toString();// 'at://did:plc:+++/app.bsky.feed.post/+++'
      * ```
-     *
-     * @throw InvalidArgumentException
      */
     public static function make(string $repo, ?string $collection = null, ?string $rkey = null): self
     {
@@ -107,12 +99,18 @@ final readonly class AtUri implements Stringable
      *
      * ```
      * $at = AtUri::parse('at://did:plc:+++/app.bsky.feed.post/+++');
+     * $uri = $at->toString();
      * $uri = (string) $at;
      * $uri = $at->__toString();
      * ```
      */
-    public function __toString(): string
+    public function toString(): string
     {
         return self::ATP.$this->host.$this->pathname.$this->searchParams.$this->hash;
+    }
+
+    public function __toString(): string
+    {
+        return $this->toString();
     }
 }
