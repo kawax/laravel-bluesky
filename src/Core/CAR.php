@@ -36,8 +36,8 @@ final class CAR
      *
      * $blocks
      * [
-     *     'cid' => [],
-     *     'cid' => [],
+     *     'cid' => [],// In Bluesky, this is always an array
+     *     'cid' => [],// Other CAR files may be mixed
      * ]
      * ```
      *
