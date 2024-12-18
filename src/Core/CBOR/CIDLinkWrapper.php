@@ -6,7 +6,6 @@ namespace Revolution\Bluesky\Core\CBOR;
 
 use Illuminate\Contracts\Support\Arrayable;
 use Revolution\Bluesky\Core\CID;
-use YOCLIB\Multiformats\Multibase\Multibase;
 
 /**
  * @internal
@@ -21,11 +20,7 @@ final readonly class CIDLinkWrapper implements Arrayable
 
     public function cid(): string
     {
-        if (str_starts_with($this->bytes, CID::V0_LEADING)) {
-            return Multibase::encode(Multibase::BASE58BTC, $this->bytes, false);
-        } else {
-            return Multibase::encode(Multibase::BASE32, $this->bytes);
-        }
+        return CID::encodeBytes($this->bytes);
     }
 
     public function bytes(): string
