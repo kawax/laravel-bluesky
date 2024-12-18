@@ -12,6 +12,8 @@ use Revolution\Bluesky\Core\CBOR\Normalizer;
 
 /**
  * DAG-CBOR.
+ *
+ * @link https://ipld.io/specs/codecs/dag-cbor/spec/
  */
 final class CBOR
 {
