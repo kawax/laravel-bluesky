@@ -124,7 +124,7 @@ final class CID
     {
         // Detect codec
         if (is_null($codec)) {
-            $codec = data_get(self::decode($cid), 'codec', self::DAG_CBOR);
+            $codec = data_get(self::decodeV1($cid), 'codec', self::DAG_CBOR);
         }
 
         return hash_equals($cid, self::encode(data: $data, codec: $codec));
