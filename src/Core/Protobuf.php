@@ -10,8 +10,6 @@ use Revolution\Bluesky\Core\Protobuf\Decoder;
 use Revolution\Bluesky\Core\Protobuf\Encoder;
 
 /**
- * Protobuf in CBOR-PB.
- *
  * This should not be used in Bluesky. Implemented for testing purposes.
  *
  * @internal
