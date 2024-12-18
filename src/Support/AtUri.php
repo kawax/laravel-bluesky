@@ -7,7 +7,6 @@ namespace Revolution\Bluesky\Support;
 use Illuminate\Support\Str;
 use Revolution\AtProto\Lexicon\Attributes\Format;
 use Stringable;
-use Throwable;
 
 /**
  * @link https://github.com/bluesky-social/atproto/blob/main/packages/syntax/src/aturi.ts
