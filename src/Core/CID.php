@@ -6,6 +6,7 @@ namespace Revolution\Bluesky\Core;
 
 use GuzzleHttp\Psr7\Utils;
 use Illuminate\Support\Str;
+use InvalidArgumentException;
 use YOCLIB\Multiformats\Multibase\Multibase;
 
 /**
@@ -109,7 +110,7 @@ final class CID
      */
     public static function verify(string $data, string $cid, ?int $codec = null): bool
     {
-        return match (self::detect($cid)) {
+        return match (self::version($cid)) {
             self::V0 => self::verifyV0($data, $cid),
             default => self::verifyV1($data, $cid, $codec),
         };
@@ -147,7 +148,7 @@ final class CID
      */
     public static function decode(string $cid): array
     {
-        return match (self::detect($cid)) {
+        return match (self::version($cid)) {
             self::V0 => self::decodeV0($cid),
             default => self::decodeV1($cid),
         };
@@ -242,7 +243,7 @@ final class CID
      */
     public static function decodeBytes(string $cid): string
     {
-        return match (self::detect($cid)) {
+        return match (self::version($cid)) {
             self::V0 => Multibase::decode($cid, Multibase::BASE58BTC),
             default => Multibase::decode($cid),
         };
@@ -253,19 +254,22 @@ final class CID
      *
      * @return int 0: CIDv0, 1: CIDv1
      */
-    public static function detect(string $cid): int
+    public static function version(string $cid): int
     {
         if (strlen($cid) === 46 && Str::startsWith($cid, 'Qm')) {
             return self::V0;
         }
 
         $bytes = Multibase::decode($cid);
-        throw_if(str_starts_with($bytes, "\x12"));
+
+        throw_if(ord($bytes) === self::SHA2_256);
 
         if (strlen($bytes) === 34 && str_starts_with($bytes, self::V0_LEADING)) {
             return self::V0;
         }
 
-        return ord($bytes);
+        throw_if(ord($bytes) > self::V1, InvalidArgumentException::class, 'Unknown CID version.');
+
+        return self::V1;
     }
 }
