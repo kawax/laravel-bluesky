@@ -5,9 +5,7 @@ declare(strict_types=1);
 namespace Revolution\Bluesky\Core\CBOR;
 
 use Illuminate\Contracts\Support\Arrayable;
-use Illuminate\Contracts\Support\Jsonable;
 use Revolution\Bluesky\Core\CID;
-use Stringable;
 use YOCLIB\Multiformats\Multibase\Multibase;
 
 /**
@@ -15,7 +13,7 @@ use YOCLIB\Multiformats\Multibase\Multibase;
  *
  * @link https://github.com/mary-ext/atcute/blob/trunk/packages/utilities/cbor/lib/cid-link.ts
  */
-final readonly class CIDLinkWrapper implements Arrayable, Jsonable, Stringable
+final readonly class CIDLinkWrapper implements Arrayable
 {
     public function __construct(protected string $bytes)
     {
@@ -48,15 +46,5 @@ final readonly class CIDLinkWrapper implements Arrayable, Jsonable, Stringable
     public function toArray(): array
     {
         return $this->mst();
-    }
-
-    public function toJson($options = 0): string
-    {
-        return json_encode($this->toArray(), $options);
-    }
-
-    public function __toString(): string
-    {
-        return $this->toJson();
     }
 }
