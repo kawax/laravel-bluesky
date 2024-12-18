@@ -10,6 +10,9 @@ use Revolution\Bluesky\Core\CBOR\Decoder;
 use Revolution\Bluesky\Core\CBOR\Encoder;
 use Revolution\Bluesky\Core\CBOR\Normalizer;
 
+/**
+ * DAG-CBOR.
+ */
 final class CBOR
 {
     public static function encode(mixed $data): string
