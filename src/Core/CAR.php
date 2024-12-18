@@ -12,6 +12,8 @@ use Revolution\Bluesky\Support\Identity;
 use YOCLIB\Multiformats\Multibase\Multibase;
 
 /**
+ * Content Addressable aRchives.
+ *
  * @link https://ipld.io/specs/transport/car/carv1/
  * @link https://github.com/ipld/go-car
  * @link https://github.com/ipld/js-car
