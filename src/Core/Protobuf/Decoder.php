@@ -29,7 +29,9 @@ final class Decoder
         $linksBeforeData = false;
         $data = null;
 
-        while ($stream->getSize() > $stream->tell()) {
+        $size = $stream->getSize();
+
+        while ($size > $stream->tell()) {
             [$wireType, $fieldNum] = $this->decodeKey($stream);
 
             throw_unless($wireType === 2);
@@ -86,7 +88,9 @@ final class Decoder
     {
         $link = [];
 
-        while ($stream->getSize() > $stream->tell()) {
+        $size = $stream->getSize();
+
+        while ($size > $stream->tell()) {
             [$wireType, $fieldNum] = $this->decodeKey($stream);
 
             if ($fieldNum === 1) {
