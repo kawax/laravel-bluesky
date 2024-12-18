@@ -81,46 +81,66 @@ final class Decoder
         return $stream->read($varint);
     }
 
-    /**
-     * @throws Throwable
-     */
     private function decodeLink(StreamInterface $stream): array
     {
         $link = [];
-
         $size = $stream->getSize();
 
         while ($size > $stream->tell()) {
             [$wireType, $fieldNum] = $this->decodeKey($stream);
 
-            if ($fieldNum === 1) {
-                throw_if(Arr::has($link, ['Hash', 'Name', 'Tsize']));
-                throw_unless($wireType === 2);
-
-                $bytes = $this->decodeBytes($stream);
-                if (str_starts_with($bytes, CID::V0_LEADING)) {
-                    // v0
-                    $cid = Multibase::encode(Multibase::BASE58BTC, $bytes, false);
-                } else {
-                    // v1
-                    $cid = Multibase::encode(Multibase::BASE32, $bytes);
-                }
-                $link['Hash'] = ['/' => $cid];
-            } elseif ($fieldNum === 2) {
-                throw_if(Arr::has($link, ['Name', 'Tsize']));
-                throw_unless($wireType === 2);
-
-                $link['Name'] = $this->decodeBytes($stream);
-            } elseif ($fieldNum === 3) {
-                throw_if(Arr::has($link, ['Tsize']));
-                throw_unless($wireType === 0);
-
-                $link['Tsize'] = Varint::decodeStream($stream);
-            } else {
-                throw new RuntimeException();
+            switch ($fieldNum) {
+                case 1:
+                    $this->validateLink($link, ['Hash', 'Name', 'Tsize']);
+                    $this->validateWireType($wireType, 2);
+                    $link['Hash'] = $this->decodeHash($stream);
+                    break;
+                case 2:
+                    $this->validateLink($link, ['Name', 'Tsize']);
+                    $this->validateWireType($wireType, 2);
+                    $link['Name'] = $this->decodeBytes($stream);
+                    break;
+                case 3:
+                    $this->validateLink($link, ['Tsize']);
+                    $this->validateWireType($wireType, 0);
+                    $link['Tsize'] = Varint::decodeStream($stream);
+                    break;
+                default:
+                    throw new RuntimeException('Invalid field number');
             }
         }
 
         return $link;
+    }
+
+    private function validateLink(array $link, array $fields): void
+    {
+        foreach ($fields as $field) {
+            if (Arr::has($link, $field)) {
+                throw new RuntimeException("Field $field already exists in link");
+            }
+        }
+    }
+
+    private function validateWireType(int $wireType, int $expectedType): void
+    {
+        if ($wireType !== $expectedType) {
+            throw new RuntimeException("Invalid wire type: expected $expectedType, got $wireType");
+        }
+    }
+
+    private function decodeHash(StreamInterface $stream): array
+    {
+        $bytes = $this->decodeBytes($stream);
+
+        if (str_starts_with($bytes, CID::V0_LEADING)) {
+            // v0
+            $cid = Multibase::encode(Multibase::BASE58BTC, $bytes, false);
+        } else {
+            // v1
+            $cid = Multibase::encode(Multibase::BASE32, $bytes);
+        }
+
+        return ['/' => $cid];
     }
 }
