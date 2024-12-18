@@ -20,15 +20,20 @@ final class Normalizer
                 if (in_array($key, ['ref', 'link'], true) && $item instanceof CIDLinkWrapper) {
                     return $item->link();
                 }
+
                 if (in_array($key, ['v', 't', 'l', 'data'], true) && $item instanceof CIDLinkWrapper) {
                     return $item->mst();
                 }
+
                 if ($item instanceof CIDLinkWrapper) {
                     return $item->cid();
                 }
+
+                // Only here is in ['$bytes' => 'base64'] format
                 if ($key === 'sig' && $item instanceof BytesWrapper) {
-                    return $item->encode();
+                    return $item->toArray();
                 }
+
                 if ($item instanceof BytesWrapper) {
                     return $item->bytes();
                 }
