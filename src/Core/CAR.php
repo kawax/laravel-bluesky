@@ -246,7 +246,7 @@ final class CAR
             $lastKey = $key;
 
             [$collection, $rkey] = explode('/', $key);
-            $uri = (string) AtUri::make(repo: $did, collection: $collection, rkey: $rkey);
+            $uri = AtUri::make(repo: $did, collection: $collection, rkey: $rkey)->toString();
             $cid = data_get($entry, 'v./');
             $value = data_get($blockmap, $cid);
 
