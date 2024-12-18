@@ -5,10 +5,14 @@ declare(strict_types=1);
 namespace Revolution\Bluesky\Core;
 
 use GuzzleHttp\Psr7\Utils;
+use Illuminate\Support\Arr;
 use InvalidArgumentException;
+use phpseclib3\Crypt\EC;
 use Psr\Http\Message\StreamInterface;
+use Revolution\Bluesky\Crypto\Signature;
 use Revolution\Bluesky\Support\AtUri;
 use Revolution\Bluesky\Support\Identity;
+use RuntimeException;
 use YOCLIB\Multiformats\Multibase\Multibase;
 
 /**
@@ -261,5 +265,60 @@ final class CAR
                 yield from self::walkEntries($blockmap, $tree, $did);
             }
         }
+    }
+
+    /**
+     * Get signed commit.
+     *
+     * @return array{did: string, rev: string, sig: array{"$bytes": string}, data: array{"/": string}, prev: null, version: int}
+     */
+    public static function signedCommit(StreamInterface|string $data): array
+    {
+        $roots = CAR::decodeRoots($data);
+        $root_cid = data_get($roots, 0);
+
+        foreach (CAR::blockIterator($data) as $cid => $block) {
+            if ($cid === $root_cid) {
+                if (Arr::exists($block, 'sig')) {
+                    return $block;
+                }
+
+                break;
+            }
+        }
+
+        throw new RuntimeException('Signed commit not found.');
+    }
+
+    /**
+     * ```
+     * $signed = CAR::signedCommit($data);
+     *
+     * $pk = DidKey::parse('did key from DidDoc')['key'];
+     *
+     * if (CAR::verifySignedCommit($signed, $pk) {
+     *
+     * }
+     * ```
+     */
+    public static function verifySignedCommit(array $signed, string $publicKey): bool
+    {
+        $sig = data_get($signed, 'sig.$bytes');
+
+        if (empty($sig)) {
+            return false;
+        }
+
+        $sig = base64_decode($sig);
+
+        $sig = Signature::fromCompact($sig);
+
+        $unsigned = Arr::except($signed, 'sig');
+
+        $cbor = CBOR::encode($unsigned);
+
+        $pk = EC::loadPublicKey($publicKey);
+
+        return $pk->verify($cbor, $sig);
     }
 }
