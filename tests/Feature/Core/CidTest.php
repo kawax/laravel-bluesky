@@ -64,15 +64,15 @@ class CidTest extends TestCase
 
     public function test_cid_detect()
     {
-        $this->assertSame(CID::V0, CID::detect('QmNX6Tffavsya4xgBi2VJQnSuqy9GsxongxZZ9uZBqp16d'));
-        $this->assertSame(CID::V1, CID::detect('bafyreib3h3z3a5jwjcthjojoqjpzrlzly53ycpctnmfsijdk3qb5m3qcdq'));
+        $this->assertSame(CID::V0, CID::version('QmNX6Tffavsya4xgBi2VJQnSuqy9GsxongxZZ9uZBqp16d'));
+        $this->assertSame(CID::V1, CID::version('bafyreib3h3z3a5jwjcthjojoqjpzrlzly53ycpctnmfsijdk3qb5m3qcdq'));
     }
 
     public function test_cid_detect_throw()
     {
         $this->expectException(Throwable::class);
 
-        $this->assertSame(CID::V0, CID::detect('zQmNX6Tffavsya4xgBi2VJQnSuqy9GsxongxZZ9uZBqp16d'));
+        $this->assertSame(CID::V0, CID::version('zQmNX6Tffavsya4xgBi2VJQnSuqy9GsxongxZZ9uZBqp16d'));
     }
 
     public function test_cid_encode_dag_cbor()
