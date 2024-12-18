@@ -20,13 +20,13 @@ use Revolution\Bluesky\Core\Protobuf\Encoder;
  */
 final class Protobuf
 {
-    public static function decode(StreamInterface|string $stream): array
-    {
-        return app(Decoder::class)->decode(Utils::streamFor($stream));
-    }
-
     public static function encode(array $node): string
     {
         return app(Encoder::class)->encodeNode($node);
+    }
+
+    public static function decode(StreamInterface|string $stream): array
+    {
+        return app(Decoder::class)->decode(Utils::streamFor($stream));
     }
 }
