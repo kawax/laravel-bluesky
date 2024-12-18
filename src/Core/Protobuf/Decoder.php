@@ -133,13 +133,7 @@ final class Decoder
     {
         $bytes = $this->decodeBytes($stream);
 
-        if (str_starts_with($bytes, CID::V0_LEADING)) {
-            // v0
-            $cid = Multibase::encode(Multibase::BASE58BTC, $bytes, false);
-        } else {
-            // v1
-            $cid = Multibase::encode(Multibase::BASE32, $bytes);
-        }
+        $cid = CID::encodeBytes($bytes);
 
         return ['/' => $cid];
     }
