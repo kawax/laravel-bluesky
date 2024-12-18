@@ -15,6 +15,7 @@ use Revolution\Bluesky\Core\CID;
 use Revolution\Bluesky\Core\Protobuf;
 use Revolution\Bluesky\Core\Varint;
 use Revolution\Bluesky\Crypto\DidKey;
+use Revolution\Bluesky\Crypto\Signature;
 use Revolution\Bluesky\Socialite\Key\OAuthKey;
 use Tests\TestCase;
 use YOCLIB\Multiformats\Multibase\Multibase;
@@ -228,9 +229,6 @@ class CarTest extends TestCase
         }
     }
 
-    /**
-     * @todo
-     */
     public function test_car_verify_signed_commit()
     {
         $data = Utils::streamFor(Utils::tryFopen(__DIR__.'/fixture/bsky-app.car', 'rb'));
@@ -244,17 +242,17 @@ class CarTest extends TestCase
 
         $sig = data_get($signed_commit, 'sig.$bytes');
         $sig = base64_decode($sig);
+        $sig = Signature::fromCompact($sig);
 
         $unsigned = Arr::except($signed_commit, 'sig');
 
         $cbor = CBOR::encode($unsigned);
-        $cbor_hash = hash('sha256', $cbor, true);
 
         $bsky_app = 'zQ3shQo6TF2moaqMTrUZEM1jeuYRQXeHEx4evX9751y2qPqRA';
         $didKey = DidKey::parse($bsky_app);
         $pk = EC::loadPublicKey($didKey['key']);
 
-        $this->assertTrue(! $pk->verify($cbor_hash, $sig));
+        $this->assertTrue($pk->verify($cbor, $sig));
     }
 
     public function test_car_verify_signed()
@@ -274,9 +272,8 @@ class CarTest extends TestCase
         ];
 
         $unsigned_cbor = CBOR::encode($unsigned);
-        $unsigned_hash = hash('sha256', $unsigned_cbor, true);
 
-        $sign = $sk->privateKey()->sign($unsigned_hash);
+        $sign = $sk->privateKey()->sign($unsigned_cbor);
 
         $signed = array_merge($unsigned, ['sig' => ['$bytes' => base64_encode($sign)]]);
         $signed_cbor = CBOR::encode($signed);
@@ -288,11 +285,10 @@ class CarTest extends TestCase
 
         $unsigned_decode = Arr::except($decode, 'sig');
         $unsigned_decode_cbor = CBOR::encode($unsigned_decode);
-        $unsigned_decode_hash = hash('sha256', $unsigned_decode_cbor, true);
 
         $pk = $sk->publicKey();
 
         $this->assertSame($unsigned, $unsigned_decode);
-        $this->assertTrue($pk->verify($unsigned_decode_hash, $sig));
+        $this->assertTrue($pk->verify($unsigned_decode_cbor, $sig));
     }
 }
