@@ -23,11 +23,11 @@ class CoreTest extends TestCase
 {
     public function test_tid_encode()
     {
-        $time = now()->getPreciseTimestamp();
+        $time = (int) now()->getPreciseTimestamp();
         $encode = TID::s32encode($time);
         $decode = TID::s32decode($encode);
 
-        $this->assertSame((int) $time, $decode);
+        $this->assertSame($time, $decode);
     }
 
     public function test_tid_next()
@@ -57,15 +57,16 @@ class CoreTest extends TestCase
 
         $this->assertMatchesRegularExpression(TID::FORMAT, $tid->toString());
         $this->assertSame($tid_str, $tid->toString());
+        $this->assertSame($tid_str, (string) $tid);
     }
 
     public function test_tid_from_time()
     {
-        $time = now()->getPreciseTimestamp();
+        $time = (int) now()->getPreciseTimestamp();
         $clockId = 31;
         $tid = TID::fromTime($time, $clockId);
 
-        $this->assertSame((int) $time, $tid->timestamp());
+        $this->assertSame($time, $tid->timestamp());
         $this->assertSame($clockId, $tid->clockId());
     }
 
@@ -82,7 +83,7 @@ class CoreTest extends TestCase
         $time = now();
         $tid = TID::fromTime($time->getPreciseTimestamp(), 1);
 
-        $decode = TID::fromStr((string) $tid)->toDate();
+        $decode = TID::fromStr($tid->toString())->toDate();
 
         $this->assertTrue($time->eq($decode));
     }
