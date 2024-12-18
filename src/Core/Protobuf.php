@@ -12,6 +12,8 @@ use Revolution\Bluesky\Core\Protobuf\Encoder;
 /**
  * This should not be used in Bluesky. Implemented for testing purposes.
  *
+ * DAG-PB.
+ *
  * @internal
  *
  * @link https://github.com/ipld/js-dag-pb
