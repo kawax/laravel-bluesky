@@ -605,7 +605,7 @@ class SupportTest extends TestCase
 
     public function test_car_block_map()
     {
-        $data = Utils::streamFor(utils::tryFopen(__DIR__.'/fixture/bsky-app.car', 'rb'));
+        $data = Utils::streamFor(Utils::tryFopen(__DIR__.'/fixture/bsky-app.car', 'rb'));
 
         $this->assertCount(604, iterator_to_array(CAR::blockMap($data)));
         $this->assertCount(744, iterator_to_array(CAR::blockIterator($data)));
