@@ -35,7 +35,7 @@ final readonly class CIDLinkWrapper implements Arrayable, Jsonable, Stringable
         return $this->bytes;
     }
 
-    public function toArray(): array
+    public function link(): array
     {
         return ['$link' => $this->cid()];
     }
@@ -43,6 +43,11 @@ final readonly class CIDLinkWrapper implements Arrayable, Jsonable, Stringable
     public function mst(): array
     {
         return ['/' => $this->cid()];
+    }
+
+    public function toArray(): array
+    {
+        return $this->mst();
     }
 
     public function toJson($options = 0): string
