@@ -382,11 +382,13 @@ final class Encoder
         if (! is_array($node)) {
             return false;
         }
+
         foreach (array_keys($node) as $p) {
             if (! in_array($p, $properties, true)) {
                 return false;
             }
         }
+
         return true;
     }
 }
