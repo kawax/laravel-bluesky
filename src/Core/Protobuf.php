@@ -7,7 +7,6 @@ use GuzzleHttp\Psr7\Utils;
 use Psr\Http\Message\StreamInterface;
 use Revolution\Bluesky\Core\Protobuf\Decoder;
 use Revolution\Bluesky\Core\Protobuf\Encoder;
-use Throwable;
 
 /**
  * Protobuf in CBOR-PB.
