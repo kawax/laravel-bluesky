@@ -62,8 +62,10 @@ class UnpackRepoCommand extends Command
             return 1;
         }
 
+        $stream = Utils::streamFor(Storage::readStream($file));
+
         // Unpack only record data for all collections
-        foreach (CAR::blockMap(Utils::streamFor(Storage::readStream($file))) as $key => $record) {
+        foreach (CAR::blockMap($stream) as $key => $record) {
             [$collection, $rkey] = explode('/', $key);
             $block = data_get($record, 'value');
             $cid = data_get($record, 'cid');
