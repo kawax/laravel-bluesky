@@ -59,8 +59,6 @@ final class Decoder
             $node['Data'] = $data;
         }
 
-        rescue(fn () => $stream->close());
-
         return $node;
     }
 
