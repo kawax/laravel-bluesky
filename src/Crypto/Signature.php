@@ -16,7 +16,7 @@ final class Signature
      */
     public static function fromCompact(string $sig): string
     {
-        if (strlen($sig) > 64) {
+        if (strlen($sig) !== 64) {
             return $sig;
         }
 
