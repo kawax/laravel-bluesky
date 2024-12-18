@@ -12,6 +12,7 @@ use Revolution\Bluesky\Crypto\K256;
 use Revolution\Bluesky\Facades\Bluesky;
 use Revolution\Bluesky\FeedGenerator\FeedGenerator;
 use Revolution\Bluesky\FeedGenerator\ValidateAuth;
+use RuntimeException;
 use Tests\TestCase;
 
 class FeedGeneratorTest extends TestCase
@@ -49,7 +50,7 @@ class FeedGeneratorTest extends TestCase
 
     public function test_feed_register_class_not_callable(): void
     {
-        $this->expectException(InvalidArgumentException::class);
+        $this->expectException(RuntimeException::class);
 
         FeedGenerator::register('test', TestFeed2::class);
 
