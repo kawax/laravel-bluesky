@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Tests\Feature\FeedGenerator;
 
 use Illuminate\Http\Request;
-use InvalidArgumentException;
 use Revolution\Bluesky\Crypto\DidKey;
 use Revolution\Bluesky\Crypto\JsonWebToken;
 use Revolution\Bluesky\Crypto\K256;
