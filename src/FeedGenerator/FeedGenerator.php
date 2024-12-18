@@ -7,7 +7,6 @@ namespace Revolution\Bluesky\FeedGenerator;
 use BackedEnum;
 use Closure;
 use Illuminate\Http\Request;
-use InvalidArgumentException;
 use Revolution\Bluesky\Support\DID;
 
 use function Illuminate\Support\enum_value;
