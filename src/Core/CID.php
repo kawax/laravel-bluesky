@@ -239,7 +239,7 @@ final class CID
     }
 
     /**
-     * Encode from bytes to CID.
+     * Encode from bytes to CID string.
      */
     public static function encodeBytes(string $bytes): string
     {
@@ -251,7 +251,7 @@ final class CID
     }
 
     /**
-     * Decode from CID to bytes.
+     * Decode from CID string to bytes.
      */
     public static function decodeBytes(string $cid): string
     {
