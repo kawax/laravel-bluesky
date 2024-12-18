@@ -138,7 +138,7 @@ class CarTest extends TestCase
         $data_len = Varint::decode($data->read(8));
         $pos = strlen(Varint::encode($data_len));
         $data->seek(1 + $header_len + $pos);
-        $this->assertSame(209, $data_len);
+        $this->assertSame(242, $data_len);
         $this->assertSame(2, $pos);
 
         $ver1 = Varint::decode($data->read(1));
@@ -155,7 +155,7 @@ class CarTest extends TestCase
 
         $data->seek(-4, SEEK_CUR);
         $hash = $data->read(4 + $hash_len);
-        $this->assertSame('bafyreig7gxhfmvwk4qzo2aliqytgdiflw6xwi4dkkqwjlgt7zjlvfbptcy', Multibase::encode(Multibase::BASE32, $hash));
+        $this->assertSame('bafyreift3sxgywrkke7bqazypjucn3f3tctvrv3q4i3bzmblq7x6ku3ire', Multibase::encode(Multibase::BASE32, $hash));
 
         $block_len = $data_len - 4 - $hash_len;
 
@@ -168,7 +168,7 @@ class CarTest extends TestCase
         $data_len = Varint::decode($data->read(8));
         $pos = strlen(Varint::encode($data_len));
         $data->seek($current + $pos);
-        $this->assertSame(1733, $data_len);
+        $this->assertSame(534, $data_len);
         $this->assertSame(2, $pos);
 
         $ver1 = Varint::decode($data->read(1));
@@ -185,7 +185,7 @@ class CarTest extends TestCase
 
         $data->seek(-4, SEEK_CUR);
         $hash = $data->read(4 + $hash_len);
-        $this->assertSame('bafyreiejo5hn2rjcihcfz3txibzg3f7z5cmoxpdmloxamwlrrkgllafqy4', Multibase::encode(Multibase::BASE32, $hash));
+        $this->assertSame('bafyreifsbltuvxsxfonlftmif7jhe7j7nfeijd7t5juw4p6shcopyqkmim', Multibase::encode(Multibase::BASE32, $hash));
 
         $block_len = $data_len - 4 - $hash_len;
 
@@ -198,8 +198,8 @@ class CarTest extends TestCase
         $data_len = Varint::decode($data->read(8));
         $pos = strlen(Varint::encode($data_len));
         $data->seek($current + $pos);
-        $this->assertSame(224, $data_len);
-        $this->assertSame(2, $pos);
+        $this->assertSame(83, $data_len);
+        $this->assertSame(1, $pos);
 
         $ver1 = Varint::decode($data->read(1));
         $this->assertSame(CID::V1, $ver1);
@@ -239,18 +239,22 @@ class CarTest extends TestCase
 
         $signed_commit = $blocks[$roots[0]];
 
+        $cid = CID::encode(CBOR::encode($signed_commit), codec: CID::DAG_CBOR);
+        $this->assertSame($roots[0], $cid);
+
         $sig = data_get($signed_commit, 'sig.$bytes');
         $sig = base64_decode($sig);
 
         $unsigned = Arr::except($signed_commit, 'sig');
 
         $cbor = CBOR::encode($unsigned);
+        $cbor_hash = hash('sha256', $cbor, true);
 
         $bsky_app = 'zQ3shQo6TF2moaqMTrUZEM1jeuYRQXeHEx4evX9751y2qPqRA';
         $didKey = DidKey::parse($bsky_app);
         $pk = EC::loadPublicKey($didKey['key']);
 
-        $this->assertTrue(! $pk->verify($cbor, $sig));
+        $this->assertTrue(! $pk->verify($cbor_hash, $sig));
     }
 
     public function test_car_verify_signed()
@@ -270,8 +274,9 @@ class CarTest extends TestCase
         ];
 
         $unsigned_cbor = CBOR::encode($unsigned);
+        $unsigned_hash = hash('sha256', $unsigned_cbor, true);
 
-        $sign = $sk->privateKey()->sign($unsigned_cbor);
+        $sign = $sk->privateKey()->sign($unsigned_hash);
 
         $signed = array_merge($unsigned, ['sig' => ['$bytes' => base64_encode($sign)]]);
         $signed_cbor = CBOR::encode($signed);
@@ -282,10 +287,12 @@ class CarTest extends TestCase
         $sig = base64_decode($sig);
 
         $unsigned_decode = Arr::except($decode, 'sig');
+        $unsigned_decode_cbor = CBOR::encode($unsigned_decode);
+        $unsigned_decode_hash = hash('sha256', $unsigned_decode_cbor, true);
 
         $pk = $sk->publicKey();
 
         $this->assertSame($unsigned, $unsigned_decode);
-        $this->assertTrue($pk->verify(CBOR::encode($unsigned_decode), $sig));
+        $this->assertTrue($pk->verify($unsigned_decode_hash, $sig));
     }
 }
