@@ -192,9 +192,4 @@ final class Decoder
 
         throw new InvalidArgumentException();
     }
-
-    public function __destruct()
-    {
-        rescue(fn () => $this->stream->close());
-    }
 }
