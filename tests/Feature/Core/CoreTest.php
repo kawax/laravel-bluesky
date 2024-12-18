@@ -9,12 +9,17 @@ use GuzzleHttp\Psr7\Utils;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Str;
 use InvalidArgumentException;
+use phpseclib3\Crypt\EC;
 use Revolution\Bluesky\Core\CAR;
 use Revolution\Bluesky\Core\CBOR;
 use Revolution\Bluesky\Core\CID;
 use Revolution\Bluesky\Core\Protobuf;
 use Revolution\Bluesky\Core\TID;
 use Revolution\Bluesky\Core\Varint;
+use Revolution\Bluesky\Crypto\DidKey;
+use Revolution\Bluesky\Facades\Bluesky;
+use Revolution\Bluesky\Socialite\Key\OAuthKey;
+use Revolution\Bluesky\Support\DidDocument;
 use Tests\TestCase;
 use Throwable;
 use YOCLIB\Multiformats\Multibase\Multibase;
@@ -488,5 +493,57 @@ class CoreTest extends TestCase
             $this->assertTrue(Str::contains($key, '/'));
             $this->assertTrue(Arr::exists($record, 'uri'));
         }
+    }
+
+    /**
+     * @todo
+     */
+    public function test_car_verify_signed_commit()
+    {
+        $data = Utils::streamFor(Utils::tryFopen(__DIR__.'/fixture/bsky-app.car', 'rb'));
+
+        [$roots, $blocks] = CAR::decode($data);
+
+        $signed_commit = $blocks[$roots[0]];
+
+        $sig = data_get($signed_commit, 'sig');
+        $sig = base64_decode($sig);
+
+        $unsigned = Arr::except($signed_commit, 'sig');
+
+        $cbor = CBOR::encode($unsigned);
+
+        $bsky_app = 'zQ3shQo6TF2moaqMTrUZEM1jeuYRQXeHEx4evX9751y2qPqRA';
+        $didKey = DidKey::parse($bsky_app);
+        $pk = EC::loadPublicKey($didKey['key']);
+
+        $this->assertTrue(! $pk->verify($cbor, $sig));
+    }
+
+    public function test_car_verify_signed()
+    {
+        $sk = OAuthKey::load();
+
+        $unsigned = [
+            'data' => 'test',
+        ];
+
+        $unsigned_cbor = CBOR::encode($unsigned);
+
+        $sign = $sk->privateKey()->sign($unsigned_cbor);
+
+        $signed = array_merge($unsigned, ['sig' => $sign]);
+        $signed_cbor = CBOR::encode($signed);
+
+        $decode = CBOR::decode($signed_cbor);
+
+        $sig = data_get($decode, 'sig');
+
+        $unsigned_decode = Arr::except($decode, 'sig');
+
+        $pk = $sk->publicKey();
+
+        $this->assertSame($unsigned, $unsigned_decode);
+        $this->assertTrue($pk->verify(CBOR::encode($unsigned_decode), $sig));
     }
 }
