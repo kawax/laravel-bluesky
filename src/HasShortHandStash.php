@@ -38,7 +38,7 @@ trait HasShortHandStash
     }
 
     /**
-     * @param  string|null  $actor  DID or handle.
+     * @param  string|null  $actor  DID or handle
      *
      * @throws AuthenticationException
      */

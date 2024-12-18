@@ -71,10 +71,10 @@ class BlueskyManager implements Factory
      * Send any API request.
      *
      * @param  BackedEnum|string  $api  e.g. "app.bsky.actor.getProfile"
-     * @param  string  $method  get or post.
-     * @param  bool  $auth  Requires auth.
-     * @param  ?array  $params  get query or post data.
-     * @param  null|callable(PendingRequest $http): PendingRequest  $callback  Perform processing before sending.
+     * @param  string  $method  get or post
+     * @param  bool  $auth  requires auth
+     * @param  ?array  $params  get query or post data
+     * @param  null|callable(PendingRequest $http): PendingRequest  $callback  perform processing before sending
      */
     public function send(#[Format('nsid')] BackedEnum|string $api, #[KnownValues(['get', 'post'])] string $method = 'get', bool $auth = true, ?array $params = null, ?callable $callback = null): Response
     {
