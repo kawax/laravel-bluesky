@@ -131,10 +131,10 @@ class FirehoseServeCommand extends Command
             }
 
             $records = data_get($payload, 'blocks');
-            $roots = [];
+
             $blocks = [];
             if (filled($records)) {
-                [$roots, $blocks] = rescue(fn () => CAR::decode($records));
+                $blocks = rescue(fn () => iterator_to_array(CAR::blockMap($records)));
 
                 if (empty($blocks)) {
                     //dump($blocks);
