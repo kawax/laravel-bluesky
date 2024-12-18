@@ -235,8 +235,8 @@ final class CAR
 
         $lastKey = '';
 
-        if (filled(data_get($data, 'l./'))) {
-            yield from self::walkEntries($blockmap, data_get($data, 'l./'), $did);
+        if (filled($left = data_get($data, 'l./'))) {
+            yield from self::walkEntries($blockmap, $left, $did);
         }
 
         foreach ($entries as $entry) {
@@ -257,8 +257,8 @@ final class CAR
             }
             yield $key => $record;
 
-            if (filled(data_get($entry, 't./'))) {
-                yield from self::walkEntries($blockmap, data_get($entry, 't./'), $did);
+            if (filled($tree = data_get($entry, 't./'))) {
+                yield from self::walkEntries($blockmap, $tree, $did);
             }
         }
     }
