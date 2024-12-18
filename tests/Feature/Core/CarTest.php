@@ -239,7 +239,7 @@ class CarTest extends TestCase
 
         $signed_commit = $blocks[$roots[0]];
 
-        $sig = data_get($signed_commit, 'sig');
+        $sig = data_get($signed_commit, 'sig.$bytes');
         $sig = base64_decode($sig);
 
         $unsigned = Arr::except($signed_commit, 'sig');
@@ -265,12 +265,13 @@ class CarTest extends TestCase
 
         $sign = $sk->privateKey()->sign($unsigned_cbor);
 
-        $signed = array_merge($unsigned, ['sig' => $sign]);
+        $signed = array_merge($unsigned, ['sig' => ['$bytes' => base64_encode($sign)]]);
         $signed_cbor = CBOR::encode($signed);
 
         $decode = CBOR::decode($signed_cbor);
 
-        $sig = data_get($decode, 'sig');
+        $sig = data_get($decode, 'sig.$bytes');
+        $sig = base64_decode($sig);
 
         $unsigned_decode = Arr::except($decode, 'sig');
 
