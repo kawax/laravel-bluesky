@@ -104,7 +104,7 @@ final class CID
      * }
      * ```
      *
-     * @param  string  $data  Target encoded bytes data. RAW, DAG-CBOR or DAG-PG
+     * @param  string  $data  Target encoded bytes data. RAW, DAG-CBOR or DAG-PB
      * @param  string  $cid  CIDv1 or v0
      */
     public static function verify(string $data, string $cid, ?int $codec = null): bool
