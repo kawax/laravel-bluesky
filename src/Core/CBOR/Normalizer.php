@@ -18,7 +18,7 @@ final class Normalizer
         if (is_array($data)) {
             return collect($data)->map(function ($item, $key) {
                 if (in_array($key, ['ref', 'link'], true) && $item instanceof CIDLinkWrapper) {
-                    return $item->toArray();
+                    return $item->link();
                 }
                 if (in_array($key, ['v', 't', 'l', 'data'], true) && $item instanceof CIDLinkWrapper) {
                     return $item->mst();
