@@ -113,6 +113,7 @@ class SupportTest extends TestCase
         $at = AtUri::parse('at://did:plc:test/app.bsky.feed.post/abcde?test=a#hash');
 
         $this->assertSame('at://did:plc:test/app.bsky.feed.post/abcde?test=a#hash', (string) $at);
+        $this->assertSame('at://did:plc:test/app.bsky.feed.post/abcde?test=a#hash', $at->toString());
         $this->assertSame('at://did:plc:test/app.bsky.feed.post/abcde?test=a#hash', $at->__toString());
     }
 
@@ -123,7 +124,7 @@ class SupportTest extends TestCase
         $at3 = AtUri::make(repo: 'did:plc:test');
 
         $this->assertSame('at://did:plc:test/app.bsky.feed.post/abcde', (string) $at);
-        $this->assertSame('at://did:plc:test/app.bsky.feed.post', $at2->__toString());
+        $this->assertSame('at://did:plc:test/app.bsky.feed.post', $at2->toString());
         $this->assertSame('at://did:plc:test', $at3->__toString());
     }
 
