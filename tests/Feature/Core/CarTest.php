@@ -260,6 +260,8 @@ class CarTest extends TestCase
         $unsigned = [
             'int' => -100,
             'data' => 'test',
+            'true' => true,
+            'false' => false,
             'float' => 3.14,
             'uint8' => 0x100,
             'uint16' => 0x10000,
