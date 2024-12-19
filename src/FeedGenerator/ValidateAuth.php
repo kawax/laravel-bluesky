@@ -12,6 +12,7 @@ use Revolution\Bluesky\Crypto\JsonWebToken;
 use Revolution\Bluesky\Facades\Bluesky;
 use Revolution\Bluesky\Support\DidDocument;
 use Revolution\Bluesky\Support\Identity;
+use stdClass;
 
 /**
  * @link https://github.com/bluesky-social/feed-generator/blob/main/src/auth.ts
@@ -41,6 +42,7 @@ class ValidateAuth
 
         $key = new Key($didKey['key'], $didKey['alg']);
 
+        /** @var ?stdClass $payload */
         $payload = rescue(fn () => JWT::decode($jwt, $key));
 
         return $payload?->iss;
