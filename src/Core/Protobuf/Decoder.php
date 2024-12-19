@@ -11,7 +11,6 @@ use Revolution\Bluesky\Core\CID;
 use Revolution\Bluesky\Core\Varint;
 use RuntimeException;
 use Throwable;
-use YOCLIB\Multiformats\Multibase\Multibase;
 
 /**
  * @internal
