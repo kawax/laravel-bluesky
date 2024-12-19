@@ -269,32 +269,20 @@ final class Encoder
                 ->reject(fn ($val, $key) => $key !== 'prev' && is_null($val))
                 ->toArray();
 
-            $keys = array_keys($filtered);
-            usort($keys, [$this, 'compareKeys']);
+            uksort($filtered, new MapKeySort());
 
-            $len = count($keys);
+            $len = count($filtered);
             $this->writeTypeAndArgument(5, $len);
 
-            foreach ($keys as $key) {
+            foreach ($filtered as $key => $value) {
                 $this->writeString($key);
-                $this->writeValue($filtered[$key]);
+                $this->writeValue($value);
             }
 
             return;
         }
 
         throw new InvalidArgumentException();
-    }
-
-    private function compareKeys(string $a, string $b): int
-    {
-        if (strlen($a) < strlen($b)) {
-            return -1;
-        } elseif (strlen($b) < strlen($a)) {
-            return 1;
-        } else {
-            return ($a < $b) ? -1 : 1;
-        }
     }
 
     private function writeRaw(string $data): void
