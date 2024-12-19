@@ -249,9 +249,9 @@ final class CID
 
         if ($ver === CID::V0) {
             return Multibase::encode(Multibase::BASE58BTC, $bytes, false);
-        } else {
-            return Multibase::encode(Multibase::BASE32, $bytes);
         }
+
+        return Multibase::encode(Multibase::BASE32, $bytes);
     }
 
     /**
