@@ -16,6 +16,9 @@ final readonly class DidDocument implements Arrayable
 {
     protected Collection $didDoc;
 
+    /**
+     * @param  null|array<array-key, mixed>|Collection  $didDoc
+     */
     public function __construct(array|Collection|null $didDoc = null)
     {
         $this->didDoc = Collection::wrap($didDoc)
@@ -28,6 +31,9 @@ final readonly class DidDocument implements Arrayable
             ]);
     }
 
+    /**
+     * @param  null|array<array-key, mixed>|Collection  $didDoc
+     */
     public static function make(array|Collection|null $didDoc = null): self
     {
         return new self($didDoc);

@@ -11,15 +11,17 @@ use Revolution\AtProto\Lexicon\Types\AbstractUnion;
 #[NSID('com.atproto.label.defs#selfLabels')]
 final class SelfLabels extends AbstractUnion implements Arrayable
 {
-    protected array $labels;
-
-    public function __construct(array $labels)
+    /**
+     * @param  array<string>  $labels
+     */
+    public function __construct(protected array $labels)
     {
         $this->type = 'com.atproto.label.defs#selfLabels';
-
-        $this->labels = $labels;
     }
 
+    /**
+     * @param  array<string>  $labels
+     */
     public static function make(array $labels): self
     {
         return new self($labels);

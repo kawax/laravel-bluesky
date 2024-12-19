@@ -14,6 +14,9 @@ final readonly class ProtectedResource implements Arrayable
 {
     protected Collection $meta;
 
+    /**
+     * @param  null|array<array-key, mixed>|Collection  $meta
+     */
     public function __construct(array|Collection|null $meta = null)
     {
         $this->meta = Collection::wrap($meta)
@@ -26,6 +29,9 @@ final readonly class ProtectedResource implements Arrayable
             ]);
     }
 
+    /**
+     * @param  null|array<array-key, mixed>|Collection  $meta
+     */
     public static function make(array|Collection|null $meta = null): self
     {
         return new self($meta);
