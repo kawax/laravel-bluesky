@@ -13,7 +13,6 @@ use Revolution\Bluesky\Crypto\Signature;
 use Revolution\Bluesky\Support\AtUri;
 use Revolution\Bluesky\Support\Identity;
 use RuntimeException;
-use YOCLIB\Multiformats\Multibase\Multibase;
 
 /**
  * Content Addressable aRchives.
