@@ -130,7 +130,7 @@ class Identity
             default => throw new InvalidArgumentException('Unsupported DID type'),
         };
 
-        $response = Http::get($url);
+        $response = Http::timeout(10)->withoutRedirecting()->get($url);
 
         if ($cache && $response->successful()) {
             cache()->put(self::CACHE_DID.$did, $response->json(), now()->addDay());
