@@ -7,6 +7,7 @@ namespace Revolution\Bluesky\Crypto;
 use ArrayAccess;
 use Illuminate\Contracts\Support\Arrayable;
 use Illuminate\Support\Arr;
+use Illuminate\Support\Collection;
 use InvalidArgumentException;
 use phpseclib3\Crypt\EC;
 use phpseclib3\Crypt\EC\Formats\Keys\PKCS8;
@@ -65,7 +66,7 @@ final class DidKey implements Arrayable, ArrayAccess
         /** @var PublicKey $key */
         $key = EC::loadPublicKeyFormat(class_basename(Base58btc::class), $didkey);
 
-        $curve = $key->getCurve();
+        $curve = (string) Collection::wrap($key->getCurve())->first();
 
         if (! Arr::exists(self::ALGS, $curve)) {
             throw new InvalidArgumentException('Unsupported format.');
@@ -121,7 +122,11 @@ final class DidKey implements Arrayable, ArrayAccess
      */
     public function toArray(): array
     {
-        return get_object_vars($this);
+        return [
+            'curve' => $this->curve,
+            'alg' => $this->alg,
+            'key' => $this->key,
+        ];
     }
 
     public function offsetExists(mixed $offset): bool

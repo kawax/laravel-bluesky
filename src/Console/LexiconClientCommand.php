@@ -51,8 +51,8 @@ class LexiconClientCommand extends Command
      */
     public function handle(): int
     {
-        $this->client_path = realpath(__DIR__.'/../Client/Concerns/');
-        $this->interface_path = realpath(__DIR__.'/../../vendor/revolution/atproto-lexicon-contracts/src/Contracts/');
+        $this->client_path = (string) realpath(__DIR__.'/../Client/Concerns/');
+        $this->interface_path = (string) realpath(__DIR__.'/../../vendor/revolution/atproto-lexicon-contracts/src/Contracts/');
 
         File::cleanDirectory($this->client_path);
 
@@ -77,6 +77,7 @@ class LexiconClientCommand extends Command
                     ->toString();
 
                 // Revolution\AtProto\Lexicon\Contracts\App\Bsky\Actor
+                /** @var class-string $contract */
                 $contract = $class->replace('/', '\\')
                     ->prepend('Revolution\AtProto\Lexicon\Contracts')
                     ->toString();
@@ -149,7 +150,7 @@ class LexiconClientCommand extends Command
     }
 
     /**
-     * @param  array{contract: string, methods: array{func: string, http: string, params: array}}  $file
+     * @param  array{contract: class-string, methods: array}  $file
      */
     protected function save(array $file, string $name): void
     {
@@ -171,7 +172,7 @@ class LexiconClientCommand extends Command
                 ])->implode(PHP_EOL);
             })->implode(PHP_EOL.PHP_EOL);
 
-        $tmp = File::get(realpath(__DIR__.'/stubs/lexicon-trait.stub'));
+        $tmp = File::get((string) realpath(__DIR__.'/stubs/lexicon-trait.stub'));
 
         $tmp = Str::of($tmp)
             ->replace('{contract}', $contract)

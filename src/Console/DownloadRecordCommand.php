@@ -76,7 +76,7 @@ class DownloadRecordCommand extends Command
                 $file = collect(['bluesky', 'download', $name, $collection, $at->rkey().'.json'])
                     ->implode(DIRECTORY_SEPARATOR);
 
-                Storage::put($file, json_encode($record, JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES));
+                Storage::put($file, json_encode($record, JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES | JSON_THROW_ON_ERROR));
 
                 $this->line('Download: '.Storage::path($file));
             });

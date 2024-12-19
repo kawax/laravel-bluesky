@@ -48,7 +48,7 @@ final class External extends AbstractExternal implements Arrayable
         $thumb = $this->thumb;
 
         if (is_callable($thumb)) {
-            $thumb = call_user_func($this->thumb);
+            $thumb = call_user_func($thumb);
         }
 
         if ($thumb instanceof BlobRef) {

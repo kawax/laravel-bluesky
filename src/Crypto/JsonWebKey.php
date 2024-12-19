@@ -68,7 +68,7 @@ final class JsonWebKey implements Arrayable, Jsonable, Stringable
 
     public function toJson($options = 0): string
     {
-        return json_encode($this->toArray(), $options);
+        return json_encode($this->toArray(), $options | JSON_THROW_ON_ERROR);
     }
 
     public function __toString(): string

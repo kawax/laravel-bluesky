@@ -12,6 +12,8 @@ trait WithAuthServer
 
     /**
      * @link  https://bsky.social/.well-known/oauth-authorization-server
+     *
+     * @return ($key is non-empty-string ? string|null : array)
      */
     protected function authServerMeta(?string $key = null, ?string $default = null): array|string|null
     {

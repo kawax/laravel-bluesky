@@ -146,11 +146,8 @@ final class Encoder
         $this->writeFloat64($val);
     }
 
-    private function writeNumber(mixed $val): void
+    private function writeNumber(int|float $val): void
     {
-        if (! is_numeric($val)) {
-            throw new InvalidArgumentException();
-        }
         if (is_nan($val)) {
             throw new InvalidArgumentException();
         }

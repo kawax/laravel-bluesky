@@ -23,6 +23,9 @@ final class Decoder
 
     protected int $stream_size = 0;
 
+    /**
+     * @return array{0: mixed, 1: ?string}
+     */
     public function decodeFirst(StreamInterface $stream): array
     {
         throw_unless($stream->isReadable());
@@ -64,6 +67,7 @@ final class Decoder
     {
         $data = $this->stream->read(8);
         $arr = unpack('E', $data);
+        throw_unless($arr);
 
         return $arr[1];
     }
@@ -77,6 +81,7 @@ final class Decoder
     {
         $data = $this->stream->read(2);
         $arr = unpack('n', $data);
+        throw_unless($arr);
 
         return $arr[1];
     }
@@ -85,6 +90,7 @@ final class Decoder
     {
         $data = $this->stream->read(4);
         $arr = unpack('N', $data);
+        throw_unless($arr);
 
         return $arr[1];
     }
@@ -94,6 +100,8 @@ final class Decoder
         $data = $this->stream->read(8);
 
         $arr = unpack('N2', $data);
+        throw_unless($arr);
+
         $hi = $arr[1];
         $lo = $arr[2];
 

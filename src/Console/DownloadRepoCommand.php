@@ -79,7 +79,7 @@ class DownloadRepoCommand extends Command
 
         $did_doc_file = collect(['bluesky', 'download', $name, $name.'-did.json'])
             ->implode(DIRECTORY_SEPARATOR);
-        Storage::put($did_doc_file, json_encode($didDoc->toArray(), JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES));
+        Storage::put($did_doc_file, json_encode($didDoc->toArray(), JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES | JSON_THROW_ON_ERROR));
 
         $file = collect(['bluesky', 'download', $name, $name.'.car'])
             ->implode(DIRECTORY_SEPARATOR);

@@ -97,7 +97,7 @@ trait WithTokenRequest
      */
     protected function getTokenUrl(): string
     {
-        return $this->authServerMeta('token_endpoint');
+        return (string) $this->authServerMeta('token_endpoint');
     }
 
     /**

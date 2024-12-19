@@ -43,6 +43,8 @@ final class Varint
     public static function decode(string $bytes): int
     {
         $buf = unpack('C*', $bytes);
+        throw_unless($buf);
+
         $x = new BigInteger(0);
         $s = 0;
 

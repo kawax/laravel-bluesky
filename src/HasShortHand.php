@@ -436,7 +436,7 @@ trait HasShortHand
         //Service auth is required to use the video upload features.
         $aud = $this->agent()->session()->didDoc()->serviceAuthAud();
 
-        $token = $this->getServiceAuth(aud: $aud, exp: now()->addMinutes(30)->timestamp, lxm: AtRepo::uploadBlob)
+        $token = $this->getServiceAuth(aud: $aud, exp: (int) now()->addMinutes(30)->timestamp, lxm: AtRepo::uploadBlob)
             ->json('token');
 
         return $this->client(auth: true)

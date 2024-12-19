@@ -108,7 +108,7 @@ class WebSocketServeCommand extends Command
             ],
         ];
 
-        $ws->write($options = json_encode($payload));
+        $ws->write($options = json_encode($payload, JSON_THROW_ON_ERROR));
 
         $this->info('Host : '.$host);
         $this->info('Payload : '.$options);

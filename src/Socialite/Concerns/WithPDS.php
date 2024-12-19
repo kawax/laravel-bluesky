@@ -38,6 +38,9 @@ trait WithPDS
         }
     }
 
+    /**
+     * @return ($key is non-empty-string ? array|string|null : ProtectedResource)
+     */
     protected function pdsProtectedResource(string $pds_url, string $key = '', ?string $default = null): ProtectedResource|array|string|null
     {
         if (empty($this->pds_resource)) {

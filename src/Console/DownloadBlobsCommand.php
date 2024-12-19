@@ -97,7 +97,7 @@ class DownloadBlobsCommand extends Command
 
                 Storage::put($file, $content);
 
-                $file_ext = $file.$this->ext(Storage::mimeType($file));
+                $file_ext = $file.$this->ext((string) Storage::mimeType($file));
 
                 Storage::move($file, $file_ext);
 
