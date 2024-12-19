@@ -21,11 +21,14 @@ final class Decoder
 
     protected StreamInterface $stream;
 
+    protected int $stream_size = 0;
+
     public function decodeFirst(StreamInterface $stream): array
     {
         throw_unless($stream->isReadable());
 
         $this->stream = $stream;
+        $this->stream_size = min($stream->getSize(), self::MAX_SIZE);
 
         $value = $this->readValue();
         $remainder = $this->stream->getContents();
@@ -103,17 +106,17 @@ final class Decoder
 
     private function readString(int $length): string
     {
-        return $this->stream->read(min($length, self::MAX_SIZE));
+        return $this->stream->read(min($length, $this->stream_size));
     }
 
     private function readBytes(int $length): BytesWrapper
     {
-        return new BytesWrapper($this->stream->read(min($length, self::MAX_SIZE)));
+        return new BytesWrapper($this->stream->read(min($length, $this->stream_size)));
     }
 
     private function readCid(int $length): CIDLinkWrapper
     {
-        $cid = $this->stream->read(min($length, self::MAX_SIZE));
+        $cid = $this->stream->read(min($length, $this->stream_size));
         $cid = Str::ltrim($cid, CID::ZERO);
 
         return new CIDLinkWrapper($cid);
