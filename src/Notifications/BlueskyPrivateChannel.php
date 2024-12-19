@@ -32,6 +32,7 @@ class BlueskyPrivateChannel
         }
 
         /** @var BlueskyRoute $route */
+        // @phpstan-ignore-next-line
         $route = $notifiable->routeNotificationFor('bluesky-private', $notification);
 
         // @phpstan-ignore-next-line

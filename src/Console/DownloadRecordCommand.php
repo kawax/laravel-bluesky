@@ -81,6 +81,7 @@ class DownloadRecordCommand extends Command
                 $this->line('Download: '.Storage::path($file));
             });
 
+            /** @var string $cursor */
             $cursor = $response->json('cursor');
             $this->warn('cursor: '.$cursor);
         } while (filled($cursor));

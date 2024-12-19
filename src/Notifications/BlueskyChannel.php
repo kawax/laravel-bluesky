@@ -31,6 +31,7 @@ class BlueskyChannel
         }
 
         /** @var BlueskyRoute $route */
+        // @phpstan-ignore-next-line
         $route = $notifiable->routeNotificationFor('bluesky', $notification);
 
         // @phpstan-ignore-next-line

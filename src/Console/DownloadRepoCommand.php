@@ -62,6 +62,7 @@ class DownloadRepoCommand extends Command
             return 1;
         }
 
+        /** @var string $did */
         $this->warn('DID: '.$did);
 
         $didDoc = DidDocument::make(Bluesky::identity()->resolveDID($did, cache: false)->json());

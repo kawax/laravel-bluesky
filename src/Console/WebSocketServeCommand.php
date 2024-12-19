@@ -120,7 +120,9 @@ class WebSocketServeCommand extends Command
 
             if ($this->output->isVerbose()) {
                 dump($message);
+                /** @var ?array $record */
                 $record = data_get($message, 'commit.record');
+                /** @var ?string $cid */
                 $cid = data_get($message, 'commit.cid');
                 if (! is_null($record) && ! is_null($cid)) {
                     if (CID::verify(CBOR::encode($record), $cid)) {

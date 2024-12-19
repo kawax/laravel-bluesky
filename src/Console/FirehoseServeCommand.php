@@ -147,6 +147,7 @@ class FirehoseServeCommand extends Command
 
             $did = data_get($payload, 'repo') ?? '';
             $rev = data_get($payload, 'rev') ?? '';
+            /** @var string $cid */
             $cid = data_get($payload, 'ops.0.cid') ?? '';
             $path = data_get($payload, 'ops.0.path') ?? '';
             [$collection, $rkey] = explode('/', $path);

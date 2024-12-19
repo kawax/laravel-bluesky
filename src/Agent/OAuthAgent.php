@@ -174,6 +174,7 @@ final class OAuthAgent implements Agent
         $base = $this->pdsUrl();
 
         if (empty($base)) {
+            /** @var string $base */
             $base = config('bluesky.public_endpoint');
         }
 

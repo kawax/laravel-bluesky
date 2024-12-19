@@ -62,11 +62,12 @@ final class FeedGenerator
 
     public static function describeFeedGenerator(): array
     {
+        /** @var string $pub */
         $pub = config('bluesky.generator.publisher') ?? DID::web();
 
         $feeds = collect(self::$algos)
             ->keys()
-            ->map(fn ($algo) => 'at://'.$pub.'/app.bsky.feed.generator/'.$algo)
+            ->map(fn (string $algo) => 'at://'.$pub.'/app.bsky.feed.generator/'.$algo)
             ->toArray();
 
         return [

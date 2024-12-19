@@ -95,6 +95,7 @@ final class LegacyAgent implements Agent
             $base = config('bluesky.public_endpoint');
         }
 
+        /** @var string $base */
         return $base.'/xrpc/';
     }
 }

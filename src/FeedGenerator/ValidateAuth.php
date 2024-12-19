@@ -25,6 +25,7 @@ class ValidateAuth
     {
         [, $payload] = JsonWebToken::explode($jwt);
 
+        /** @var string $did */
         $did = data_get($payload, 'iss');
 
         if (is_null($jwt) || ! Identity::isDID($did)) {

@@ -60,6 +60,7 @@ class VideoClient implements XrpcClient, Video
 
     protected function ext(string $type): string
     {
+        /** @var ?string $ext */
         $ext = head(MimeTypes::getDefault()->getExtensions($type));
 
         if (empty($ext)) {

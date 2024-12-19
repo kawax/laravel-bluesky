@@ -232,7 +232,7 @@ final class Encoder
             $val = $val->toArray();
         }
 
-        if (Arr::isList($val)) {
+        if (is_array($val) && Arr::isList($val)) {
             $len = count($val);
             $this->writeTypeAndArgument(4, $len);
             foreach ($val as $v) {

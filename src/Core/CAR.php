@@ -245,6 +245,7 @@ final class CAR
     private static function walkEntries(array $blockmap, string $pointer, string $did): iterable
     {
         $data = data_get($blockmap, $pointer);
+        /** @var array $entries */
         $entries = data_get($data, 'e', []);
 
         $lastKey = '';
@@ -254,6 +255,7 @@ final class CAR
         }
 
         foreach ($entries as $entry) {
+            /** @var string $key_str */
             $key_str = data_get($entry, 'k');
             $key = substr($lastKey, 0, data_get($entry, 'p')).$key_str;
 

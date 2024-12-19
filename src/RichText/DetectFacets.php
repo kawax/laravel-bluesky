@@ -45,7 +45,9 @@ final class DetectFacets
 
         collect((array) data_get($matches, 3))
             ->each(function ($match) {
+                /** @var string $handle */
                 $handle = data_get($match, 0);
+                /** @var int $start */
                 $start = data_get($match, 1);
 
                 if (empty($handle) || ! Identity::isHandle($handle)) {
@@ -79,7 +81,9 @@ final class DetectFacets
 
         collect((array) data_get($matches, 2))
             ->each(function ($match) {
+                /** @var string $uri */
                 $uri = data_get($match, 0);
+                /** @var int $start */
                 $start = data_get($match, 1);
                 $end = $start + strlen($uri);
 
@@ -122,6 +126,7 @@ final class DetectFacets
                 $leading = data_get($matches, "2.$index.0");
 
                 $tag = data_get($match, 0);
+                /** @var int $start */
                 $start = data_get($match, 1);
 
                 $tag = Str::of($tag)

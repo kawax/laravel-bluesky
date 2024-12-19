@@ -61,6 +61,7 @@ class DownloadBlobsCommand extends Command
             return 1;
         }
 
+        /** @var string $did */
         $this->warn('DID: '.$did);
 
         $pds = DidDocument::make(Bluesky::identity()->resolveDID($did, cache: false)->json())->pdsUrl();
@@ -104,6 +105,7 @@ class DownloadBlobsCommand extends Command
                 $this->line('Download: '.Storage::path($file_ext));
             });
 
+            /** @var string $cursor */
             $cursor = $response->json('cursor');
             $this->warn('cursor: '.$cursor);
         } while (filled($cursor));
@@ -115,6 +117,7 @@ class DownloadBlobsCommand extends Command
 
     protected function ext(string $type): string
     {
+        /** @var ?string $ext */
         $ext = head(MimeTypes::getDefault()->getExtensions($type));
 
         if (empty($ext)) {
