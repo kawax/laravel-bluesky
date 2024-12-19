@@ -93,8 +93,11 @@ class FirehoseServeCommand extends Command
             $event = $ws->read(self::MAX_SIZE);
 
             // Firehose often receives incorrect data.
+            if (ord($event) !== 0xA2) {
+                continue;
+            }
+
             [$header, $remainder] = rescue(fn () => CBOR::decodeFirst($event));
-            [$payload, $remainder] = rescue(fn () => CBOR::decodeFirst($remainder));
 
             if (data_get($header, 'op') !== 1) {
                 continue;
@@ -116,16 +119,11 @@ class FirehoseServeCommand extends Command
                 continue;
             }
 
+            $payload = rescue(fn () => CBOR::decode($remainder));
+
             if (blank($payload) || ! is_array($payload)) {
                 if ($this->output->isVerbose()) {
                     dump($payload);
-                }
-                continue;
-            }
-
-            if (strlen($remainder) !== 0) {
-                if ($this->output->isVerbose()) {
-                    dump($remainder);
                 }
                 continue;
             }
@@ -175,7 +173,7 @@ class FirehoseServeCommand extends Command
                     if (CID::verify(CBOR::encode($block), $cid, codec: CID::DAG_CBOR)) {
                         dump('Verified: '.$cid);
                     } else {
-                        dump('Failed: '.$cid, CID::encode(CBOR::encode($record), codec: CID::DAG_CBOR));
+                        dd('Failed: '.$cid, CID::encode(CBOR::encode($record), codec: CID::DAG_CBOR));
                     }
                 }
             }
