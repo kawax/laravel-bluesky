@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Revolution\Bluesky\Crypto;
 
+use ArrayAccess;
+use Illuminate\Contracts\Support\Arrayable;
 use Illuminate\Support\Arr;
 use InvalidArgumentException;
 use phpseclib3\Crypt\EC;
@@ -23,7 +25,7 @@ use Revolution\Bluesky\Crypto\Format\Base58btc;
  * @link https://github.com/bluesky-social/atproto/blob/main/packages/crypto/src/did.ts
  * @link https://atproto.com/specs/cryptography
  */
-final class DidKey
+final class DidKey implements Arrayable, ArrayAccess
 {
     public const PREFIX = 'did:key:';
 
@@ -32,13 +34,20 @@ final class DidKey
         K256::CURVE => K256::ALG,
     ];
 
+    public function __construct(
+        public string $curve,
+        public string $alg,
+        public string $key,
+    ) {
+    }
+
     /**
      * Did key to Public key.
      *
      * ```
      * use Revolution\Bluesky\Crypto\DidKey;
      *
-     * $didkey = DidKey::parse('z***');
+     * $didkey = DidKey::parse('z***')->toArray();
      *
      * [
      *     'curve' => 'secp256k1',
@@ -48,9 +57,8 @@ final class DidKey
      * ```
      *
      * @param  string  $didkey  `did:key:z***` or `z***`
-     * @return array{curve: string, alg: string, key: string}
      */
-    public static function parse(string $didkey): array
+    public static function parse(string $didkey): self
     {
         EC::addFileFormat(Base58btc::class);
 
@@ -63,11 +71,7 @@ final class DidKey
             throw new InvalidArgumentException('Unsupported format.');
         }
 
-        return [
-            'curve' => $curve,
-            'alg' => self::ALGS[$curve],
-            'key' => $key->toString(class_basename(PKCS8::class)),
-        ];
+        return new self($curve, self::ALGS[$curve], $key->toString(class_basename(PKCS8::class)));
     }
 
     /**
@@ -110,5 +114,37 @@ final class DidKey
     public static function format(string $pubkey): string
     {
         return self::PREFIX.self::encode($pubkey);
+    }
+
+    /**
+     * @return array{curve: string, alg: string, key: string}
+     */
+    public function toArray(): array
+    {
+        return get_object_vars($this);
+    }
+
+    public function offsetExists(mixed $offset): bool
+    {
+        return Arr::exists($this->toArray(), $offset);
+    }
+
+    public function offsetGet(mixed $offset): mixed
+    {
+        return Arr::get($this->toArray(), $offset);
+    }
+
+    public function offsetSet(mixed $offset, mixed $value): void
+    {
+        if (property_exists($this, $offset)) {
+            $this->$offset = $value;
+        }
+    }
+
+    public function offsetUnset(mixed $offset): void
+    {
+        if (property_exists($this, $offset)) {
+            unset($this->$offset);
+        }
     }
 }
