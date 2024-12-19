@@ -241,9 +241,13 @@ final class CID
     /**
      * Encode from bytes to CID string.
      */
-    public static function encodeBytes(string $bytes): string
+    public static function encodeBytes(string $bytes, ?int $ver = null): string
     {
-        if (str_starts_with($bytes, CID::V0_LEADING)) {
+        if (is_null($ver)) {
+            $ver = str_starts_with($bytes, CID::V0_LEADING) ? CID::V0 : CID::V1;
+        }
+
+        if ($ver === CID::V0) {
             return Multibase::encode(Multibase::BASE58BTC, $bytes, false);
         } else {
             return Multibase::encode(Multibase::BASE32, $bytes);
