@@ -13,6 +13,8 @@ Bluesky(AT Protocol) for Laravel
 composer require revolution/laravel-bluesky
 ```
 
+Basically, everything can be set in the `.env` file, so publishing the config file is optional.
+
 ### Uninstall
 ```shell
 composer remove revolution/laravel-bluesky
