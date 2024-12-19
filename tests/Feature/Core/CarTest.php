@@ -237,7 +237,7 @@ class CarTest extends TestCase
 
         $didDoc = DidDocument::make(File::json(__DIR__.'/fixture/bsky-app-did.json'));
 
-        $pk = DidKey::parse($didDoc->publicKey())['key'];
+        $pk = DidKey::parse($didDoc->publicKey());
 
         $this->assertTrue(CAR::verifySignedCommit($signed, $pk));
     }
