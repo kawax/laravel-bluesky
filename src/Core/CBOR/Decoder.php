@@ -33,10 +33,10 @@ final class Decoder
         $this->stream = $stream;
         $this->stream_size = (int) min($stream->getSize(), self::MAX_SIZE);
 
-        $value = $this->readValue();
+        $first = $this->readValue();
         $remainder = $this->stream->getContents();
 
-        return [CBOR::normalize($value), $remainder];
+        return [CBOR::normalize($first), $remainder];
     }
 
     public function decode(StreamInterface $stream): mixed
