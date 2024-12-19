@@ -22,7 +22,7 @@ use YOCLIB\Multiformats\Multibase\Multibase;
 
 class CarTest extends TestCase
 {
-    public function test_car_basic()
+    public function test_car_basic(): void
     {
         $data = file_get_contents(__DIR__.'/fixture/carv1-basic.car');
         $roots = iterator_to_array(CAR::decodeRoots($data));
@@ -35,7 +35,7 @@ class CarTest extends TestCase
         $this->assertArrayHasKey('QmNX6Tffavsya4xgBi2VJQnSuqy9GsxongxZZ9uZBqp16d', $blocks);
     }
 
-    public function test_car_basic_map()
+    public function test_car_basic_map(): void
     {
         $data = Utils::streamFor(Utils::tryFopen(__DIR__.'/fixture/carv1-basic.car', 'rb'));
 
@@ -44,7 +44,7 @@ class CarTest extends TestCase
         $this->assertEmpty($blocks);
     }
 
-    public function test_car_basic_protobuf()
+    public function test_car_basic_protobuf(): void
     {
         $data = Utils::streamFor(Utils::tryFopen(__DIR__.'/fixture/carv1-basic.car', 'rb'));
         $blocks = iterator_to_array(CAR::blockIterator($data));
@@ -61,7 +61,7 @@ class CarTest extends TestCase
         $this->assertSame($block, $decode);
     }
 
-    public function test_car_basic_stream()
+    public function test_car_basic_stream(): void
     {
         $data = Utils::streamFor(Utils::tryFopen(__DIR__.'/fixture/carv1-basic.car', 'rb'));
 
@@ -94,7 +94,7 @@ class CarTest extends TestCase
         $this->assertSame('Y2NjYw', JWT::urlsafeB64Encode($data->read(4)));
     }
 
-    public function test_car_download_repo()
+    public function test_car_download_repo(): void
     {
         $data = file_get_contents(__DIR__.'/fixture/bsky-app.car');
 
@@ -105,7 +105,7 @@ class CarTest extends TestCase
         $this->assertArrayHasKey($roots[0], $blocks);
     }
 
-    public function test_car_download_repo_stream()
+    public function test_car_download_repo_stream(): void
     {
         $data = Utils::streamFor(Utils::tryFopen(__DIR__.'/fixture/bsky-app.car', 'rb'));
 
@@ -114,7 +114,7 @@ class CarTest extends TestCase
         $this->assertCount(744, $blocks);
     }
 
-    public function test_car_block_iterator()
+    public function test_car_block_iterator(): void
     {
         $data = Utils::streamFor(Utils::tryFopen(__DIR__.'/fixture/bsky-app.car', 'rb'));
 
@@ -125,7 +125,7 @@ class CarTest extends TestCase
         }
     }
 
-    public function test_car_download_file_stream()
+    public function test_car_download_file_stream(): void
     {
         $data = Utils::streamFor(Utils::tryFopen(__DIR__.'/fixture/bsky-app.car', 'rb'));
 
@@ -215,7 +215,7 @@ class CarTest extends TestCase
         $this->assertSame(32, $hash_len);
     }
 
-    public function test_car_block_map()
+    public function test_car_block_map(): void
     {
         $data = Utils::streamFor(Utils::tryFopen(__DIR__.'/fixture/bsky-app.car', 'rb'));
 
@@ -229,7 +229,7 @@ class CarTest extends TestCase
         }
     }
 
-    public function test_car_verify_signed_commit()
+    public function test_car_verify_signed_commit(): void
     {
         $data = Utils::streamFor(Utils::tryFopen(__DIR__.'/fixture/bsky-app.car', 'rb'));
 
@@ -242,7 +242,7 @@ class CarTest extends TestCase
         $this->assertTrue(CAR::verifySignedCommit($signed, $pk));
     }
 
-    public function test_car_verify_signed()
+    public function test_car_verify_signed(): void
     {
         $sk = OAuthKey::load();
 

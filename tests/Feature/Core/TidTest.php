@@ -10,7 +10,7 @@ use Tests\TestCase;
 
 class TidTest extends TestCase
 {
-    public function test_tid_encode()
+    public function test_tid_encode(): void
     {
         $time = (int) now()->getPreciseTimestamp();
         $encode = TID::s32encode($time);
@@ -19,7 +19,7 @@ class TidTest extends TestCase
         $this->assertSame($time, $decode);
     }
 
-    public function test_tid_next()
+    public function test_tid_next(): void
     {
         $this->freezeTime(function () {
             $tid = TID::next();
@@ -31,7 +31,7 @@ class TidTest extends TestCase
         });
     }
 
-    public function test_tid_next_str()
+    public function test_tid_next_str(): void
     {
         $tid = TID::nextStr();
 
@@ -39,7 +39,7 @@ class TidTest extends TestCase
         $this->assertMatchesRegularExpression(TID::FORMAT, $tid);
     }
 
-    public function test_tid_from_str()
+    public function test_tid_from_str(): void
     {
         $tid_str = TID::nextStr();
         $tid = TID::fromStr($tid_str);
@@ -49,7 +49,7 @@ class TidTest extends TestCase
         $this->assertSame($tid_str, (string) $tid);
     }
 
-    public function test_tid_from_time()
+    public function test_tid_from_time(): void
     {
         $time = (int) now()->getPreciseTimestamp();
         $clockId = 31;
@@ -59,7 +59,7 @@ class TidTest extends TestCase
         $this->assertSame($clockId, $tid->clockId());
     }
 
-    public function test_tid_equals()
+    public function test_tid_equals(): void
     {
         $tid = TID::next();
         $tid2 = clone $tid;
@@ -67,7 +67,7 @@ class TidTest extends TestCase
         $this->assertTrue($tid->equals($tid2));
     }
 
-    public function test_tid_date()
+    public function test_tid_date(): void
     {
         $time = now();
         $tid = TID::fromTime($time->getPreciseTimestamp(), 1);
@@ -77,7 +77,7 @@ class TidTest extends TestCase
         $this->assertTrue($time->eq($decode));
     }
 
-    public function test_tid_prev()
+    public function test_tid_prev(): void
     {
         $this->travel(1)->hour();
         $prev = TID::next();
@@ -89,7 +89,7 @@ class TidTest extends TestCase
         $this->assertSame($tid->timestamp(), $prev->timestamp() + 1);
     }
 
-    public function test_tid_prev_str()
+    public function test_tid_prev_str(): void
     {
         $this->freezeTime(function () {
             $prev = TID::nextStr();
@@ -99,21 +99,21 @@ class TidTest extends TestCase
         });
     }
 
-    public function test_tid_invalid_len()
+    public function test_tid_invalid_len(): void
     {
         $this->expectException(InvalidArgumentException::class);
 
         $tid = TID::fromStr('invalid');
     }
 
-    public function test_tid_invalid_match()
+    public function test_tid_invalid_match(): void
     {
         $this->expectException(InvalidArgumentException::class);
 
         $tid = TID::fromStr('0000000000000');
     }
 
-    public function test_tid_is()
+    public function test_tid_is(): void
     {
         $this->assertTrue(TID::is('3jzfcijpj2z2a'));
         $this->assertTrue(TID::is('7777777777777'));
@@ -128,7 +128,7 @@ class TidTest extends TestCase
         $this->assertFalse(TID::is('kjzfcijpj2z2a'));
     }
 
-    public function test_tid_parse()
+    public function test_tid_parse(): void
     {
         $tid = TID::fromStr('3jt6walwmos2y');
 

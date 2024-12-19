@@ -11,14 +11,14 @@ use Throwable;
 
 class CidTest extends TestCase
 {
-    public function test_cid_encode()
+    public function test_cid_encode(): void
     {
         $cid = CID::encode('test');
 
         $this->assertSame('bafkreie7q3iidccmpvszul7kudcvvuavuo7u6gzlbobczuk5nqk3b4akba', $cid);
     }
 
-    public function test_cid_encode_cbor()
+    public function test_cid_encode_cbor(): void
     {
         $record = [
             'text' => 'Hello, Bluesky!',
@@ -31,13 +31,13 @@ class CidTest extends TestCase
         $this->assertSame('bafyreih5y47li4zuvvzevmq4xl7woqxchfc2pnfclv3kfz3zefb2qd3bzm', $cid);
     }
 
-    public function test_cid_verify()
+    public function test_cid_verify(): void
     {
         $this->assertTrue(CID::verify('test', 'bafkreie7q3iidccmpvszul7kudcvvuavuo7u6gzlbobczuk5nqk3b4akba'));
         $this->assertFalse(CID::verify('test2', 'bafkreie7q3iidccmpvszul7kudcvvuavuo7u6gzlbobczuk5nqk3b4akba', codec: null));
     }
 
-    public function test_cid_decode()
+    public function test_cid_decode(): void
     {
         $cid = CID::decode('bafkreie7q3iidccmpvszul7kudcvvuavuo7u6gzlbobczuk5nqk3b4akba');
 
@@ -47,7 +47,7 @@ class CidTest extends TestCase
         $this->assertSame($hash, $cid['hash']);
     }
 
-    public function test_cid_decode_cbor()
+    public function test_cid_decode_cbor(): void
     {
         $cid = CID::decode('bafyreib3h3z3a5jwjcthjojoqjpzrlzly53ycpctnmfsijdk3qb5m3qcdq');
 
@@ -55,7 +55,7 @@ class CidTest extends TestCase
         $this->assertSame(CID::DAG_CBOR, $cid['codec']);
     }
 
-    public function test_cid_decode_v0()
+    public function test_cid_decode_v0(): void
     {
         // If v0 is specified, "zQm" is also allowed.
         $decode = CID::decodeV0('zQmNX6Tffavsya4xgBi2VJQnSuqy9GsxongxZZ9uZBqp16d');
@@ -68,20 +68,20 @@ class CidTest extends TestCase
         $this->assertSame('02acecc5de2438ea4126a3010ecb1f8a599c8eff22fff1a1dcffe999b27fd3de', $decode['hash']);
     }
 
-    public function test_cid_detect()
+    public function test_cid_detect(): void
     {
         $this->assertSame(CID::V0, CID::version('QmNX6Tffavsya4xgBi2VJQnSuqy9GsxongxZZ9uZBqp16d'));
         $this->assertSame(CID::V1, CID::version('bafyreib3h3z3a5jwjcthjojoqjpzrlzly53ycpctnmfsijdk3qb5m3qcdq'));
     }
 
-    public function test_cid_detect_throw()
+    public function test_cid_detect_throw(): void
     {
         $this->expectException(Throwable::class);
 
         $this->assertSame(CID::V0, CID::version('zQmNX6Tffavsya4xgBi2VJQnSuqy9GsxongxZZ9uZBqp16d'));
     }
 
-    public function test_cid_encode_dag_cbor()
+    public function test_cid_encode_dag_cbor(): void
     {
         $cbor = CBOR::encode('test');
         $cid = CID::encode($cbor, codec: CID::DAG_CBOR);

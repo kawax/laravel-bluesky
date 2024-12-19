@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Tests\Feature\Core;
 
 use GuzzleHttp\Psr7\Utils;
+use Illuminate\Support\Facades\File;
 use Revolution\Bluesky\Core\CBOR;
 use Revolution\Bluesky\Core\CID;
 use Revolution\Bluesky\Core\Varint;
@@ -12,9 +13,9 @@ use Tests\TestCase;
 
 class CoreTest extends TestCase
 {
-    public function test_cbor_encode()
+    public function test_cbor_encode(): void
     {
-        $json = json_decode(file_get_contents(__DIR__.'/fixture/3juf3jiip3l2x.json'), true);
+        $json = File::json(__DIR__.'/fixture/3juf3jiip3l2x.json');
         $expect_cid = $json['cid'];
 
         $cbor = CBOR::encode($json['value']);
@@ -29,9 +30,9 @@ class CoreTest extends TestCase
         $this->assertSame($expect_cid, $cid);
     }
 
-    public function test_cbor_from_array_2()
+    public function test_cbor_from_array_2(): void
     {
-        $json = json_decode(file_get_contents(__DIR__.'/fixture/3jt6walwmos2y.json'), true);
+        $json = File::json(__DIR__.'/fixture/3jt6walwmos2y.json');
         $expect_cid = $json['cid'];
 
         $cbor = CBOR::encode($json['value']);
@@ -52,7 +53,7 @@ class CoreTest extends TestCase
         $this->assertTrue(CID::verify($cbor_encoded, $cid, codec: CID::DAG_CBOR));
     }
 
-    public function test_varint()
+    public function test_varint(): void
     {
         $this->assertSame("\x80\x01", Varint::encode(0x80));
         $this->assertSame("\xFF\x01", Varint::encode(0xFF));

@@ -35,7 +35,7 @@ class OAuthAgentTest extends TestCase
         parent::tearDown();
     }
 
-    public function test_instance()
+    public function test_instance(): void
     {
         $session = new OAuthSession([]);
         $agent = new OAuthAgent($session);
@@ -43,14 +43,14 @@ class OAuthAgentTest extends TestCase
         $this->assertInstanceOf(OAuthAgent::class, $agent);
     }
 
-    public function test_agent()
+    public function test_agent(): void
     {
         $agent = Bluesky::withToken(OAuthSession::create(['refresh_token' => 'test']))->agent();
 
         $this->assertInstanceOf(OAuthAgent::class, $agent);
     }
 
-    public function test_http()
+    public function test_http(): void
     {
         $session = new OAuthSession([
             'iss' => 'iss',
@@ -64,7 +64,7 @@ class OAuthAgentTest extends TestCase
         $this->assertInstanceOf(PendingRequest::class, $http);
     }
 
-    public function test_profile()
+    public function test_profile(): void
     {
         Http::fakeSequence()
             ->push(
@@ -82,7 +82,7 @@ class OAuthAgentTest extends TestCase
         $this->assertTrue($response->successful());
     }
 
-    public function test_refresh_session()
+    public function test_refresh_session(): void
     {
         Event::fake();
 
@@ -115,7 +115,7 @@ class OAuthAgentTest extends TestCase
         Event::assertDispatched(OAuthSessionUpdated::class);
     }
 
-    public function test_refresh_session_replayed()
+    public function test_refresh_session_replayed(): void
     {
         Event::fake();
 
@@ -142,7 +142,7 @@ class OAuthAgentTest extends TestCase
         Event::assertNotDispatched(OAuthSessionUpdated::class);
     }
 
-    public function test_token_expired()
+    public function test_token_expired(): void
     {
         $session = OAuthSession::create([
             'token_created_at' => now()->toISOString(),
@@ -168,7 +168,7 @@ class OAuthAgentTest extends TestCase
         $this->assertTrue($agent->tokenExpired());
     }
 
-    public function test_pds_url()
+    public function test_pds_url(): void
     {
         $session = OAuthSession::create([
             'didDoc' => [
