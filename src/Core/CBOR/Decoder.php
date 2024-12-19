@@ -23,6 +23,8 @@ final class Decoder
 
     public function decodeFirst(StreamInterface $stream): array
     {
+        throw_unless($stream->isReadable());
+
         $this->stream = $stream;
 
         $value = $this->readValue();
