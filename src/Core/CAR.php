@@ -9,6 +9,7 @@ use Illuminate\Support\Arr;
 use InvalidArgumentException;
 use phpseclib3\Crypt\EC;
 use Psr\Http\Message\StreamInterface;
+use Revolution\Bluesky\Crypto\DidKey;
 use Revolution\Bluesky\Crypto\Signature;
 use Revolution\Bluesky\Support\AtUri;
 use Revolution\Bluesky\Support\Identity;
@@ -295,14 +296,14 @@ final class CAR
      * ```
      * $signed = CAR::signedCommit($data);
      *
-     * $pk = DidKey::parse('did key from DidDoc')['key'];
+     * $pk = DidKey::parse('did key from DidDoc');
      *
      * if (CAR::verifySignedCommit($signed, $pk) {
      *
      * }
      * ```
      */
-    public static function verifySignedCommit(array $signed, string $publicKey): bool
+    public static function verifySignedCommit(array $signed, DidKey|string $publicKey): bool
     {
         $sig = data_get($signed, 'sig.$bytes');
 
@@ -317,6 +318,10 @@ final class CAR
         $unsigned = Arr::except($signed, 'sig');
 
         $cbor = CBOR::encode($unsigned);
+
+        if ($publicKey instanceof DidKey) {
+            $publicKey = $publicKey->key;
+        }
 
         $pk = EC::loadPublicKey($publicKey);
 
