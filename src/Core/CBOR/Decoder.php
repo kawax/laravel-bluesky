@@ -99,6 +99,7 @@ final class Decoder
     {
         $data = $this->stream->read(8);
 
+        /** @var array{1: int, 2: int} $arr */
         $arr = unpack('N2', $data);
         throw_unless($arr);
 

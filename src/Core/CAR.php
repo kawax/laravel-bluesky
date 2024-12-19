@@ -141,12 +141,15 @@ final class CAR
                 [$cid, $block] = self::decodeBlockV1($data);
             }
 
-            if (! is_null($block)) {
+            if (! empty($block)) {
                 yield $cid => $block;
             }
         }
     }
 
+    /**
+     * @return array{0: string, 1: array}
+     */
     private static function decodeBlockV1(StreamInterface $data): array
     {
         $block_varint = Varint::decodeStream($data);
@@ -191,6 +194,9 @@ final class CAR
         return [$cid, $block];
     }
 
+    /**
+     * @return array{0: string, 1: array}
+     */
     private static function decodeBlockV0(StreamInterface $data): array
     {
         $block_varint = Varint::decodeStream($data);
@@ -238,10 +244,14 @@ final class CAR
         $did = data_get($commit, 'did');
 
         if (Identity::isDID($did)) {
-            yield from self::walkEntries($blockmap, data_get($commit, 'data./'), $did);
+            $pointer = data_get($commit, 'data./');
+            yield from self::walkEntries($blockmap, $pointer, $did);
         }
     }
 
+    /**
+     * @return iterable<string, array>
+     */
     private static function walkEntries(array $blockmap, string $pointer, string $did): iterable
     {
         $data = data_get($blockmap, $pointer);

@@ -4,7 +4,7 @@ parameters:
         - src/
 
     # Level 10 is the highest level
-    level: 9
+    level: 10
 
     ignoreErrors:
         #- '#PHPDoc tag @var#'
@@ -19,6 +19,7 @@ parameters:
         - identifier: assign.propertyType
         - identifier: return.type
         - identifier: cast.string
+        - identifier: method.nonObject
 
     excludePaths:
         - ./src/Client/Concerns/*.php

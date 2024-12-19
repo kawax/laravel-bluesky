@@ -118,6 +118,7 @@ final class Decoder
     {
         foreach ($fields as $field) {
             if (Arr::has($link, $field)) {
+                /** @var string $field */
                 throw new RuntimeException("Field $field already exists in link");
             }
         }

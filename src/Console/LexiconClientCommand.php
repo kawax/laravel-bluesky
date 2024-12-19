@@ -160,12 +160,17 @@ class LexiconClientCommand extends Command
             ->map(function (array $method) use ($contract) {
                 $contract_name = Str::afterLast($contract, '\\');
 
+                /** @var string $func */
+                $func = $method['func'];
+                /** @var string $http */
+                $http = $method['http'];
+
                 return collect([
-                    sprintf('    public function %s(%s): Response', $method['func'], $method['params']),
+                    sprintf('    public function %s(%s): Response', $func, $method['params']),
                     '    {',
                     '        return $this->call(',
-                    "            api: $contract_name::".$method['func'].',',
-                    '            method: self::'.$method['http'].',',
+                    "            api: $contract_name::".$func.',',
+                    '            method: self::'.$http.',',
                     '            params: compact($this->params(__METHOD__)),',
                     '        );',
                     '    }',
