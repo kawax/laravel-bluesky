@@ -64,3 +64,7 @@ use Revolution\Bluesky\FeedGenerator\FeedGenerator;
         $response->assertJson(['feed' => [['post' => 'at://']]]);
     }
 ```
+
+### Core
+
+The "Core" functionality of Bluesky/AtProtocol does not involve external access, so mocking is not considered.
