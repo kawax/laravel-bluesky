@@ -20,9 +20,15 @@ class CidTest extends TestCase
 
     public function test_cid_encode_cbor()
     {
-        $cid = CID::encode(CBOR::encode(['test' => 'test']), codec: CID::DAG_CBOR);
+        $record = [
+            'text' => 'Hello, Bluesky!',
+            '$type' => 'app.bsky.feed.post',
+            'createdAt' => '2025-01-01T00:00:00.000Z',
+        ];
 
-        $this->assertSame('bafyreib3h3z3a5jwjcthjojoqjpzrlzly53ycpctnmfsijdk3qb5m3qcdq', $cid);
+        $cid = CID::encode(CBOR::encode($record), codec: CID::DAG_CBOR);
+
+        $this->assertSame('bafyreih5y47li4zuvvzevmq4xl7woqxchfc2pnfclv3kfz3zefb2qd3bzm', $cid);
     }
 
     public function test_cid_verify()
