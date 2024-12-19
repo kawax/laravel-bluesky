@@ -50,7 +50,7 @@ class ClientTest extends TestCase
         parent::tearDown();
     }
 
-    public function test_login()
+    public function test_login(): void
     {
         Http::fake(fn () => $this->session);
 
@@ -66,7 +66,7 @@ class ClientTest extends TestCase
         $this->assertTrue($client->check());
     }
 
-    public function test_logout()
+    public function test_logout(): void
     {
         Http::fake(fn () => $this->session);
 
@@ -84,7 +84,7 @@ class ClientTest extends TestCase
         $this->assertFalse($client->check());
     }
 
-    public function test_session()
+    public function test_session(): void
     {
         Http::fake(fn () => $this->session);
 
@@ -96,7 +96,7 @@ class ClientTest extends TestCase
         $this->assertSame('test', $client->agent()->session('accessJwt'));
     }
 
-    public function test_feed()
+    public function test_feed(): void
     {
         Http::fakeSequence()
             ->push($this->session)
@@ -110,7 +110,7 @@ class ClientTest extends TestCase
         $this->assertTrue($response->collect()->has('feed'));
     }
 
-    public function test_timeline()
+    public function test_timeline(): void
     {
         Http::fakeSequence()
             ->push($this->session)
@@ -122,7 +122,7 @@ class ClientTest extends TestCase
         $this->assertTrue($response->collect()->has('feed'));
     }
 
-    public function test_post()
+    public function test_post(): void
     {
         Http::fakeSequence()
             ->push($this->session)
@@ -134,7 +134,7 @@ class ClientTest extends TestCase
         $this->assertTrue($response->collect()->has('uri'));
     }
 
-    public function test_post_message()
+    public function test_post_message(): void
     {
         Http::fakeSequence()
             ->push($this->session)
@@ -150,7 +150,7 @@ class ClientTest extends TestCase
         $this->assertTrue($response->collect()->has('uri'));
     }
 
-    public function test_upload_blob()
+    public function test_upload_blob(): void
     {
         Http::fakeSequence()
             ->push($this->session)
@@ -162,7 +162,7 @@ class ClientTest extends TestCase
         $this->assertTrue($response->collect()->has('blob'));
     }
 
-    public function test_resolve_handle()
+    public function test_resolve_handle(): void
     {
         Http::fakeSequence()
             ->push($this->session)
@@ -175,7 +175,7 @@ class ClientTest extends TestCase
         $this->assertSame('test', $response->json('did'));
     }
 
-    public function test_get_profile()
+    public function test_get_profile(): void
     {
         Http::fakeSequence()
             ->push($this->session)
@@ -188,7 +188,7 @@ class ClientTest extends TestCase
         $this->assertSame('test', $response->json('did'));
     }
 
-    public function test_resolve_did_plc()
+    public function test_resolve_did_plc(): void
     {
         Http::fakeSequence()
             ->push(['id' => 'did:plc:test']);
@@ -205,7 +205,7 @@ class ClientTest extends TestCase
         });
     }
 
-    public function test_resolve_did_web()
+    public function test_resolve_did_web(): void
     {
         Http::fakeSequence()
             ->push(['id' => 'did:web:localhost']);
@@ -221,7 +221,7 @@ class ClientTest extends TestCase
         });
     }
 
-    public function test_resolve_did_unsupported()
+    public function test_resolve_did_unsupported(): void
     {
         $this->expectException(InvalidArgumentException::class);
 
@@ -232,7 +232,7 @@ class ClientTest extends TestCase
         Http::assertNothingSent();
     }
 
-    public function test_resolve_did_invalid()
+    public function test_resolve_did_invalid(): void
     {
         $this->expectException(InvalidArgumentException::class);
 
@@ -243,7 +243,7 @@ class ClientTest extends TestCase
         Http::assertNothingSent();
     }
 
-    public function test_identity_resolve_handle_dns()
+    public function test_identity_resolve_handle_dns(): void
     {
         DNS::fake(txt: 'did=did:plc:1234');
 
@@ -254,7 +254,7 @@ class ClientTest extends TestCase
         $this->assertSame('did:plc:1234', $did_cache);
     }
 
-    public function test_identity_resolve_handle_wellknown()
+    public function test_identity_resolve_handle_wellknown(): void
     {
         DNS::fake(txt: '');
 
@@ -266,7 +266,7 @@ class ClientTest extends TestCase
         $this->assertSame('did:plc:1234', $did);
     }
 
-    public function test_identity_resolve_identity_handle()
+    public function test_identity_resolve_identity_handle(): void
     {
         DNS::fake(txt: 'did=did:web:example.com');
 
@@ -283,7 +283,7 @@ class ClientTest extends TestCase
         });
     }
 
-    public function test_identity_resolve_identity_did()
+    public function test_identity_resolve_identity_did(): void
     {
         Http::fakeSequence()
             ->push(['id' => 'did:web:example.com']);
@@ -298,7 +298,7 @@ class ClientTest extends TestCase
         });
     }
 
-    public function test_with_agent()
+    public function test_with_agent(): void
     {
         $agent = Bluesky::withAgent(OAuthAgent::create(OAuthSession::create()))
             ->agent();
@@ -306,12 +306,12 @@ class ClientTest extends TestCase
         $this->assertInstanceOf(OAuthAgent::class, $agent);
     }
 
-    public function test_client_identity()
+    public function test_client_identity(): void
     {
         $this->assertInstanceOf(Identity::class, Bluesky::identity());
     }
 
-    public function test_legacy_session()
+    public function test_legacy_session(): void
     {
         $session = new LegacySession($this->session);
 
@@ -319,7 +319,7 @@ class ClientTest extends TestCase
         $this->assertSame('test', $session->toArray()['accessJwt']);
     }
 
-    public function test_oauth_session()
+    public function test_oauth_session(): void
     {
         $oauth = [
             'access_token' => 'test',
@@ -333,7 +333,7 @@ class ClientTest extends TestCase
         $this->assertSame('test', $session->toArray()['access_token']);
     }
 
-    public function test_with_oauth()
+    public function test_with_oauth(): void
     {
         $oauth = [
             'refresh_token' => 'test',
@@ -348,7 +348,7 @@ class ClientTest extends TestCase
         $this->assertSame('did:plc:test', $client->agent()->did());
     }
 
-    public function test_public_endpoint()
+    public function test_public_endpoint(): void
     {
         Http::fake();
 
@@ -357,12 +357,12 @@ class ClientTest extends TestCase
         Http::assertSentCount(1);
     }
 
-    public function test_refresh_session()
+    public function test_refresh_session(): void
     {
         $this->assertInstanceOf(BlueskyManager::class, Bluesky::refreshSession());
     }
 
-    public function test_with_bluesky_trait()
+    public function test_with_bluesky_trait(): void
     {
         $user = new class
         {
@@ -380,7 +380,7 @@ class ClientTest extends TestCase
         $this->assertInstanceOf(BlueskyManager::class, $user->bluesky());
     }
 
-    public function test_send()
+    public function test_send(): void
     {
         Http::fake(fn () => ['did' => 'did']);
 
@@ -393,7 +393,7 @@ class ClientTest extends TestCase
         });
     }
 
-    public function test_send_callback()
+    public function test_send_callback(): void
     {
         Http::fake();
 
@@ -409,7 +409,7 @@ class ClientTest extends TestCase
         });
     }
 
-    public function test_follow()
+    public function test_follow(): void
     {
         Http::fakeSequence()
             ->push($this->session)
@@ -422,7 +422,7 @@ class ClientTest extends TestCase
         $this->assertTrue($response->successful());
     }
 
-    public function test_like()
+    public function test_like(): void
     {
         Http::fakeSequence()
             ->push($this->session)
@@ -435,7 +435,7 @@ class ClientTest extends TestCase
         $this->assertTrue($response->successful());
     }
 
-    public function test_like_subject()
+    public function test_like_subject(): void
     {
         Http::fakeSequence()
             ->push($this->session)
@@ -448,7 +448,7 @@ class ClientTest extends TestCase
         $this->assertTrue($response->successful());
     }
 
-    public function test_repost()
+    public function test_repost(): void
     {
         Http::fakeSequence()
             ->push($this->session)
@@ -461,7 +461,7 @@ class ClientTest extends TestCase
         $this->assertTrue($response->successful());
     }
 
-    public function test_repost_subject()
+    public function test_repost_subject(): void
     {
         Http::fakeSequence()
             ->push($this->session)
@@ -474,7 +474,7 @@ class ClientTest extends TestCase
         $this->assertTrue($response->successful());
     }
 
-    public function test_block()
+    public function test_block(): void
     {
         Http::fakeSequence()
             ->push($this->session)
@@ -485,7 +485,7 @@ class ClientTest extends TestCase
         $this->assertSame('did', $block->toArray()['subject']);
     }
 
-    public function test_user_list()
+    public function test_user_list(): void
     {
         Http::fakeSequence()
             ->push($this->session)
@@ -499,7 +499,7 @@ class ClientTest extends TestCase
         $this->assertSame('name', $userlist->toArray()['name']);
     }
 
-    public function test_upsert_profile()
+    public function test_upsert_profile(): void
     {
         $profile = Profile::fromArray([
             'displayName' => 'name',
@@ -524,7 +524,7 @@ class ClientTest extends TestCase
         $this->assertTrue($response->successful());
     }
 
-    public function test_search_posts()
+    public function test_search_posts(): void
     {
         Http::fake();
 
@@ -546,7 +546,7 @@ class ClientTest extends TestCase
         $this->assertTrue($response->successful());
     }
 
-    public function test_video_upload()
+    public function test_video_upload(): void
     {
         Http::fakeSequence()
             ->push($this->session)
@@ -559,7 +559,7 @@ class ClientTest extends TestCase
         $this->assertTrue($response->successful());
     }
 
-    public function test_video_status()
+    public function test_video_status(): void
     {
         Http::fakeSequence()
             ->push($this->session)
@@ -572,7 +572,7 @@ class ClientTest extends TestCase
         $this->assertTrue($response->successful());
     }
 
-    public function test_video_limits()
+    public function test_video_limits(): void
     {
         Http::fakeSequence()
             ->push($this->session)

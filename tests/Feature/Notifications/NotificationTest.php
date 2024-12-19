@@ -45,7 +45,7 @@ class NotificationTest extends TestCase
         parent::tearDown();
     }
 
-    public function test_notification()
+    public function test_notification(): void
     {
         Http::fakeSequence()
             ->push($this->session)
@@ -62,7 +62,7 @@ class NotificationTest extends TestCase
         $this->assertSame('test', $recorded[1][0]['record']['text']);
     }
 
-    public function test_notification_failed()
+    public function test_notification_failed(): void
     {
         Event::fake();
 
@@ -80,7 +80,7 @@ class NotificationTest extends TestCase
         });
     }
 
-    public function test_notification_fake()
+    public function test_notification_fake(): void
     {
         Notification::fake();
 
@@ -90,7 +90,7 @@ class NotificationTest extends TestCase
         Notification::assertSentOnDemand(TestNotification::class);
     }
 
-    public function test_message()
+    public function test_message(): void
     {
         $m = new Post(text: 'test');
         $m2 = Post::create(text: 'test');
@@ -103,7 +103,7 @@ class NotificationTest extends TestCase
         $this->assertArrayNotHasKey('langs', $m->toArray());
     }
 
-    public function test_message_facets()
+    public function test_message_facets(): void
     {
         $builder = TextBuilder::make('test')
             ->text(text: 'text')
@@ -119,7 +119,7 @@ class NotificationTest extends TestCase
         $this->assertIsArray($m->toArray()['facets']);
     }
 
-    public function test_message_facet_index()
+    public function test_message_facet_index(): void
     {
         $builder = TextBuilder::make('test')
             ->link('テスト', 'http://');
@@ -133,7 +133,7 @@ class NotificationTest extends TestCase
         ], $m->toArray()['facets'][0]['index']);
     }
 
-    public function test_message_facet()
+    public function test_message_facet(): void
     {
         $m = Post::create(text: 'test')
             ->facets([]);
@@ -141,7 +141,7 @@ class NotificationTest extends TestCase
         $this->assertIsArray($m->toArray()['facets']);
     }
 
-    public function test_text_builder_to_post()
+    public function test_text_builder_to_post(): void
     {
         $post = TextBuilder::make('test')->toPost();
 
@@ -149,7 +149,7 @@ class NotificationTest extends TestCase
         $this->assertSame('test', $post->toArray()['text']);
     }
 
-    public function test_message_embed()
+    public function test_message_embed(): void
     {
         $m = Post::create(text: 'test')
             ->embed([
@@ -159,7 +159,7 @@ class NotificationTest extends TestCase
         $this->assertIsArray($m->toArray()['embed']);
     }
 
-    public function test_message_embed_external()
+    public function test_message_embed_external(): void
     {
         $e = External::create(title: 'test', description: 'test', uri: 'http://');
 
@@ -172,7 +172,7 @@ class NotificationTest extends TestCase
         $this->assertSame(Embed::External->value, $m->toArray()['embed']['$type']);
     }
 
-    public function test_message_embed_images()
+    public function test_message_embed_images(): void
     {
         $blob2 = BlobRef::fromArray([
             'type' => 'blob',
@@ -197,7 +197,7 @@ class NotificationTest extends TestCase
         $this->assertSame(Embed::Images->value, $m->toArray()['embed']['$type']);
     }
 
-    public function test_message_embed_video()
+    public function test_message_embed_video(): void
     {
         $video_blob = BlobRef::make(link: '...', mimeType: 'video/mp4', size: 10000);
 
@@ -212,7 +212,7 @@ class NotificationTest extends TestCase
         $this->assertSame(Embed::Video->value, $m->toArray()['embed']['$type']);
     }
 
-    public function test_message_embed_quote()
+    public function test_message_embed_quote(): void
     {
         $quote = QuoteRecord::create(StrongRef::to(uri: 'uri', cid: 'cid'));
 
@@ -224,7 +224,7 @@ class NotificationTest extends TestCase
         $this->assertSame(Embed::Record->value, $m->toArray()['embed']['$type']);
     }
 
-    public function test_message_embed_quote_with_media()
+    public function test_message_embed_quote_with_media(): void
     {
         $external = External::create(title: 'title', description: '', uri: 'https://');
 
@@ -239,7 +239,7 @@ class NotificationTest extends TestCase
         $this->assertSame(Embed::RecordWithMedia->value, $m->toArray()['embed']['$type']);
     }
 
-    public function test_message_langs()
+    public function test_message_langs(): void
     {
         $m = Post::create(text: 'test')
             ->langs(['en']);
@@ -247,7 +247,7 @@ class NotificationTest extends TestCase
         $this->assertSame(['en'], $m->toArray()['langs']);
     }
 
-    public function test_message_new_line()
+    public function test_message_new_line(): void
     {
         $builder = TextBuilder::make('test')
             ->newLine(2)
@@ -259,7 +259,7 @@ class NotificationTest extends TestCase
         $this->assertSame('test'.PHP_EOL.PHP_EOL.'test', $m->toArray()['text']);
     }
 
-    public function test_route()
+    public function test_route(): void
     {
         $route = new BlueskyRoute(identifier: 'identifier', password: 'password');
         $route2 = BlueskyRoute::to(identifier: 'identifier', password: 'password');
@@ -268,7 +268,7 @@ class NotificationTest extends TestCase
         $this->assertSame('identifier', $route2->identifier);
     }
 
-    public function test_user_notify()
+    public function test_user_notify(): void
     {
         Http::fake(fn () => $this->session);
 
@@ -279,7 +279,7 @@ class NotificationTest extends TestCase
         Http::assertSentCount(2);
     }
 
-    public function test_route_oauth()
+    public function test_route_oauth(): void
     {
         $session = OAuthSession::create([
             'refresh_token' => 'refresh_token',
@@ -291,7 +291,7 @@ class NotificationTest extends TestCase
         $this->assertSame('https://iss', $route->oauth->issuer());
     }
 
-    public function test_user_notify_oauth()
+    public function test_user_notify_oauth(): void
     {
         Http::fake();
 

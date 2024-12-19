@@ -13,7 +13,7 @@ use Tests\TestCase;
 
 class RecordTest extends TestCase
 {
-    public function test_follow()
+    public function test_follow(): void
     {
         $follow = Follow::create(did: 'did');
 
@@ -24,7 +24,7 @@ class RecordTest extends TestCase
         $this->assertSame($follow::NSID, $follow->toRecord()['$type']);
     }
 
-    public function test_post()
+    public function test_post(): void
     {
         $this->travelTo(Carbon::parse('2024-12-31'), function () {
             $post = Post::create(text: 'test');
@@ -38,7 +38,7 @@ class RecordTest extends TestCase
         });
     }
 
-    public function test_post_created()
+    public function test_post_created(): void
     {
         $post = Post::create(text: 'test')
             ->createdAt('2024');
@@ -48,7 +48,7 @@ class RecordTest extends TestCase
         $this->assertStringStartsWith('2024', $post->toRecord()['createdAt']);
     }
 
-    public function test_post_build()
+    public function test_post_build(): void
     {
         $post = Post::build(fn (TextBuilder $builder): TextBuilder => $builder->text('test ')->tag('#tag', 'tag'));
 
@@ -56,14 +56,14 @@ class RecordTest extends TestCase
         $this->assertSame('test #tag', $post->toRecord()['text']);
     }
 
-    public function test_validator()
+    public function test_validator(): void
     {
         $post = Post::create(text: 'test');
 
         $this->assertTrue($post->validator()->passes());
     }
 
-    public function test_thread_gate()
+    public function test_thread_gate(): void
     {
         $gate = ThreadGate::create(post: 'at://', allow: [ThreadGate::mention(), ThreadGate::following(), ThreadGate::list('at://')]);
 

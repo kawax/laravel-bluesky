@@ -12,7 +12,7 @@ use Tests\TestCase;
 
 class ValidationTest extends TestCase
 {
-    public function test_did_passes()
+    public function test_did_passes(): void
     {
         $validator = Validator::make(
             data: ['did' => 'did:plc:test'],
@@ -22,7 +22,7 @@ class ValidationTest extends TestCase
         $this->assertTrue($validator->passes());
     }
 
-    public function test_did_fails()
+    public function test_did_fails(): void
     {
         $validator = Validator::make(
             data: ['did' => ''],
@@ -32,7 +32,7 @@ class ValidationTest extends TestCase
         $this->assertTrue($validator->fails());
     }
 
-    public function test_handle_passes()
+    public function test_handle_passes(): void
     {
         $validator = Validator::make(
             data: ['handle' => 'alice.local'],
@@ -42,7 +42,7 @@ class ValidationTest extends TestCase
         $this->assertTrue($validator->passes());
     }
 
-    public function test_handle_fails()
+    public function test_handle_fails(): void
     {
         $validator = Validator::make(
             data: ['handle' => ''],
@@ -52,7 +52,7 @@ class ValidationTest extends TestCase
         $this->assertTrue($validator->fails());
     }
 
-    public function test_actor_passes()
+    public function test_actor_passes(): void
     {
         $validator = Validator::make(
             data: [
@@ -68,7 +68,7 @@ class ValidationTest extends TestCase
         $this->assertTrue($validator->passes());
     }
 
-    public function test_did_or_handle_fails()
+    public function test_did_or_handle_fails(): void
     {
         $validator = Validator::make(
             data: [

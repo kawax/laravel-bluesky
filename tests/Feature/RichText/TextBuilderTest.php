@@ -18,7 +18,7 @@ class TextBuilderTest extends TestCase
         Http::preventStrayRequests();
     }
 
-    public function test_detect_facets_mention()
+    public function test_detect_facets_mention(): void
     {
         Http::fakeSequence()
             ->push(['did' => 'did:plc:alice'])
@@ -37,7 +37,7 @@ class TextBuilderTest extends TestCase
         $this->assertSame(['did:plc:alice', 'did:plc:alice', 'did:plc:bob'], collect($builder->facets)->pluck('features.0.did')->toArray());
     }
 
-    public function test_detect_facets_link()
+    public function test_detect_facets_link(): void
     {
         $builder = TextBuilder::make('https://localhost https://localhost/?test=a test test (https://localhost) example.com https://localhost/.,;:!? https://localhost/#hash https://')->detectFacets();
 
@@ -50,7 +50,7 @@ class TextBuilderTest extends TestCase
         $this->assertSame(['https://localhost', 'https://localhost/?test=a', 'https://localhost', 'https://example.com', 'https://localhost/', 'https://localhost/#hash'], collect($builder->facets)->pluck('features.0.uri')->toArray());
     }
 
-    public function test_detect_facets_tag()
+    public function test_detect_facets_tag(): void
     {
         $builder = TextBuilder::make('#test #a_ #ゑ ＃ん #ü #_ #😇 #')->detectFacets();
 
@@ -65,7 +65,7 @@ class TextBuilderTest extends TestCase
         $this->assertSame(['test', 'a', 'ゑ', 'ん', 'ü', '😇'], collect($builder->facets)->pluck('features.0.tag')->toArray());
     }
 
-    public function test_detect_facets_all()
+    public function test_detect_facets_all(): void
     {
         Http::fakeSequence()
             ->push(['did' => 'did:plc:alice']);
@@ -85,7 +85,7 @@ class TextBuilderTest extends TestCase
         $this->assertSame('alice', collect($builder->facets)->dot()->get('2.features.0.tag'));
     }
 
-    public function test_detect_facets_post_build()
+    public function test_detect_facets_post_build(): void
     {
         Http::fakeSequence()
             ->push(['did' => 'did:plc:alice']);
@@ -114,7 +114,7 @@ class TextBuilderTest extends TestCase
         $this->assertSame('alice', collect($facets)->dot()->get('2.features.0.tag'));
     }
 
-    public function test_resolve_mention()
+    public function test_resolve_mention(): void
     {
         Http::fakeSequence()
             ->push(['did' => 'did:plc:alice']);
@@ -127,7 +127,7 @@ class TextBuilderTest extends TestCase
         $this->assertSame('did:plc:alice', collect($builder->facets)->dot()->get('0.features.0.did'));
     }
 
-    public function test_resolve_link()
+    public function test_resolve_link(): void
     {
         $builder = TextBuilder::make('test')
             ->link('https://localhost ');
@@ -137,7 +137,7 @@ class TextBuilderTest extends TestCase
         $this->assertSame('https://localhost', collect($builder->facets)->dot()->get('0.features.0.uri'));
     }
 
-    public function test_resolve_tag()
+    public function test_resolve_tag(): void
     {
         $builder = TextBuilder::make('test')
             ->tag('#alice ');

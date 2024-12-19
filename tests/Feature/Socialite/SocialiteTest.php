@@ -40,14 +40,14 @@ class SocialiteTest extends TestCase
         parent::tearDown();
     }
 
-    public function test_instance()
+    public function test_instance(): void
     {
         $provider = Socialite::driver('bluesky');
 
         $this->assertInstanceOf(BlueskyProvider::class, $provider);
     }
 
-    public function test_redirect()
+    public function test_redirect(): void
     {
         $session = app('Illuminate\Contracts\Session\Session');
 
@@ -74,7 +74,7 @@ class SocialiteTest extends TestCase
         $this->assertStringContainsString(rawurlencode('httsp://request_uri'), $response->getTargetUrl());
     }
 
-    public function test_redirect_login_hint()
+    public function test_redirect_login_hint(): void
     {
         $session = app('Illuminate\Contracts\Session\Session');
 
@@ -105,7 +105,7 @@ class SocialiteTest extends TestCase
         $this->assertStringContainsString(rawurlencode('httsp://request_uri'), $response->getTargetUrl());
     }
 
-    public function test_user()
+    public function test_user(): void
     {
         $session = app('Illuminate\Contracts\Session\Session');
         $session->put('state', 'state');
@@ -154,7 +154,7 @@ class SocialiteTest extends TestCase
         $this->assertSame('access_token', $user->token);
     }
 
-    public function test_user_login_hint()
+    public function test_user_login_hint(): void
     {
         $session = app('Illuminate\Contracts\Session\Session');
         $session->put('state', 'state');
@@ -207,7 +207,7 @@ class SocialiteTest extends TestCase
         $this->assertSame('access_token', $user->token);
     }
 
-    public function test_user_login_hint_handle()
+    public function test_user_login_hint_handle(): void
     {
         $session = app('Illuminate\Contracts\Session\Session');
         $session->put('state', 'state');
@@ -263,7 +263,7 @@ class SocialiteTest extends TestCase
         $this->assertSame('access_token', $user->token);
     }
 
-    public function test_refresh()
+    public function test_refresh(): void
     {
         $session = app('Illuminate\Contracts\Session\Session');
 
@@ -304,7 +304,7 @@ class SocialiteTest extends TestCase
         Event::assertDispatched(DPoPNonceReceived::class);
     }
 
-    public function test_jwk_private()
+    public function test_jwk_private(): void
     {
         $jwk = new JsonWebKey(OAuthKey::create()->privateKey());
         $jwk->withKid('kid');
@@ -314,7 +314,7 @@ class SocialiteTest extends TestCase
         $this->assertIsString((string) $jwk);
     }
 
-    public function test_jwk_public()
+    public function test_jwk_public(): void
     {
         $jwk = new JsonWebKey(OAuthKey::create()->publicKey());
         $jwk->withKid('kid')->asPublic();
@@ -324,7 +324,7 @@ class SocialiteTest extends TestCase
         $this->assertIsString((string) $jwk);
     }
 
-    public function test_jwks()
+    public function test_jwks(): void
     {
         $jwks = JsonWebKeySet::load();
 
@@ -332,14 +332,14 @@ class SocialiteTest extends TestCase
         $this->assertIsString((string) $jwks);
     }
 
-    public function test_route_client_meta()
+    public function test_route_client_meta(): void
     {
         $response = $this->get(route('bluesky.oauth.client-metadata'));
 
         $response->assertOk();
     }
 
-    public function test_route_client_meta_using()
+    public function test_route_client_meta_using(): void
     {
         OAuthConfig::clientMetadataUsing(function () {
             return ['client_id' => 'test'];
@@ -351,14 +351,14 @@ class SocialiteTest extends TestCase
             ->assertJson(['client_id' => 'test']);
     }
 
-    public function test_route_jwks()
+    public function test_route_jwks(): void
     {
         $response = $this->get(route('bluesky.oauth.jwks'));
 
         $response->assertOk();
     }
 
-    public function test_route_jwks_using()
+    public function test_route_jwks_using(): void
     {
         OAuthConfig::jwksUsing(function () {
             return ['keys' => 'test'];
@@ -370,7 +370,7 @@ class SocialiteTest extends TestCase
             ->assertJson(['keys' => 'test']);
     }
 
-    public function test_jwt()
+    public function test_jwt(): void
     {
         $jwtStr = JsonWebToken::encode(
             head: ['typ' => 'JWT', 'alg' => P256::ALG],

@@ -21,7 +21,7 @@ class SupportTest extends TestCase
         Http::preventStrayRequests();
     }
 
-    public function test_did_document()
+    public function test_did_document(): void
     {
         $didDoc = DidDocument::make([
             '@context' => [],
@@ -59,7 +59,7 @@ class SupportTest extends TestCase
         $this->assertSame('ztest', $didDoc->publicKey());
     }
 
-    public function test_did_document_make()
+    public function test_did_document_make(): void
     {
         Http::fakeSequence()
             ->push([
@@ -92,7 +92,7 @@ class SupportTest extends TestCase
         $this->assertSame([], $didDoc->get('verificationMethod'));
     }
 
-    public function test_at_uri()
+    public function test_at_uri(): void
     {
         $at = AtUri::parse('at://did:plc:test/app.bsky.feed.post/abcde');
 
@@ -101,14 +101,14 @@ class SupportTest extends TestCase
         $this->assertSame('abcde', $at->rkey());
     }
 
-    public function test_at_uri_invalid()
+    public function test_at_uri_invalid(): void
     {
         $this->expectException(RuntimeException::class);
 
         $at = AtUri::parse('http://did:plc:test/app.bsky.feed.post/abcde');
     }
 
-    public function test_at_uri_to_string()
+    public function test_at_uri_to_string(): void
     {
         $at = AtUri::parse('at://did:plc:test/app.bsky.feed.post/abcde?test=a#hash');
 
@@ -117,7 +117,7 @@ class SupportTest extends TestCase
         $this->assertSame('at://did:plc:test/app.bsky.feed.post/abcde?test=a#hash', $at->__toString());
     }
 
-    public function test_at_uri_make()
+    public function test_at_uri_make(): void
     {
         $at = AtUri::make(repo: 'did:plc:test', collection: 'app.bsky.feed.post', rkey: 'abcde');
         $at2 = AtUri::make(repo: 'did:plc:test', collection: 'app.bsky.feed.post');
@@ -128,7 +128,7 @@ class SupportTest extends TestCase
         $this->assertSame('at://did:plc:test', $at3->__toString());
     }
 
-    public function test_did_web()
+    public function test_did_web(): void
     {
         $web = DID::web();
         $example = DID::web('https://example.com/test');

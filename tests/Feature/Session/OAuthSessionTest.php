@@ -10,7 +10,7 @@ use Tests\TestCase;
 
 class OAuthSessionTest extends TestCase
 {
-    public function test_oauth_session()
+    public function test_oauth_session(): void
     {
         $session = OAuthSession::create([
             'did' => 'did:plc:test',
@@ -32,7 +32,7 @@ class OAuthSessionTest extends TestCase
         $this->assertInstanceOf(Collection::class, $session->collect());
     }
 
-    public function test_merge()
+    public function test_merge(): void
     {
         $session = OAuthSession::create([
             'did' => 'test',
@@ -42,7 +42,7 @@ class OAuthSessionTest extends TestCase
         $this->assertTrue($session->has('test'));
     }
 
-    public function test_forget()
+    public function test_forget(): void
     {
         $session = OAuthSession::create([
             'did' => 'test',
@@ -53,7 +53,7 @@ class OAuthSessionTest extends TestCase
         $this->assertFalse($session->has('test'));
     }
 
-    public function test_put()
+    public function test_put(): void
     {
         $session = OAuthSession::create()->put('test', 'test');
 
