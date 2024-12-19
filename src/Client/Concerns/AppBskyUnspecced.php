@@ -48,6 +48,15 @@ trait AppBskyUnspecced
         );
     }
 
+    public function getTrendingTopics(?string $viewer = null, ?int $limit = 10): Response
+    {
+        return $this->call(
+            api: Unspecced::getTrendingTopics,
+            method: self::GET,
+            params: compact($this->params(__METHOD__)),
+        );
+    }
+
     public function searchActorsSkeleton(string $q, ?string $viewer = null, ?bool $typeahead = null, ?int $limit = 25, ?string $cursor = null): Response
     {
         return $this->call(
