@@ -116,7 +116,9 @@ final class CAR
         $header_length = Varint::decodeStream($data);
         $data->seek($header_length, SEEK_CUR);
 
-        while ($data->getSize() > $data->tell()) {
+        $size = $data->getSize();
+
+        while ($size > $data->tell()) {
             $start = $data->tell();
 
             $block_varint = Varint::decodeStream($data);
