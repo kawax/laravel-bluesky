@@ -51,6 +51,8 @@ final class CAR
     {
         $data = Utils::streamFor($data);
 
+        throw_unless($data->isReadable() && $data->isSeekable());
+
         $data->rewind();
 
         $roots = self::decodeRoots($data);
@@ -68,6 +70,8 @@ final class CAR
     public static function decodeHeader(StreamInterface|string $data): array
     {
         $data = Utils::streamFor($data);
+
+        throw_unless($data->isReadable() && $data->isSeekable());
 
         $data->rewind();
 
@@ -110,6 +114,8 @@ final class CAR
     public static function blockIterator(StreamInterface|string $data): iterable
     {
         $data = Utils::streamFor($data);
+
+        throw_unless($data->isReadable() && $data->isSeekable());
 
         $data->rewind();
 
@@ -223,6 +229,8 @@ final class CAR
     public static function blockMap(StreamInterface|string $data): iterable
     {
         $data = Utils::streamFor($data);
+
+        throw_unless($data->isReadable() && $data->isSeekable());
 
         [$roots, $blockmap] = self::decode($data);
 
