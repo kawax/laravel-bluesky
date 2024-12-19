@@ -15,6 +15,7 @@ parameters:
         #- identifier: larastan.noEnvCallsOutsideOfConfig
         - identifier: missingType.generics
         - identifier: missingType.iterableValue
+        #- identifier: argument.type
 
     excludePaths:
         - ./src/Client/Concerns/*.php
