@@ -24,6 +24,8 @@ final class Decoder
      */
     public function decode(StreamInterface $stream): array
     {
+        throw_unless($stream->isReadable() && $stream->isSeekable());
+
         $links = [];
         $linksBeforeData = false;
         $data = null;
