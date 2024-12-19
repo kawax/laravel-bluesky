@@ -44,14 +44,14 @@ final readonly class ProtectedResource implements Arrayable
     /**
      * service or issuer url.
      *
-     * @return string|null `https://bsky.social`
+     * @return string `https://bsky.social`
      */
-    public function authServer(?string $default = null): ?string
+    public function authServer(string $default = ''): string
     {
         return $this->get('authorization_servers.{first}', $default);
     }
 
-    public function get(string $key, ?string $default = null): mixed
+    public function get(string $key, string $default = ''): mixed
     {
         return data_get($this->meta, $key, $default);
     }

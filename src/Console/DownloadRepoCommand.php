@@ -91,7 +91,7 @@ class DownloadRepoCommand extends Command
         $signed = CAR::signedCommit(Utils::streamFor(Storage::readStream($file)));
         //dump($signed);
 
-        $pk = DidKey::parse($didDoc->publicKey() ?? '');
+        $pk = DidKey::parse($didDoc->publicKey());
 
         if (CAR::verifySignedCommit($signed, $pk)) {
             $this->info('Verified');

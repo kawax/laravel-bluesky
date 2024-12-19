@@ -76,7 +76,7 @@ final class LegacyAgent implements Agent
         return $this->session->refresh($default);
     }
 
-    public function pdsUrl(?string $default = null): ?string
+    public function pdsUrl(string $default = ''): string
     {
         return $this->session->didDoc()->pdsUrl($default);
     }

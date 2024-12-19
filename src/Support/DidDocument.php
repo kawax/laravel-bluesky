@@ -48,9 +48,9 @@ final readonly class DidDocument implements Arrayable
     /**
      * PDS url.
      *
-     * @return string|null `https://***.***.host.bsky.network`
+     * @return string `https://***.***.host.bsky.network`
      */
-    public function pdsUrl(?string $default = null): ?string
+    public function pdsUrl(string $default = ''): string
     {
         $service = collect((array) $this->didDoc->get('service', []))
             ->firstWhere('id', '#atproto_pds');
@@ -82,7 +82,7 @@ final readonly class DidDocument implements Arrayable
      * $pubkey_pem = $parsed->key;
      * ```
      */
-    public function publicKey(?string $default = null): ?string
+    public function publicKey(string $default = ''): string
     {
         $verification = collect((array) $this->didDoc->get('verificationMethod', []))
             ->firstWhere('type', 'Multikey');

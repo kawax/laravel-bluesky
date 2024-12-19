@@ -35,7 +35,7 @@ class ValidateAuth
         $didKey = cache()->remember(
             key: 'bluesky:did:key:'.$did,
             ttl: now()->addDay(),
-            callback: fn () => DidKey::parse(DidDocument::make(Bluesky::identity()->resolveDID($did)->json())->publicKey() ?? ''),
+            callback: fn () => DidKey::parse(DidDocument::make(Bluesky::identity()->resolveDID($did)->json())->publicKey()),
         );
 
         $key = new Key($didKey->key, $didKey->alg);

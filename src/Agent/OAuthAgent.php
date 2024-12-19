@@ -164,7 +164,7 @@ final class OAuthAgent implements Agent
         return $this->session()->tokenExpired();
     }
 
-    public function pdsUrl(?string $default = null): ?string
+    public function pdsUrl(string $default = ''): string
     {
         return $this->session->didDoc()->pdsUrl($default);
     }

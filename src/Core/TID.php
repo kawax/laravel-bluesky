@@ -74,9 +74,9 @@ final class TID implements Stringable
      *
      * @link https://atproto.com/guides/applications
      */
-    public static function nextStr(?string $prev = null): string
+    public static function nextStr(string $prev = ''): string
     {
-        return self::next(self::is($prev) ? new self($prev ?? '') : null)->toString();
+        return self::next(self::is($prev) ? new self($prev) : null)->toString();
     }
 
     /**
@@ -85,9 +85,10 @@ final class TID implements Stringable
      */
     public static function fromTime(int|float $timestamp, int $clockId): self
     {
-        $str = self::s32encode($timestamp).Str::padLeft(self::s32encode($clockId), length: 2, pad: '2');
+        $time = Str::padLeft(self::s32encode((int) $timestamp), length: 11, pad: '2');
+        $clock = Str::padLeft(self::s32encode($clockId), length: 2, pad: '2');
 
-        return new self($str);
+        return new self($time.$clock);
     }
 
     public static function fromStr(string $str): self
@@ -158,7 +159,7 @@ final class TID implements Stringable
     /**
      * encode base32-sortable.
      */
-    public static function s32encode(int|float $i): string
+    public static function s32encode(int $i): string
     {
         $s = '';
 

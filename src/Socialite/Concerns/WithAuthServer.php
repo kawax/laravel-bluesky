@@ -13,9 +13,9 @@ trait WithAuthServer
     /**
      * @link  https://bsky.social/.well-known/oauth-authorization-server
      *
-     * @return ($key is non-empty-string ? string|null : array)
+     * @return ($key is non-empty-string ? string : array)
      */
-    protected function authServerMeta(?string $key = null, ?string $default = null): array|string|null
+    protected function authServerMeta(?string $key = null, string $default = ''): array|string
     {
         if (empty($this->auth_server_meta)) {
             $this->auth_server_meta = Http::baseUrl($this->authUrl())
