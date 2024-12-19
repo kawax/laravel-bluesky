@@ -90,7 +90,7 @@ class FirehoseServeCommand extends Command
         $this->info('Host : '.$host);
 
         while ($this->running) {
-            $event = $ws->read(self::MAX_SIZE);
+            $event = rescue(fn () => $ws->read(self::MAX_SIZE), '');
 
             // Firehose often receives incorrect data.
             if (ord($event) !== 0xA2) {
