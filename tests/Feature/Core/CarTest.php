@@ -11,6 +11,7 @@ use Illuminate\Support\Facades\File;
 use Illuminate\Support\Str;
 use Revolution\Bluesky\Core\CAR;
 use Revolution\Bluesky\Core\CBOR;
+use Revolution\Bluesky\Core\CBOR\MapKeySort;
 use Revolution\Bluesky\Core\CID;
 use Revolution\Bluesky\Core\Protobuf;
 use Revolution\Bluesky\Core\Varint;
@@ -263,7 +264,12 @@ class CarTest extends TestCase
         $sign = $sk->privateKey()->sign($unsigned_cbor);
 
         $signed = array_merge($unsigned, ['sig' => ['$bytes' => base64_encode($sign)]]);
+        uksort($signed, new MapKeySort());
 
         $this->assertTrue(CAR::verifySignedCommit($signed, $sk->publicPEM()));
+
+        $signed_cbor = CBOR::encode($signed);
+        $cbor_decode = CBOR::decode($signed_cbor);
+        $this->assertSame($signed, $cbor_decode);
     }
 }
