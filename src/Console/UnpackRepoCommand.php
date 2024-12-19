@@ -94,6 +94,8 @@ class UnpackRepoCommand extends Command
     /**
      * A different version using CAR::blockIterator().
      * Use this if you need _mst or _commit.
+     *
+     * @phpstan-ignore method.unused
      */
     private function blockIterator($name, $file): void
     {
