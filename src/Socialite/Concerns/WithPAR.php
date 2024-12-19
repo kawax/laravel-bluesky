@@ -35,7 +35,7 @@ trait WithPAR
             ->post($par_url, $par_data);
     }
 
-    protected function parRequestFields($state): array
+    protected function parRequestFields(string $state): array
     {
         // Special exception for development only.
         // https://atproto.com/specs/oauth

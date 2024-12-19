@@ -40,7 +40,7 @@ final class Base58btc
         return Multibase::encode(Multibase::BASE58BTC, $alg_prefix.hex2bin($compressed));
     }
 
-    public static function load($key, $password = ''): array
+    public static function load(?string $key, string $password = ''): array
     {
         // did:key:z***
         $key = Str::chopStart($key, DidKey::PREFIX);

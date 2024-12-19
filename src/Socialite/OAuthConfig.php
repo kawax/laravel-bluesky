@@ -42,7 +42,7 @@ class OAuthConfig
             $redirect = 'http://127.0.0.1:8000/';
         }
 
-        return collect(config('bluesky.oauth.metadata'))
+        return collect((array) config('bluesky.oauth.metadata'))
             ->merge(
                 [
                     'client_id' => route('bluesky.oauth.client-metadata'),

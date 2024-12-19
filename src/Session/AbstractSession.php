@@ -29,38 +29,38 @@ abstract class AbstractSession implements Arrayable
         return new static($session);
     }
 
-    public function get(string $key, $default = null): mixed
+    public function get(string $key, mixed $default = null): mixed
     {
         return data_get($this->session, $key, $default);
     }
 
-    public function put(string $key, $value): static
+    public function put(string $key, mixed $value): static
     {
         $this->session->put($key, $value);
 
         return $this;
     }
 
-    public function forget($keys): static
+    public function forget(string|array $keys): static
     {
         $this->session->forget($keys);
 
         return $this;
     }
 
-    public function has($key): bool
+    public function has(string|array $key): bool
     {
         return $this->session->has($key);
     }
 
-    public function merge($items): static
+    public function merge(array|Collection $items): static
     {
         $this->session = $this->session->merge($items);
 
         return $this;
     }
 
-    public function except($keys): static
+    public function except(string|array $keys): static
     {
         $this->session = $this->session->except($keys);
 

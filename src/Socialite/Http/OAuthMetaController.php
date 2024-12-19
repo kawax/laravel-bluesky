@@ -8,12 +8,12 @@ use Revolution\Bluesky\Socialite\OAuthConfig;
 
 class OAuthMetaController
 {
-    public function clientMetadata()
+    public function clientMetadata(): mixed
     {
         return OAuthConfig::clientMetadata();
     }
 
-    public function jwks()
+    public function jwks(): mixed
     {
         return OAuthConfig::jwks();
     }

@@ -24,7 +24,7 @@ final class Encoder
 
     private int $pos = 0;
 
-    public function encode($value): string
+    public function encode(mixed $value): string
     {
         $this->createState();
         $this->writeValue($value);
@@ -146,7 +146,7 @@ final class Encoder
         $this->writeFloat64($val);
     }
 
-    private function writeNumber($val): void
+    private function writeNumber(mixed $val): void
     {
         if (! is_numeric($val)) {
             throw new InvalidArgumentException();
@@ -268,7 +268,7 @@ final class Encoder
                 return;
             }
 
-            $filtered = collect($val)
+            $filtered = collect((array) $val)
                 ->reject(fn ($val, $key) => $key !== 'prev' && is_null($val))
                 ->toArray();
 

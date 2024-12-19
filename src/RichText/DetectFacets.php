@@ -43,7 +43,7 @@ final class DetectFacets
     {
         preg_match_all(self::MENTION_REGEX, $this->text, $matches, flags: PREG_OFFSET_CAPTURE);
 
-        collect(data_get($matches, 3))
+        collect((array) data_get($matches, 3))
             ->each(function ($match) {
                 $handle = data_get($match, 0);
                 $start = data_get($match, 1);
@@ -77,7 +77,7 @@ final class DetectFacets
     {
         preg_match_all(self::URL_REGEX, $this->text, $matches, flags: PREG_OFFSET_CAPTURE);
 
-        collect(data_get($matches, 2))
+        collect((array) data_get($matches, 2))
             ->each(function ($match) {
                 $uri = data_get($match, 0);
                 $start = data_get($match, 1);
@@ -116,7 +116,7 @@ final class DetectFacets
     {
         preg_match_all(self::TAG_REGEX, $this->text, $matches, flags: PREG_OFFSET_CAPTURE);
 
-        collect(data_get($matches, 3))
+        collect((array) data_get($matches, 3))
             ->each(function ($match, $index) use ($matches) {
                 // # or ＃
                 $leading = data_get($matches, "2.$index.0");

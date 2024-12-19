@@ -16,7 +16,7 @@ interface Agent
     /**
      * @return ($key is non-empty-string ? mixed : AbstractSession)
      */
-    public function session(?string $key = null, $default = null): mixed;
+    public function session(?string $key = null, mixed $default = null): mixed;
 
     public function did(string $default = ''): string;
 

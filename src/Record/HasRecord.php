@@ -40,7 +40,7 @@ trait HasRecord
 
         $required = $attrs[0]->getArguments()[0] ?? [];
 
-        $rules = collect($required)
+        $rules = collect((array) $required)
             ->mapWithKeys(fn ($item) => [$item => 'required'])
             ->toArray();
 

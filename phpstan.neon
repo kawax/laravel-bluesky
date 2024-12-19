@@ -4,7 +4,7 @@ parameters:
         - src/
 
     # Level 10 is the highest level
-    level: 5
+    level: 6
 
     ignoreErrors:
         #- '#PHPDoc tag @var#'
@@ -13,6 +13,8 @@ parameters:
         #- identifier: return.unusedType
         #- identifier: phpDoc.parseError
         #- identifier: larastan.noEnvCallsOutsideOfConfig
+        - identifier: missingType.generics
+        - identifier: missingType.iterableValue
 
     excludePaths:
         - ./src/Client/Concerns/*.php

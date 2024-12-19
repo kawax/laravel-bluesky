@@ -97,7 +97,7 @@ class UnpackRepoCommand extends Command
      *
      * @phpstan-ignore method.unused
      */
-    private function blockIterator($name, $file): void
+    private function blockIterator(string $name, string $file): void
     {
         foreach (CAR::blockIterator(Utils::streamFor(Storage::readStream($file))) as $cid => $block) {
             //dump($cid, $block);

@@ -52,7 +52,7 @@ final readonly class DidDocument implements Arrayable
      */
     public function pdsUrl(?string $default = null): ?string
     {
-        $service = collect($this->didDoc->get('service', []))
+        $service = collect((array) $this->didDoc->get('service', []))
             ->firstWhere('id', '#atproto_pds');
 
         return data_get($service, 'serviceEndpoint', $default);
@@ -65,7 +65,7 @@ final readonly class DidDocument implements Arrayable
      */
     public function serviceAuthAud(): string
     {
-        return Str::replace(search: 'https://', replace: 'did:web:', subject: $this->pdsUrl());
+        return Str::replace(search: 'https://', replace: 'did:web:', subject: (string) $this->pdsUrl());
     }
 
     /**
@@ -84,7 +84,7 @@ final readonly class DidDocument implements Arrayable
      */
     public function publicKey(?string $default = null): ?string
     {
-        $verification = collect($this->didDoc->get('verificationMethod', []))
+        $verification = collect((array) $this->didDoc->get('verificationMethod', []))
             ->firstWhere('type', 'Multikey');
 
         return data_get($verification, 'publicKeyMultibase', $default);

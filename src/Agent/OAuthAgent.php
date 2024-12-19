@@ -139,7 +139,7 @@ final class OAuthAgent implements Agent
     /**
      * @return ($key is non-empty-string ? mixed : OAuthSession)
      */
-    public function session(?string $key = null, $default = null): mixed
+    public function session(?string $key = null, mixed $default = null): mixed
     {
         return empty($key) ? $this->session : $this->session->get($key, $default);
     }
