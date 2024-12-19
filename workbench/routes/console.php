@@ -3,16 +3,10 @@
 declare(strict_types=1);
 
 use Illuminate\Console\Command;
-use Illuminate\Foundation\Inspiring;
 use Illuminate\Support\Facades\Artisan;
 use Revolution\Bluesky\Facades\Bluesky;
 
 /** @var Command $this */
-Artisan::command('inspire', function () {
-    /** @var Command $this */
-    $this->comment(Inspiring::quote());
-})->purpose('Display an inspiring quote')->hourly();
-
 // vendor/bin/testbench bsky:search "#bluesky"
 Artisan::command('bsky:search {q=#bluesky}', function () {
     /** @var Command $this */
