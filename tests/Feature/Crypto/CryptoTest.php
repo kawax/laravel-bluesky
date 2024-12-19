@@ -18,9 +18,16 @@ class CryptoTest extends TestCase
 
         $parsed = DidKey::parse('zQ3shunBKsXixLxKtC5qeSG9E4J5RkGN57im31pcTzbNQnm5w');
 
+        unset($parsed['curve']);
+        $parsed['curve'] = 'secp256k1';
+
         $this->assertIsString($parsed['key']);
+        $this->assertIsArray($parsed->toArray());
+        $this->assertTrue(isset($parsed['curve']));
         $this->assertSame('secp256k1', $parsed['curve']);
         $this->assertSame('ES256K', $parsed['alg']);
+        $this->assertSame('secp256k1', $parsed->curve);
+        $this->assertSame('ES256K', $parsed->alg);
     }
 
     public function test_did_key_encode(): void
@@ -38,7 +45,7 @@ class CryptoTest extends TestCase
 
         $this->assertStringStartsWith('z', $b58key);
         $this->assertStringStartsWith('did:key:z', $didkey);
-        $this->assertSame('secp256k1', $parsed['curve']);
+        $this->assertSame('secp256k1', $parsed->curve);
         $this->assertSame('ES256K', $parsed['alg']);
         $this->assertSame($b58key, $b58key2);
     }
