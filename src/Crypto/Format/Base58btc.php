@@ -37,13 +37,13 @@ final class Base58btc
             default => throw new InvalidArgumentException('Unsupported format.'),
         };
 
-        return Multibase::encode(Multibase::BASE58BTC, $alg_prefix.hex2bin($compressed));
+        return Multibase::encode(Multibase::BASE58BTC, $alg_prefix.hex2bin($compressed)) ?? '';
     }
 
     public static function load(?string $key, string $password = ''): array
     {
         // did:key:z***
-        $key = Str::chopStart($key, DidKey::PREFIX);
+        $key = Str::chopStart($key ?? '', DidKey::PREFIX);
 
         // decode base58btc
         $keyBytes = Multibase::decode($key);

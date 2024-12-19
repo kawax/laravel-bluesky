@@ -56,17 +56,17 @@ class BlueskyPrivateChannel
             ->refreshSession()
             ->client(auth: true)
             ->chat()
-            ->getConvoForMembers(Arr::wrap($this->resolveHandle($route->receiver)));
+            ->getConvoForMembers(Arr::wrap($this->resolveHandle($route->receiver ?? '')));
 
         return $response->json('convo.id') ?? '';
     }
 
     protected function legacy(BlueskyRoute $route): string
     {
-        $response = Bluesky::login($route->identifier, $route->password)
+        $response = Bluesky::login($route->identifier ?? '', $route->password ?? '')
             ->client(auth: true)
             ->chat()
-            ->getConvoForMembers(Arr::wrap($this->resolveHandle($route->receiver)));
+            ->getConvoForMembers(Arr::wrap($this->resolveHandle($route->receiver ?? '')));
 
         return $response->json('convo.id') ?? '';
     }

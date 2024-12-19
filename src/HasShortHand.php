@@ -434,7 +434,8 @@ trait HasShortHand
     public function uploadVideo(StreamInterface|string $data, #[KnownValues(['video/mp4', 'video/mpeg', 'video/webm', 'video/quicktime', 'image/gif'])] string $type = 'video/mp4'): Response
     {
         //Service auth is required to use the video upload features.
-        $aud = $this->agent()->session()->didDoc()->serviceAuthAud();
+        $aud = $this->agent()?->session()->didDoc()->serviceAuthAud();
+        throw_if(empty($aud), AuthenticationException::class);
 
         $token = $this->getServiceAuth(aud: $aud, exp: (int) now()->addMinutes(30)->timestamp, lxm: AtRepo::uploadBlob)
             ->json('token');
@@ -454,7 +455,8 @@ trait HasShortHand
     #[ArrayShape(AtVideo::getJobStatusResponse)]
     public function getJobStatus(string $jobId): Response
     {
-        $aud = $this->agent()->session()->didDoc()->serviceAuthAud();
+        $aud = $this->agent()?->session()->didDoc()->serviceAuthAud();
+        throw_if(empty($aud), AuthenticationException::class);
 
         $token = $this->getServiceAuth(aud: $aud, lxm: AtVideo::getJobStatus)
             ->json('token');

@@ -19,9 +19,9 @@ final readonly class AtUri implements Stringable
 
     protected ?string $protocol;
     protected ?string $host;
-    protected ?string $pathname;
-    protected ?string $searchParams;
-    protected ?string $hash;
+    protected string $pathname;
+    protected string $searchParams;
+    protected string $hash;
 
     public function __construct(protected string $uri)
     {
@@ -31,9 +31,9 @@ final readonly class AtUri implements Stringable
 
         $this->protocol = $matches[1];
         $this->host = $matches[2];
-        $this->pathname = $matches[3] ?? null;
-        $this->searchParams = $matches[4] ?? null;
-        $this->hash = $matches[5] ?? null;
+        $this->pathname = $matches[3] ?? '';
+        $this->searchParams = $matches[4] ?? '';
+        $this->hash = $matches[5] ?? '';
     }
 
     /**

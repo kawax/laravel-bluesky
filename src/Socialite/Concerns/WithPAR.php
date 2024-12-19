@@ -27,6 +27,8 @@ trait WithPAR
     {
         $par_url = $this->authServerMeta('pushed_authorization_request_endpoint');
 
+        throw_if(empty($par_url));
+
         return Http::asForm()
             ->withRequestMiddleware($this->parRequestMiddleware(...))
             ->withResponseMiddleware($this->parResponseMiddleware(...))

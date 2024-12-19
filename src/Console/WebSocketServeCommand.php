@@ -78,7 +78,7 @@ class WebSocketServeCommand extends Command
         $handlerStack->push(new WebSocketMiddleware());
         $client = new Client(['handler' => $handlerStack]);
 
-        $host = $this->option('host');
+        $host = (string) $this->option('host');
 
         $uri = 'wss://'.$host.'/subscribe?requireHello=true';
 

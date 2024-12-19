@@ -81,7 +81,7 @@ final class CID
 
         $bytes = $version.$code.$algo.$length.$hash;
 
-        return Multibase::encode(Multibase::BASE32, $bytes);
+        return Multibase::encode(Multibase::BASE32, $bytes) ?? '';
     }
 
     /**
@@ -93,7 +93,7 @@ final class CID
     {
         $hash = hash(algo: 'sha256', data: $data, binary: true);
 
-        return Multibase::encode(Multibase::BASE58BTC, self::V0_LEADING.$hash, false);
+        return Multibase::encode(Multibase::BASE58BTC, self::V0_LEADING.$hash, false) ?? '';
     }
 
     /**
@@ -244,10 +244,10 @@ final class CID
         }
 
         if ($ver === CID::V0) {
-            return Multibase::encode(Multibase::BASE58BTC, $bytes, false);
+            return Multibase::encode(Multibase::BASE58BTC, $bytes, false) ?? '';
         }
 
-        return Multibase::encode(Multibase::BASE32, $bytes);
+        return Multibase::encode(Multibase::BASE32, $bytes) ?? '';
     }
 
     /**

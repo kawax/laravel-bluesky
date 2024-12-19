@@ -19,9 +19,9 @@ trait WithPDS
 
     protected function updateServiceWithHint(): void
     {
-        if (Str::startsWith($this->login_hint, 'https://') && Str::isUrl($this->login_hint, ['https', 'http']) && $this->isSafeUrl($this->login_hint)) {
-            $auth_url = $this->pdsProtectedResource($this->login_hint)
-                ->authServer(Bluesky::entryway());
+        if (Str::startsWith($this->login_hint ?? '', 'https://') && Str::isUrl($this->login_hint, ['https', 'http']) && $this->isSafeUrl($this->login_hint ?? '')) {
+            $auth_url = $this->pdsProtectedResource($this->login_hint ?? '')
+                ->authServer(Bluesky::entryway()) ?? '';
 
             $this->service($auth_url);
 
@@ -31,8 +31,8 @@ trait WithPDS
         if (Identity::isDID($this->login_hint) || Identity::isHandle($this->login_hint)) {
             $didDoc = DidDocument::make(Bluesky::identity()->resolveIdentity($this->login_hint)->collect());
 
-            $auth_url = $this->pdsProtectedResource($didDoc->pdsUrl())
-                ->authServer(Bluesky::entryway());
+            $auth_url = $this->pdsProtectedResource($didDoc->pdsUrl() ?? '')
+                ->authServer(Bluesky::entryway()) ?? '';
 
             $this->service($auth_url);
         }

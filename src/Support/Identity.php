@@ -116,7 +116,7 @@ class Identity
      */
     public function resolveDID(?string $did, bool $cache = false): Response
     {
-        if (! self::isDID($did)) {
+        if (is_null($did) || ! self::isDID($did)) {
             throw new InvalidArgumentException("The did '$did' is not a valid DID.");
         }
 

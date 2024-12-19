@@ -46,7 +46,7 @@ class DownloadRecordCommand extends Command
     public function handle(): int
     {
         $actor = $this->argument('actor');
-        $collection = $this->option('collection');
+        $collection = (string) $this->option('collection');
 
         $this->warn('Actor: '.$actor);
         $this->warn('Collection: '.$collection);

@@ -123,7 +123,7 @@ class LexiconClientCommand extends Command
         return collect($parameters)
             ->map(function (ReflectionParameter $parameter) {
                 $name = $parameter->getName();
-                $type = $parameter->getType()->__toString();
+                $type = $parameter->getType()?->__toString();
 
                 $attrs = collect($parameter->getAttributes())
                     ->filter(fn (ReflectionAttribute $attr) => $attr->getName() === \SensitiveParameter::class)

@@ -65,12 +65,12 @@ final class JsonWebToken
      * [$header, $payload, $sig] = JsonWebToken::explode('****.****.****', decode: true);
      * ```
      *
-     * @return null|array{0: array, 1: array, 2: string}
+     * @return array{0: array, 1: array, 2: string}
      */
-    public static function explode(?string $token, bool $decode = false): ?array
+    public static function explode(?string $token, bool $decode = false): array
     {
-        if (Str::substrCount($token, '.') !== 2) {
-            return null;
+        if (is_null($token) || Str::substrCount($token, '.') !== 2) {
+            return [[], [], ''];
         }
 
         [$header, $payload, $sig] = explode(separator: '.', string: $token, limit: 3);

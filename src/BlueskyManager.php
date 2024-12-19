@@ -40,7 +40,9 @@ class BlueskyManager implements Factory
      */
     public function withToken(#[\SensitiveParameter] ?OAuthSession $token): Factory
     {
-        $this->agent = OAuthAgent::create($token);
+        if (! is_null($token)) {
+            $this->agent = OAuthAgent::create($token);
+        }
 
         return $this;
     }
@@ -81,13 +83,13 @@ class BlueskyManager implements Factory
         $method = Str::lower($method) === 'post' ? 'post' : 'get';
 
         return $this->http($auth)
-            ->when(is_callable($callback), fn (PendingRequest $http) => $callback($http))
+            ->when(is_callable($callback), fn (PendingRequest $http) => is_callable($callback) ? $callback($http) : $http)
             ->$method(enum_value($api), $params);
     }
 
     protected function http(bool $auth = true): PendingRequest
     {
-        if (! $auth || ! $this->check()) {
+        if (! $auth || ! $this->check() || is_null($this->agent())) {
             return Http::baseUrl($this->publicEndpoint());
         }
 

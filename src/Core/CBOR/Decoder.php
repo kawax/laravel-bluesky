@@ -31,7 +31,7 @@ final class Decoder
         throw_unless($stream->isReadable());
 
         $this->stream = $stream;
-        $this->stream_size = min($stream->getSize(), self::MAX_SIZE);
+        $this->stream_size = (int) min($stream->getSize(), self::MAX_SIZE);
 
         $value = $this->readValue();
         $remainder = $this->stream->getContents();
@@ -43,7 +43,7 @@ final class Decoder
     {
         [$value, $remainder] = $this->decodeFirst($stream);
 
-        throw_unless(strlen($remainder) === 0);
+        throw_unless(strlen($remainder ?? '') === 0);
 
         return $value;
     }

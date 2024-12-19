@@ -76,7 +76,7 @@ final class TID implements Stringable
      */
     public static function nextStr(?string $prev = null): string
     {
-        return self::next(self::is($prev) ? new self($prev) : null)->toString();
+        return self::next(self::is($prev) ? new self($prev ?? '') : null)->toString();
     }
 
     /**
@@ -97,6 +97,10 @@ final class TID implements Stringable
 
     public static function is(?string $str): bool
     {
+        if (is_null($str)) {
+            return false;
+        }
+
         return (Str::length($str) === self::TID_LEN) && Str::of($str)->test(self::FORMAT);
     }
 

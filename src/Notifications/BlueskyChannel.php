@@ -42,7 +42,7 @@ class BlueskyChannel
             $route->isOAuth() => Bluesky::withToken($route->oauth)
                 ->refreshSession()
                 ->post($post),
-            $route->isLegacy() => Bluesky::login($route->identifier, $route->password)
+            $route->isLegacy() => Bluesky::login($route->identifier ?? '', $route->password ?? '')
                 ->post($post),
             default => throw new RuntimeException(),
         };

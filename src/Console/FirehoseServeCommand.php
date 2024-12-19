@@ -66,7 +66,7 @@ class FirehoseServeCommand extends Command
         $handlerStack->push(new WebSocketMiddleware());
         $client = new Client(['handler' => $handlerStack]);
 
-        $host = $this->option('host');
+        $host = (string) $this->option('host');
 
         $uri = 'wss://'.$host.'/xrpc/com.atproto.sync.subscribeRepos';
 
@@ -97,7 +97,7 @@ class FirehoseServeCommand extends Command
                 continue;
             }
 
-            [$header, $remainder] = rescue(fn () => CBOR::decodeFirst($event));
+            [$header, $remainder] = rescue(fn () => CBOR::decodeFirst($event), [[], '']);
 
             if (data_get($header, 'op') !== 1) {
                 continue;
@@ -119,7 +119,7 @@ class FirehoseServeCommand extends Command
                 continue;
             }
 
-            $payload = rescue(fn () => CBOR::decode($remainder));
+            $payload = rescue(fn () => CBOR::decode($remainder ?? ''));
 
             if (blank($payload) || ! is_array($payload)) {
                 if ($this->output->isVerbose()) {
