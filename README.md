@@ -1,4 +1,4 @@
-Bluesky(AT Protocol) package for Laravel
+Bluesky(AT Protocol) for Laravel
 ====
 
 **Work in progress**
@@ -129,6 +129,12 @@ To authenticate with OAuth, read the Socialite documentation.
 - [Laravel Notifications](./docs/notification.md)
 - [Socialite](./docs/socialite.md)
 - [FeedGenerator](./docs/feed-generator.md)
+- [Testing](./docs/testing.md)
+
+## Advanced
+- [Identity](./docs/identity.md)
+- [Verify](./docs/verify.md)
+- [Route](./docs/route.md)
 
 ## Contracts
 https://github.com/kawax/atproto-lexicon-contracts
