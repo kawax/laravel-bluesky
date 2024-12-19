@@ -79,7 +79,7 @@ final readonly class DidDocument implements Arrayable
      * $pubkey = $didDoc->publicKey();
      *
      * $parsed = DidKey::parse($pubkey);
-     * $pubkey_pem = $parsed['key'];
+     * $pubkey_pem = $parsed->key;
      * ```
      */
     public function publicKey(?string $default = null): ?string
