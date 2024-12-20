@@ -5,9 +5,7 @@ declare(strict_types=1);
 namespace Revolution\Bluesky\Core;
 
 use InvalidArgumentException;
-use phpseclib3\Math\BigInteger;
 use Psr\Http\Message\StreamInterface;
-use Throwable;
 
 /**
  * unsigned varint (VARiable INTeger).
@@ -18,46 +16,49 @@ use Throwable;
  */
 final class Varint
 {
+    private const MAX_LEN = 9;
+
     public static function encode(int $x): string
     {
-        $x = new BigInteger($x);
-
-        $x80 = new BigInteger(0x80);
-        $xFF = new BigInteger(0xFF);
+        // In PHP, if the value exceeds PHP_INT_MAX=9223372036854775807, it will no longer be an int type, so this check is unnecessary.
 
         $bytes = '';
 
-        while ($x->compare($x80) >= 0) {
-            $bytes .= $x->bitwise_and($xFF)->bitwise_or($x80)->toBytes();
-            $x = $x->bitwise_rightShift(7);
+        while ($x >= 0x80) {
+            $bytes .= chr(($x & 0xFF) | 0x80);
+            $x >>= 7;
         }
 
-        $bytes .= $x->bitwise_and($xFF)->toBytes();
+        $bytes .= chr($x & 0xFF);
 
         return $bytes;
     }
 
-    /**
-     * @throws Throwable
-     */
     public static function decode(string $bytes): int
     {
-        $buf = unpack('C*', $bytes);
-        throw_unless($buf);
+        if (strlen($bytes) > self::MAX_LEN) {
+            throw new InvalidArgumentException();
+        }
 
-        $x = new BigInteger(0);
+        $x = 0;
         $s = 0;
 
-        foreach ($buf as $i => $b) {
-            throw_if($i >= 9);
+        foreach (str_split($bytes) as $i => $b) {
+            $b = ord($b);
 
-            if ($b < 0x80) {
-                throw_if($b === 0 && $s > 0);
-
-                return intval($x->bitwise_or((new BigInteger($b))->bitwise_leftShift($s))->toString());
+            if ($i === self::MAX_LEN && $b >= 0x80) {
+                throw new InvalidArgumentException();
             }
 
-            $x = $x->bitwise_or((new BigInteger($b))->bitwise_and(new BigInteger(0x7F))->bitwise_leftShift($s));
+            if ($b < 0x80) {
+                if ($b === 0 && $s > 0) {
+                    throw new InvalidArgumentException();
+                }
+
+                return $x | ($b << $s);
+            }
+
+            $x |= ($b & 0x7F) << $s;
             $s += 7;
         }
 
@@ -71,7 +72,7 @@ final class Varint
     {
         $start = $stream->tell();
 
-        $bytes = $stream->read(8);
+        $bytes = $stream->read(9);
         $x = self::decode($bytes);
         $stream->seek($start + strlen(self::encode($x)));
 
