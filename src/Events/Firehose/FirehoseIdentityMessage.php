@@ -10,7 +10,7 @@ class FirehoseIdentityMessage
         public string $did,
         public int $seq,
         public string $time,
-        public ?string $handle,
+        public string $handle,
         public string $raw,
     ) {
         //
