@@ -30,7 +30,7 @@ final class CBOR
         return app(Decoder::class)->decodeFirst(Utils::streamFor($data));
     }
 
-    public static function decode(StreamInterface|string $data): mixed
+    public static function decode(StreamInterface|string $data): array
     {
         return app(Decoder::class)->decode(Utils::streamFor($data));
     }
