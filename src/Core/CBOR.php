@@ -35,6 +35,11 @@ final class CBOR
         return app(Decoder::class)->decode(Utils::streamFor($data));
     }
 
+    public static function decodeAll(StreamInterface|string $data): array
+    {
+        return app(Decoder::class)->decodeAll(Utils::streamFor($data));
+    }
+
     public static function normalize(mixed $data): mixed
     {
         return app()->call(Normalizer::class, compact('data'));
