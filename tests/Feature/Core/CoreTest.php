@@ -74,17 +74,18 @@ class CoreTest extends TestCase
         $this->assertSame(PHP_INT_MAX, Varint::decodeStream(Utils::streamFor("\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\x7F\xFF\xFF")));
     }
 
-    public function test_varint_fails(): void
+    public function test_varint_invalid(): void
     {
         $this->expectException(InvalidArgumentException::class);
 
-        $this->assertSame(0x4000, Varint::decode("\x80\x80\x80\x80\x80\x80\x80\x71\x80\x80"));
+        $this->assertSame(0, Varint::decode("\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\x80"));
+        $this->assertSame(0, Varint::decode("\x80\x80\x80\x80\x80\x80\x80\x71\x80\x80"));
     }
 
     public function test_varint_type_error(): void
     {
         $this->expectException(TypeError::class);
 
-        $this->assertSame("\xFF", Varint::encode(PHP_INT_MAX + 1));
+        $this->assertSame('', Varint::encode(PHP_INT_MAX + 1));
     }
 }
