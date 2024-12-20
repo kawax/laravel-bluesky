@@ -85,36 +85,34 @@ class FirehoseServeCommand extends Command
                 continue;
             }
 
+            /** @var array{t: string, op: int} $header */
             [$header, $remainder] = rescue(fn () => CBOR::decodeFirst($event), [[], '']);
 
-            if (data_get($header, 'op') !== 1) {
-                continue;
-            }
-
-            if (blank($header) || ! Arr::isAssoc($header)) {
+            if (! Arr::has($header, ['t', 'op'])) {
                 if ($this->output->isVerbose()) {
-                    // Frequent memory errors
-                    dump(Number::abbreviate(memory_get_usage(), 2));
-
                     dump($header);
                 }
 
                 continue;
             }
 
-            $payload = rescue(fn () => CBOR::decode($remainder ?? []));
-
-            if (blank($payload) || ! Arr::isAssoc($payload)) {
-                if ($this->output->isVerbose()) {
-                    dump($payload);
-                }
+            if ($header['op'] !== 1) {
                 continue;
             }
 
-            /** @var string $kind */
-            $kind = data_get($header, 't');
+            $kind = $header['t'];
 
             if (! in_array($kind, self::KINDS, true)) {
+                continue;
+            }
+
+            $payload = rescue(fn () => CBOR::decode($remainder ?? []));
+
+            if ($kind === '#commit' && ! Arr::has($payload, ['tooBig'])) {
+                if ($this->output->isVerbose()) {
+                    dump(Arr::set($payload, 'blocks', '...Invalid payload...'));
+                }
+
                 continue;
             }
 
@@ -127,54 +125,58 @@ class FirehoseServeCommand extends Command
             };
 
             // Finally, dispatch the raw data event
-            if (Arr::has($header, ['t']) && Arr::has($payload, ['ops'])) {
-                event(new FirehoseMessageReceived($header, $payload, $event));
-            }
+            event(new FirehoseMessageReceived($header, $payload, $event));
         }
 
         return 0;
     }
 
+    /**
+     * @param  array{ops: list<array{cid: ?string, path: string, action: string}>, rev: string,seq: int, prev: null, repo: string, time: string, blobs: array, since: string, blocks: array, commit: string, rebase: bool, tooBig: bool}  $payload
+     */
     private function commit(array $header, array $payload, string $raw): void
     {
-        $did = (string) data_get($payload, 'repo');
-        $rev = (string) data_get($payload, 'rev');
-        $time = (string) data_get($payload, 'time');
-
-        if (empty($time)) {
+        $required = ['seq', 'rebase', 'tooBig', 'repo', 'commit', 'rev', 'since', 'blocks', 'ops', 'blobs', 'time'];
+        if (! Arr::has($payload, $required)) {
             return;
         }
 
-        $records = data_get($payload, 'blocks');
+        $did = $payload['repo'];
+        $rev = $payload['rev'];
+        $time = $payload['time'];
+
+        $records = $payload['blocks'];
 
         $blocks = [];
-        if (filled($records)) {
+        if (! empty($records)) {
             $blocks = rescue(fn () => iterator_to_array(CAR::blockMap($records)));
         }
 
-        /** @var array $ops */
-        $ops = data_get($payload, 'ops') ?? [];
+        $ops = $payload['ops'];
 
         foreach ($ops as $op) {
-            $action = data_get($op, 'action') ?? '';
+            if (! Arr::has($op, ['cid', 'path', 'action'])) {
+                continue;
+            }
+
+            $action = $op['action'];
             if (! in_array($action, self::ACTIONS, true)) {
                 return;
             }
 
-            /** @var ?string $cid */
-            $cid = data_get($op, 'cid');
+            $cid = $op['cid'];
 
-            $path = data_get($op, 'path') ?? '';
+            $path = $op['path'];
             if (str_contains($path, '/')) {
                 [$collection, $rkey] = explode('/', $path);
             }
 
-            $record = collect($blocks)->get($path) ?? [];
+            $record = $blocks[$path] ?? [];
 
             if ($this->output->isVeryVerbose()) {
-                $value = data_get($record, 'value');
+                $value = $record['value'] ?? null;
 
-                if (filled($cid) && filled($value)) {
+                if (! empty($cid) && ! empty($value)) {
                     dump($record);
 
                     if (CID::verify(CBOR::encode($value), $cid, codec: CID::DAG_CBOR)) {
@@ -189,23 +191,47 @@ class FirehoseServeCommand extends Command
         }
     }
 
+    /**
+     * @param  array{did: string, seq: int, time: string, handle?: string}  $payload
+     */
     private function identity(array $header, array $payload, string $raw): void
     {
-        $did = data_get($payload, 'did');
-        $seq = data_get($payload, 'seq');
-        $time = data_get($payload, 'time');
-        $handle = data_get($payload, 'handle');
+        $required = ['did', 'seq', 'time'];
+        if (! Arr::has($payload, $required)) {
+            return;
+        }
+
+        if ($this->output->isVeryVerbose()) {
+            dump($payload);
+        }
+
+        $did = $payload['did'];
+        $seq = $payload['seq'];
+        $time = $payload['time'];
+        $handle = $payload['handle'] ?? '';
 
         event(new FirehoseIdentityMessage($did, $seq, $time, $handle, $raw));
     }
 
+    /**
+     * @param  array{did: string, seq: int, time: string, active: bool, status?: string}  $payload
+     */
     private function account(array $header, array $payload, string $raw): void
     {
-        $did = data_get($payload, 'did');
-        $seq = data_get($payload, 'seq');
-        $time = data_get($payload, 'time');
-        $active = data_get($payload, 'active');
-        $status = data_get($payload, 'status');
+        $required = ['did', 'seq', 'time', 'active'];
+        if (! Arr::has($payload, $required)) {
+            return;
+        }
+
+        if ($this->output->isVeryVerbose()) {
+            dump($payload);
+        }
+
+        $did = $payload['did'];
+        $seq = $payload['seq'];
+        $time = $payload['time'];
+        $active = $payload['active'];
+        $status = $payload['status'] ?? null;
 
         event(new FirehoseAccountMessage($did, $seq, $time, $active, $status, $raw));
     }
