@@ -108,7 +108,7 @@ class FirehoseServeCommand extends Command
                 continue;
             }
 
-            if (blank($header) || ! is_array($header)) {
+            if (blank($header) || ! Arr::isAssoc($header)) {
                 if ($this->output->isVerbose()) {
                     // Frequent memory errors
                     dump(Number::abbreviate(memory_get_usage(), 2));
@@ -119,9 +119,9 @@ class FirehoseServeCommand extends Command
                 continue;
             }
 
-            $payload = rescue(fn () => CBOR::decode($remainder ?? ''));
+            $payload = rescue(fn () => CBOR::decode($remainder ?? []));
 
-            if (blank($payload) || ! is_array($payload)) {
+            if (blank($payload) || ! Arr::isAssoc($payload)) {
                 if ($this->output->isVerbose()) {
                     dump($payload);
                 }
@@ -149,6 +149,7 @@ class FirehoseServeCommand extends Command
             $rev = data_get($payload, 'rev') ?? '';
             /** @var string $cid */
             $cid = data_get($payload, 'ops.0.cid') ?? '';
+            $time = data_get($payload, 'time') ?? 0;
             $path = data_get($payload, 'ops.0.path') ?? '';
             [$collection, $rkey] = explode('/', $path);
 
