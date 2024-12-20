@@ -137,9 +137,13 @@ class FirehoseServeCommand extends Command
 
     private function commit(array $header, array $payload, string $raw): void
     {
-        $did = data_get($payload, 'repo') ?? '';
-        $rev = data_get($payload, 'rev') ?? '';
-        $time = data_get($payload, 'time') ?? 0;
+        $did = (string) data_get($payload, 'repo');
+        $rev = (string) data_get($payload, 'rev');
+        $time = (string) data_get($payload, 'time');
+
+        if (empty($time)) {
+            return;
+        }
 
         $records = data_get($payload, 'blocks');
 
