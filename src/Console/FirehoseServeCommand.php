@@ -120,7 +120,6 @@ class FirehoseServeCommand extends Command
                 '#commit' => $this->commit($header, $payload, $event),
                 '#identity' => $this->identity($header, $payload, $event),
                 '#account' => $this->account($header, $payload, $event),
-                default => null,
             };
 
             // Finally, dispatch the raw data event
