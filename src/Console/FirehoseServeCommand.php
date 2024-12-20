@@ -165,6 +165,8 @@ class FirehoseServeCommand extends Command
             $cid = $op['cid'];
 
             $path = $op['path'];
+            $collection = '';
+            $rkey = '';
             if (str_contains($path, '/')) {
                 [$collection, $rkey] = explode('/', $path);
             }
@@ -185,7 +187,7 @@ class FirehoseServeCommand extends Command
                 }
             }
 
-            event(new FirehoseCommitMessage($did, $action, $time, $cid, $path, $record, $payload, $raw));
+            event(new FirehoseCommitMessage($did, $action, $time, $cid, $path, $collection, $rkey, $record, $payload, $raw));
         }
     }
 
