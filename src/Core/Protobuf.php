@@ -21,7 +21,7 @@ use Revolution\Bluesky\Core\Protobuf\Encoder;
  */
 final class Protobuf
 {
-    public static function encode(array $node): string
+    public static function encode(array|string $node): string
     {
         return app(Encoder::class)->encodeNode($node);
     }

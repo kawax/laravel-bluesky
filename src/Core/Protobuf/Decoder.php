@@ -19,9 +19,6 @@ use Throwable;
  */
 final class Decoder
 {
-    /**
-     * @throws Throwable
-     */
     public function decode(StreamInterface $stream): array
     {
         throw_unless($stream->isReadable() && $stream->isSeekable());

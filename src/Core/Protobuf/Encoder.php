@@ -41,7 +41,7 @@ final class Encoder
 
     private const LINK = ['Hash', 'Name', 'Tsize'];
 
-    public function encodeNode(array $node): string
+    public function encodeNode(array|string $node): string
     {
         $node = $this->prepare($node);
         $this->validate($node);
@@ -150,7 +150,7 @@ final class Encoder
         return $pbl;
     }
 
-    private function prepare(mixed $node): array
+    private function prepare(array|string $node): array
     {
         if (is_string($node)) {
             $node = ['Data' => $node];
