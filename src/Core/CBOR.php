@@ -48,7 +48,7 @@ final class CBOR
     /**
      * Decodes a CBOR containing only a single data item.
      */
-    public static function decode(StreamInterface|string $data): array
+    public static function decode(StreamInterface|string $data): mixed
     {
         return app(Decoder::class)->decode(Utils::streamFor($data));
     }
