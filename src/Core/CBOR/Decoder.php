@@ -48,6 +48,20 @@ final class Decoder
         return $value;
     }
 
+    public function decodeAll(StreamInterface $stream): array
+    {
+        $arr = [];
+
+        $this->stream = $stream;
+        $this->stream_size = (int) min($stream->getSize(), self::MAX_SIZE);
+
+        while (! $stream->eof()) {
+            $arr[] = CBOR::normalize($this->readValue());
+        }
+
+        return $arr;
+    }
+
     private function readArgument(int $info): int
     {
         if ($info < 24) {
