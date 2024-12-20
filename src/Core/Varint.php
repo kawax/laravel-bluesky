@@ -20,7 +20,7 @@ final class Varint
 
     public static function encode(int $x): string
     {
-        // In PHP, if the value exceeds PHP_INT_MAX=9223372036854775807, it will no longer be an int type, so this check is unnecessary.
+        // In PHP, if the value exceeds PHP_INT_MAX=9223372036854775807, it will no longer be an int type and a TypeError will be thrown, so there is no need to check here.
 
         $bytes = '';
 
@@ -46,7 +46,7 @@ final class Varint
         foreach (str_split($bytes) as $i => $b) {
             $b = ord($b);
 
-            if ($i === self::MAX_LEN && $b >= 0x80) {
+            if ($i === self::MAX_LEN - 1 && $b >= 0x80) {
                 throw new InvalidArgumentException();
             }
 
