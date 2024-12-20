@@ -13,7 +13,10 @@ use Illuminate\Support\Number;
 use Revolution\Bluesky\Core\CAR;
 use Revolution\Bluesky\Core\CBOR;
 use Revolution\Bluesky\Core\CID;
-use Revolution\Bluesky\Events\FirehoseMessageReceived;
+use Revolution\Bluesky\Events\Firehose\FirehoseAccountMessage;
+use Revolution\Bluesky\Events\Firehose\FirehoseCommitMessage;
+use Revolution\Bluesky\Events\Firehose\FirehoseIdentityMessage;
+use Revolution\Bluesky\Events\Firehose\FirehoseMessageReceived;
 use Valtzu\WebSocketMiddleware\WebSocketMiddleware;
 use Valtzu\WebSocketMiddleware\WebSocketStream;
 
@@ -47,6 +50,12 @@ class FirehoseServeCommand extends Command
         '#commit',
         '#identity',
         '#account',
+
+        // DEPRECATED
+        '#handle',
+        '#migrate',
+        '#tombstone',
+        '#info',
     ];
 
     protected const ACTIONS = [
@@ -62,32 +71,11 @@ class FirehoseServeCommand extends Command
      */
     public function handle(): int
     {
-        $handlerStack = new HandlerStack(new StreamHandler());
-        $handlerStack->push(new WebSocketMiddleware());
-        $client = new Client(['handler' => $handlerStack]);
-
-        $host = (string) $this->option('host');
-
-        $uri = 'wss://'.$host.'/xrpc/com.atproto.sync.subscribeRepos';
-
-        $res = $client->get($uri);
-
-        if ($res->getStatusCode() !== 101) {
-            dd($res);
-        }
-
-        $ws = $res->getBody();
-
-        if (! $ws instanceof WebSocketStream) {
-            $this->error('Something WebSocket error');
-            dd($ws);
-        }
+        $ws = $this->ws();
 
         $this->trap(SIGTERM, function () {
             $this->running = false;
         });
-
-        $this->info('Host : '.$host);
 
         while ($this->running) {
             $event = rescue(fn () => $ws->read(self::MAX_SIZE), '');
@@ -100,11 +88,6 @@ class FirehoseServeCommand extends Command
             [$header, $remainder] = rescue(fn () => CBOR::decodeFirst($event), [[], '']);
 
             if (data_get($header, 'op') !== 1) {
-                continue;
-            }
-
-            $kind = data_get($header, 't');
-            if (! in_array($kind, self::KINDS, true)) {
                 continue;
             }
 
@@ -128,72 +111,125 @@ class FirehoseServeCommand extends Command
                 continue;
             }
 
-            $records = data_get($payload, 'blocks');
+            /** @var string $kind */
+            $kind = data_get($header, 't');
 
-            $blocks = [];
-            if (filled($records)) {
-                $blocks = rescue(fn () => iterator_to_array(CAR::blockMap($records)));
-
-                if (empty($blocks)) {
-                    //dump($blocks);
-                    continue;
-                }
-            }
-
-            $action = data_get($payload, 'ops.0.action');
-            if (! in_array($action, self::ACTIONS, true)) {
+            if (! in_array($kind, self::KINDS, true)) {
                 continue;
             }
 
-            $did = data_get($payload, 'repo') ?? '';
-            $rev = data_get($payload, 'rev') ?? '';
-            /** @var string $cid */
-            $cid = data_get($payload, 'ops.0.cid') ?? '';
-            $time = data_get($payload, 'time') ?? 0;
-            $path = data_get($payload, 'ops.0.path') ?? '';
-            [$collection, $rkey] = explode('/', $path);
+            // Event processing subdivided by kind
+            match ($kind) {
+                '#commit' => $this->commit($header, $payload, $event),
+                '#identity' => $this->identity($header, $payload, $event),
+                '#account' => $this->account($header, $payload, $event),
+                default => null,
+            };
 
-            $record = collect($blocks)->get($path) ?? [];
-
-            if ($this->output->isVeryVerbose()) {
-                //dump($header);
-                //dump($payload);
-
-//                if (filled($roots)) {
-//                    dump($roots);
-//                }
-//
-//                if (filled($blocks)) {
-//                    dump($blocks);
-//                }
-
-                $block = data_get($record, 'value');
-
-                if (filled($block) && data_get($block, '$type') === 'app.bsky.feed.post') {
-                    dump($record);
-
-                    if (CID::verify(CBOR::encode($block), $cid, codec: CID::DAG_CBOR)) {
-                        dump('Verified: '.$cid);
-                    } else {
-                        dd('Failed: '.$cid, CID::encode(CBOR::encode($record), codec: CID::DAG_CBOR));
-                    }
-                }
-            }
-
-            if (Arr::has($header, ['t'])) {
-                event(new FirehoseMessageReceived(
-                    $did,
-                    $kind,
-                    $action,
-                    $cid,
-                    $record,
-                    $payload,
-                    $host,
-                    $event,
-                ));
+            // Finally, dispatch the raw data event
+            if (Arr::has($header, ['t']) && Arr::has($payload, ['ops'])) {
+                event(new FirehoseMessageReceived($header, $payload, $event,));
             }
         }
 
         return 0;
+    }
+
+    private function commit(array $header, array $payload, string $raw): void
+    {
+        $did = data_get($payload, 'repo') ?? '';
+        $rev = data_get($payload, 'rev') ?? '';
+        $time = data_get($payload, 'time') ?? 0;
+
+        $records = data_get($payload, 'blocks');
+
+        $blocks = [];
+        if (filled($records)) {
+            $blocks = rescue(fn () => iterator_to_array(CAR::blockMap($records)));
+        }
+
+        /** @var array $ops */
+        $ops = data_get($payload, 'ops') ?? [];
+
+        foreach ($ops as $op) {
+            $action = data_get($op, 'action') ?? '';
+            if (! in_array($action, self::ACTIONS, true)) {
+                return;
+            }
+
+            /** @var ?string $cid */
+            $cid = data_get($op, 'cid');
+
+            $path = data_get($op, 'path') ?? '';
+            if (str_contains($path, '/')) {
+                [$collection, $rkey] = explode('/', $path);
+            }
+
+            $record = collect($blocks)->get($path) ?? [];
+
+            if ($this->output->isVeryVerbose()) {
+                $value = data_get($record, 'value');
+
+                if (filled($cid) && filled($value)) {
+                    dump($record);
+
+                    if (CID::verify(CBOR::encode($value), $cid, codec: CID::DAG_CBOR)) {
+                        dump('Verified: '.$cid);
+                    } else {
+                        dump('Failed: '.$cid, CID::encode(CBOR::encode($record), codec: CID::DAG_CBOR));
+                    }
+                }
+            }
+
+            event(new FirehoseCommitMessage($did, $action, $time, $cid, $path, $record, $payload, $raw));
+        }
+    }
+
+    private function identity(array $header, array $payload, string $raw): void
+    {
+        $did = data_get($payload, 'did');
+        $seq = data_get($payload, 'seq');
+        $time = data_get($payload, 'time');
+        $handle = data_get($payload, 'handle');
+
+        event(new FirehoseIdentityMessage($did, $seq, $time, $handle, $raw));
+    }
+
+    private function account(array $header, array $payload, string $raw): void
+    {
+        $did = data_get($payload, 'did');
+        $seq = data_get($payload, 'seq');
+        $time = data_get($payload, 'time');
+        $active = data_get($payload, 'active');
+        $status = data_get($payload, 'status');
+
+        event(new FirehoseAccountMessage($did, $seq, $time, $active, $status, $raw));
+    }
+
+    private function ws(): WebSocketStream
+    {
+        $handlerStack = new HandlerStack(new StreamHandler());
+        $handlerStack->push(new WebSocketMiddleware());
+        $client = new Client(['handler' => $handlerStack]);
+
+        $host = (string) $this->option('host');
+        $this->info('Host : '.$host);
+
+        $uri = 'wss://'.$host.'/xrpc/com.atproto.sync.subscribeRepos';
+
+        $res = $client->get($uri);
+
+        if ($res->getStatusCode() !== 101) {
+            dd($res);
+        }
+
+        $ws = $res->getBody();
+
+        if (! $ws instanceof WebSocketStream) {
+            $this->error('Something WebSocket error');
+            dd($ws);
+        }
+
+        return $ws;
     }
 }

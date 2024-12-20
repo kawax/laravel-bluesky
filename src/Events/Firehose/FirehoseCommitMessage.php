@@ -2,22 +2,18 @@
 
 declare(strict_types=1);
 
-namespace Revolution\Bluesky\Events;
+namespace Revolution\Bluesky\Events\Firehose;
 
-use Illuminate\Foundation\Events\Dispatchable;
-
-class FirehoseMessageReceived
+class FirehoseCommitMessage
 {
-    use Dispatchable;
-
     public function __construct(
         public string $did,
-        public string $kind,
         public string $action,
-        public string $cid,
+        public string $time,
+        public ?string $cid,
+        public string $path,
         public array $record,
         public array $payload,
-        public string $host,
         public string $raw,
     ) {
         //
