@@ -10,12 +10,12 @@
                 {
                     "alt": "",
                     "image": {
-                        "$type": "blob",
                         "ref": {
                             "$link": "bafkreidf3ystxebv33boyb5hr2ggwmlee5x53vubwelsuvmcw3tq4p36pi"
                         },
-                        "mimeType": "image/jpeg",
-                        "size": 148647
+                        "size": 148647,
+                        "$type": "blob",
+                        "mimeType": "image/jpeg"
                     }
                 }
             ]
