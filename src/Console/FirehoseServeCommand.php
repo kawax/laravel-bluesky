@@ -51,10 +51,10 @@ class FirehoseServeCommand extends Command
         '#account',
 
         // DEPRECATED
-        '#handle',
-        '#migrate',
-        '#tombstone',
-        '#info',
+        // '#handle',
+        // '#migrate',
+        // '#tombstone',
+        // '#info',
     ];
 
     protected const ACTIONS = [
