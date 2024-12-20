@@ -128,7 +128,7 @@ class FirehoseServeCommand extends Command
 
             // Finally, dispatch the raw data event
             if (Arr::has($header, ['t']) && Arr::has($payload, ['ops'])) {
-                event(new FirehoseMessageReceived($header, $payload, $event,));
+                event(new FirehoseMessageReceived($header, $payload, $event));
             }
         }
 
