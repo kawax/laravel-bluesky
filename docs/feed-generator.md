@@ -214,6 +214,9 @@ FeedGenerator::validateAuthUsing(function (?string $jwt, Request $request): ?str
 });
 ```
 
+## Note
+The display of the feed is affected by the "language settings of your account". If the feed is not displayed on Bluesky even though the FeedGenerator is retrieving posts, please check the settings.
+
 ## Advanced
 
 Use artisan commands and task schedules to save posts to a database. With algo, you can just retrieve them from the DB. It's up to you how you use it.
