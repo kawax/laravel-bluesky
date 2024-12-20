@@ -79,7 +79,20 @@ class CoreTest extends TestCase
         $this->expectException(InvalidArgumentException::class);
 
         $this->assertSame(0, Varint::decode("\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\x80"));
+    }
+
+    public function test_varint_invalid_length(): void
+    {
+        $this->expectException(InvalidArgumentException::class);
+
         $this->assertSame(0, Varint::decode("\x80\x80\x80\x80\x80\x80\x80\x71\x80\x80"));
+    }
+
+    public function test_varint_invalid_minimally(): void
+    {
+        $this->expectException(InvalidArgumentException::class);
+
+        $this->assertSame(0, Varint::decode("\x80\x00"));
     }
 
     public function test_varint_type_error(): void
