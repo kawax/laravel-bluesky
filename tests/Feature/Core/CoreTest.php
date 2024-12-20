@@ -54,6 +54,23 @@ class CoreTest extends TestCase
         $this->assertTrue(CID::verify($cbor_encoded, $cid, codec: CID::DAG_CBOR));
     }
 
+    public function test_cbor_encode_all(): void
+    {
+        $json = File::json(__DIR__.'/fixture/3juf3jiip3l2x.json');
+        $expect_cid = $json['cid'];
+
+        $cbor = CBOR::encode($json['value']);
+
+        $decode = CBOR::decodeAll($cbor.$cbor);
+
+        $cbor = CBOR::encode($decode[1]);
+
+        $cid = CID::encode($cbor, codec: CID::DAG_CBOR);
+
+        $this->assertSame($json['value'], $decode[1]);
+        $this->assertSame($expect_cid, $cid);
+    }
+
     public function test_varint(): void
     {
         $this->assertSame("\x80\x01", Varint::encode(0x80));
