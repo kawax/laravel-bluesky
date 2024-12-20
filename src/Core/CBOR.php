@@ -23,7 +23,7 @@ final class CBOR
     }
 
     /**
-     * @return array{0: mixed, 1: ?string}
+     * @return array{0: array, 1: ?string}
      */
     public static function decodeFirst(StreamInterface|string $data): array
     {
