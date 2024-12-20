@@ -6,10 +6,12 @@ namespace Tests\Feature\Core;
 
 use GuzzleHttp\Psr7\Utils;
 use Illuminate\Support\Facades\File;
+use InvalidArgumentException;
 use Revolution\Bluesky\Core\CBOR;
 use Revolution\Bluesky\Core\CID;
 use Revolution\Bluesky\Core\Varint;
 use Tests\TestCase;
+use TypeError;
 
 class CoreTest extends TestCase
 {
@@ -42,8 +44,7 @@ class CoreTest extends TestCase
         $cbor_encoded = CBOR::encode($decode);
         $cid = CID::encode($cbor_encoded, codec: CID::DAG_CBOR);
 
-        $this->assertEquals($json['value'], $decode);
-        $this->assertSame($json['value']['text'], $decode['text']);
+        $this->assertSame($json['value'], $decode);
         $this->assertSame($cbor, $cbor_encoded);
         $this->assertSame(225, strlen($cbor));
         $this->assertSame(225, strlen($cbor_encoded));
@@ -60,13 +61,30 @@ class CoreTest extends TestCase
         $this->assertSame("\xAC\x02", Varint::encode(0x012C));
         $this->assertSame("\x80\x80\x01", Varint::encode(0x4000));
         $this->assertSame("\x83\x01", Varint::encode(131));
+        $this->assertSame("\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\x7F", Varint::encode(PHP_INT_MAX));
 
         $this->assertSame(0x80, Varint::decode("\x80\x01"));
         $this->assertSame(0xFF, Varint::decode("\xFF\x01"));
         $this->assertSame(0x012C, Varint::decode("\xAC\x02"));
         $this->assertSame(0x4000, Varint::decode("\x80\x80\x01"));
         $this->assertSame(131, Varint::decode("\x83\x01"));
+        $this->assertSame(PHP_INT_MAX, Varint::decode("\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\x7F"));
 
         $this->assertSame(0x4000, Varint::decodeStream(Utils::streamFor("\x80\x80\x01")));
+        $this->assertSame(PHP_INT_MAX, Varint::decodeStream(Utils::streamFor("\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\x7F\xFF\xFF")));
+    }
+
+    public function test_varint_fails(): void
+    {
+        $this->expectException(InvalidArgumentException::class);
+
+        $this->assertSame(0x4000, Varint::decode("\x80\x80\x80\x80\x80\x80\x80\x71\x80\x80"));
+    }
+
+    public function test_varint_type_error(): void
+    {
+        $this->expectException(TypeError::class);
+
+        $this->assertSame("\xFF", Varint::encode(PHP_INT_MAX + 1));
     }
 }
