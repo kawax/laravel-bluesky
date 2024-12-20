@@ -165,8 +165,9 @@ namespace App\FeedGenerator;
 
 use Illuminate\Http\Request;
 use Revolution\Bluesky\Facades\Bluesky;
+use Revolution\Bluesky\Contracts\FeedGeneratorAlgorithm;
 
-class ArtisanFeed
+class ArtisanFeed implements FeedGeneratorAlgorithm
 {
     public function __invoke(int $limit, ?string $cursor, ?string $user, Request $request): array
     {
