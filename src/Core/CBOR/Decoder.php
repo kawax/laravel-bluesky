@@ -24,7 +24,7 @@ final class Decoder
     protected int $stream_size = 0;
 
     /**
-     * @return array{0: mixed, 1: ?string}
+     * If the CBOR contains multiple data items, decode only the first item and return an array with the remainder left as is.
      */
     public function decodeFirst(StreamInterface $stream): array
     {
@@ -39,15 +39,21 @@ final class Decoder
         return [CBOR::normalize($first), $remainder];
     }
 
+    /**
+     * Decodes a CBOR containing only a single data item.
+     */
     public function decode(StreamInterface $stream): mixed
     {
-        [$value, $remainder] = $this->decodeFirst($stream);
+        [$first, $remainder] = $this->decodeFirst($stream);
 
-        throw_unless(strlen($remainder ?? '') === 0);
+        throw_unless(strlen($remainder ?? '') === 0, InvalidArgumentException::class, 'Multiple data items found');
 
-        return $value;
+        return $first;
     }
 
+    /**
+     * Decode all data from CBOR containing multiple items.
+     */
     public function decodeAll(StreamInterface $stream): array
     {
         $arr = [];
