@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Tests\Feature\FeedGenerator;
 
 use Illuminate\Http\Request;
+use Revolution\Bluesky\Contracts\FeedGeneratorAlgorithm;
 use Revolution\Bluesky\Crypto\DidKey;
 use Revolution\Bluesky\Crypto\JsonWebToken;
 use Revolution\Bluesky\Crypto\K256;
@@ -123,7 +124,7 @@ class FeedGeneratorTest extends TestCase
         $response->assertSuccessful();
     }
 
-    public function test_validate_auth_using()
+    public function test_validate_auth_using(): void
     {
         FeedGenerator::validateAuthUsing(function (?string $jwt, Request $request) {
             return 'did';
@@ -176,9 +177,9 @@ class FeedGeneratorTest extends TestCase
     }
 }
 
-class TestFeed
+class TestFeed implements FeedGeneratorAlgorithm
 {
-    public function __invoke(int $limit, ?string $cursor): array
+    public function __invoke(int $limit, ?string $cursor, ?string $user, Request $request): array
     {
         return [];
     }
