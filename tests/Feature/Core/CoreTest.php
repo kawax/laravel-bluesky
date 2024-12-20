@@ -30,6 +30,14 @@ class CoreTest extends TestCase
 
         $this->assertSame($json['value'], $decode);
         $this->assertSame($expect_cid, $cid);
+
+        $str = CBOR::encode('a');
+        $str = CBOR::decode($str);
+        $this->assertSame('a', $str);
+
+        $int = CBOR::encode(1);
+        $int = CBOR::decode($int);
+        $this->assertSame(1, $int);
     }
 
     public function test_cbor_from_array_2(): void
@@ -61,7 +69,9 @@ class CoreTest extends TestCase
 
         $cbor = CBOR::encode($json['value']);
 
-        $decode = CBOR::decodeAll($cbor.$cbor);
+        $str = CBOR::encode('a');
+        $int = CBOR::encode(1);
+        $decode = CBOR::decodeAll($str.$cbor.$int);
 
         $cbor = CBOR::encode($decode[1]);
 
@@ -69,6 +79,8 @@ class CoreTest extends TestCase
 
         $this->assertSame($json['value'], $decode[1]);
         $this->assertSame($expect_cid, $cid);
+        $this->assertSame('a', $decode[0]);
+        $this->assertSame(1, $decode[2]);
     }
 
     public function test_varint(): void
