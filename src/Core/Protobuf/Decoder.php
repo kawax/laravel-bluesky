@@ -10,7 +10,6 @@ use Psr\Http\Message\StreamInterface;
 use Revolution\Bluesky\Core\CID;
 use Revolution\Bluesky\Core\Varint;
 use RuntimeException;
-use Throwable;
 
 /**
  * @internal
