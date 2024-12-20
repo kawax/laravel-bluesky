@@ -12,6 +12,8 @@ class FirehoseCommitMessage
         public string $time,
         public ?string $cid,
         public string $path,
+        public string $collection,
+        public string $rkey,
         public array $record,
         public array $payload,
         public string $raw,
