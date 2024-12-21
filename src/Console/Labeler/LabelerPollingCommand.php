@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Revolution\Bluesky\Console\Labeler;
 
 use Illuminate\Console\Command;
-use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Config;
 use Revolution\Bluesky\Events\Labeler\NotificationReceived;
@@ -53,6 +52,7 @@ class LabelerPollingCommand extends Command
 
         /** @var string $seen */
         $seen = Cache::get(self::CACHE_KEY, '');
+
         if ($this->output->isVerbose()) {
             $this->line('SeenAt: '.$seen);
         }
@@ -71,18 +71,19 @@ class LabelerPollingCommand extends Command
         $res = Bluesky::updateSeenNotifications($seen);
         Cache::forever(self::CACHE_KEY, $seen);
 
-        $notifications = Arr::wrap($response->json('notifications'));
+        $notifications = $response->collect('notifications');
+
         if ($this->output->isVerbose()) {
-            $this->line('Count: '.count($notifications));
+            $this->line('Count: '.$notifications->count());
         }
 
-        foreach ($notifications as $notification) {
+        $notifications->each(function (array $notification) {
             $reason = data_get($notification, 'reason');
 
             if (in_array($reason, self::REASONS, true)) {
                 event(new NotificationReceived($reason, $notification));
             }
-        }
+        });
 
         return 0;
     }
