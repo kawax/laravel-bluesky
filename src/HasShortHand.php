@@ -14,7 +14,6 @@ use Revolution\AtProto\Lexicon\Attributes\Format;
 use Revolution\AtProto\Lexicon\Attributes\KnownValues;
 use Revolution\AtProto\Lexicon\Contracts\App\Bsky\Actor as AtActor;
 use Revolution\AtProto\Lexicon\Contracts\App\Bsky\Feed as AtFeed;
-use Revolution\AtProto\Lexicon\Contracts\App\Bsky\Labeler;
 use Revolution\AtProto\Lexicon\Contracts\App\Bsky\Notification as AtNotification;
 use Revolution\AtProto\Lexicon\Contracts\App\Bsky\Video as AtVideo;
 use Revolution\AtProto\Lexicon\Contracts\Com\Atproto\Identity as AtIdentity;
