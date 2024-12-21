@@ -14,6 +14,7 @@ use Revolution\AtProto\Lexicon\Attributes\Format;
 use Revolution\AtProto\Lexicon\Attributes\KnownValues;
 use Revolution\AtProto\Lexicon\Contracts\App\Bsky\Actor as AtActor;
 use Revolution\AtProto\Lexicon\Contracts\App\Bsky\Feed as AtFeed;
+use Revolution\AtProto\Lexicon\Contracts\App\Bsky\Labeler;
 use Revolution\AtProto\Lexicon\Contracts\App\Bsky\Notification as AtNotification;
 use Revolution\AtProto\Lexicon\Contracts\App\Bsky\Video as AtVideo;
 use Revolution\AtProto\Lexicon\Contracts\Com\Atproto\Identity as AtIdentity;
@@ -21,10 +22,12 @@ use Revolution\AtProto\Lexicon\Contracts\Com\Atproto\Repo as AtRepo;
 use Revolution\AtProto\Lexicon\Contracts\Com\Atproto\Server as AtServer;
 use Revolution\AtProto\Lexicon\Enum\Feed;
 use Revolution\AtProto\Lexicon\Enum\Graph;
+use Revolution\AtProto\Lexicon\Record\App\Bsky\Labeler\AbstractService;
 use Revolution\Bluesky\Client\SubClient\VideoClient;
 use Revolution\Bluesky\Contracts\Recordable;
 use Revolution\Bluesky\Record\Follow;
 use Revolution\Bluesky\Record\Generator;
+use Revolution\Bluesky\Record\LabelerService;
 use Revolution\Bluesky\Record\Like;
 use Revolution\Bluesky\Record\Post;
 use Revolution\Bluesky\Record\Profile;
@@ -583,5 +586,33 @@ trait HasShortHand
             ->updateSeen(
                 seenAt: $seenAt,
             );
+    }
+
+    public function upsertLabelDefinitions(callable $callback): Response
+    {
+        $response = $this->getRecord(
+            repo: $this->assertDid(),
+            collection: AbstractService::NSID,
+            rkey: 'self',
+        );
+
+        $service = LabelerService::fromArray($response->json('value'))->tap($callback);
+
+        return $this->putRecord(
+            repo: $this->assertDid(),
+            collection: AbstractService::NSID,
+            rkey: 'self',
+            record: $service,
+            swapRecord: $response->json('cid'),
+        );
+    }
+
+    public function deleteLabelDefinitions(): Response
+    {
+        return $this->deleteRecord(
+            repo: $this->assertDid(),
+            collection: AbstractService::NSID,
+            rkey: 'self',
+        );
     }
 }

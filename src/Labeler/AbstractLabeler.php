@@ -34,7 +34,7 @@ abstract class AbstractLabeler implements Label, Moderation
      *
      * @return array<LabelDefinition>
      */
-    abstract protected function definitions(): array;
+    abstract public function definitions(): array;
 
     /**
      * @link https://docs.bsky.app/docs/api/com-atproto-label-query-labels

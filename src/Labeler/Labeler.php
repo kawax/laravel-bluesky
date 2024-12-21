@@ -29,6 +29,14 @@ final class Labeler
         self::$labeler = $labeler::class;
     }
 
+    public static function getLabelDefinitions(): array
+    {
+        /** @var AbstractLabeler $labeler */
+        $labeler = app(self::$labeler);
+
+        return collect($labeler->definitions())->toArray();
+    }
+
     public static function queryLabels(Request $request): array
     {
         /** @var AbstractLabeler $labeler */
