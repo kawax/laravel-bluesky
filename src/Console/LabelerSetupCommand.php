@@ -40,7 +40,7 @@ class LabelerSetupCommand extends Command
      *
      * @return int
      */
-    public function handle(): int
+    public function handle(SetupLabeler $setup): int
     {
         $confirmed = confirm(
             label: 'Before setting up, have you created an account dedicated to Labeler?',
@@ -107,7 +107,6 @@ class LabelerSetupCommand extends Command
             hint: 'URL where the labeler will be hosted:',
         );
 
-        $setup = app(SetupLabeler::class);
         $setup($did, $password, $service, $plcToken, $endpoint);
 
         $this->info('If successful, PLC will be updated: https://plc.directory/'.$did);
