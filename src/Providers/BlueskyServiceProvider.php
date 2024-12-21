@@ -4,10 +4,13 @@ declare(strict_types=1);
 
 namespace Revolution\Bluesky\Providers;
 
+use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\ServiceProvider;
 use Laravel\Socialite\Facades\Socialite;
 use Revolution\AtProto\Lexicon\Contracts\App\Bsky\Feed;
+use Revolution\AtProto\Lexicon\Contracts\Com\Atproto\Label;
+use Revolution\AtProto\Lexicon\Contracts\Com\Atproto\Moderation;
 use Revolution\Bluesky\BlueskyManager;
 use Revolution\Bluesky\Console\DownloadBlobsCommand;
 use Revolution\Bluesky\Console\DownloadRecordCommand;
@@ -20,6 +23,7 @@ use Revolution\Bluesky\Console\WebSocketServeCommand;
 use Revolution\Bluesky\Contracts\Factory;
 use Revolution\Bluesky\FeedGenerator\Http\DescribeFeedController;
 use Revolution\Bluesky\FeedGenerator\Http\FeedSkeletonController;
+use Revolution\Bluesky\Labeler\Http\LabelerController;
 use Revolution\Bluesky\Socialite\BlueskyProvider;
 use Revolution\Bluesky\Socialite\Http\OAuthMetaController;
 use Revolution\Bluesky\WellKnown\Http\WellKnownController;
@@ -60,6 +64,7 @@ class BlueskyServiceProvider extends ServiceProvider
         $this->socialite();
         $this->generator();
         $this->well();
+        $this->labeler();
     }
 
     protected function socialite(): void
@@ -122,5 +127,20 @@ class BlueskyServiceProvider extends ServiceProvider
             ->name('bluesky.well-known.did');
         Route::get('.well-known/atproto-did', [WellKnownController::class, 'atproto'])
             ->name('bluesky.well-known.atproto');
+    }
+
+    protected function labeler(): void
+    {
+        if (Config::boolean('bluesky.labeler.disabled')) {
+            return;
+        }
+
+        Route::prefix('/xrpc/')
+            ->group(function () {
+                Route::get(Label::queryLabels, [LabelerController::class, 'queryLabels'])
+                    ->name('bluesky.labeler.query');
+                Route::post(Moderation::createReport, [LabelerController::class, 'createReport'])
+                    ->name('bluesky.labeler.report');
+            });
     }
 }
