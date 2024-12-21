@@ -20,7 +20,7 @@ class SetupLabeler
         $key = Config::string('bluesky.labeler.private_key');
 
         if (empty($key)) {
-            throw new RuntimeException('Private key is required.');
+            throw new RuntimeException('Private key for Labeler is required.');
         }
 
         $didkey = DidKey::format(K256::load($key)->publicPEM());
@@ -29,8 +29,6 @@ class SetupLabeler
 
         $credentials = Bluesky::client()
             ->getRecommendedDidCredentials();
-
-        //dump($credentials);
 
         $operation = [];
 
@@ -51,8 +49,6 @@ class SetupLabeler
                 ])->toArray();
         }
 
-        //dump($operation);
-
         if (empty($operation)) {
             return [];
         }
@@ -64,12 +60,8 @@ class SetupLabeler
                 services: data_get($operation, 'services'),
             );
 
-        //dump($plcOp->json());
-
         $submit = Bluesky::client()
             ->submitPlcOperation(operation: $plcOp->json('operation'));
-
-        //dump($submit->json());
 
         return $operation;
     }
