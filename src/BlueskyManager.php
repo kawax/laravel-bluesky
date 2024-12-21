@@ -56,7 +56,8 @@ class BlueskyManager implements Factory
 
         $response = $this->client(auth: false)
             ->baseUrl($service.'/xrpc/')
-            ->createSession($identifier, $password);
+            ->createSession($identifier, $password)
+            ->throw();
 
         $session = LegacySession::create($response->collect());
         $this->agent = LegacyAgent::create($session);

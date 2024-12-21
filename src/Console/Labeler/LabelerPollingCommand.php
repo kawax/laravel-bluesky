@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Revolution\Bluesky\Console\Labeler;
 
 use Illuminate\Console\Command;
+use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Config;
 use Revolution\Bluesky\Events\Labeler\NotificationReceived;
@@ -27,9 +28,9 @@ class LabelerPollingCommand extends Command
      *
      * @var string
      */
-    protected $description = 'Polling notifications for Labeler';
+    protected $description = 'Polling Bluesky notifications for Labeler';
 
-    protected const CACHE_KEY = 'bluesky:labeler:polling:cursor';
+    protected const CACHE_KEY = 'bluesky:labeler:polling:seen';
 
     protected const REASONS = [
         'like',
@@ -50,16 +51,30 @@ class LabelerPollingCommand extends Command
     {
         $limit = (int) $this->option('limit');
 
-        $cursor = Cache::get(self::CACHE_KEY);
+        /** @var string $seen */
+        $seen = Cache::get(self::CACHE_KEY, '');
+        if ($this->output->isVerbose()) {
+            $this->line('SeenAt: '.$seen);
+        }
 
-        $response = Bluesky::login(Config::string('bluesky.labeler.identifier'), Config::string('bluesky.labeler.password'))
-            ->listNotifications(limit: $limit, cursor: $cursor);
+        Bluesky::login(Config::string('bluesky.labeler.identifier'), Config::string('bluesky.labeler.password'));
 
-        $cursor = $response->json('cursor');
-        Cache::forever(self::CACHE_KEY, $cursor);
+        $response = Bluesky::listNotifications(limit: $limit);
 
-        /** @var array $notifications */
-        $notifications = $response->json('notifications');
+        if ($response->failed()) {
+            $this->error($response->body());
+
+            return 1;
+        }
+
+        $seen = now()->toIso8601String();
+        $res = Bluesky::updateSeenNotifications($seen);
+        Cache::forever(self::CACHE_KEY, $seen);
+
+        $notifications = Arr::wrap($response->json('notifications'));
+        if ($this->output->isVerbose()) {
+            $this->line('Count: '.count($notifications));
+        }
 
         foreach ($notifications as $notification) {
             $reason = data_get($notification, 'reason');
