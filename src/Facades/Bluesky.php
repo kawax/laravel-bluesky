@@ -20,7 +20,7 @@ use Revolution\Bluesky\Support\PDS;
  * @method static Response send(BackedEnum|string $api, string $method = 'get', bool $auth = true, ?array $params = null, ?callable $callback = null)
  * @method static Agent agent()
  * @method static static withAgent(?Agent $agent)
- * @method static static login(string $identifier, string $password)
+ * @method static static login(string $identifier, string $password, ?string $service = null)
  * @method static static logout()
  * @method static bool check()
  * @method static Identity identity()

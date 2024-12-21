@@ -587,6 +587,9 @@ trait HasShortHand
             );
     }
 
+    /**
+     * @param  callable(LabelerService $service): LabelerService  $callback
+     */
     public function upsertLabelDefinitions(callable $callback): Response
     {
         $response = $this->getRecord(

@@ -19,9 +19,9 @@ final class LabelerService extends AbstractService implements Arrayable, Recorda
     use Conditionable;
     use Tappable;
 
-    public static function fromArray(Collection|array $service): self
+    public static function fromArray(null|Collection|array $service): self
     {
-        $profile = Collection::make($service);
+        $profile = Collection::make($service ?? []);
 
         $self = new self();
 
@@ -34,6 +34,18 @@ final class LabelerService extends AbstractService implements Arrayable, Recorda
         return $self;
     }
 
+    /**
+     * ```
+     * $policies = [
+     *    'labelValues' => [],
+     *    'labelValueDefinitions' => [],
+     * ]
+     *
+     * ->policies($policies);
+     * ```
+     *
+     * @param  array{labelValues: array, labelValueDefinitions: array}  $policies
+     */
     public function policies(array $policies): self
     {
         $this->policies = $policies;

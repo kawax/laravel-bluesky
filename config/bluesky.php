@@ -89,5 +89,8 @@ return [
 
         'identifier' => env('BLUESKY_LABELER_IDENTIFIER'),
         'password' => env('BLUESKY_LABELER_APP_PASSWORD'),
+
+        // Private key(K256, base64url encoded)
+        'private_key' => env('BLUESKY_LABELER_PRIVATE_KEY'),
     ],
 ];

@@ -13,7 +13,7 @@ interface Factory
 {
     public function withToken(OAuthSession $token): self;
 
-    public function login(string $identifier, string $password): self;
+    public function login(string $identifier, string $password, ?string $service = null): self;
 
     public function client(bool $auth = true): XrpcClient|AtpClient;
 

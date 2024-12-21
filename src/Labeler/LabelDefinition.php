@@ -16,32 +16,35 @@ final readonly class LabelDefinition implements Arrayable
      * @param  array<LabelLocale>  $locales
      */
     public function __construct(
-        private string  $identifier,
+        private string $identifier,
         #[KnownValues(['inform', 'alert', 'none'])]
-        private string  $severity,
+        private string $severity,
         #[KnownValues(['content', 'media', 'none'])]
-        private string  $blurs,
-        private array   $locales,
+        private string $blurs,
+        private array $locales,
         #[KnownValues(['ignore', 'warn', 'hide'])]
         private ?string $defaultSetting = 'warn',
-        private ?bool   $adultOnly = null,
+        private ?bool $adultOnly = null,
     ) {
     }
 
     public static function make(
-        string  $identifier,
-        string  $severity,
-        string  $blurs,
-        array   $locales,
+        string $identifier,
+        string $severity,
+        string $blurs,
+        array $locales,
         ?string $defaultSetting = null,
-        ?bool   $adultOnly = null,
+        ?bool $adultOnly = null,
     ): self {
         return new self(...func_get_args());
     }
 
     public function toArray(): array
     {
+        $locales = collect($this->locales)->toArray();
+
         return collect(get_object_vars($this))
+            ->put('locales', $locales)
             ->reject(fn ($item) => is_null($item))
             ->toArray();
     }

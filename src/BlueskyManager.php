@@ -50,10 +50,12 @@ class BlueskyManager implements Factory
     /**
      * App password authentication.
      */
-    public function login(#[Format('at-identifier')] string $identifier, #[\SensitiveParameter] string $password): Factory
+    public function login(#[Format('at-identifier')] string $identifier, #[\SensitiveParameter] string $password, ?string $service = null): Factory
     {
+        $service = $service ?? $this->entryway();
+
         $response = $this->client(auth: false)
-            ->baseUrl($this->entryway().'/xrpc/')
+            ->baseUrl($service.'/xrpc/')
             ->createSession($identifier, $password);
 
         $session = LegacySession::create($response->collect());
