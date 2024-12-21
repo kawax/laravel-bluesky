@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Revolution\Bluesky\WellKnown;
 
 use Closure;
+use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Str;
 use Revolution\Bluesky\Support\DID;
 
@@ -39,18 +40,24 @@ class WellKnownConfig
             return call_user_func(static::$didUsing);
         }
 
+        $endpoint = Str::rtrim(url('/'), '/');
+
+        $service = [];
+
+        if (! Config::boolean('bluesky.generator.disabled')) {
+            $service[] = [
+                'id' => '#bsky_fg',
+                'type' => 'BskyFeedGenerator',
+                'serviceEndpoint' => $endpoint,
+            ];
+        }
+
         return [
             '@context' => [
                 'https://www.w3.org/ns/did/v1',
             ],
             'id' => config('bluesky.generator.service') ?? DID::web(),
-            'service' => [
-                [
-                    'id' => '#bsky_fg',
-                    'type' => 'BskyFeedGenerator',
-                    'serviceEndpoint' => Str::rtrim(url('/'), '/'),
-                ],
-            ],
+            'service' => $service,
         ];
     }
 
