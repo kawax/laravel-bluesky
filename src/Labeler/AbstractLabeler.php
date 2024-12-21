@@ -20,7 +20,7 @@ abstract class AbstractLabeler implements Label, Moderation
      * ```
      * use Revolution\Bluesky\Labeler\LabelDefinition;
      *
-     * protected function definitions() {
+     * protected function labels() {
      *     return [
      *         new LabelDefinition(
      *               identifier: 'artisan',
@@ -34,7 +34,7 @@ abstract class AbstractLabeler implements Label, Moderation
      *
      * @return array<LabelDefinition>
      */
-    abstract public function definitions(): array;
+    abstract public function labels(): array;
 
     /**
      * @link https://docs.bsky.app/docs/api/com-atproto-label-query-labels

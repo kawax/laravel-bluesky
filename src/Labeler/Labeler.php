@@ -34,7 +34,7 @@ final class Labeler
         /** @var AbstractLabeler $labeler */
         $labeler = app(self::$labeler);
 
-        return collect($labeler->definitions())->toArray();
+        return collect($labeler->labels())->toArray();
     }
 
     public static function queryLabels(Request $request): array

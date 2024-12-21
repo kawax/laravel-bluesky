@@ -21,7 +21,7 @@ class ArtisanLabeler extends AbstractLabeler
      * ```
      * use Revolution\Bluesky\Labeler\LabelDefinition;
      *
-     * protected function definitions() {
+     * protected function labels() {
      *     return [
      *         new LabelDefinition(
      *               identifier: 'artisan',
@@ -35,7 +35,7 @@ class ArtisanLabeler extends AbstractLabeler
      *
      * @return array<LabelDefinition>
      */
-    public function definitions(): array
+    public function labels(): array
     {
         return [
             new LabelDefinition(
