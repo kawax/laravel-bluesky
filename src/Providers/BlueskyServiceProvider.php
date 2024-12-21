@@ -17,6 +17,7 @@ use Revolution\Bluesky\Console\DownloadRecordCommand;
 use Revolution\Bluesky\Console\DownloadRepoCommand;
 use Revolution\Bluesky\Console\FirehoseServeCommand;
 use Revolution\Bluesky\Console\LabelerNewPrivateKeyCommand;
+use Revolution\Bluesky\Console\LabelerSetupCommand;
 use Revolution\Bluesky\Console\LexiconClientCommand;
 use Revolution\Bluesky\Console\NewPrivateKeyCommand;
 use Revolution\Bluesky\Console\UnpackRepoCommand;
@@ -54,6 +55,7 @@ class BlueskyServiceProvider extends ServiceProvider
                 DownloadRecordCommand::class,
                 FirehoseServeCommand::class,
                 LabelerNewPrivateKeyCommand::class,
+                LabelerSetupCommand::class,
             ]);
 
             if (class_exists(LexiconClientCommand::class)) {
