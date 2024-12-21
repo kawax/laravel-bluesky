@@ -83,6 +83,7 @@ return [
         'disabled' => env('BLUESKY_WELLKNOWN_DISABLED', false),
     ],
 
+    // Labeler
     'labeler' => [
         // Disable Labeler routes
         'disabled' => env('BLUESKY_LABELER_DISABLED', false),
