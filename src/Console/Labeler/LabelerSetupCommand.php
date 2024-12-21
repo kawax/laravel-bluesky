@@ -56,7 +56,7 @@ class LabelerSetupCommand extends Command
         $did = text(
             label: 'Enter DID or Handle',
             placeholder: 'alice.bsky.social',
-            default: Config::string('bluesky.labeler.did') ?? Config::string('bluesky.labeler.identifier'),
+            default: config('bluesky.labeler.did') ?? Config::string('bluesky.labeler.identifier'),
             validate: fn (?string $did) => match (true) {
                 Identity::isDID($did) => null,
                 default => throw new InvalidArgumentException("Could not resolve '$did' to a valid account. Please try again."),
