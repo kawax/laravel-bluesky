@@ -24,7 +24,7 @@ class DeclareLabelDefinitions
 
         $policies = [
             'labelValues' => $labelValues->toArray(),
-            'labelValueDefinitions' => $labelValueDefinitions->toArray()
+            'labelValueDefinitions' => $labelValueDefinitions->toArray(),
         ];
 
         return Bluesky::login(Config::string('bluesky.labeler.identifier'), Config::string('bluesky.labeler.password'))

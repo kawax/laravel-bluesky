@@ -7,8 +7,8 @@ use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Str;
 use Revolution\Bluesky\Facades\Bluesky;
-use Revolution\Bluesky\Labeler\DeleteLabelDefinitions;
 use Revolution\Bluesky\Labeler\DeclareLabelDefinitions;
+use Revolution\Bluesky\Labeler\DeleteLabelDefinitions;
 use Revolution\Bluesky\Labeler\SetupLabeler;
 use Revolution\Bluesky\Support\Identity;
 
@@ -64,7 +64,6 @@ Artisan::command('bsky:labeler-delete', function () {
 
 // vendor/bin/testbench bsky:labeler-setup
 Artisan::command('bsky:labeler-setup', function () {
-
     $handle = text(
         label: 'Enter DID or handle',
         default: Config::string('bluesky.labeler.identifier'),

@@ -46,7 +46,7 @@ class SetupLabeler
                 ->merge([
                     'atproto_label' => [
                         'type' => 'AtprotoLabeler',
-                        'endpoint' => $endpoint
+                        'endpoint' => $endpoint,
                     ],
                 ])->toArray();
         }
