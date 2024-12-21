@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Revolution\Bluesky\Console;
+namespace Revolution\Bluesky\Console\Labeler;
 
 use Illuminate\Console\Command;
 use Revolution\Bluesky\Crypto\K256;
