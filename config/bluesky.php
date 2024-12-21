@@ -88,6 +88,8 @@ return [
         // Disable Labeler routes
         'disabled' => env('BLUESKY_LABELER_DISABLED', false),
 
+        'did' => env('BLUESKY_LABELER_DID'),
+
         'identifier' => env('BLUESKY_LABELER_IDENTIFIER'),
         'password' => env('BLUESKY_LABELER_APP_PASSWORD'),
 
