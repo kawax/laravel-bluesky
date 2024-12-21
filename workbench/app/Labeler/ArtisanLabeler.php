@@ -43,7 +43,7 @@ class ArtisanLabeler extends AbstractLabeler
                 severity: 'inform',
                 blurs: 'none',
                 locales: [
-                    new LabelLocale(lang: 'en', name: 'artisan', description: 'Web artisan')
+                    new LabelLocale(lang: 'en', name: 'artisan', description: 'Web artisan'),
                 ],
             ),
         ];
@@ -56,7 +56,8 @@ class ArtisanLabeler extends AbstractLabeler
     #[Output(Label::queryLabelsResponse)]
     public function queryLabels(array $uriPatterns, #[Format('did')] ?array $sources = null, ?int $limit = 50, ?string $cursor = null): array
     {
-        // TODO: Implement queryLabels() method.
+        dump($uriPatterns);
+        return [];
     }
 
     /**
@@ -66,6 +67,6 @@ class ArtisanLabeler extends AbstractLabeler
     #[Output(Moderation::createReportResponse)]
     public function createReport(#[Ref('com.atproto.moderation.defs#reasonType')] string $reasonType, #[Union(['com.atproto.admin.defs#repoRef', 'com.atproto.repo.strongRef'])] array $subject, ?string $reason = null): array
     {
-        // TODO: Implement createReport() method.
+        return [];
     }
 }
