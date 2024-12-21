@@ -42,6 +42,10 @@ final class Labeler
         /** @var AbstractLabeler $labeler */
         $labeler = app(self::$labeler);
 
+        $request->mergeIfMissing([
+            'uriPatterns' => [],
+        ]);
+
         return $labeler->queryLabels(...$request->all());
     }
 
