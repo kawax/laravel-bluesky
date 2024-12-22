@@ -164,6 +164,7 @@ class FeedGeneratorTest extends TestCase
         Bluesky::shouldReceive('identity->resolveDID->json')->once()->andReturn([
             'verificationMethod' => [
                 [
+                    'id' => '#atproto',
                     'type' => 'Multikey',
                     'publicKeyMultibase' => $didkey,
                 ],

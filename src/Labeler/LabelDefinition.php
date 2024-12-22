@@ -17,24 +17,24 @@ final readonly class LabelDefinition implements Arrayable
      */
     public function __construct(
         private string $identifier,
-        #[KnownValues(['inform', 'alert', 'none'])]
-        private string $severity,
-        #[KnownValues(['content', 'media', 'none'])]
-        private string $blurs,
         private array $locales,
+        #[KnownValues(['inform', 'alert', 'none'])]
+        private string $severity = 'inform',
+        #[KnownValues(['content', 'media', 'none'])]
+        private string $blurs = 'none',
         #[KnownValues(['ignore', 'warn', 'hide'])]
-        private ?string $defaultSetting = 'warn',
-        private ?bool $adultOnly = null,
+        private string $defaultSetting = 'warn',
+        private bool $adultOnly = false,
     ) {
     }
 
     public static function make(
         string $identifier,
-        string $severity,
-        string $blurs,
         array $locales,
-        ?string $defaultSetting = null,
-        ?bool $adultOnly = null,
+        string $severity = 'inform',
+        string $blurs = 'none',
+        string $defaultSetting = 'warn',
+        bool $adultOnly = false,
     ): self {
         return new self(...func_get_args());
     }

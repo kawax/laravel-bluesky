@@ -11,6 +11,8 @@ use Revolution\Bluesky\Record\LabelerService;
 use RuntimeException;
 
 /**
+ * @internal
+ *
  * @link https://github.com/skyware-js/labeler/blob/main/src/scripts/declareLabeler.ts
  */
 class DeclareLabelDefinitions

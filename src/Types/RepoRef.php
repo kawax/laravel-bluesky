@@ -14,6 +14,7 @@ final class RepoRef extends AbstractUnion implements Arrayable
 {
     public function __construct(protected string $did)
     {
+        $this->type = 'com.atproto.admin.defs#repoRef';
     }
 
     /**
@@ -32,6 +33,7 @@ final class RepoRef extends AbstractUnion implements Arrayable
     public function toArray(): array
     {
         return [
+            '$type' => $this->type,
             'did' => $this->did,
         ];
     }

@@ -5,10 +5,19 @@ declare(strict_types=1);
 namespace Revolution\Bluesky\Labeler;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Arr;
+use Illuminate\Support\Facades\Config;
 use InvalidArgumentException;
+use Revolution\Bluesky\Core\CBOR;
+use Revolution\Bluesky\Core\CBOR\AtBytes;
+use Revolution\Bluesky\Crypto\K256;
+use Revolution\Bluesky\FeedGenerator\ValidateAuth;
+use RuntimeException;
 
 final class Labeler
 {
+    public const VERSION = 1;
+
     protected static string $labeler;
 
     /**
@@ -37,18 +46,53 @@ final class Labeler
         return collect($labeler->labels())->toArray();
     }
 
-    public static function emitEvent(Request $request): array
+    /**
+     * @return iterable<null|SubscribeLabelMessage>
+     *
+     * @throws LabelerException
+     */
+    public static function subscribeLabels(?int $cursor): iterable
+    {
+        /** @var ?AbstractLabeler $labeler */
+        $labeler = app(self::$labeler);
+
+        if (! $labeler instanceof AbstractLabeler) {
+            throw new LabelerException('Labeler class not found');
+        }
+
+        yield from $labeler->subscribeLabels($cursor);
+    }
+
+    /**
+     * @return iterable<UnsignedLabel>
+     *
+     * @throws LabelerException
+     */
+    public static function emitEvent(Request $request, ?string $token): iterable
     {
         /** @var AbstractLabeler $labeler */
         $labeler = app(self::$labeler);
 
-        $request->mergeIfMissing([
-            'event' => [],
-            'subject' => [],
-            'createdBy' => '',
-        ]);
+        $user = self::verifyJWT($request, $token);
 
-        return $labeler->emitEvent(...$request->all());
+        if (empty($user)) {
+            throw new LabelerException('Invalid JWT');
+        }
+
+        yield from $labeler->emitEvent($request, $user, $token);
+    }
+
+    private static function verifyJWT(Request $request, ?string $token): ?string
+    {
+        return app()->call(ValidateAuth::class, ['jwt' => $token, 'request' => $request]);
+    }
+
+    public static function saveLabel(SignedLabel $label, string $sign): SavedLabel
+    {
+        /** @var AbstractLabeler $labeler */
+        $labeler = app(self::$labeler);
+
+        return $labeler->saveLabel($label, $sign);
     }
 
     public static function queryLabels(Request $request): array
@@ -56,11 +100,7 @@ final class Labeler
         /** @var AbstractLabeler $labeler */
         $labeler = app(self::$labeler);
 
-        $request->mergeIfMissing([
-            'uriPatterns' => [],
-        ]);
-
-        return $labeler->queryLabels(...$request->all());
+        return $labeler->queryLabels($request);
     }
 
     public static function createReport(Request $request): array
@@ -68,11 +108,53 @@ final class Labeler
         /** @var AbstractLabeler $labeler */
         $labeler = app(self::$labeler);
 
-        $request->mergeIfMissing([
-            'reasonType' => '',
-            'subject' => [],
-        ]);
+        return $labeler->createReport($request);
+    }
 
-        return $labeler->createReport(...$request->all());
+    /**
+     * ```
+     * [$signed, $sign] = Labeler::signLabel($unsigned);
+     *
+     * $signed
+     * SignedLabel
+     *
+     * $sign
+     * raw bytes
+     * ```
+     *
+     * @return array{0: SignedLabel, 1: string}
+     */
+    public static function signLabel(UnsignedLabel $unsigned): array
+    {
+        /** @var AbstractLabeler $labeler */
+        $labeler = app(self::$labeler);
+        if (method_exists($labeler, 'signLabel')) {
+            return $labeler->signLabel($unsigned);
+        }
+
+        $label = $unsigned->toArray();
+
+        $label = Arr::add($label, 'ver', self::VERSION);
+
+        if (Arr::get($label, 'neg') === true) {
+            $label['neg'] = true;
+        } else {
+            unset($label['neg']);
+        }
+
+        $bytes = CBOR::encode($label);
+
+        $key = Config::string('bluesky.labeler.private_key');
+
+        if (empty($key)) {
+            throw new RuntimeException('Private key for Labeler is required.');
+        }
+
+        $sign = K256::load($key)->privateKey()->sign($bytes);
+
+        $label = Arr::add($label, 'sig', new AtBytes($sign));
+        $label = SignedLabel::fromArray($label);
+
+        return [$label, $sign];
     }
 }

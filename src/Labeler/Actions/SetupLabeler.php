@@ -11,6 +11,8 @@ use Revolution\Bluesky\Facades\Bluesky;
 use RuntimeException;
 
 /**
+ * @internal
+ *
  * @link https://github.com/skyware-js/labeler/blob/main/src/scripts/plc.ts#L45
  */
 class SetupLabeler

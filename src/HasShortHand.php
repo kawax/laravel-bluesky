@@ -6,6 +6,7 @@ namespace Revolution\Bluesky;
 
 use BackedEnum;
 use Illuminate\Auth\AuthenticationException;
+use Illuminate\Contracts\Support\Arrayable;
 use Illuminate\Http\Client\Response;
 use InvalidArgumentException;
 use JetBrains\PhpStorm\ArrayShape;
@@ -33,6 +34,7 @@ use Revolution\Bluesky\Record\Profile;
 use Revolution\Bluesky\Record\Repost;
 use Revolution\Bluesky\Record\ThreadGate;
 use Revolution\Bluesky\Support\AtUri;
+use Revolution\Bluesky\Types\RepoRef;
 use Revolution\Bluesky\Types\StrongRef;
 
 use function Illuminate\Support\enum_value;
@@ -237,7 +239,6 @@ trait HasShortHand
             record: $post,
         );
     }
-
 
     /**
      * @param  string  $uri  at://did:plc:.../app.bsky.feed.post/{rkey}
@@ -647,5 +648,55 @@ trait HasShortHand
             collection: AbstractService::NSID,
             rkey: 'self',
         );
+    }
+
+    /**
+     * ```
+     * $response = Bluesky::login(config('bluesky.labeler.identifier'), config('bluesky.labeler.password'))
+     *                    ->createLabels(RepoRef::to('did'), ['label1', 'label2']);
+     * ```
+     */
+    public function createLabels(RepoRef|StrongRef|array $subject, array $labels): Response
+    {
+        $event = [
+            '$type' => 'tools.ozone.moderation.defs#modEventLabel',
+            'createLabelVals' => $labels,
+            'negateLabelVals' => [],
+        ];
+
+        return $this->emitEventLabel(
+            event: $event,
+            subject: $subject,
+        );
+    }
+
+    public function deleteLabels(RepoRef|StrongRef|array $subject, array $labels): Response
+    {
+        $event = [
+            '$type' => 'tools.ozone.moderation.defs#modEventLabel',
+            'createLabelVals' => [],
+            'negateLabelVals' => $labels,
+        ];
+
+        return $this->emitEventLabel(
+            event: $event,
+            subject: $subject,
+        );
+    }
+
+    private function emitEventLabel(array $event, RepoRef|StrongRef|array $subject): Response
+    {
+        $labeler = $this->assertDid();
+
+        $subject = $subject instanceof Arrayable ? $subject->toArray() : $subject;
+
+        return $this->client(auth: true)
+            ->ozone()
+            ->withServiceProxy($labeler.'#atproto_labeler')
+            ->emitEvent(
+                event: $event,
+                subject: $subject,
+                createdBy: $labeler,
+            );
     }
 }

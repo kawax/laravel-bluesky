@@ -11,7 +11,6 @@ use Laravel\Socialite\Facades\Socialite;
 use Revolution\AtProto\Lexicon\Contracts\App\Bsky\Feed;
 use Revolution\AtProto\Lexicon\Contracts\Com\Atproto\Label;
 use Revolution\AtProto\Lexicon\Contracts\Com\Atproto\Moderation;
-use Revolution\AtProto\Lexicon\Contracts\Tools\Ozone\Moderation as OzoneModeration;
 use Revolution\Bluesky\BlueskyManager;
 use Revolution\Bluesky\Console\DownloadBlobsCommand;
 use Revolution\Bluesky\Console\DownloadRecordCommand;
@@ -20,6 +19,7 @@ use Revolution\Bluesky\Console\FirehoseServeCommand;
 use Revolution\Bluesky\Console\Labeler\LabelerDeclareLabelsCommand;
 use Revolution\Bluesky\Console\Labeler\LabelerNewPrivateKeyCommand;
 use Revolution\Bluesky\Console\Labeler\LabelerPollingCommand;
+use Revolution\Bluesky\Console\Labeler\LabelerServeCommand;
 use Revolution\Bluesky\Console\Labeler\LabelerSetupCommand;
 use Revolution\Bluesky\Console\LexiconClientCommand;
 use Revolution\Bluesky\Console\NewPrivateKeyCommand;
@@ -61,6 +61,7 @@ class BlueskyServiceProvider extends ServiceProvider
                 LabelerSetupCommand::class,
                 LabelerPollingCommand::class,
                 LabelerDeclareLabelsCommand::class,
+                LabelerServeCommand::class,
             ]);
 
             if (class_exists(LexiconClientCommand::class)) {
@@ -150,8 +151,6 @@ class BlueskyServiceProvider extends ServiceProvider
                     ->name('bluesky.labeler.query');
                 Route::post(Moderation::createReport, [LabelerController::class, 'createReport'])
                     ->name('bluesky.labeler.report');
-                Route::post(OzoneModeration::emitEvent, [LabelerController::class, 'emitEvent'])
-                    ->name('bluesky.labeler.emit-event');
             });
     }
 }

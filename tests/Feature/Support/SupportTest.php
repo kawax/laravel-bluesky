@@ -32,7 +32,7 @@ class SupportTest extends TestCase
             ],
             'verificationMethod' => [
                 [
-                    'id' => '',
+                    'id' => 'did:plc:test#atproto',
                     'type' => 'Multikey',
                     'controller' => '',
                     'publicKeyMultibase' => 'ztest',

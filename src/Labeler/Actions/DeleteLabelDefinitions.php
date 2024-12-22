@@ -8,6 +8,8 @@ use Illuminate\Support\Facades\Config;
 use Revolution\Bluesky\Facades\Bluesky;
 
 /**
+ * @internal
+ *
  * @link https://github.com/skyware-js/labeler/blob/main/src/scripts/declareLabeler.ts
  */
 class DeleteLabelDefinitions

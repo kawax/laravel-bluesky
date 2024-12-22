@@ -2,12 +2,13 @@
 
 namespace Workbench\App\Labeler;
 
-use Revolution\AtProto\Lexicon\Attributes\Format;
-use Revolution\AtProto\Lexicon\Attributes\Ref;
-use Revolution\AtProto\Lexicon\Attributes\Union;
+use Illuminate\Http\Request;
 use Revolution\Bluesky\Labeler\AbstractLabeler;
 use Revolution\Bluesky\Labeler\LabelDefinition;
 use Revolution\Bluesky\Labeler\LabelLocale;
+use Revolution\Bluesky\Labeler\SavedLabel;
+use Revolution\Bluesky\Labeler\SignedLabel;
+use Revolution\Bluesky\Labeler\SubscribeLabelMessage;
 
 class ArtisanLabeler extends AbstractLabeler
 {
@@ -19,26 +20,41 @@ class ArtisanLabeler extends AbstractLabeler
         return [
             new LabelDefinition(
                 identifier: 'artisan',
-                severity: 'inform',
-                blurs: 'none',
                 locales: [
                     new LabelLocale(lang: 'en', name: 'artisan', description: 'Web artisan'),
                 ],
+                severity: 'inform',
+                blurs: 'none',
             ),
         ];
     }
 
-    public function emitEvent(array $event, array $subject, string $createdBy, ?array $subjectBlobCids = null): array
+    /**
+     * @return iterable<null|SubscribeLabelMessage>
+     *
+     * @throw LabelerException
+     */
+    public function subscribeLabels(?int $cursor): iterable
+    {
+        yield null;
+    }
+
+    public function emitEvent(Request $request, ?string $user, ?string $token): iterable
+    {
+        return null;
+    }
+
+    public function saveLabel(SignedLabel $label, string $sign): ?SavedLabel
+    {
+        return null;
+    }
+
+    public function createReport(Request $request): array
     {
         return [];
     }
 
-    public function queryLabels(array $uriPatterns, #[Format('did')] ?array $sources = null, ?int $limit = 50, ?string $cursor = null): array
-    {
-        return [];
-    }
-
-    public function createReport(#[Ref('com.atproto.moderation.defs#reasonType')] string $reasonType, #[Union(['com.atproto.admin.defs#repoRef', 'com.atproto.repo.strongRef'])] array $subject, ?string $reason = null): array
+    public function queryLabels(Request $request): array
     {
         return [];
     }

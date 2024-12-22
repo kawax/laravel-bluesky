@@ -138,9 +138,9 @@ final class Decoder
         return $this->stream->read(min($length, $this->stream_size));
     }
 
-    private function readBytes(int $length): BytesWrapper
+    private function readBytes(int $length): AtBytes
     {
-        return new BytesWrapper($this->stream->read(min($length, $this->stream_size)));
+        return new AtBytes($this->stream->read(min($length, $this->stream_size)));
     }
 
     private function readCid(int $length): CIDLinkWrapper

@@ -39,6 +39,7 @@ final class StrongRef extends AbstractStrongRef implements Arrayable
     public function toArray(): array
     {
         return [
+            '$type' => self::NSID,
             'uri' => $this->uri,
             'cid' => $this->cid,
         ];

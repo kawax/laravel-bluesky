@@ -4,10 +4,9 @@ declare(strict_types=1);
 
 namespace Revolution\Bluesky\Labeler;
 
-use Revolution\AtProto\Lexicon\Contracts\Com\Atproto\Label;
-use Revolution\AtProto\Lexicon\Contracts\Com\Atproto\Moderation;
+use Illuminate\Http\Request;
 
-abstract class AbstractLabeler implements Label, Moderation
+abstract class AbstractLabeler
 {
     /**
      * Label definitions.
@@ -20,9 +19,15 @@ abstract class AbstractLabeler implements Label, Moderation
      *     return [
      *         new LabelDefinition(
      *               identifier: 'artisan',
+     *               locales: [
+     *                   new LabelLocale(
+     *                       lang: 'en',
+     *                       name: 'artisan',
+     *                       description: 'Web artisan',
+     *                   ),
+     *               ],
      *               severity: 'inform',
      *               blurs: 'none',
-     *               locales: [new LabelLocale(lang: 'en', name: 'artisan', description: 'Web artisan')],
      *         ),
      *     ];
      * }
@@ -33,25 +38,37 @@ abstract class AbstractLabeler implements Label, Moderation
     abstract public function labels(): array;
 
     /**
-     * Take a moderation action on an actor.
+     * @return iterable<null|SubscribeLabelMessage>
      *
-     * @return array{id: int, event: array, subject: array, subjectBlobCids: array, createdBy: string, createdAt: string, creatorHandle?: string, subjectHandle?: string}
+     * @throw LabelerException
+     */
+    abstract public function subscribeLabels(?int $cursor): iterable;
+
+    /**
+     * @return iterable<UnsignedLabel>
+     *
+     * @throw LabelerException
      *
      * @link https://docs.bsky.app/docs/api/tools-ozone-moderation-emit-event
      */
-    abstract public function emitEvent(array $event, array $subject, string $createdBy, ?array $subjectBlobCids = null): array;
+    abstract public function emitEvent(Request $request, ?string $user, ?string $token): iterable;
 
     /**
-     * @return array{cursor: string, labels: array{ver?: int, src: string, uri: string, cid?: string, val: string, neg?: bool, cts: string, exp?: string, sig?: mixed}}
-     *
-     * @link https://docs.bsky.app/docs/api/com-atproto-label-query-labels
+     * @throw LabelerException
      */
-    abstract public function queryLabels(array $uriPatterns, ?array $sources = null, ?int $limit = 50, ?string $cursor = null): array;
+    abstract public function saveLabel(SignedLabel $label, string $sign): ?SavedLabel;
 
     /**
      * @return array{id: int, reasonType: string, reason: string, subject: array, reportedBy: string, createdAt: string}
      *
      * @link https://docs.bsky.app/docs/api/com-atproto-moderation-create-report
      */
-    abstract public function createReport(string $reasonType, array $subject, ?string $reason = null): array;
+    abstract public function createReport(Request $request): array;
+
+    /**
+     * @return array{cursor: string, labels: array{ver?: int, src: string, uri: string, cid?: string, val: string, neg?: bool, cts: string, exp?: string, sig?: mixed}}
+     *
+     * @link https://docs.bsky.app/docs/api/com-atproto-label-query-labels
+     */
+    abstract public function queryLabels(Request $request): array;
 }
