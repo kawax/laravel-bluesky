@@ -9,6 +9,11 @@ use Revolution\Bluesky\Labeler\Labeler;
 
 final class LabelerController
 {
+    public function emitEvent(Request $request): array
+    {
+        return Labeler::emitEvent($request);
+    }
+
     public function queryLabels(Request $request): array
     {
         return Labeler::queryLabels($request);
