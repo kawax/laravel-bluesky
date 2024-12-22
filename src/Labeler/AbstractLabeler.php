@@ -33,8 +33,6 @@ abstract class AbstractLabeler implements Label, Moderation
     abstract public function labels(): array;
 
     /**
-     * Take a moderation action on an actor.
-     *
      * @return array{id: int, event: array, subject: array, subjectBlobCids: array, createdBy: string, createdAt: string, creatorHandle?: string, subjectHandle?: string}
      *
      * @link https://docs.bsky.app/docs/api/tools-ozone-moderation-emit-event
@@ -42,16 +40,16 @@ abstract class AbstractLabeler implements Label, Moderation
     abstract public function emitEvent(array $event, array $subject, string $createdBy, ?array $subjectBlobCids = null): array;
 
     /**
-     * @return array{cursor: string, labels: array{ver?: int, src: string, uri: string, cid?: string, val: string, neg?: bool, cts: string, exp?: string, sig?: mixed}}
-     *
-     * @link https://docs.bsky.app/docs/api/com-atproto-label-query-labels
-     */
-    abstract public function queryLabels(array $uriPatterns, ?array $sources = null, ?int $limit = 50, ?string $cursor = null): array;
-
-    /**
      * @return array{id: int, reasonType: string, reason: string, subject: array, reportedBy: string, createdAt: string}
      *
      * @link https://docs.bsky.app/docs/api/com-atproto-moderation-create-report
      */
     abstract public function createReport(string $reasonType, array $subject, ?string $reason = null): array;
+
+    /**
+     * @return array{cursor: string, labels: array{ver?: int, src: string, uri: string, cid?: string, val: string, neg?: bool, cts: string, exp?: string, sig?: mixed}}
+     *
+     * @link https://docs.bsky.app/docs/api/com-atproto-label-query-labels
+     */
+    abstract public function queryLabels(array $uriPatterns, ?array $sources = null, ?int $limit = 50, ?string $cursor = null): array;
 }
