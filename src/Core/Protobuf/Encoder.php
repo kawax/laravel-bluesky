@@ -156,10 +156,6 @@ final class Encoder
             $node = ['Data' => $node];
         }
 
-        if (! is_array($node)) {
-            throw new InvalidArgumentException('Invalid DAG-PB: node must be an array');
-        }
-
         $pbn = [];
 
         if (array_key_exists('Data', $node)) {
