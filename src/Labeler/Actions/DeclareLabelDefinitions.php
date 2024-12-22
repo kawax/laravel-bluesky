@@ -6,7 +6,9 @@ namespace Revolution\Bluesky\Labeler\Actions;
 
 use Illuminate\Support\Facades\Config;
 use Revolution\Bluesky\Facades\Bluesky;
+use Revolution\Bluesky\Labeler\Labeler;
 use Revolution\Bluesky\Record\LabelerService;
+use RuntimeException;
 
 /**
  * @link https://github.com/skyware-js/labeler/blob/main/src/scripts/declareLabeler.ts
@@ -17,7 +19,7 @@ class DeclareLabelDefinitions
     {
         $labelValueDefinitions = collect(Labeler::getLabelDefinitions());
         if ($labelValueDefinitions->count() === 0) {
-            return [];
+            throw new RuntimeException('No label definitions found.');
         }
 
         $labelValues = $labelValueDefinitions->pluck('identifier');
@@ -29,6 +31,7 @@ class DeclareLabelDefinitions
 
         return Bluesky::login(Config::string('bluesky.labeler.identifier'), Config::string('bluesky.labeler.password'))
             ->upsertLabelDefinitions(fn (LabelerService $service) => $service->policies($policies))
+            ->throw()
             ->json();
     }
 }

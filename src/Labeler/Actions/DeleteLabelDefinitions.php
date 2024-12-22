@@ -16,6 +16,7 @@ class DeleteLabelDefinitions
     {
         return Bluesky::login(Config::string('bluesky.labeler.identifier'), Config::string('bluesky.labeler.password'))
             ->deleteLabelDefinitions()
+            ->throw()
             ->json();
     }
 }
