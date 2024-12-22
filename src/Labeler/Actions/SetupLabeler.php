@@ -42,7 +42,7 @@ class SetupLabeler
         if ($credentials->json('services.atproto_labeler.endpoint') !== $endpoint) {
             $operation['services'] = $credentials->collect('services')
                 ->merge([
-                    'atproto_label' => [
+                    'atproto_labeler' => [
                         'type' => 'AtprotoLabeler',
                         'endpoint' => $endpoint,
                     ],
