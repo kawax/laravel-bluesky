@@ -4,9 +4,11 @@ declare(strict_types=1);
 
 namespace Revolution\Bluesky\Core\CBOR;
 
+use GuzzleHttp\Psr7\Utils;
 use Illuminate\Contracts\Support\Arrayable;
 use Illuminate\Support\Arr;
 use InvalidArgumentException;
+use Psr\Http\Message\StreamInterface;
 use Revolution\Bluesky\Core\CID;
 
 /**
@@ -16,49 +18,17 @@ use Revolution\Bluesky\Core\CID;
  */
 final class Encoder
 {
-    private const CHUNK_SIZE = 1024;
-
-    private array $chunks = [];
-
-    private string $buffer = '';
-
-    private int $pos = 0;
+    private StreamInterface $buffer;
 
     public function encode(mixed $value): string
     {
-        $this->createState();
+        $this->buffer = Utils::streamFor();
+
         $this->writeValue($value);
-        $this->flushBuffer();
 
-        return implode('', $this->chunks);
-    }
+        $this->buffer->rewind();
 
-    private function createState(): void
-    {
-        $this->chunks = [];
-        $this->buffer = str_repeat(CID::ZERO, self::CHUNK_SIZE);
-        $this->pos = 0;
-    }
-
-    private function flushBuffer(): void
-    {
-        if ($this->pos > 0) {
-            $this->chunks[] = substr($this->buffer, 0, $this->pos);
-        }
-    }
-
-    private function resizeIfNeeded(int $needed): void
-    {
-        $bufLen = strlen($this->buffer);
-        if ($bufLen < $this->pos + $needed) {
-            if ($this->pos > 0) {
-                $this->chunks[] = substr($this->buffer, 0, $this->pos);
-            }
-
-            $newSize = max(self::CHUNK_SIZE, $needed);
-            $this->buffer = str_repeat(CID::ZERO, $newSize);
-            $this->pos = 0;
-        }
+        return $this->buffer->getContents();
     }
 
     private function getInfo(int $arg): int
@@ -74,28 +44,23 @@ final class Encoder
 
     private function writeFloat64(float $val): void
     {
-        $this->resizeIfNeeded(8);
         $data = pack('E', $val);
         $this->writeRaw($data);
     }
 
     private function writeUint8(int $val): void
     {
-        $this->resizeIfNeeded(1);
-        $this->buffer[$this->pos] = chr($val & 0xFF);
-        $this->pos += 1;
+        $this->buffer->write(chr($val & 0xFF));
     }
 
     private function writeUint16(int $val): void
     {
-        $this->resizeIfNeeded(2);
         $data = pack('n', $val);
         $this->writeRaw($data);
     }
 
     private function writeUint32(int $val): void
     {
-        $this->resizeIfNeeded(4);
         $data = pack('N', $val);
         $this->writeRaw($data);
     }
@@ -104,8 +69,6 @@ final class Encoder
     {
         $hi = ($val >> 32) & 0xFFFFFFFF;
         $lo = $val & 0xFFFFFFFF;
-
-        $this->resizeIfNeeded(8);
         $data = pack('N2', $hi, $lo);
         $this->writeRaw($data);
     }
@@ -148,27 +111,17 @@ final class Encoder
 
     private function writeNumber(int|float $val): void
     {
-        if (is_nan($val)) {
-            throw new InvalidArgumentException();
-        }
-
-        if ($val > PHP_INT_MAX || $val < -PHP_INT_MAX) {
-            throw new InvalidArgumentException();
-        }
-
         if (is_int($val)) {
             $this->writeInteger($val);
         } else {
-            $this->writeFloat((float) $val);
+            $this->writeFloat($val);
         }
     }
 
     private function writeString(string $val): void
     {
         $len = strlen($val);
-
         $this->writeTypeAndArgument(3, $len);
-        $this->resizeIfNeeded($len);
         $this->writeRaw($val);
     }
 
@@ -176,9 +129,7 @@ final class Encoder
     {
         $bytes = base64_decode($val);
         $len = strlen($bytes);
-
         $this->writeTypeAndArgument(2, $len);
-        $this->resizeIfNeeded($len);
         $this->writeRaw($bytes);
     }
 
@@ -190,9 +141,8 @@ final class Encoder
         $this->writeTypeAndArgument(6, 42);
         $this->writeTypeAndArgument(2, $len);
 
-        $this->resizeIfNeeded($len);
-        $this->buffer[$this->pos] = CID::ZERO;
-        $this->pos += 1;
+        $this->buffer->write(CID::ZERO);
+
         $this->writeRaw($buf);
     }
 
@@ -235,6 +185,7 @@ final class Encoder
         if (is_array($val) && Arr::isList($val)) {
             $len = count($val);
             $this->writeTypeAndArgument(4, $len);
+
             foreach ($val as $v) {
                 $this->writeValue($v);
             }
@@ -287,10 +238,6 @@ final class Encoder
 
     private function writeRaw(string $data): void
     {
-        $len = strlen($data);
-
-        for ($i = 0; $i < $len; $i++) {
-            $this->buffer[$this->pos++] = $data[$i];
-        }
+        $this->buffer->write($data);
     }
 }
