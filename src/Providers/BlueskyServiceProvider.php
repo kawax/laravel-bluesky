@@ -11,6 +11,7 @@ use Laravel\Socialite\Facades\Socialite;
 use Revolution\AtProto\Lexicon\Contracts\App\Bsky\Feed;
 use Revolution\AtProto\Lexicon\Contracts\Com\Atproto\Label;
 use Revolution\AtProto\Lexicon\Contracts\Com\Atproto\Moderation;
+use Revolution\AtProto\Lexicon\Contracts\Tools\Ozone\Moderation as OzoneModeration;
 use Revolution\Bluesky\BlueskyManager;
 use Revolution\Bluesky\Console\DownloadBlobsCommand;
 use Revolution\Bluesky\Console\DownloadRecordCommand;
@@ -149,6 +150,8 @@ class BlueskyServiceProvider extends ServiceProvider
                     ->name('bluesky.labeler.query');
                 Route::post(Moderation::createReport, [LabelerController::class, 'createReport'])
                     ->name('bluesky.labeler.report');
+                Route::post(OzoneModeration::emitEvent, [LabelerController::class, 'emitEvent'])
+                    ->name('bluesky.labeler.emit-event');
             });
     }
 }
