@@ -37,6 +37,20 @@ final class Labeler
         return collect($labeler->labels())->toArray();
     }
 
+    public static function emitEvent(Request $request): array
+    {
+        /** @var AbstractLabeler $labeler */
+        $labeler = app(self::$labeler);
+
+        $request->mergeIfMissing([
+            'event' => [],
+            'subject' => [],
+            'createdBy' => '',
+        ]);
+
+        return $labeler->emitEvent(...$request->all());
+    }
+
     public static function queryLabels(Request $request): array
     {
         /** @var AbstractLabeler $labeler */
@@ -53,6 +67,11 @@ final class Labeler
     {
         /** @var AbstractLabeler $labeler */
         $labeler = app(self::$labeler);
+
+        $request->mergeIfMissing([
+            'reasonType' => '',
+            'subject' => [],
+        ]);
 
         return $labeler->createReport(...$request->all());
     }

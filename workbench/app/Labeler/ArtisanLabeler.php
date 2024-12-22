@@ -28,10 +28,13 @@ class ArtisanLabeler extends AbstractLabeler
         ];
     }
 
+    public function emitEvent(array $event, array $subject, string $createdBy, ?array $subjectBlobCids = null): array
+    {
+        return [];
+    }
+
     public function queryLabels(array $uriPatterns, #[Format('did')] ?array $sources = null, ?int $limit = 50, ?string $cursor = null): array
     {
-        dump($uriPatterns);
-
         return [];
     }
 
