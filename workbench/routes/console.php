@@ -7,9 +7,9 @@ use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Str;
 use Revolution\Bluesky\Facades\Bluesky;
-use Revolution\Bluesky\Labeler\DeclareLabelDefinitions;
-use Revolution\Bluesky\Labeler\DeleteLabelDefinitions;
-use Revolution\Bluesky\Labeler\SetupLabeler;
+use Revolution\Bluesky\Labeler\Actions\DeclareLabelDefinitions;
+use Revolution\Bluesky\Labeler\Actions\DeleteLabelDefinitions;
+use Revolution\Bluesky\Labeler\Actions\SetupLabeler;
 use Revolution\Bluesky\Support\Identity;
 
 use function Laravel\Prompts\password;

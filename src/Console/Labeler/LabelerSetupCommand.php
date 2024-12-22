@@ -9,7 +9,7 @@ use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Str;
 use InvalidArgumentException;
 use Revolution\Bluesky\Facades\Bluesky;
-use Revolution\Bluesky\Labeler\SetupLabeler;
+use Revolution\Bluesky\Labeler\Actions\SetupLabeler;
 use Revolution\Bluesky\Support\Identity;
 
 use function Laravel\Prompts\confirm;

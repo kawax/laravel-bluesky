@@ -19,6 +19,7 @@ abstract class AbstractLabeler implements Label, Moderation
      *
      * ```
      * use Revolution\Bluesky\Labeler\LabelDefinition;
+     * use Revolution\Bluesky\Labeler\LabelLocale;
      *
      * protected function labels() {
      *     return [

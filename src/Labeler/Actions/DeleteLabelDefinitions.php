@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Revolution\Bluesky\Labeler;
+namespace Revolution\Bluesky\Labeler\Actions;
 
 use Illuminate\Support\Facades\Config;
 use Revolution\Bluesky\Facades\Bluesky;
