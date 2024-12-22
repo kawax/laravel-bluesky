@@ -238,7 +238,6 @@ trait HasShortHand
         );
     }
 
-
     /**
      * @param  string  $uri  at://did:plc:.../app.bsky.feed.post/{rkey}
      */
