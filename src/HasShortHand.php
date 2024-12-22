@@ -238,6 +238,37 @@ trait HasShortHand
         );
     }
 
+
+    /**
+     * @param  string  $uri  at://did:plc:.../app.bsky.feed.post/{rkey}
+     */
+    public function getPost(#[Format('at-uri')] string $uri, ?string $cid = null): Response
+    {
+        $at = AtUri::parse($uri);
+
+        if ($at->collection() !== Feed::Post->value) {
+            throw new InvalidArgumentException();
+        }
+
+        return $this->getRecord(
+            repo: $at->repo(),
+            collection: $at->collection(),
+            rkey: $at->rkey(),
+            cid: $cid,
+        );
+    }
+
+    /**
+     * @param  array<string>  $uris  AT-URI
+     */
+    public function getPosts(array $uris): Response
+    {
+        return $this->client(auth: true)
+            ->getPosts(
+                uris: $uris,
+            );
+    }
+
     /**
      * @param  string  $uri  at://did:plc:.../app.bsky.feed.post/{rkey}
      */

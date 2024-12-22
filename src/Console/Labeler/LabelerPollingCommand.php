@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Revolution\Bluesky\Console\Labeler;
 
 use Illuminate\Console\Command;
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Config;
 use Revolution\Bluesky\Events\Labeler\NotificationReceived;
@@ -51,7 +52,7 @@ class LabelerPollingCommand extends Command
         $limit = (int) $this->option('limit');
 
         /** @var string $seen */
-        $seen = Cache::get(self::CACHE_KEY, '');
+        $seen = Cache::get(self::CACHE_KEY, now()->subDays(7)->toISOString());
 
         if ($this->output->isVerbose()) {
             $this->line('SeenAt: '.$seen);
@@ -67,23 +68,36 @@ class LabelerPollingCommand extends Command
             return 1;
         }
 
-        $seen = now()->toIso8601String();
-        $res = Bluesky::updateSeenNotifications($seen);
-        Cache::forever(self::CACHE_KEY, $seen);
-
         $notifications = $response->collect('notifications');
 
         if ($this->output->isVerbose()) {
             $this->line('Count: '.$notifications->count());
         }
 
-        $notifications->each(function (array $notification) {
-            $reason = data_get($notification, 'reason');
+        $seen = Carbon::parse($seen);
 
-            if (in_array($reason, self::REASONS, true)) {
+        $notifications->each(function (array $notification) use ($seen) {
+            $reason = data_get($notification, 'reason');
+            $indexedAt = Carbon::parse(data_get($notification, 'indexedAt'));
+
+            if ($indexedAt->gt($seen) && in_array($reason, self::REASONS, true)) {
+                if ($this->output->isVerbose()) {
+                    $this->line('Reason: '.$reason);
+                }
+
                 event(new NotificationReceived($reason, $notification));
             }
         });
+
+        $seen = now()->toISOString();
+        $res = Bluesky::updateSeenNotifications($seen);
+        if ($res->failed()) {
+            $this->error($res->body());
+
+            return 1;
+        }
+
+        Cache::forever(self::CACHE_KEY, $seen);
 
         return 0;
     }

@@ -4,11 +4,6 @@ declare(strict_types=1);
 
 namespace Revolution\Bluesky\Labeler;
 
-use Revolution\AtProto\Lexicon\Attributes\Format;
-use Revolution\AtProto\Lexicon\Attributes\NSID;
-use Revolution\AtProto\Lexicon\Attributes\Output;
-use Revolution\AtProto\Lexicon\Attributes\Ref;
-use Revolution\AtProto\Lexicon\Attributes\Union;
 use Revolution\AtProto\Lexicon\Contracts\Com\Atproto\Label;
 use Revolution\AtProto\Lexicon\Contracts\Com\Atproto\Moderation;
 
@@ -38,16 +33,16 @@ abstract class AbstractLabeler implements Label, Moderation
     abstract public function labels(): array;
 
     /**
+     * @return array{cursor: string, labels: array{ver?: int, src: string, uri: string, cid?: string, val: string, neg?: bool, cts: string, exp?: string, sig?: mixed}}
+     *
      * @link https://docs.bsky.app/docs/api/com-atproto-label-query-labels
      */
-    #[NSID(Label::queryLabels)]
-    #[Output(Label::queryLabelsResponse)]
-    abstract public function queryLabels(array $uriPatterns, #[Format('did')] ?array $sources = null, ?int $limit = 50, ?string $cursor = null): array;
+    abstract public function queryLabels(array $uriPatterns, ?array $sources = null, ?int $limit = 50, ?string $cursor = null): array;
 
     /**
+     * @return array{id: int, reasonType: string, reason: string, subject: array, reportedBy: string, createdAt: string}
+     *
      * @link https://docs.bsky.app/docs/api/com-atproto-moderation-create-report
      */
-    #[NSID(Moderation::createReport)]
-    #[Output(Moderation::createReportResponse)]
-    abstract public function createReport(#[Ref('com.atproto.moderation.defs#reasonType')] string $reasonType, #[Union(['com.atproto.admin.defs#repoRef', 'com.atproto.repo.strongRef'])] array $subject, ?string $reason = null): array;
+    abstract public function createReport(string $reasonType, array $subject, ?string $reason = null): array;
 }
