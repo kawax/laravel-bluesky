@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Revolution\Bluesky\Labeler;
 
+use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Config;
 use Revolution\AtProto\Lexicon\Contracts\Tools\Ozone\Moderation as OzoneModeration;
 use Revolution\Bluesky\Core\CBOR;
@@ -52,7 +53,7 @@ final class LabelerServer
 
                     try {
                         info('header', $request->header());
-                        info('token', $request->header('Authorization'));
+                        info('token', Arr::wrap($request->header('Authorization')));
 
                         $emitEvent = Labeler::emitEvent($req);
 
