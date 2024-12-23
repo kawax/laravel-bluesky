@@ -6,6 +6,7 @@ namespace Revolution\Bluesky;
 
 use BackedEnum;
 use Illuminate\Auth\AuthenticationException;
+use Illuminate\Contracts\Support\Arrayable;
 use Illuminate\Http\Client\Response;
 use InvalidArgumentException;
 use JetBrains\PhpStorm\ArrayShape;
@@ -656,6 +657,8 @@ trait HasShortHand
             'createLabelVals' => $labels,
         ];
 
+        $subject = $subject instanceof Arrayable ? $subject->toArray() : $subject;
+
         return $this->client(auth: true)
             ->ozone()
             ->withServiceProxy($labeler.'#atproto_labeler')
@@ -666,3 +669,5 @@ trait HasShortHand
             );
     }
 }
+
+
