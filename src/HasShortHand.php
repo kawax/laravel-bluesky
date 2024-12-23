@@ -673,4 +673,28 @@ trait HasShortHand
                 createdBy: $labeler,
             );
     }
+
+    public function deleteLabels(string $labeler, RepoRef|StrongRef|array $subject, array $labels): Response
+    {
+        $event = [
+            '$type' => 'tools.ozone.moderation.defs#modEventLabel',
+            'createLabelVals' => [],
+            'negateLabelVals' => $labels,
+        ];
+
+        if ($subject instanceof RepoRef) {
+            $subject = ['uri' => data_get($subject->toArray(), 'did')];
+        }
+
+        $subject = $subject instanceof Arrayable ? $subject->toArray() : $subject;
+
+        return $this->client(auth: true)
+            ->withServiceProxy($labeler.'#atproto_labeler')
+            ->ozone()
+            ->emitEvent(
+                event: $event,
+                subject: $subject,
+                createdBy: $labeler,
+            );
+    }
 }
