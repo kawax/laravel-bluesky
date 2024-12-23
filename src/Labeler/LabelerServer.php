@@ -52,6 +52,8 @@ final class LabelerServer
                     );
 
                     try {
+                        info('header', $req->header());
+
                         $emitEvent = Labeler::emitEvent($req);
 
                         // websocket
