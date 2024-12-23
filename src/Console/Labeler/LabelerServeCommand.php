@@ -6,6 +6,7 @@ namespace Revolution\Bluesky\Console\Labeler;
 
 use Illuminate\Console\Command;
 use Revolution\Bluesky\Labeler\LabelerServer;
+use Workerman\Worker;
 
 /**
  * ```
@@ -35,6 +36,12 @@ class LabelerServeCommand extends Command
      */
     public function handle(LabelerServer $server): int
     {
+        if (! class_exists(Worker::class)) {
+            $this->error('Please install workerman/workerman');
+
+            return 1;
+        }
+
         $server->host = (string) $this->option('host');
         $server->port = (int) $this->option('port');
 
