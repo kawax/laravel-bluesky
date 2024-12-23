@@ -64,12 +64,12 @@ final class Labeler
     /**
      * @throws LabelerException
      */
-    public static function emitEvent(Request $request): ?EmitEventResponse
+    public static function emitEvent(Request $request, ?string $token): ?EmitEventResponse
     {
         /** @var AbstractLabeler $labeler */
         $labeler = app(self::$labeler);
 
-        $user = self::verifyJWT($request);
+        $user = self::verifyJWT($request, $token);
 
         if (empty($user)) {
             throw new LabelerException('Invalid JWT');
@@ -78,9 +78,9 @@ final class Labeler
         return $labeler->emitEvent($request, $user);
     }
 
-    private static function verifyJWT(Request $request): ?string
+    private static function verifyJWT(Request $request, ?string $token): ?string
     {
-        return app()->call(ValidateAuth::class, ['jwt' => $request->bearerToken(), 'request' => $request]);
+        return app()->call(ValidateAuth::class, ['jwt' => $token, 'request' => $request]);
     }
 
     public static function queryLabels(Request $request): array
