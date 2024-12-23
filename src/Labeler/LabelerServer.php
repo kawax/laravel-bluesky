@@ -52,7 +52,7 @@ final class LabelerServer
                     );
 
                     try {
-                        info('header', $request->header());
+                        info(LaravelRequest::capture()->bearerToken());
                         info('token', Arr::wrap($request->header('Authorization')));
 
                         $emitEvent = Labeler::emitEvent($req);
