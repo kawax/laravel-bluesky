@@ -7,7 +7,6 @@ namespace Revolution\Bluesky;
 use BackedEnum;
 use Illuminate\Auth\AuthenticationException;
 use Illuminate\Http\Client\Response;
-use Illuminate\Support\Facades\Config;
 use InvalidArgumentException;
 use JetBrains\PhpStorm\ArrayShape;
 use Psr\Http\Message\StreamInterface;
