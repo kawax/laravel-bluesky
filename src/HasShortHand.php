@@ -7,6 +7,7 @@ namespace Revolution\Bluesky;
 use BackedEnum;
 use Illuminate\Auth\AuthenticationException;
 use Illuminate\Http\Client\Response;
+use Illuminate\Support\Facades\Config;
 use InvalidArgumentException;
 use JetBrains\PhpStorm\ArrayShape;
 use Psr\Http\Message\StreamInterface;
@@ -33,6 +34,7 @@ use Revolution\Bluesky\Record\Profile;
 use Revolution\Bluesky\Record\Repost;
 use Revolution\Bluesky\Record\ThreadGate;
 use Revolution\Bluesky\Support\AtUri;
+use Revolution\Bluesky\Types\RepoRef;
 use Revolution\Bluesky\Types\StrongRef;
 
 use function Illuminate\Support\enum_value;
@@ -646,5 +648,22 @@ trait HasShortHand
             collection: AbstractService::NSID,
             rkey: 'self',
         );
+    }
+
+    public function createLabels(string $labeler, RepoRef|StrongRef|array $subject, array $labels): Response
+    {
+        $event = [
+            '$type' => 'tools.ozone.moderation.defs#modEventLabel',
+            'createLabelVals' => $labels,
+        ];
+
+        return $this->client(auth: true)
+            ->ozone()
+            ->withServiceProxy($labeler.'#atproto_labeler')
+            ->emitEvent(
+                event: $event,
+                subject: $subject,
+                createdBy: $this->assertDid(),
+            );
     }
 }
