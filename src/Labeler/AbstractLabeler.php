@@ -4,10 +4,9 @@ declare(strict_types=1);
 
 namespace Revolution\Bluesky\Labeler;
 
-use Revolution\AtProto\Lexicon\Contracts\Com\Atproto\Label;
-use Revolution\AtProto\Lexicon\Contracts\Com\Atproto\Moderation;
+use Illuminate\Http\Request;
 
-abstract class AbstractLabeler implements Label, Moderation
+abstract class AbstractLabeler
 {
     /**
      * Label definitions.
@@ -33,23 +32,27 @@ abstract class AbstractLabeler implements Label, Moderation
     abstract public function labels(): array;
 
     /**
-     * @return array{id: int, event: array, subject: array, subjectBlobCids: array, createdBy: string, createdAt: string, creatorHandle?: string, subjectHandle?: string}
-     *
+     * @return iterable<null|LabelMessage>
+     * @throw LabelerException
+     */
+    abstract public function subscribeLabels(?int $cursor): iterable;
+
+    /**
      * @link https://docs.bsky.app/docs/api/tools-ozone-moderation-emit-event
      */
-    abstract public function emitEvent(array $event, array $subject, string $createdBy, ?array $subjectBlobCids = null): array;
+    abstract public function emitEvent(Request $request, ?string $user): ?EmitEventResponse;
 
     /**
      * @return array{id: int, reasonType: string, reason: string, subject: array, reportedBy: string, createdAt: string}
      *
      * @link https://docs.bsky.app/docs/api/com-atproto-moderation-create-report
      */
-    abstract public function createReport(string $reasonType, array $subject, ?string $reason = null): array;
+    abstract public function createReport(Request $request): array;
 
     /**
      * @return array{cursor: string, labels: array{ver?: int, src: string, uri: string, cid?: string, val: string, neg?: bool, cts: string, exp?: string, sig?: mixed}}
      *
      * @link https://docs.bsky.app/docs/api/com-atproto-label-query-labels
      */
-    abstract public function queryLabels(array $uriPatterns, ?array $sources = null, ?int $limit = 50, ?string $cursor = null): array;
+    abstract public function queryLabels(Request $request): array;
 }

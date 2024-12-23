@@ -2,12 +2,12 @@
 
 namespace Workbench\App\Labeler;
 
-use Revolution\AtProto\Lexicon\Attributes\Format;
-use Revolution\AtProto\Lexicon\Attributes\Ref;
-use Revolution\AtProto\Lexicon\Attributes\Union;
+use Illuminate\Http\Request;
 use Revolution\Bluesky\Labeler\AbstractLabeler;
+use Revolution\Bluesky\Labeler\EmitEventResponse;
 use Revolution\Bluesky\Labeler\LabelDefinition;
 use Revolution\Bluesky\Labeler\LabelLocale;
+use Revolution\Bluesky\Labeler\LabelMessage;
 
 class ArtisanLabeler extends AbstractLabeler
 {
@@ -28,17 +28,26 @@ class ArtisanLabeler extends AbstractLabeler
         ];
     }
 
-    public function emitEvent(array $event, array $subject, string $createdBy, ?array $subjectBlobCids = null): array
+    /**
+     * @return iterable<null|LabelMessage>
+     * @throw LabelerException
+     */
+    public function subscribeLabels(?int $cursor): iterable
+    {
+        yield null;
+    }
+
+    public function emitEvent(Request $request, ?string $user): ?EmitEventResponse
+    {
+        return null;
+    }
+
+    public function createReport(Request $request): array
     {
         return [];
     }
 
-    public function queryLabels(array $uriPatterns, #[Format('did')] ?array $sources = null, ?int $limit = 50, ?string $cursor = null): array
-    {
-        return [];
-    }
-
-    public function createReport(#[Ref('com.atproto.moderation.defs#reasonType')] string $reasonType, #[Union(['com.atproto.admin.defs#repoRef', 'com.atproto.repo.strongRef'])] array $subject, ?string $reason = null): array
+    public function queryLabels(Request $request): array
     {
         return [];
     }
