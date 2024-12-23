@@ -6,6 +6,7 @@ namespace Revolution\Bluesky\Labeler;
 
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Config;
+use Illuminate\Support\Str;
 use Revolution\AtProto\Lexicon\Contracts\Tools\Ozone\Moderation as OzoneModeration;
 use Revolution\Bluesky\Core\CBOR;
 use Workerman\Connection\TcpConnection;
@@ -47,15 +48,12 @@ final class LabelerServer
                         uri: $request->uri(),
                         method: $request->method(),
                         parameters: array_merge($request->get(), $request->post()),
-                        server: $request->header(),
-                        content: $request->rawBody(),
                     );
 
                     try {
-                        info(LaravelRequest::capture()->bearerToken());
-                        info('token', Arr::wrap($request->header('Authorization')));
+                        $token = Str::after($request->header('Authorization'), 'Bearer ');
 
-                        $emitEvent = Labeler::emitEvent($req);
+                        $emitEvent = Labeler::emitEvent($req, $token);
 
                         // websocket
                         $this->createLabels($emitEvent);
