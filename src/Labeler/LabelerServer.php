@@ -105,6 +105,10 @@ final class LabelerServer
             }
         };
 
+        $this->ws->onMessage = function (TcpConnection $connection, string $data) {
+            $connection->send($data);
+        };
+
         Worker::runAll();
     }
 
