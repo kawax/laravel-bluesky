@@ -14,11 +14,11 @@ class EmitEventResponse implements Arrayable, Jsonable
         protected int $id,
         public array $event,
         public array $subject,
-        protected array $subjectBlobCids,
         protected string $createdBy,
-        protected ?string $createdAt,
-        protected ?string $creatorHandle,
-        protected ?string $subjectHandle,
+        protected array $subjectBlobCids = [],
+        protected ?string $createdAt = null,
+        protected ?string $creatorHandle = null,
+        protected ?string $subjectHandle = null,
     ) {
     }
 
