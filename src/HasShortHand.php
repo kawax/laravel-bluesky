@@ -658,6 +658,10 @@ trait HasShortHand
             'negateLabelVals' => [],
         ];
 
+        if ($subject instanceof RepoRef) {
+            $subject = ['uri' => data_get($subject->toArray(), 'did')];
+        }
+
         $subject = $subject instanceof Arrayable ? $subject->toArray() : $subject;
 
         return $this->client(auth: true)
