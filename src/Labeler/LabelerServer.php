@@ -51,6 +51,9 @@ final class LabelerServer
                     );
 
                     try {
+                        info('req', $req->all());
+                        info('sub', $req->input('subject'));
+
                         $token = Str::after($request->header('Authorization'), 'Bearer ');
 
                         $emitEvent = Labeler::emitEvent($req, $token);
