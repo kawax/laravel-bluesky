@@ -661,14 +661,12 @@ trait HasShortHand
         $subject = $subject instanceof Arrayable ? $subject->toArray() : $subject;
 
         return $this->client(auth: true)
-            ->ozone()
             ->withServiceProxy($labeler.'#atproto_labeler')
+            ->ozone()
             ->emitEvent(
                 event: $event,
                 subject: $subject,
-                createdBy: $this->assertDid(),
+                createdBy: $labeler,
             );
     }
 }
-
-
