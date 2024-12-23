@@ -655,6 +655,7 @@ trait HasShortHand
         $event = [
             '$type' => 'tools.ozone.moderation.defs#modEventLabel',
             'createLabelVals' => $labels,
+            'negateLabelVals' => [],
         ];
 
         $subject = $subject instanceof Arrayable ? $subject->toArray() : $subject;
