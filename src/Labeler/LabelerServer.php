@@ -41,7 +41,7 @@ final class LabelerServer
             $http->onMessage = function (TcpConnection $connection, Request $request) {
                 $path = $request->path();
 
-                if ($request->method() === 'GET' && $path === '/xrpc/'.OzoneModeration::emitEvent) {
+                if ($path === '/xrpc/'.OzoneModeration::emitEvent) {
                     $req = LaravelRequest::create(
                         uri: $request->uri(),
                         method: $request->method(),
