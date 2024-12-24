@@ -124,7 +124,7 @@ final class Labeler
 
         $sign = K256::load($key)->privateKey()->sign($bytes);
 
-        $label = Arr::add($label, 'sig', (new BytesWrapper($sign))->toArray());
+        $label = Arr::add($label, 'sig', new BytesWrapper($sign));
 
         return [$label, $sign];
     }
