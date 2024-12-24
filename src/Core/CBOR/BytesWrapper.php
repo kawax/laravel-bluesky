@@ -8,8 +8,6 @@ use Illuminate\Contracts\Support\Arrayable;
 use Illuminate\Contracts\Support\Jsonable;
 
 /**
- * @internal
- *
  * @link https://github.com/mary-ext/atcute/blob/trunk/packages/utilities/cbor/lib/bytes.ts
  */
 final readonly class BytesWrapper implements Arrayable, Jsonable
