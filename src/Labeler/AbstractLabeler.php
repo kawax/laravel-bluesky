@@ -33,6 +33,7 @@ abstract class AbstractLabeler
 
     /**
      * @return iterable<null|LabelMessage>
+     *
      * @throw LabelerException
      */
     abstract public function subscribeLabels(?int $cursor): iterable;

@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Revolution\Bluesky\Labeler;
 
-use Illuminate\Support\Arr;
+use Illuminate\Http\Request as LaravelRequest;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Str;
 use Revolution\AtProto\Lexicon\Contracts\Tools\Ozone\Moderation as OzoneModeration;
@@ -15,7 +15,6 @@ use Workerman\Protocols\Http\Response;
 use Workerman\Protocols\Websocket;
 use Workerman\Timer;
 use Workerman\Worker;
-use Illuminate\Http\Request as LaravelRequest;
 
 final class LabelerServer
 {
@@ -150,7 +149,7 @@ final class LabelerServer
             'val' => $val,
             'src' => Config::string('bluesky.labeler.did'),
             'cts' => now()->toISOString(),
-            'exp' => null,// TODO
+            'exp' => null, // TODO
         ])
             //->reject(fn ($value) => is_null($value))
             ->when($neg, fn ($collection) => $collection->put('neg', true))

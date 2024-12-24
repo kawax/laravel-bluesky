@@ -48,6 +48,7 @@ final class Labeler
 
     /**
      * @return iterable<null|LabelMessage>
+     *
      * @throws LabelerException
      */
     public static function subscribeLabels(?int $cursor): iterable

@@ -30,6 +30,7 @@ class ArtisanLabeler extends AbstractLabeler
 
     /**
      * @return iterable<null|LabelMessage>
+     *
      * @throw LabelerException
      */
     public function subscribeLabels(?int $cursor): iterable
