@@ -9,6 +9,7 @@ use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Config;
 use InvalidArgumentException;
 use Revolution\Bluesky\Core\CBOR;
+use Revolution\Bluesky\Core\CBOR\BytesWrapper;
 use Revolution\Bluesky\Crypto\K256;
 use Revolution\Bluesky\FeedGenerator\ValidateAuth;
 use RuntimeException;
@@ -119,6 +120,6 @@ final class Labeler
 
         $sign = K256::load($key)->privateKey()->sign($bytes);
 
-        return Arr::add($label, 'sig', $sign);
+        return Arr::add($label, 'sig', new BytesWrapper($sign));
     }
 }
