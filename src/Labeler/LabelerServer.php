@@ -62,9 +62,6 @@ final class LabelerServer
                         $this->createLabels($emitEvent);
 
                         // http response
-                        $header = (string) $request->header('atproto-accept-labelers');
-                        info('emitEvent header: '.$header);
-
                         $json = $emitEvent->toJson();
                         info('emitEvent json: '.$json);
 
@@ -152,7 +149,8 @@ final class LabelerServer
             'src' => Config::string('bluesky.labeler.did'),
             'cts' => now()->toISOString(),
             'exp' => null,// TODO
-        ])->reject(fn ($value) => is_null($value))
+        ])
+            //->reject(fn ($value) => is_null($value))
             ->when($neg, fn ($collection) => $collection->put('neg', true))
             ->toArray();
 
