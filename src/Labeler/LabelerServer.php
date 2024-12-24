@@ -43,7 +43,7 @@ final class LabelerServer
             $http->onMessage = function (TcpConnection $connection, Request $request) {
                 $path = $request->path();
 
-                if ($path === '/xrpc/'.OzoneModeration::emitEvent) {
+                if (Str::endsWith($path, OzoneModeration::emitEvent)) {
                     $req = LaravelRequest::create(
                         uri: $request->uri(),
                         method: $request->method(),
@@ -62,9 +62,13 @@ final class LabelerServer
                         $this->createLabels($emitEvent);
 
                         // http response
-                        $header = $request->header('atproto-accept-labelers');
+                        $header = (string) $request->header('atproto-accept-labelers');
+                        info('emitEvent header: '.$header);
 
-                        $connection->send(new Response(200, ['atproto-content-labelers' => $header], $emitEvent->toJson()));
+                        $json = $emitEvent->toJson();
+                        info('emitEvent json: '.$json);
+
+                        $connection->send(new Response(200, ['content-type' => 'application/json'], $json));
                     } catch (LabelerException $e) {
                         $connection->send(new Response(403, [], 'Forbidden'));
                     }
@@ -104,7 +108,9 @@ final class LabelerServer
             try {
                 foreach (Labeler::subscribeLabels($cursor) as $label) {
                     if ($label instanceof LabelMessage) {
-                        $connection->send($label->toBytes());
+                        $bytes = $label->toBytes();
+                        info('subscribeLabels: '.$bytes);
+                        $connection->send($bytes);
                     }
                 }
             } catch (LabelerException $e) {
