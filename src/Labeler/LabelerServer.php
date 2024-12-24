@@ -160,7 +160,8 @@ final class LabelerServer
 
     private function saveLabel(int $seq, array $label): void
     {
-        $label = CBOR::normalize(Labeler::signLabel($label));
+        [$label, $sign] = Labeler::signLabel($label);
+        $label = CBOR::normalize($label);
 
         info('saveLabel', $label);
 
