@@ -112,7 +112,9 @@ final class LabelerServer
                     }
                 }
             } catch (LabelerException $e) {
-                $connection->send($e->toBytes());
+                $bytes = $e->toBytes();
+                info('subscribeLabels error: '.$bytes);
+                $connection->send($bytes);
             }
         };
 
