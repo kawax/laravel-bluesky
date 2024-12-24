@@ -170,7 +170,7 @@ final class LabelerServer
 
         $bytes = CBOR::encode($header).CBOR::encode($body);
 
-        info('emitLabel', $bytes);
+        info('emitLabel:'.$bytes);
 
         foreach ($this->ws->connections as $ws) {
             $ws->websocketType = Websocket::BINARY_TYPE_ARRAYBUFFER;
