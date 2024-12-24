@@ -51,8 +51,8 @@ final class LabelerServer
                     );
 
                     try {
-                        info('req', $req->all());
-                        info('sub', $req->input('subject'));
+                        //info('req', $req->all());
+                        //info('sub', $req->input('subject'));
 
                         $token = Str::after($request->header('Authorization'), 'Bearer ');
 
@@ -129,7 +129,7 @@ final class LabelerServer
             ->each(fn ($val) => $this->createLabel($uri, $cid, $val));
 
         collect($negateLabelVals)
-            ->map(fn ($val) => $this->createLabel($uri, $cid, $val, true));
+            ->each(fn ($val) => $this->createLabel($uri, $cid, $val, true));
     }
 
     private function createLabel(string $uri, ?string $cid, string $val, ?bool $neg = false): void
