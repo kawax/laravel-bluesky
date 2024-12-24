@@ -152,7 +152,7 @@ final class LabelerServer
 
     private function saveLabel(int $seq, array $label): void
     {
-        $label = Labeler::signLabel($label);
+        $label = CBOR::normalize(Labeler::signLabel($label));
 
         info('saveLabel', $label);
 
@@ -169,6 +169,8 @@ final class LabelerServer
         ];
 
         $bytes = CBOR::encode($header).CBOR::encode($body);
+
+        info('emitLabel', $bytes);
 
         foreach ($this->ws->connections as $ws) {
             $ws->websocketType = Websocket::BINARY_TYPE_ARRAYBUFFER;
