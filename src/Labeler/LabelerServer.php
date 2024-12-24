@@ -62,7 +62,9 @@ final class LabelerServer
                         $this->createLabels($emitEvent);
 
                         // http response
-                        $connection->send(new Response(200, [], $emitEvent->toJson()));
+                        $header = $request->header('atproto-accept-labelers');
+
+                        $connection->send(new Response(200, ['atproto-content-labelers' => $header], $emitEvent->toJson()));
                     } catch (LabelerException $e) {
                         $connection->send(new Response(403, [], 'Forbidden'));
                     }
