@@ -11,7 +11,7 @@ use Illuminate\Support\Arr;
 class EmitEventResponse implements Arrayable, Jsonable
 {
     public function __construct(
-        protected int $id,
+        public int $id,
         public array $event,
         public array $subject,
         protected string $createdBy,
