@@ -5,13 +5,14 @@ declare(strict_types=1);
 namespace Revolution\Bluesky\Core\CBOR;
 
 use Illuminate\Contracts\Support\Arrayable;
+use Illuminate\Contracts\Support\Jsonable;
 
 /**
  * @internal
  *
  * @link https://github.com/mary-ext/atcute/blob/trunk/packages/utilities/cbor/lib/bytes.ts
  */
-final readonly class BytesWrapper implements Arrayable
+final readonly class BytesWrapper implements Arrayable, Jsonable
 {
     public function __construct(protected string $bytes)
     {
@@ -30,5 +31,10 @@ final readonly class BytesWrapper implements Arrayable
     public function toArray(): array
     {
         return ['$bytes' => $this->encode()];
+    }
+
+    public function toJson($options = 0): string
+    {
+        return json_encode($this->toArray(), $options);
     }
 }
