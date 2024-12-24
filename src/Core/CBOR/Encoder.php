@@ -216,9 +216,10 @@ final class Encoder
                 return;
             }
 
-            $filtered = collect((array) $val)
-                ->reject(fn ($val, $key) => $key !== 'prev' && is_null($val))
-                ->toArray();
+            $filtered = $val;
+//            $filtered = collect((array) $val)
+//                ->reject(fn ($val, $key) => $key !== 'prev' && is_null($val))
+//                ->toArray();
 
             uksort($filtered, new MapKeySort());
 
