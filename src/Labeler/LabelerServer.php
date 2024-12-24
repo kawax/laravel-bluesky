@@ -119,6 +119,8 @@ final class LabelerServer
 
     private function createLabels(EmitEventResponse $emitEvent): void
     {
+        $seq = $emitEvent->id;
+
         $uri = data_get($emitEvent->subject, 'uri');
         $cid = data_get($emitEvent->subject, 'cid');
 
@@ -126,13 +128,13 @@ final class LabelerServer
         $negateLabelVals = (array) data_get($emitEvent->event, 'negateLabelVals');
 
         collect($createLabelVals)
-            ->each(fn ($val) => $this->createLabel($uri, $cid, $val));
+            ->each(fn ($val) => $this->createLabel($seq, $uri, $cid, $val));
 
         collect($negateLabelVals)
-            ->each(fn ($val) => $this->createLabel($uri, $cid, $val, true));
+            ->each(fn ($val) => $this->createLabel($seq, $uri, $cid, $val, true));
     }
 
-    private function createLabel(string $uri, ?string $cid, string $val, ?bool $neg = false): void
+    private function createLabel(int $seq, string $uri, ?string $cid, string $val, ?bool $neg = false): void
     {
         $label = collect([
             'uri' => $uri,
@@ -145,16 +147,14 @@ final class LabelerServer
             ->when($neg, fn ($collection) => $collection->put('neg', true))
             ->toArray();
 
-        $this->saveLabel($label);
+        $this->saveLabel($seq, $label);
     }
 
-    private function saveLabel(array $label): void
+    private function saveLabel(int $seq, array $label): void
     {
         $label = Labeler::signLabel($label);
 
         info('saveLabel', $label);
-
-        $seq = now()->timestamp;// TODO
 
         $this->emitLabel($seq, $label);
     }
