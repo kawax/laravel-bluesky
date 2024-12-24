@@ -152,6 +152,8 @@ final class LabelerServer
     {
         $label = Labeler::signLabel($label);
 
+        info('saveLabel', $label);
+
         $seq = now()->timestamp;// TODO
 
         $this->emitLabel($seq, $label);
