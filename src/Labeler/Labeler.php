@@ -108,7 +108,11 @@ final class Labeler
 
         $label = Arr::add($label, 'ver', self::VERSION);
 
-        $label['neg'] = Arr::get($label, 'neg', false);
+        if (Arr::get($label, 'neg') === true) {
+            $label['neg'] = true;
+        } else {
+            unset($label['neg']);
+        }
 
         $bytes = CBOR::encode($label);
 
