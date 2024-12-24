@@ -5,18 +5,16 @@ declare(strict_types=1);
 namespace Revolution\Bluesky\Labeler\Http;
 
 use Illuminate\Http\Request;
+use Illuminate\Http\Response;
 use Revolution\Bluesky\Labeler\Labeler;
 
 final class LabelerController
 {
-    public function emitEvent(Request $request): array
+    public function queryLabels(Request $request): Response
     {
-        return Labeler::emitEvent($request);
-    }
+        $header = $request->header('atproto-accept-labelers');
 
-    public function queryLabels(Request $request): array
-    {
-        return Labeler::queryLabels($request);
+        return response(Labeler::queryLabels($request), 200, ['atproto-content-labelers' => $header]);
     }
 
     public function createReport(Request $request): array
