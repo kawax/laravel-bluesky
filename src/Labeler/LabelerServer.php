@@ -104,6 +104,7 @@ final class LabelerServer
 
             $cursor = $request->get('cursor');
             $cursor = is_null($cursor) ? null : intval($cursor);
+            info('subscribeLabels cursor: '.$cursor);
 
             try {
                 foreach (Labeler::subscribeLabels($cursor) as $label) {
