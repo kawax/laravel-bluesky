@@ -53,7 +53,7 @@ final class Labeler
      */
     public static function subscribeLabels(?int $cursor): iterable
     {
-        /** @var ?AbstractLabeler $labeler */
+        /** @var AbstractLabeler $labeler */
         $labeler = app(self::$labeler);
 
         if (! $labeler instanceof AbstractLabeler) {
