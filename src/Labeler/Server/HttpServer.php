@@ -90,7 +90,8 @@ final class HttpServer
     {
         $bytes = $label->toBytes();
 
-        info('emitLabel: '.$bytes);
+        info('emitLabel: ',$label->toArray());
+        info('emitLabel bytes: '.$bytes);
 
         foreach ($this->ws->connections as $ws) {
             $ws->websocketType = Websocket::BINARY_TYPE_ARRAYBUFFER;
