@@ -137,14 +137,7 @@ final class Labeler
         }
 
         $label = $unsigned->toArray();
-
-        $label = Arr::add($label, 'ver', self::VERSION);
-
-        if (Arr::get($label, 'neg') === true) {
-            $label['neg'] = true;
-        } else {
-            Arr::forget($label, 'neg');
-        }
+        $label = self::formatLabel($label);
 
         $bytes = CBOR::encode($label);
 
