@@ -31,6 +31,8 @@ final class LabelerServer
 
     protected int $count = 1;
 
+    protected bool $useHeartbeat = false;
+
     public function start(?string $host = null, ?int $port = null): void
     {
         if (! is_null($host)) {
@@ -64,24 +66,26 @@ final class LabelerServer
 
         $http->listen();
 
-        Timer::add(10, function () use ($worker) {
-            $time_now = time();
-            foreach ($worker->connections as $connection) {
-                if (empty($connection->lastMessageTime)) {
+        if ($this->useHeartbeat) {
+            Timer::add(10, function () use ($worker) {
+                $time_now = time();
+                foreach ($worker->connections as $connection) {
+                    if (empty($connection->lastMessageTime)) {
+                        /**
+                         * @phpstan-ignore property.notFound
+                         */
+                        $connection->lastMessageTime = $time_now;
+                        continue;
+                    }
                     /**
-                     * @phpstan-ignore property.notFound
+                     * @phpstan-ignore-next-line
                      */
-                    $connection->lastMessageTime = $time_now;
-                    continue;
+                    if ($time_now - $connection->lastMessageTime > self::HEARTBEAT_TIME) {
+                        $connection->close();
+                    }
                 }
-                /**
-                 * @phpstan-ignore-next-line
-                 */
-                if ($time_now - $connection->lastMessageTime > self::HEARTBEAT_TIME) {
-                    $connection->close();
-                }
-            }
-        });
+            });
+        }
     }
 
     private function onWebSocketConnected(TcpConnection $connection, Request $request): void
