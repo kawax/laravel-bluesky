@@ -9,6 +9,7 @@ use Revolution\Bluesky\Core\CBOR\AtBytes;
 use Revolution\Bluesky\Core\CBOR\MapKeySort;
 use Revolution\Bluesky\Labeler\Labeler;
 use Revolution\Bluesky\Labeler\SavedLabel;
+use Revolution\Bluesky\Labeler\SignedLabel;
 use Revolution\Bluesky\Labeler\UnsignedLabel;
 use Tests\TestCase;
 
@@ -36,6 +37,25 @@ class LabelerTest extends TestCase
         $decode = CBOR::decode($cbor);
 
         $this->assertSame($label, $decode);
+    }
+
+    public function test_labeler_signed_to_unsigned(): void
+    {
+        $unsigned = new UnsignedLabel(
+            uri: 'uri',
+            cid: null,
+            val: 'val',
+            src: 'src',
+            cts: now()->milli(0)->toISOString(),
+            exp: null,
+            neg: false,
+        );
+
+        $signed = new SignedLabel($unsigned, new AtBytes('sig'));
+
+        $unsigned2 = $signed->toUnsigned();
+
+        $this->assertSame($unsigned->toArray(), $unsigned2->toArray());
     }
 
     public function test_labeler_saved(): void
