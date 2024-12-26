@@ -76,11 +76,11 @@ final class Labeler
 
         $user = self::verifyJWT($request, $token);
 
-        if (empty($user)) {
+        if (empty($user) || $user !== Config::string('bluesky.labeler.did')) {
             throw new LabelerException('Invalid JWT');
         }
 
-        yield from $labeler->emitEvent($request, $user, $token);
+        yield from $labeler->emitEvent($request);
     }
 
     private static function verifyJWT(Request $request, ?string $token): ?string
