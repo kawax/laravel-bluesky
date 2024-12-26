@@ -55,12 +55,7 @@ class SavedLabel extends SignedLabel
 
     public function toEmit(): array
     {
-        return collect($this->toArray())
-            ->except('id')
-            ->reject(fn ($value) => is_null($value))
-            ->reject(fn ($value, $key) => $key === 'neg' && $value === false)
-            ->sortKeysUsing(new CBOR\MapKeySort())
-            ->toArray();
+        return Labeler::formatLabel($this->toArray());
     }
 
     public function toBytes(): string

@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\Config;
 use InvalidArgumentException;
 use Revolution\Bluesky\Core\CBOR;
 use Revolution\Bluesky\Core\CBOR\AtBytes;
+use Revolution\Bluesky\Core\CBOR\MapKeySort;
 use Revolution\Bluesky\Crypto\K256;
 use Revolution\Bluesky\Crypto\Signature;
 use Revolution\Bluesky\FeedGenerator\ValidateAuth;
@@ -160,5 +161,16 @@ final class Labeler
         $label = SignedLabel::fromArray($label);
 
         return [$label, $sign];
+    }
+
+    public static function formatLabel(array $label): array
+    {
+        return collect($label)
+            ->put('ver', self::VERSION)
+            ->except('id')
+            ->reject(fn ($value) => is_null($value))
+            ->reject(fn ($value, $key) => $key === 'neg' && $value === false)
+            ->sortKeysUsing(new MapKeySort())
+            ->toArray();
     }
 }

@@ -18,9 +18,13 @@ final readonly class SubscribeLabelMessage
     {
         $header = ['op' => 1, 't' => '#labels'];
 
+        $labels = collect($this->labels)
+            ->map(fn ($label) => Labeler::formatLabel($label))
+            ->toArray();
+
         $body = [
             'seq' => $this->seq,
-            'labels' => $this->labels,
+            'labels' => $labels,
         ];
 
         return CBOR::encode($header).CBOR::encode($body);
