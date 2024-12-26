@@ -11,6 +11,7 @@ use InvalidArgumentException;
 use Revolution\Bluesky\Core\CBOR;
 use Revolution\Bluesky\Core\CBOR\AtBytes;
 use Revolution\Bluesky\Crypto\K256;
+use Revolution\Bluesky\Crypto\Signature;
 use Revolution\Bluesky\FeedGenerator\ValidateAuth;
 use RuntimeException;
 
@@ -151,6 +152,7 @@ final class Labeler
         }
 
         $sign = K256::load($key)->privateKey()->sign($bytes);
+        $sign = Signature::toCompact($sign);
 
         $label = Arr::add($label, 'sig', new AtBytes($sign));
         $label = SignedLabel::fromArray($label);
