@@ -51,12 +51,14 @@ abstract class AbstractLabeler
      *
      * @link https://docs.bsky.app/docs/api/tools-ozone-moderation-emit-event
      */
-    abstract public function emitEvent(Request $request, ?string $user, ?string $token): iterable;
+    abstract public function emitEvent(Request $request): iterable;
 
     /**
+     * @param  string  $sign  raw bytes compact signature
+     *
      * @throw LabelerException
      */
-    abstract public function saveLabel(SignedLabel $label, string $sign): ?SavedLabel;
+    abstract public function saveLabel(SignedLabel $signed, string $sign): ?SavedLabel;
 
     /**
      * @return array{id: int, reasonType: string, reason: string, subject: array, reportedBy: string, createdAt: string}

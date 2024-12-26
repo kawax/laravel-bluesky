@@ -39,12 +39,12 @@ class ArtisanLabeler extends AbstractLabeler
         yield null;
     }
 
-    public function emitEvent(Request $request, ?string $user, ?string $token): iterable
+    public function emitEvent(Request $request): iterable
     {
         return null;
     }
 
-    public function saveLabel(SignedLabel $label, string $sign): ?SavedLabel
+    public function saveLabel(SignedLabel $signed, string $sign): ?SavedLabel
     {
         return null;
     }

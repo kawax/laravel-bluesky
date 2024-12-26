@@ -127,10 +127,12 @@ final class Labeler
      */
     public static function signLabel(UnsignedLabel $unsigned): array
     {
-        /** @var AbstractLabeler $labeler */
-        $labeler = app(self::$labeler);
-        if (method_exists($labeler, 'signLabel')) {
-            return $labeler->signLabel($unsigned);
+        if (isset(self::$labeler)) {
+            /** @var AbstractLabeler $labeler */
+            $labeler = app(self::$labeler);
+            if (method_exists($labeler, 'signLabel')) {
+                return $labeler->signLabel($unsigned);
+            }
         }
 
         $label = $unsigned->toArray();
@@ -140,7 +142,7 @@ final class Labeler
         if (Arr::get($label, 'neg') === true) {
             $label['neg'] = true;
         } else {
-            unset($label['neg']);
+            Arr::forget($label, 'neg');
         }
 
         $bytes = CBOR::encode($label);
