@@ -44,7 +44,7 @@ class SignedLabel extends UnsignedLabel
 
     public function toUnsigned(): UnsignedLabel
     {
-        return new UnsignedLabel($this->uri, $this->cid, $this->val, $this->src, $this->cts, $this->exp);
+        return new UnsignedLabel(...Arr::except($this->toArray(),['sig', 'ver']),);
     }
 
     /**
