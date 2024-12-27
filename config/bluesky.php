@@ -82,4 +82,18 @@ return [
         // Disable well-known routes
         'disabled' => env('BLUESKY_WELLKNOWN_DISABLED', false),
     ],
+
+    // Labeler
+    'labeler' => [
+        // Disable Labeler routes
+        'disabled' => env('BLUESKY_LABELER_DISABLED', false),
+
+        'did' => env('BLUESKY_LABELER_DID'),
+
+        'identifier' => env('BLUESKY_LABELER_IDENTIFIER'),
+        'password' => env('BLUESKY_LABELER_APP_PASSWORD'),
+
+        // Private key(K256, base64url encoded)
+        'private_key' => env('BLUESKY_LABELER_PRIVATE_KEY'),
+    ],
 ];

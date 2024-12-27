@@ -87,11 +87,17 @@ final readonly class DidDocument implements Arrayable
      * $parsed = DidKey::parse($pubkey);
      * $pubkey_pem = $parsed->key;
      * ```
+     * Labeler's key.
+     * ```
+     * $pubkey = $didDoc->publicKey(id: 'atproto_label');
+     * ```
      */
-    public function publicKey(string $default = ''): string
+    public function publicKey(string $id = 'atproto', string $default = ''): string
     {
+        $id = $this->id().'#'.$id;
+
         $verification = collect((array) $this->didDoc->get('verificationMethod', []))
-            ->firstWhere('type', 'Multikey');
+            ->firstWhere('id', $id);
 
         return data_get($verification, 'publicKeyMultibase', $default);
     }

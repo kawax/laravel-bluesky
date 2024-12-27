@@ -62,7 +62,13 @@ final class Decoder
         $this->stream_size = (int) min($stream->getSize(), self::MAX_SIZE);
 
         while (! $stream->eof()) {
-            $arr[] = CBOR::normalize($this->readValue());
+            $value = $this->readValue();
+
+            if (empty($value)) {
+                continue;
+            }
+
+            $arr[] = CBOR::normalize($value);
         }
 
         return $arr;
@@ -138,9 +144,9 @@ final class Decoder
         return $this->stream->read(min($length, $this->stream_size));
     }
 
-    private function readBytes(int $length): BytesWrapper
+    private function readBytes(int $length): AtBytes
     {
-        return new BytesWrapper($this->stream->read(min($length, $this->stream_size)));
+        return new AtBytes($this->stream->read(min($length, $this->stream_size)));
     }
 
     private function readCid(int $length): CIDLinkWrapper

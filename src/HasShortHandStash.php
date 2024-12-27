@@ -53,25 +53,6 @@ trait HasShortHandStash
     }
 
     /**
-     * @param  string  $uri  at://did:plc:.../app.bsky.feed.post/{rkey}
-     */
-    public function getPost(#[Format('at-uri')] string $uri, ?string $cid = null): Response
-    {
-        $at = AtUri::parse($uri);
-
-        if ($at->collection() !== Feed::Post->value) {
-            throw new InvalidArgumentException();
-        }
-
-        return $this->getRecord(
-            repo: $at->repo(),
-            collection: $at->collection(),
-            rkey: $at->rkey(),
-            cid: $cid,
-        );
-    }
-
-    /**
      * @param  string  $list  AT-URI
      */
     public function muteModList(#[Format('at-uri')] string $list): Response
@@ -219,17 +200,6 @@ trait HasShortHandStash
             collection: $at->collection(),
             rkey: $at->rkey(),
         );
-    }
-
-    /**
-     * @param  array<string>  $uris  AT-URI
-     */
-    public function getPosts(array $uris): Response
-    {
-        return $this->client(auth: true)
-            ->getPosts(
-                uris: $uris,
-            );
     }
 
     public function mute(#[Format('at-identifier')] string $actor): Response

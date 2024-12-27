@@ -28,4 +28,20 @@ final class Signature
 
         return ASN1::save($r, $s);
     }
+
+    public static function toCompact(string $sig): string
+    {
+        if (strlen($sig) === 64) {
+            return $sig;
+        }
+
+        $arr = ASN1::load($sig);
+
+        /** @var BigInteger $r */
+        $r = $arr['r'];
+        /** @var BigInteger $s */
+        $s = $arr['s'];
+
+        return $r->toBytes().$s->toBytes();
+    }
 }

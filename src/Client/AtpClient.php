@@ -27,6 +27,7 @@ use Revolution\Bluesky\Client\Concerns\ComAtprotoServer;
 use Revolution\Bluesky\Client\SubClient\AdminClient;
 use Revolution\Bluesky\Client\SubClient\BskyNotification;
 use Revolution\Bluesky\Client\SubClient\ChatClient;
+use Revolution\Bluesky\Client\SubClient\OzoneClient;
 use Revolution\Bluesky\Client\SubClient\SyncClient;
 use Revolution\Bluesky\Client\SubClient\VideoClient;
 use Revolution\Bluesky\Contracts\XrpcClient;
@@ -113,5 +114,15 @@ class AtpClient implements
     public function sync(): SyncClient
     {
         return app(SyncClient::class)->withHttp($this->http());
+    }
+
+    /**
+     * OzoneClient.
+     *
+     * tools.ozone
+     */
+    public function ozone(): OzoneClient
+    {
+        return app(OzoneClient::class)->withHttp($this->http());
     }
 }

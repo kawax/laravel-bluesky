@@ -8,6 +8,7 @@ use phpseclib3\Crypt\EC;
 use Revolution\Bluesky\Crypto\DidKey;
 use Revolution\Bluesky\Crypto\Format\Base58btc;
 use Revolution\Bluesky\Crypto\K256;
+use Revolution\Bluesky\Crypto\Signature;
 use Tests\TestCase;
 
 class CryptoTest extends TestCase
@@ -48,5 +49,15 @@ class CryptoTest extends TestCase
         $this->assertSame('secp256k1', $parsed->curve);
         $this->assertSame('ES256K', $parsed['alg']);
         $this->assertSame($b58key, $b58key2);
+    }
+
+    public function test_sig_to_compact(): void
+    {
+        $sk = K256::create()->privateKey();
+
+        $sign = $sk->sign('test');
+
+        $compact = Signature::toCompact($sign);
+        $this->assertSame(64, strlen($compact));
     }
 }

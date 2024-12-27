@@ -6,6 +6,7 @@ namespace Revolution\Bluesky;
 
 use BackedEnum;
 use Illuminate\Auth\AuthenticationException;
+use Illuminate\Contracts\Support\Arrayable;
 use Illuminate\Http\Client\Response;
 use InvalidArgumentException;
 use JetBrains\PhpStorm\ArrayShape;
@@ -21,16 +22,19 @@ use Revolution\AtProto\Lexicon\Contracts\Com\Atproto\Repo as AtRepo;
 use Revolution\AtProto\Lexicon\Contracts\Com\Atproto\Server as AtServer;
 use Revolution\AtProto\Lexicon\Enum\Feed;
 use Revolution\AtProto\Lexicon\Enum\Graph;
+use Revolution\AtProto\Lexicon\Record\App\Bsky\Labeler\AbstractService;
 use Revolution\Bluesky\Client\SubClient\VideoClient;
 use Revolution\Bluesky\Contracts\Recordable;
 use Revolution\Bluesky\Record\Follow;
 use Revolution\Bluesky\Record\Generator;
+use Revolution\Bluesky\Record\LabelerService;
 use Revolution\Bluesky\Record\Like;
 use Revolution\Bluesky\Record\Post;
 use Revolution\Bluesky\Record\Profile;
 use Revolution\Bluesky\Record\Repost;
 use Revolution\Bluesky\Record\ThreadGate;
 use Revolution\Bluesky\Support\AtUri;
+use Revolution\Bluesky\Types\RepoRef;
 use Revolution\Bluesky\Types\StrongRef;
 
 use function Illuminate\Support\enum_value;
@@ -234,6 +238,36 @@ trait HasShortHand
             collection: Feed::Post->value,
             record: $post,
         );
+    }
+
+    /**
+     * @param  string  $uri  at://did:plc:.../app.bsky.feed.post/{rkey}
+     */
+    public function getPost(#[Format('at-uri')] string $uri, ?string $cid = null): Response
+    {
+        $at = AtUri::parse($uri);
+
+        if ($at->collection() !== Feed::Post->value) {
+            throw new InvalidArgumentException();
+        }
+
+        return $this->getRecord(
+            repo: $at->repo(),
+            collection: $at->collection(),
+            rkey: $at->rkey(),
+            cid: $cid,
+        );
+    }
+
+    /**
+     * @param  array<string>  $uris  AT-URI
+     */
+    public function getPosts(array $uris): Response
+    {
+        return $this->client(auth: true)
+            ->getPosts(
+                uris: $uris,
+            );
     }
 
     /**
@@ -582,6 +616,87 @@ trait HasShortHand
             ->notification()
             ->updateSeen(
                 seenAt: $seenAt,
+            );
+    }
+
+    /**
+     * @param  callable(LabelerService $service): LabelerService  $callback
+     */
+    public function upsertLabelDefinitions(callable $callback): Response
+    {
+        $response = $this->getRecord(
+            repo: $this->assertDid(),
+            collection: AbstractService::NSID,
+            rkey: 'self',
+        );
+
+        $service = LabelerService::fromArray($response->json('value'))->tap($callback);
+
+        return $this->putRecord(
+            repo: $this->assertDid(),
+            collection: AbstractService::NSID,
+            rkey: 'self',
+            record: $service,
+            swapRecord: $response->json('cid'),
+        );
+    }
+
+    public function deleteLabelDefinitions(): Response
+    {
+        return $this->deleteRecord(
+            repo: $this->assertDid(),
+            collection: AbstractService::NSID,
+            rkey: 'self',
+        );
+    }
+
+    /**
+     * ```
+     * $response = Bluesky::login(config('bluesky.labeler.identifier'), config('bluesky.labeler.password'))
+     *                    ->createLabels(RepoRef::to('did'), ['label1', 'label2']);
+     * ```
+     */
+    public function createLabels(RepoRef|StrongRef|array $subject, array $labels): Response
+    {
+        $event = [
+            '$type' => 'tools.ozone.moderation.defs#modEventLabel',
+            'createLabelVals' => $labels,
+            'negateLabelVals' => [],
+        ];
+
+        return $this->emitEventLabel(
+            event: $event,
+            subject: $subject,
+        );
+    }
+
+    public function deleteLabels(RepoRef|StrongRef|array $subject, array $labels): Response
+    {
+        $event = [
+            '$type' => 'tools.ozone.moderation.defs#modEventLabel',
+            'createLabelVals' => [],
+            'negateLabelVals' => $labels,
+        ];
+
+        return $this->emitEventLabel(
+            event: $event,
+            subject: $subject,
+        );
+    }
+
+    private function emitEventLabel(array $event, RepoRef|StrongRef|array $subject): Response
+    {
+        $labeler = $this->assertDid();
+
+        $subject = $subject instanceof Arrayable ? $subject->toArray() : $subject;
+
+        return $this->client(auth: true)
+            ->ozone()
+            ->withServiceProxy($labeler.'#atproto_labeler')
+            ->emitEvent(
+                event: $event,
+                subject: $subject,
+                createdBy: $labeler,
             );
     }
 }

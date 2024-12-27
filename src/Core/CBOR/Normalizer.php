@@ -30,12 +30,12 @@ final class Normalizer
                 }
 
                 // Only here is in ['$bytes' => 'base64'] format
-                if ($key === 'sig' && $item instanceof BytesWrapper) {
+                if ($key === 'sig' && $item instanceof AtBytes) {
                     return $item->toArray();
                 }
 
-                if ($item instanceof BytesWrapper) {
-                    return $item->bytes();
+                if ($item instanceof AtBytes) {
+                    return $item->toBytes();
                 }
 
                 return $this($item);

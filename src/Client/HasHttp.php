@@ -27,6 +27,10 @@ trait HasHttp
             ->reject(fn ($param) => is_null($param))
             ->toArray();
 
+        if (blank($params)) {
+            $params = null;
+        }
+
         return $this->http()->$method(enum_value($api), $params);
     }
 
