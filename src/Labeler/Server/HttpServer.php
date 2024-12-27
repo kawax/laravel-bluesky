@@ -39,7 +39,7 @@ final class HttpServer
         } elseif (Str::endsWith($path, '/xrpc/_health')) {
             $this->health($connection, $request);
         } else {
-            $connection->send(new Response(404, [], 'Not Found'));
+            $connection->send($this->json(['error' => 'Not Found'], status: 404));
         }
     }
 
@@ -77,12 +77,10 @@ final class HttpServer
                 subjectBlobCids: $req->get('subjectBlobCids', []),
                 createdAt: now()->toISOString(),
             );
-            $json = $emitEvent->toJson();
-            info('emitEvent json: '.$json);
 
-            $connection->send(new Response(200, ['Content-Type' => 'application/json'], $json));
+            $connection->send($this->json($emitEvent->toArray()));
         } catch (LabelerException) {
-            $connection->send(new Response(403, [], 'Forbidden'));
+            $connection->send($this->json(['error' => 'Forbidden'], status: 403));
         }
     }
 
@@ -90,8 +88,8 @@ final class HttpServer
     {
         $bytes = $label->toBytes();
 
-        info('emitLabel: ',$label->toArray());
-        info('emitLabel bytes: '.$bytes);
+        //info('emitLabel: ', $label->toArray());
+        //info('emitLabel bytes: '.$bytes);
 
         foreach ($this->ws->connections as $ws) {
             $ws->websocketType = Websocket::BINARY_TYPE_ARRAYBUFFER;
@@ -102,10 +100,15 @@ final class HttpServer
 
     private function health(TcpConnection $connection, Request $request): void
     {
-        info('health', Arr::wrap($request->header()));
+        //info('health', Arr::wrap($request->header()));
 
-        $connection->send(new Response(200, [
+        $connection->send($this->json(Labeler::health($request->header())));
+    }
+
+    private function json(array $data, int $status = 200): Response
+    {
+        return new Response($status, [
             'Content-Type' => 'application/json',
-        ], json_encode(['version' => app()->version()])));
+        ], json_encode($data));
     }
 }

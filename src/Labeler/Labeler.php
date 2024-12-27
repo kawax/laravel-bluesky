@@ -166,4 +166,17 @@ final class Labeler
             ->sortKeysUsing(new MapKeySort())
             ->toArray();
     }
+
+    public static function health(?array $header = null): array
+    {
+        if (isset(self::$labeler)) {
+            /** @var AbstractLabeler $labeler */
+            $labeler = app(self::$labeler);
+            if (method_exists($labeler, 'health')) {
+                return $labeler->health($header);
+            }
+        }
+
+        return ['version' => app()->version()];
+    }
 }

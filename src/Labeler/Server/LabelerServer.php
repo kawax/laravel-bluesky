@@ -45,7 +45,7 @@ final class LabelerServer
 
         $this->ws = new Worker('websocket://'.$this->host.':'.$this->port);
 
-        $this->ws->count = $this->count;
+        $this->ws->count = 1;
 
         $this->ws->onWorkerStart = $this->onWorkerStart(...);
 
@@ -60,7 +60,7 @@ final class LabelerServer
     {
         $http = new Worker('http://'.$this->host.':'.$this->port + 1);
         $http->reusePort = true;
-        $http->count = 4;
+        $http->count = $this->count;
 
         $http->onMessage = (new HttpServer($this->ws))->onMessage(...);
 
@@ -94,26 +94,26 @@ final class LabelerServer
 
         $cursor = $request->get('cursor');
         $cursor = is_null($cursor) ? null : intval($cursor);
-        info('subscribeLabels cursor: '.$cursor);
+        //info('subscribeLabels cursor: '.$cursor);
 
         try {
             foreach (Labeler::subscribeLabels($cursor) as $label) {
                 if ($label instanceof SubscribeLabelMessage) {
                     $bytes = $label->toBytes();
-                    info('subscribeLabels: '.$bytes);
+                    //info('subscribeLabels: '.$bytes);
                     $connection->send($bytes);
                 }
             }
         } catch (LabelerException $e) {
             $bytes = $e->toBytes();
-            info('subscribeLabels error: '.$bytes);
+            //info('subscribeLabels error: '.$bytes);
             $connection->send($bytes);
         }
     }
 
     private function onMessage(TcpConnection $connection, string $data): void
     {
-        info('onMessage: ', Arr::wrap($data));
+        //info('onMessage: ', Arr::wrap($data));
 
         $connection->send($data);
     }

@@ -20,7 +20,7 @@ class LabelerServeCommand extends Command
      *
      * @var string
      */
-    protected $signature = 'bluesky:labeler:server {cmd} {--H|host=127.0.0.1} {--P|port=7000} {--d|daemon=}';
+    protected $signature = 'bluesky:labeler:server {cmd} {--H|host=127.0.0.1} {--P|port=7000}';
 
     /**
      * The console command description.
