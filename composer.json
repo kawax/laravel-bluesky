@@ -44,7 +44,9 @@
     },
     "suggest": {
         "ext-pcntl": "*",
-        "ext-gmp": "*"
+        "ext-gmp": "*",
+        "workerman/workerman": "*",
+        "revolt/event-loop": "*"
     },
     "authors": [
         {
