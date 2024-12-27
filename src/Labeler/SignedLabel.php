@@ -44,7 +44,7 @@ class SignedLabel extends UnsignedLabel
 
     public function toUnsigned(): UnsignedLabel
     {
-        return new UnsignedLabel(...Arr::except($this->toArray(),['sig', 'ver']),);
+        return new UnsignedLabel(...Arr::except($this->toArray(), ['sig', 'ver']));
     }
 
     /**
