@@ -39,7 +39,7 @@ class ArtisanLabeler extends AbstractLabeler
         return null;
     }
 
-    public function emitEvent(Request $request): iterable
+    public function emitEvent(Request $request, ?string $did, ?string $token): iterable
     {
         return null;
     }

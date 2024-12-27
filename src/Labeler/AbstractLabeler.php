@@ -52,7 +52,7 @@ abstract class AbstractLabeler
      *
      * @link https://docs.bsky.app/docs/api/tools-ozone-moderation-emit-event
      */
-    abstract public function emitEvent(Request $request): iterable;
+    abstract public function emitEvent(Request $request, ?string $did, ?string $token): iterable;
 
     /**
      * @param  string  $sign  raw bytes compact signature
