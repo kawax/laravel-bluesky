@@ -4,10 +4,7 @@ declare(strict_types=1);
 
 namespace Revolution\Bluesky\Labeler\Server;
 
-use Illuminate\Support\Arr;
 use Revolution\Bluesky\Labeler\Labeler;
-use Revolution\Bluesky\Labeler\LabelerException;
-use Revolution\Bluesky\Labeler\SubscribeLabelMessage;
 use Workerman\Connection\TcpConnection;
 use Workerman\Protocols\Http\Request;
 use Workerman\Protocols\Websocket;
