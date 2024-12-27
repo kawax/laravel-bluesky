@@ -80,7 +80,30 @@ class WebSocketServeCommand extends Command
 
         $host = (string) $this->option('host');
 
-        $uri = 'wss://'.$host.'/subscribe?requireHello=true';
+        $wantedCollections = collect($this->option('collection'))
+            ->map(fn ($did) => 'wantedCollections='.$did)
+            ->implode('&');
+
+        $wantedDids = collect($this->option('did'))
+            ->map(fn ($did) => 'wantedDids='.$did)
+            ->implode('&');
+
+        $max = $this->option('max');
+        if (! empty($max)) {
+            $max = 'maxMessageSizeBytes='.$max;
+        }
+
+        $payload = [
+            'wantedCollections' => $wantedCollections,
+            'wantedDids' => $wantedDids,
+            'maxMessageSizeBytes' => $max,
+        ];
+
+        $options = collect($payload)
+            ->reject(fn ($value) => empty($value))
+            ->implode('&');
+
+        $uri = 'wss://'.$host.'/subscribe?'.$options;
 
         $res = $client->get($uri);
 
@@ -99,24 +122,17 @@ class WebSocketServeCommand extends Command
             $this->running = false;
         });
 
-        $payload = [
-            'type' => 'options_update',
-            'payload' => [
-                'wantedCollections' => $this->option('collection'),
-                'wantedDids' => $this->option('did'),
-                'maxMessageSizeBytes' => (int) $this->option('max'),
-            ],
-        ];
-
-        $ws->write($options = json_encode($payload, JSON_THROW_ON_ERROR));
-
         $this->info('Host : '.$host);
         $this->info('Payload : '.$options);
 
         while ($this->running) {
-            $event = $ws->read();
+            $event = rescue(fn () => $ws->read(), '');
 
             $message = json_decode($event, true);
+
+            if (empty($message)) {
+                continue;
+            }
 
             if ($this->output->isVerbose()) {
                 dump($message);
