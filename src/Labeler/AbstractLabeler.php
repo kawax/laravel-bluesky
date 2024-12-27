@@ -16,7 +16,8 @@ abstract class AbstractLabeler
      * use Revolution\Bluesky\Labeler\LabelDefinition;
      * use Revolution\Bluesky\Labeler\LabelLocale;
      *
-     * protected function labels() {
+     * public function labels(): array
+     * {
      *     return [
      *         new LabelDefinition(
      *               identifier: 'artisan',
@@ -39,6 +40,8 @@ abstract class AbstractLabeler
     abstract public function labels(): array;
 
     /**
+     * Called when connected via WebSocket.
+     *
      * @return iterable<SubscribeLabelResponse>
      *
      * @throw LabelerException
@@ -46,6 +49,8 @@ abstract class AbstractLabeler
     abstract public function subscribeLabels(?int $cursor): iterable;
 
     /**
+     * Called when adding or removing labels.
+     *
      * @return iterable<UnsignedLabel>
      *
      * @throw LabelerException
@@ -55,6 +60,8 @@ abstract class AbstractLabeler
     abstract public function emitEvent(Request $request, ?string $did, ?string $token): iterable;
 
     /**
+     * Save to database, etc.
+     *
      * @param  string  $sign  raw bytes compact signature
      *
      * @throw LabelerException
