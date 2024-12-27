@@ -8,7 +8,7 @@ use Illuminate\Contracts\Support\Arrayable;
 use Illuminate\Support\Arr;
 use InvalidArgumentException;
 
-class UnsignedLabel implements Arrayable
+readonly class UnsignedLabel implements Arrayable
 {
     public function __construct(
         public string $uri,

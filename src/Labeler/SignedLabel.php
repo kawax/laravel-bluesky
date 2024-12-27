@@ -8,7 +8,7 @@ use Illuminate\Support\Arr;
 use InvalidArgumentException;
 use Revolution\Bluesky\Core\CBOR\AtBytes;
 
-class SignedLabel extends UnsignedLabel
+readonly class SignedLabel extends UnsignedLabel
 {
     public function __construct(
         UnsignedLabel $unsigned,

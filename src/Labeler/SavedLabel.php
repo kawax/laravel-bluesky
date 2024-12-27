@@ -9,7 +9,7 @@ use InvalidArgumentException;
 use Revolution\Bluesky\Core\CBOR;
 use Revolution\Bluesky\Core\CBOR\AtBytes;
 
-class SavedLabel extends SignedLabel
+readonly class SavedLabel extends SignedLabel
 {
     public function __construct(
         public int $id,

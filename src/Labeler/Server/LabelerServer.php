@@ -96,17 +96,9 @@ final class LabelerServer
         $cursor = is_null($cursor) ? null : intval($cursor);
         //info('subscribeLabels cursor: '.$cursor);
 
-        try {
-            foreach (Labeler::subscribeLabels($cursor) as $label) {
-                if ($label instanceof SubscribeLabelMessage) {
-                    $bytes = $label->toBytes();
-                    //info('subscribeLabels: '.$bytes);
-                    $connection->send($bytes);
-                }
-            }
-        } catch (LabelerException $e) {
-            $bytes = $e->toBytes();
-            //info('subscribeLabels error: '.$bytes);
+        foreach (Labeler::subscribeLabels($cursor) as $label) {
+            $bytes = $label->toBytes();
+            //info('subscribeLabels: '.$bytes);
             $connection->send($bytes);
         }
     }

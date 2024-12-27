@@ -49,18 +49,12 @@ final class Labeler
     }
 
     /**
-     * @return iterable<null|SubscribeLabelMessage>
-     *
-     * @throws LabelerException
+     * @return iterable<SubscribeLabelMessage>
      */
     public static function subscribeLabels(?int $cursor): iterable
     {
         /** @var AbstractLabeler $labeler */
         $labeler = app(self::$labeler);
-
-        if (! $labeler instanceof AbstractLabeler) {
-            throw new LabelerException('Labeler class not found');
-        }
 
         yield from $labeler->subscribeLabels($cursor);
     }
@@ -151,9 +145,9 @@ final class Labeler
         $sign = Signature::toCompact($sign);
 
         $label = Arr::add($label, 'sig', new AtBytes($sign));
-        $label = SignedLabel::fromArray($label);
+        $signed = SignedLabel::fromArray($label);
 
-        return [$label, $sign];
+        return [$signed, $sign];
     }
 
     public static function formatLabel(array $label): array

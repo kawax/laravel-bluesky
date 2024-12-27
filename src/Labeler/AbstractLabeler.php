@@ -38,7 +38,7 @@ abstract class AbstractLabeler
     abstract public function labels(): array;
 
     /**
-     * @return iterable<null|SubscribeLabelMessage>
+     * @return iterable<SubscribeLabelMessage>
      *
      * @throw LabelerException
      */
