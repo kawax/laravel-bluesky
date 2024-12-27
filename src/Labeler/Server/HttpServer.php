@@ -58,6 +58,7 @@ final class HttpServer
 
             // websocket
             $iterator = Labeler::emitEvent($req, $token);
+
             foreach ($iterator as $unsigned) {
                 [$signed, $sign] = Labeler::signLabel($unsigned);
                 $savedLabel = Labeler::saveLabel($signed, $sign);
@@ -70,7 +71,7 @@ final class HttpServer
 
             // http response
             $emitEvent = new EmitEventResponse(
-                id: $seq - 1,
+                id: $seq,
                 event: $req->get('event'),
                 subject: $req->get('subject'),
                 createdBy: $req->get('createdBy'),

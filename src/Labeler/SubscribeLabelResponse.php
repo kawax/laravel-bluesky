@@ -6,7 +6,7 @@ namespace Revolution\Bluesky\Labeler;
 
 use Revolution\Bluesky\Core\CBOR;
 
-final readonly class SubscribeLabelMessage
+final readonly class SubscribeLabelResponse
 {
     public function __construct(
         protected int $seq,

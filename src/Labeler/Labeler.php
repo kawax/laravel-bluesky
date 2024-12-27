@@ -49,7 +49,7 @@ final class Labeler
     }
 
     /**
-     * @return iterable<SubscribeLabelMessage>
+     * @return iterable<SubscribeLabelResponse>
      */
     public static function subscribeLabels(?int $cursor): iterable
     {

@@ -8,7 +8,7 @@ use Revolution\Bluesky\Labeler\LabelDefinition;
 use Revolution\Bluesky\Labeler\LabelLocale;
 use Revolution\Bluesky\Labeler\SavedLabel;
 use Revolution\Bluesky\Labeler\SignedLabel;
-use Revolution\Bluesky\Labeler\SubscribeLabelMessage;
+use Revolution\Bluesky\Labeler\SubscribeLabelResponse;
 
 class ArtisanLabeler extends AbstractLabeler
 {
@@ -30,7 +30,7 @@ class ArtisanLabeler extends AbstractLabeler
     }
 
     /**
-     * @return iterable<SubscribeLabelMessage>
+     * @return iterable<SubscribeLabelResponse>
      *
      * @throw LabelerException
      */
