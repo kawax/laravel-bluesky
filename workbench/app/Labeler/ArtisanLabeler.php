@@ -6,9 +6,9 @@ use Illuminate\Http\Request;
 use Revolution\Bluesky\Labeler\AbstractLabeler;
 use Revolution\Bluesky\Labeler\LabelDefinition;
 use Revolution\Bluesky\Labeler\LabelLocale;
+use Revolution\Bluesky\Labeler\Response\SubscribeLabelResponse;
 use Revolution\Bluesky\Labeler\SavedLabel;
 use Revolution\Bluesky\Labeler\SignedLabel;
-use Revolution\Bluesky\Labeler\SubscribeLabelResponse;
 
 class ArtisanLabeler extends AbstractLabeler
 {

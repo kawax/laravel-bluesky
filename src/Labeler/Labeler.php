@@ -14,6 +14,7 @@ use Revolution\Bluesky\Core\CBOR\MapKeySort;
 use Revolution\Bluesky\Crypto\K256;
 use Revolution\Bluesky\Crypto\Signature;
 use Revolution\Bluesky\FeedGenerator\ValidateAuth;
+use Revolution\Bluesky\Labeler\Response\SubscribeLabelResponse;
 use RuntimeException;
 
 final class Labeler

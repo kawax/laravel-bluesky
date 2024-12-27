@@ -2,9 +2,10 @@
 
 declare(strict_types=1);
 
-namespace Revolution\Bluesky\Labeler;
+namespace Revolution\Bluesky\Labeler\Response;
 
 use Revolution\Bluesky\Core\CBOR;
+use Revolution\Bluesky\Labeler\Labeler;
 
 final readonly class SubscribeLabelResponse
 {

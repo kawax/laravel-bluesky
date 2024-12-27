@@ -5,12 +5,11 @@ declare(strict_types=1);
 namespace Revolution\Bluesky\Labeler\Server;
 
 use Illuminate\Http\Request as LaravelRequest;
-use Illuminate\Support\Arr;
 use Illuminate\Support\Str;
 use Revolution\AtProto\Lexicon\Contracts\Tools\Ozone\Moderation;
-use Revolution\Bluesky\Labeler\EmitEventResponse;
 use Revolution\Bluesky\Labeler\Labeler;
 use Revolution\Bluesky\Labeler\LabelerException;
+use Revolution\Bluesky\Labeler\Response\EmitEventResponse;
 use Revolution\Bluesky\Labeler\SavedLabel;
 use Workerman\Connection\TcpConnection;
 use Workerman\Protocols\Http\Request;
