@@ -8,7 +8,6 @@ use Revolution\Bluesky\Labeler\Labeler;
 use Workerman\Connection\TcpConnection;
 use Workerman\Protocols\Http\Request;
 use Workerman\Protocols\Websocket;
-use Workerman\Timer;
 use Workerman\Worker;
 
 /**
@@ -18,8 +17,6 @@ use Workerman\Worker;
  */
 final class LabelerServer
 {
-    protected const HEARTBEAT_TIME = 55;
-
     protected Worker $ws;
 
     protected string $host = '127.0.0.1';
@@ -27,8 +24,6 @@ final class LabelerServer
     protected int $port = 7000;
 
     protected int $count = 1;
-
-    protected bool $useHeartbeat = false;
 
     public function start(?string $host = null, ?int $port = null): void
     {
@@ -62,27 +57,6 @@ final class LabelerServer
         $http->onMessage = (new HttpServer($this->ws))->onMessage(...);
 
         $http->listen();
-
-        if ($this->useHeartbeat) {
-            Timer::add(10, function () use ($worker) {
-                $time_now = time();
-                foreach ($worker->connections as $connection) {
-                    if (empty($connection->lastMessageTime)) {
-                        /**
-                         * @phpstan-ignore property.notFound
-                         */
-                        $connection->lastMessageTime = $time_now;
-                        continue;
-                    }
-                    /**
-                     * @phpstan-ignore-next-line
-                     */
-                    if ($time_now - $connection->lastMessageTime > self::HEARTBEAT_TIME) {
-                        $connection->close();
-                    }
-                }
-            });
-        }
     }
 
     private function onWebSocketConnected(TcpConnection $connection, Request $request): void
