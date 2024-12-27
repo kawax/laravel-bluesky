@@ -62,7 +62,13 @@ final class Decoder
         $this->stream_size = (int) min($stream->getSize(), self::MAX_SIZE);
 
         while (! $stream->eof()) {
-            $arr[] = CBOR::normalize($this->readValue());
+            $value = $this->readValue();
+
+            if (empty($value)) {
+                continue;
+            }
+
+            $arr[] = CBOR::normalize($value);
         }
 
         return $arr;
