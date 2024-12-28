@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Tests\Feature\Support;
 
 use Illuminate\Support\Facades\Http;
+use InvalidArgumentException;
 use Revolution\Bluesky\Facades\Bluesky;
 use Revolution\Bluesky\Support\AtUri;
 use Revolution\Bluesky\Support\DID;
@@ -103,7 +104,7 @@ class SupportTest extends TestCase
 
     public function test_at_uri_invalid(): void
     {
-        $this->expectException(RuntimeException::class);
+        $this->expectException(InvalidArgumentException::class);
 
         $at = AtUri::parse('http://did:plc:test/app.bsky.feed.post/abcde');
     }
