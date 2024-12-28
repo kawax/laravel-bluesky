@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Revolution\Bluesky\Support;
 
 use Illuminate\Support\Str;
+use InvalidArgumentException;
 use Revolution\AtProto\Lexicon\Attributes\Format;
 use Stringable;
 
@@ -25,7 +26,7 @@ final readonly class AtUri implements Stringable
 
     public function __construct(protected string $uri)
     {
-        throw_unless(Str::startsWith($this->uri, self::ATP));
+        throw_unless(Str::startsWith($this->uri, self::ATP), InvalidArgumentException::class, 'Invalid AT-URI. Must start with "at://"');
 
         throw_if(preg_match(self::ATP_URI_REGEX, $this->uri, $matches) === false);
 
