@@ -18,7 +18,6 @@
         "firebase/php-jwt": "^6.10",
         "phpseclib/phpseclib": "^3.0",
         "revolution/atproto-lexicon-contracts": "1.0.39",
-        "valtzu/guzzle-websocket-middleware": "^0.2.0",
         "yocto/yoclib-multibase": "^1.2",
         "jetbrains/phpstorm-attributes": "^1.2",
         "workerman/workerman": "^5.0-rc.3",
@@ -44,9 +43,7 @@
     },
     "suggest": {
         "ext-pcntl": "*",
-        "ext-gmp": "*",
-        "workerman/workerman": "*",
-        "revolt/event-loop": "*"
+        "ext-gmp": "*"
     },
     "authors": [
         {
