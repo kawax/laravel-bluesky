@@ -4,16 +4,13 @@ declare(strict_types=1);
 
 namespace Revolution\Bluesky\Console;
 
-use GuzzleHttp\Client;
-use GuzzleHttp\Handler\StreamHandler;
-use GuzzleHttp\HandlerStack;
 use Illuminate\Console\Command;
 use Illuminate\Support\Arr;
 use Revolution\Bluesky\Core\CBOR;
 use Revolution\Bluesky\Core\CID;
 use Revolution\Bluesky\Events\WebSocketMessageReceived;
-use Valtzu\WebSocketMiddleware\WebSocketMiddleware;
-use Valtzu\WebSocketMiddleware\WebSocketStream;
+use Workerman\Connection\AsyncTcpConnection;
+use Workerman\Worker;
 
 /**
  * When message is received, dispatch {@link WebSocketMessageReceived} event.
@@ -56,7 +53,7 @@ class WebSocketServeCommand extends Command
      *
      * @var string
      */
-    protected $signature = 'bluesky:ws {--H|host=jetstream1.us-west.bsky.network} {--C|collection=*} {--D|did=*} {--M|max=0 : Set maxMessageSizeBytes}';
+    protected $signature = 'bluesky:ws {cmd} {--H|host=jetstream1.us-west.bsky.network} {--C|collection=*} {--D|did=*} {--M|max=0 : Set maxMessageSizeBytes}';
 
     /**
      * The console command description.
@@ -67,6 +64,10 @@ class WebSocketServeCommand extends Command
 
     protected bool $running = true;
 
+    protected string $host = '';
+
+    protected array $payload = [];
+
     /**
      * Execute the console command.
      *
@@ -74,11 +75,7 @@ class WebSocketServeCommand extends Command
      */
     public function handle(): int
     {
-        $handlerStack = new HandlerStack(new StreamHandler());
-        $handlerStack->push(new WebSocketMiddleware());
-        $client = new Client(['handler' => $handlerStack]);
-
-        $host = (string) $this->option('host');
+        $this->host = (string) $this->option('host');
 
         $wantedCollections = collect($this->option('collection'))
             ->map(fn ($did) => 'wantedCollections='.$did)
@@ -93,65 +90,63 @@ class WebSocketServeCommand extends Command
             $max = 'maxMessageSizeBytes='.$max;
         }
 
-        $payload = [
+        $this->payload = [
             'wantedCollections' => $wantedCollections,
             'wantedDids' => $wantedDids,
             'maxMessageSizeBytes' => $max,
         ];
 
-        $options = collect($payload)
-            ->reject(fn ($value) => empty($value))
-            ->implode('&');
+        $worker = new Worker();
 
-        $uri = 'wss://'.$host.'/subscribe?'.$options;
+        $worker->onWorkerStart = function ($worker) {
+            $options = collect($this->payload)
+                ->reject(fn ($value) => empty($value))
+                ->implode('&');
 
-        $res = $client->get($uri);
+            $uri = 'ws://'.$this->host.':443/subscribe?'.$options;
 
-        if ($res->getStatusCode() !== 101) {
-            dd($res);
-        }
+            $con = new AsyncTcpConnection($uri);
 
-        $ws = $res->getBody();
+            $con->transport = 'ssl';
 
-        if (! $ws instanceof WebSocketStream) {
-            $this->error('Something WebSocket error');
-            dd($ws);
-        }
+            $con->onWebSocketConnect = function (AsyncTcpConnection $con) use ($options) {
+                $this->info('Host : '.$this->host);
+                $this->info('Payload : '.$options);
+            };
 
-        $this->trap(SIGTERM, function () {
-            $this->running = false;
-        });
+            $con->onMessage = $this->onMessage(...);
 
-        $this->info('Host : '.$host);
-        $this->info('Payload : '.$options);
+            $con->connect();
+        };
 
-        while ($this->running) {
-            $event = rescue(fn () => $ws->read(), '');
-
-            $message = json_decode($event, true);
-
-            if (empty($message)) {
-                continue;
-            }
-
-            if ($this->output->isVerbose()) {
-                dump($message);
-                /** @var ?array $record */
-                $record = data_get($message, 'commit.record');
-                /** @var ?string $cid */
-                $cid = data_get($message, 'commit.cid');
-                if (! is_null($record) && ! is_null($cid)) {
-                    if (CID::verify(CBOR::encode($record), $cid)) {
-                        $this->info('Verified: '.$cid);
-                    }
-                }
-            }
-
-            if (is_array($message) && Arr::has($message, ['did', 'kind'])) {
-                WebSocketMessageReceived::dispatch($message, $host, $payload);
-            }
-        }
+        Worker::runAll();
 
         return 0;
+    }
+
+    private function onMessage(AsyncTcpConnection $con, string $data): void
+    {
+        $message = json_decode($data, true);
+
+        if (empty($message)) {
+            return;
+        }
+
+        if ($this->output->isVerbose()) {
+            dump($message);
+            /** @var ?array $record */
+            $record = data_get($message, 'commit.record');
+            /** @var ?string $cid */
+            $cid = data_get($message, 'commit.cid');
+            if (! is_null($record) && ! is_null($cid)) {
+                if (CID::verify(CBOR::encode($record), $cid)) {
+                    $this->info('Verified: '.$cid);
+                }
+            }
+        }
+
+        if (is_array($message) && Arr::has($message, ['did', 'kind'])) {
+            WebSocketMessageReceived::dispatch($message, $this->host, $this->payload);
+        }
     }
 }
