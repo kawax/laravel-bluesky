@@ -84,7 +84,7 @@ final class Labeler
         return app()->call(ValidateAuth::class, ['jwt' => $token, 'request' => $request]);
     }
 
-    public static function saveLabel(SignedLabel $label, string $sign): SavedLabel
+    public static function saveLabel(SignedLabel $label, string $sign): ?SavedLabel
     {
         /** @var AbstractLabeler $labeler */
         $labeler = app(self::$labeler);
