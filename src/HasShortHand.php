@@ -248,7 +248,7 @@ trait HasShortHand
         $at = AtUri::parse($uri);
 
         if ($at->collection() !== Feed::Post->value) {
-            throw new InvalidArgumentException();
+            throw new InvalidArgumentException('uri is must start with "at://".');
         }
 
         return $this->getRecord(
