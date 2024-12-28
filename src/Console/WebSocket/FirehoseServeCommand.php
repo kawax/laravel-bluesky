@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Revolution\Bluesky\Console\WebScoket;
+namespace Revolution\Bluesky\Console\WebSocket;
 
 use Illuminate\Console\Command;
 use Illuminate\Support\Arr;
