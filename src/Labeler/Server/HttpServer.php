@@ -59,10 +59,13 @@ final class HttpServer
             foreach (Labeler::emitEvent($req, $token) as $unsigned) {
                 [$signed, $sign] = Labeler::signLabel($unsigned);
                 $savedLabel = Labeler::saveLabel($signed, $sign);
-                $this->emitLabel($savedLabel);
 
-                if ($savedLabel->id > $seq) {
-                    $seq = $savedLabel->id;
+                if (! is_null($savedLabel)) {
+                    $this->emitLabel($savedLabel);
+
+                    if ($savedLabel->id > $seq) {
+                        $seq = $savedLabel->id;
+                    }
                 }
             }
 
