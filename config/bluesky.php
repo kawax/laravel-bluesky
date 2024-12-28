@@ -95,5 +95,11 @@ return [
 
         // Private key(K256, base64url encoded)
         'private_key' => env('BLUESKY_LABELER_PRIVATE_KEY'),
+
+        'logging' => [
+            'driver' => env('BLUESKY_LABELER_LOG_DRIVER', 'daily'),
+            'days' => 14,
+            'path' => env('BLUESKY_LABELER_LOG_PATH', storage_path('logs/labeler.log')),
+        ],
     ],
 ];

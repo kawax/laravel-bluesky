@@ -7,6 +7,7 @@ namespace Revolution\Bluesky\Labeler;
 use Illuminate\Http\Request;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Config;
+use Illuminate\Support\Facades\Log;
 use InvalidArgumentException;
 use Revolution\Bluesky\Core\CBOR;
 use Revolution\Bluesky\Core\CBOR\AtBytes;
@@ -173,5 +174,10 @@ final class Labeler
         }
 
         return ['version' => app()->version()];
+    }
+
+    public static function log(string $message, null|array|string|int $context = []): void
+    {
+        Log::build(config('bluesky.labeler.logging'))->info($message, Arr::wrap($context));
     }
 }

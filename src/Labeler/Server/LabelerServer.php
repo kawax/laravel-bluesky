@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Revolution\Bluesky\Labeler\Server;
 
+use Illuminate\Support\Arr;
 use Revolution\Bluesky\Labeler\Labeler;
 use Workerman\Connection\TcpConnection;
 use Workerman\Protocols\Http\Request;
@@ -65,18 +66,18 @@ final class LabelerServer
 
         $cursor = $request->get('cursor');
         $cursor = is_null($cursor) ? null : intval($cursor);
-        //info('subscribeLabels cursor: '.$cursor);
+        Labeler::log('subscribeLabels cursor: ', $cursor);
 
         foreach (Labeler::subscribeLabels($cursor) as $label) {
             $bytes = $label->toBytes();
-            //info('subscribeLabels: '.$bytes);
+            Labeler::log('subscribeLabels bytes: ', $bytes);
             $connection->send($bytes);
         }
     }
 
     private function onMessage(TcpConnection $connection, string $data): void
     {
-        //info('onMessage: ', Arr::wrap($data));
+        Labeler::log('onMessage: ', $data);
 
         $connection->send($data);
     }

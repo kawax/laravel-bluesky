@@ -44,6 +44,8 @@ final class HttpServer
 
     private function emitEvent(TcpConnection $connection, Request $request): void
     {
+        Labeler::log('emitEvent header', $request->header());
+
         $req = LaravelRequest::create(
             uri: $request->uri(),
             method: $request->method(),
@@ -79,6 +81,8 @@ final class HttpServer
                 createdAt: now()->toISOString(),
             );
 
+            Labeler::log('emitEvent response', $emitEvent->toArray());
+
             $connection->send($this->json($emitEvent->toArray()));
         } catch (LabelerException) {
             $connection->send($this->json(['error' => 'Forbidden'], status: 403));
@@ -89,8 +93,8 @@ final class HttpServer
     {
         $bytes = $label->toBytes();
 
-        //info('emitLabel: ', $label->toArray());
-        //info('emitLabel bytes: '.$bytes);
+        Labeler::log('emitLabel: ', $label->toArray());
+        Labeler::log('emitLabel bytes: '.$bytes);
 
         foreach ($this->ws->connections as $ws) {
             $ws->websocketType = Websocket::BINARY_TYPE_ARRAYBUFFER;
@@ -101,7 +105,7 @@ final class HttpServer
 
     private function health(TcpConnection $connection, Request $request): void
     {
-        //info('health', Arr::wrap($request->header()));
+        Labeler::log('health header', $request->header());
 
         $connection->send($this->json(Labeler::health($request->header())));
     }
