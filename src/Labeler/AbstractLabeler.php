@@ -7,7 +7,7 @@ namespace Revolution\Bluesky\Labeler;
 use Illuminate\Http\Request;
 use Revolution\Bluesky\Labeler\Response\SubscribeLabelResponse;
 
-abstract class AbstractLabeler
+abstract readonly class AbstractLabeler
 {
     /**
      * Label definitions.
