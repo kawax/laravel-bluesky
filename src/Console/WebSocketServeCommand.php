@@ -17,27 +17,27 @@ use Workerman\Worker;
  *
  * ```
  * // No filters. Receive all messages.
- * php artisan bluesky:ws
+ * php artisan bluesky:ws start
  * ```
  * ```
  * // Filter to a specific collection type. To specify multiple collections, use multiple "-C".
- * php artisan bluesky:ws -C app.bsky.feed.post -C app.bsky.feed.like -C ...
+ * php artisan bluesky:ws start -C app.bsky.feed.post -C app.bsky.feed.like -C ...
  * ```
  * ```
  * // To filter by user, specify DID
- * php artisan bluesky:ws -C app.bsky.feed.post -D did:plc:... -D did:...
+ * php artisan bluesky:ws start -C app.bsky.feed.post -D did:plc:... -D did:...
  * ```
  * ```
  * // Specify the host
- * php artisan bluesky:ws -H jetstream2.us-east.bsky.network
+ * php artisan bluesky:ws start -H jetstream2.us-east.bsky.network
  * ```
  * ```
  * // Set maxMessageSizeBytes
- * php artisan bluesky:ws -M 1000000
+ * php artisan bluesky:ws start -M 1000000
  * ```
  * ```
  * // Display all received messages for debugging.
- * php artisan bluesky:ws -v
+ * php artisan bluesky:ws start -v
  * ```
  *
  * This is an advanced usage so they probably won't document it.
