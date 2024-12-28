@@ -220,7 +220,3 @@ The display of the feed is affected by the "language settings of your account". 
 ## Advanced
 
 Use artisan commands and task schedules to save posts to a database. With algo, you can just retrieve them from the DB. It's up to you how you use it.
-
-## More advanced
-
-We also provide the [WebSocketServeCommand](../src/Console/WebSocketServeCommand.php), which uses WebSocket, but it is intended for users who can use it on their own.
