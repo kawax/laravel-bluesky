@@ -62,8 +62,6 @@ class WebSocketServeCommand extends Command
      */
     protected $description = 'Connect to Jetstream websocket server';
 
-    protected bool $running = true;
-
     protected string $host = '';
 
     protected array $payload = [];
