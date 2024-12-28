@@ -24,7 +24,7 @@ use Revolution\Bluesky\Console\Labeler\LabelerSetupCommand;
 use Revolution\Bluesky\Console\LexiconClientCommand;
 use Revolution\Bluesky\Console\NewPrivateKeyCommand;
 use Revolution\Bluesky\Console\UnpackRepoCommand;
-use Revolution\Bluesky\Console\WebSocketServeCommand;
+use Revolution\Bluesky\Console\JetstreamServeCommand;
 use Revolution\Bluesky\Contracts\Factory;
 use Revolution\Bluesky\FeedGenerator\Http\DescribeFeedController;
 use Revolution\Bluesky\FeedGenerator\Http\FeedSkeletonController;
@@ -51,7 +51,7 @@ class BlueskyServiceProvider extends ServiceProvider
 
             $this->commands([
                 NewPrivateKeyCommand::class,
-                WebSocketServeCommand::class,
+                JetstreamServeCommand::class,
                 DownloadRepoCommand::class,
                 UnpackRepoCommand::class,
                 DownloadBlobsCommand::class,

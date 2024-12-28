@@ -17,7 +17,7 @@ use Workerman\Connection\AsyncTcpConnection;
 use Workerman\Worker;
 
 /**
- * Firehose is even more difficult than Jetstream WebSocket ({@link WebSocketServeCommand}) and is not expected to be commonly used, so there is no documentation.
+ * Firehose is even more difficult than Jetstream WebSocket ({@link JetstreamServeCommand}) and is not expected to be commonly used, so there is no documentation.
  *
  * ```
  * php artisan bluesky:firehose start

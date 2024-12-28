@@ -2,20 +2,20 @@
 
 declare(strict_types=1);
 
-namespace Revolution\Bluesky\Events;
+namespace Revolution\Bluesky\Events\Jetstream;
 
 use Illuminate\Foundation\Events\Dispatchable;
-use Revolution\Bluesky\Console\WebSocketServeCommand;
+use Revolution\Bluesky\Console\JetstreamServeCommand;
 
 /**
- * Dispatch from {@link WebSocketServeCommand}.
+ * Dispatch from {@link JetstreamServeCommand}.
  *
  * ```
- * use Revolution\Bluesky\Events\WebSocketMessageReceived;
+ * use Revolution\Bluesky\Events\Jetstream\JetstreamMessage;
  *
  * class Listener
  * {
- *     public function handle(WebSocketMessageReceived $event): void
+ *     public function handle(JetstreamMessage $event): void
  *     {
  *         $did = data_get($event->message, 'did');
  *         $kind = data_get($event->message, 'kind');
@@ -29,7 +29,7 @@ use Revolution\Bluesky\Console\WebSocketServeCommand;
  *
  * @link https://github.com/bluesky-social/jetstream
  */
-class WebSocketMessageReceived
+class JetstreamMessageReceived
 {
     use Dispatchable;
 

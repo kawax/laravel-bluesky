@@ -8,13 +8,14 @@ use Illuminate\Console\Command;
 use Illuminate\Support\Arr;
 use Revolution\Bluesky\Core\CBOR;
 use Revolution\Bluesky\Core\CID;
-use Revolution\Bluesky\Events\WebSocketMessageReceived;
+use Revolution\Bluesky\Events\Jetstream\JetstreamAccountMessage;
+use Revolution\Bluesky\Events\Jetstream\JetstreamCommitMessage;
+use Revolution\Bluesky\Events\Jetstream\JetstreamIdentityMessage;
+use Revolution\Bluesky\Events\Jetstream\JetstreamMessageReceived;
 use Workerman\Connection\AsyncTcpConnection;
 use Workerman\Worker;
 
 /**
- * When message is received, dispatch {@link WebSocketMessageReceived} event.
- *
  * ```
  * // No filters. Receive all messages.
  * php artisan bluesky:ws start
@@ -46,7 +47,7 @@ use Workerman\Worker;
  *
  * @link https://github.com/bluesky-social/jetstream
  */
-class WebSocketServeCommand extends Command
+class JetstreamServeCommand extends Command
 {
     /**
      * The name and signature of the console command.
@@ -65,6 +66,12 @@ class WebSocketServeCommand extends Command
     protected string $host = '';
 
     protected array $payload = [];
+
+    protected const KINDS = [
+        'commit',
+        'identity',
+        'account',
+    ];
 
     /**
      * Execute the console command.
@@ -126,7 +133,7 @@ class WebSocketServeCommand extends Command
     {
         $message = json_decode($data, true);
 
-        if (empty($message)) {
+        if (! is_array($message) || ! Arr::has($message, ['did', 'kind'])) {
             return;
         }
 
@@ -143,8 +150,36 @@ class WebSocketServeCommand extends Command
             }
         }
 
-        if (is_array($message) && Arr::has($message, ['did', 'kind'])) {
-            WebSocketMessageReceived::dispatch($message, $this->host, $this->payload);
+        /** @var string $kind */
+        $kind = $message['kind'];
+
+        if (! in_array($kind, self::KINDS, true)) {
+            return;
         }
+
+        match ($kind) {
+            'commit' => $this->commit($kind, $message),
+            'identity' => $this->identity($kind, $message),
+            'account' => $this->account($kind, $message),
+        };
+
+        event(new JetstreamMessageReceived($message, $this->host, $this->payload));
+    }
+
+    private function commit(string $kind, array $message): void
+    {
+        $op = data_get($message, 'commit.operation');
+
+        event(new JetstreamCommitMessage($kind, $op, $message, $this->host, $this->payload));
+    }
+
+    private function identity(string $kind, array $message): void
+    {
+        event(new JetstreamIdentityMessage($kind, $message, $this->host, $this->payload));
+    }
+
+    private function account(string $kind, array $message): void
+    {
+        event(new JetstreamAccountMessage($kind, $message, $this->host, $this->payload));
     }
 }
