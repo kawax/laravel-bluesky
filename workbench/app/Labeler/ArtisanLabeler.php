@@ -10,7 +10,7 @@ use Revolution\Bluesky\Labeler\Response\SubscribeLabelResponse;
 use Revolution\Bluesky\Labeler\SavedLabel;
 use Revolution\Bluesky\Labeler\SignedLabel;
 
-class ArtisanLabeler extends AbstractLabeler
+readonly class ArtisanLabeler extends AbstractLabeler
 {
     /**
      * @return array<LabelDefinition>
