@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Revolution\Bluesky\Events\Jetstream;
 
 use Illuminate\Foundation\Events\Dispatchable;
-use Revolution\Bluesky\Console\JetstreamServeCommand;
+use Revolution\Bluesky\Console\WebScoket\JetstreamServeCommand;
 
 /**
  * Dispatch from {@link JetstreamServeCommand}.
