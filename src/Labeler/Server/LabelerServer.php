@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Revolution\Bluesky\Labeler\Server;
 
-use Illuminate\Support\Arr;
 use Revolution\Bluesky\Labeler\Labeler;
 use Workerman\Connection\TcpConnection;
 use Workerman\Protocols\Http\Request;
