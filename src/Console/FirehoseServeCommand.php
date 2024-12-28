@@ -4,9 +4,6 @@ declare(strict_types=1);
 
 namespace Revolution\Bluesky\Console;
 
-use GuzzleHttp\Client;
-use GuzzleHttp\Handler\StreamHandler;
-use GuzzleHttp\HandlerStack;
 use Illuminate\Console\Command;
 use Illuminate\Support\Arr;
 use Revolution\Bluesky\Core\CAR;
@@ -16,11 +13,15 @@ use Revolution\Bluesky\Events\Firehose\FirehoseAccountMessage;
 use Revolution\Bluesky\Events\Firehose\FirehoseCommitMessage;
 use Revolution\Bluesky\Events\Firehose\FirehoseIdentityMessage;
 use Revolution\Bluesky\Events\Firehose\FirehoseMessageReceived;
-use Valtzu\WebSocketMiddleware\WebSocketMiddleware;
-use Valtzu\WebSocketMiddleware\WebSocketStream;
+use Workerman\Connection\AsyncTcpConnection;
+use Workerman\Worker;
 
 /**
  * Firehose is even more difficult than Jetstream WebSocket ({@link WebSocketServeCommand}) and is not expected to be commonly used, so there is no documentation.
+ *
+ * ```
+ * php artisan bluesky:firehose start
+ * ```
  *
  * @link https://docs.bsky.app/docs/advanced-guides/firehose
  * @link https://atproto.com/specs/event-stream
@@ -32,7 +33,7 @@ class FirehoseServeCommand extends Command
      *
      * @var string
      */
-    protected $signature = 'bluesky:firehose {--H|host=bsky.network}';
+    protected $signature = 'bluesky:firehose {cmd} {--H|host=bsky.network}';
 
     /**
      * The console command description.
@@ -41,9 +42,7 @@ class FirehoseServeCommand extends Command
      */
     protected $description = 'Connect to Firehose websocket server';
 
-    protected bool $running = true;
-
-    protected const MAX_SIZE = 1024 * 1024 * 5;
+    protected string $host = '';
 
     protected const KINDS = [
         '#commit',
@@ -70,63 +69,73 @@ class FirehoseServeCommand extends Command
      */
     public function handle(): int
     {
-        $ws = $this->ws();
+        $this->host = (string) $this->option('host');
 
-        $this->trap(SIGTERM, function () {
-            $this->running = false;
-        });
+        $worker = new Worker();
 
-        while ($this->running) {
-            $event = rescue(fn () => $ws->read(self::MAX_SIZE), '');
+        $worker->onWorkerStart = function ($worker) {
+            $uri = 'ws://'.$this->host.':443/xrpc/com.atproto.sync.subscribeRepos';
 
-            // Firehose often receives incorrect data.
-            if (ord($event) !== 0xA2) {
-                continue;
-            }
+            $con = new AsyncTcpConnection($uri);
 
-            /** @var array{t: string, op: int} $header */
-            [$header, $remainder] = rescue(fn () => CBOR::decodeFirst($event), [[], '']);
+            $con->transport = 'ssl';
 
-            if (! Arr::has($header, ['t', 'op'])) {
-                if ($this->output->isVerbose()) {
-                    dump($header);
-                }
-
-                continue;
-            }
-
-            if ($header['op'] !== 1) {
-                continue;
-            }
-
-            $kind = $header['t'];
-
-            if (! in_array($kind, self::KINDS, true)) {
-                continue;
-            }
-
-            $payload = rescue(fn () => CBOR::decode($remainder ?? []));
-
-            if ($kind === '#commit' && ! Arr::has($payload, ['tooBig'])) {
-                if ($this->output->isVerbose()) {
-                    dump(Arr::set($payload, 'blocks', '...Invalid payload...'));
-                }
-
-                continue;
-            }
-
-            // Event processing subdivided by kind
-            match ($kind) {
-                '#commit' => $this->commit($header, $payload, $event),
-                '#identity' => $this->identity($header, $payload, $event),
-                '#account' => $this->account($header, $payload, $event),
+            $con->onWebSocketConnect = function (AsyncTcpConnection $con) {
+                $this->info('Host : '.$this->host);
             };
 
-            // Finally, dispatch the raw data event
-            event(new FirehoseMessageReceived($header, $payload, $event));
-        }
+            $con->onMessage = $this->onMessage(...);
+
+            $con->connect();
+        };
+
+        Worker::runAll();
 
         return 0;
+    }
+
+    private function onMessage(AsyncTcpConnection $con, string $data): void
+    {
+        /** @var array{t: string, op: int} $header */
+        [$header, $remainder] = rescue(fn () => CBOR::decodeFirst($data), [[], '']);
+
+        if (! Arr::has($header, ['t', 'op'])) {
+            if ($this->output->isVerbose()) {
+                dump($header);
+            }
+
+            return;
+        }
+
+        if ($header['op'] !== 1) {
+            return;
+        }
+
+        $kind = $header['t'];
+
+        if (! in_array($kind, self::KINDS, true)) {
+            return;
+        }
+
+        $payload = rescue(fn () => CBOR::decode($remainder ?? []));
+
+        if ($kind === '#commit' && ! Arr::has($payload, ['tooBig'])) {
+            if ($this->output->isVerbose()) {
+                dump(Arr::set($payload, 'blocks', '...Invalid payload...'));
+            }
+
+            return;
+        }
+
+        // Event processing subdivided by kind
+        match ($kind) {
+            '#commit' => $this->commit($header, $payload, $data),
+            '#identity' => $this->identity($header, $payload, $data),
+            '#account' => $this->account($header, $payload, $data),
+        };
+
+        // Finally, dispatch the raw data event
+        event(new FirehoseMessageReceived($header, $payload, $data));
     }
 
     /**
@@ -234,32 +243,5 @@ class FirehoseServeCommand extends Command
         $status = $payload['status'] ?? null;
 
         event(new FirehoseAccountMessage($did, $seq, $time, $active, $status, $raw));
-    }
-
-    private function ws(): WebSocketStream
-    {
-        $handlerStack = new HandlerStack(new StreamHandler());
-        $handlerStack->push(new WebSocketMiddleware());
-        $client = new Client(['handler' => $handlerStack]);
-
-        $host = (string) $this->option('host');
-        $this->info('Host : '.$host);
-
-        $uri = 'wss://'.$host.'/xrpc/com.atproto.sync.subscribeRepos';
-
-        $res = $client->get($uri);
-
-        if ($res->getStatusCode() !== 101) {
-            dd($res);
-        }
-
-        $ws = $res->getBody();
-
-        if (! $ws instanceof WebSocketStream) {
-            $this->error('Something WebSocket error');
-            dd($ws);
-        }
-
-        return $ws;
     }
 }
