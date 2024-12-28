@@ -1,0 +1,5 @@
+Directory
+/home/forge/labeler.example.com/
+
+Command
+php artisan bluesky:labeler:server start
