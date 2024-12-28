@@ -24,6 +24,19 @@ $profile = Bluesky::login(identifier: config('bluesky.identifier'), password: co
                   ->getProfile();
 ```
 
+Resume LegacySession.
+
+```php
+use Revolution\Bluesky\Facades\Bluesky;
+use Revolution\Bluesky\Session\LegacySession;
+
+Bluesky::login(identifier: config('bluesky.identifier'), password: config('bluesky.password'));
+
+session()->put('bluesky_legacy_session', Bluesky::agent()->session()->toArray());
+
+Bluesky::withToken(LegacySession::create(session('bluesky_legacy_session')))->refreshSession();
+```
+
 ### OAuth
 
 Specify the `OAuthSession` containing the token obtained from Socialite.
@@ -489,7 +502,8 @@ $profile = Bluesky::getProfile(actor: 'did')->json();
 $feed = Bluesky::getAuthorFeed(actor: 'did')->json('feed');
 ```
 
-The request content will automatically change depending on whether you are authenticated or not. To explicitly use the public API, use `logout()`.
+The request content will automatically change depending on whether you are authenticated or not. To explicitly use the
+public API, use `logout()`.
 
 ```php
 use Revolution\Bluesky\Facades\Bluesky;

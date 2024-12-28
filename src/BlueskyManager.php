@@ -20,6 +20,7 @@ use Revolution\Bluesky\Agent\OAuthAgent;
 use Revolution\Bluesky\Client\AtpClient;
 use Revolution\Bluesky\Contracts\Agent;
 use Revolution\Bluesky\Contracts\Factory;
+use Revolution\Bluesky\Session\AbstractSession;
 use Revolution\Bluesky\Session\LegacySession;
 use Revolution\Bluesky\Session\OAuthSession;
 use Revolution\Bluesky\Support\Identity;
@@ -36,12 +37,16 @@ class BlueskyManager implements Factory
     protected ?Agent $agent = null;
 
     /**
-     * OAuth authentication.
+     * For OAuth authentication.
+     *
+     * This can also be used to resume LegacySession.
      */
-    public function withToken(#[\SensitiveParameter] ?OAuthSession $token): Factory
+    public function withToken(#[\SensitiveParameter] ?AbstractSession $token): Factory
     {
-        if (! is_null($token)) {
+        if ($token instanceof OAuthSession) {
             $this->agent = OAuthAgent::create($token);
+        } elseif ($token instanceof LegacySession) {
+            $this->agent = LegacyAgent::create($token);
         }
 
         return $this;

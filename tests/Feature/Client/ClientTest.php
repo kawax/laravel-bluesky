@@ -92,7 +92,21 @@ class ClientTest extends TestCase
 
         $client->login(identifier: 'identifier', password: 'password');
 
-        $this->assertIsArray($client->agent()->session()->toArray());
+        $this->assertSame('test', $client->agent()->session('accessJwt'));
+    }
+
+    public function test_session_resume(): void
+    {
+        Http::fake(fn () => $this->session);
+
+        $client = new BlueskyManager();
+
+        $client->login(identifier: 'identifier', password: 'password');
+
+        $session = $client->agent()->session()->toArray();
+
+        $client->withToken(LegacySession::create($session));
+
         $this->assertSame('test', $client->agent()->session('accessJwt'));
     }
 
