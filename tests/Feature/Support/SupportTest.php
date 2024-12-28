@@ -10,7 +10,6 @@ use Revolution\Bluesky\Facades\Bluesky;
 use Revolution\Bluesky\Support\AtUri;
 use Revolution\Bluesky\Support\DID;
 use Revolution\Bluesky\Support\DidDocument;
-use RuntimeException;
 use Tests\TestCase;
 
 class SupportTest extends TestCase
