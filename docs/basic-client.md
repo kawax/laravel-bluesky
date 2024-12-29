@@ -32,7 +32,7 @@ use Revolution\Bluesky\Session\LegacySession;
 
 Bluesky::login(identifier: config('bluesky.identifier'), password: config('bluesky.password'));
 
-cache()->forever('bluesky_legacy_session', Bluesky::agent()->session()->toArray());
+cache()->put('bluesky_legacy_session', Bluesky::agent()->session()->toArray(), now()->addDay());
 
 Bluesky::withToken(LegacySession::create(cache('bluesky_legacy_session', [])));
 
