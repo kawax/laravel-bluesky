@@ -12,7 +12,7 @@ parameters:
         - identifier: method.notFound
         #- identifier: return.unusedType
         #- identifier: phpDoc.parseError
-        #- identifier: larastan.noEnvCallsOutsideOfConfig
+        - identifier: larastan.noEnvCallsOutsideOfConfig
         - identifier: missingType.generics
         - identifier: missingType.iterableValue
         - identifier: argument.type
