@@ -34,7 +34,6 @@ class FirehoseServeCommand extends Command
      */
     protected $description = 'Connect to Firehose websocket server';
 
-
     /**
      * Execute the console command.
      *
