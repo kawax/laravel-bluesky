@@ -96,6 +96,10 @@ return [
         // Private key(K256, base64url encoded)
         'private_key' => env('BLUESKY_LABELER_PRIVATE_KEY'),
 
+        'host' => env('BLUESKY_LABELER_HOST', '127.0.0.1'),
+
+        'port' => (int) env('BLUESKY_LABELER_PORT', 7000),
+
         'logging' => [
             'driver' => env('BLUESKY_LABELER_LOG_DRIVER', 'daily'),
             'days' => 14,
