@@ -56,12 +56,13 @@ class JetstreamServeCommand extends Command
     public function handle(JetstreamServer $jetstream): int
     {
         if (! class_exists(Worker::class)) {
-            $this->error('Please install "workerman/workerman"');
+            $this->error('Please install "workerman"');
+            $this->warn('composer require workerman/workerman');
 
             return 1;
         }
 
-        $jetstream->start($this->option('collection'), $this->option('did'));
+        $jetstream->withCommand($this)->start($this->option('collection'), $this->option('did'));
 
         Worker::runAll();
 
