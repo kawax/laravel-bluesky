@@ -115,7 +115,7 @@ return [
 
         'logging' => [
             'driver' => env('BLUESKY_JETSTREAM_LOG_DRIVER', 'daily'),
-            'days' => 14,
+            'days' => 7,
             'path' => env('BLUESKY_JETSTREAM_LOG_PATH', storage_path('logs/jetstream.log')),
         ],
     ],
@@ -126,7 +126,7 @@ return [
 
         'logging' => [
             'driver' => env('BLUESKY_FIREHOSE_LOG_DRIVER', 'daily'),
-            'days' => 14,
+            'days' => 7,
             'path' => env('BLUESKY_FIREHOSE_LOG_PATH', storage_path('logs/firehose.log')),
         ],
     ],
