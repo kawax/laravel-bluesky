@@ -13,6 +13,7 @@ use Revolution\Bluesky\Facades\Bluesky;
 
 /**
  * Execute this command periodically with the task scheduler.
+ * An alternative when Jetstream or Firehose cannot be used.
  */
 class LabelerPollingCommand extends Command
 {
