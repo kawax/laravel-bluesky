@@ -20,6 +20,9 @@ use Revolution\Bluesky\Events\Firehose\FirehoseMessageReceived;
 use Workerman\Connection\AsyncTcpConnection;
 use Workerman\Worker;
 
+/**
+ * @internal
+ */
 final class FirehoseServer
 {
     use InteractsWithIO;
