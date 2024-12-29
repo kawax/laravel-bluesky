@@ -12,10 +12,12 @@ use Laravel\Socialite\Facades\Socialite;
 use Laravel\Socialite\Two\Token;
 use Mockery as m;
 use Revolution\Bluesky\Agent\OAuthAgent;
+use Revolution\Bluesky\Crypto\JsonWebToken;
 use Revolution\Bluesky\Events\OAuthSessionUpdated;
 use Revolution\Bluesky\Events\RefreshTokenReplayed;
 use Revolution\Bluesky\Facades\Bluesky;
 use Revolution\Bluesky\Session\OAuthSession;
+use Revolution\Bluesky\Socialite\Key\OAuthKey;
 use Revolution\Bluesky\Support\ProtectedResource;
 use Tests\TestCase;
 
@@ -54,8 +56,14 @@ class OAuthAgentTest extends TestCase
     {
         $session = new OAuthSession([
             'iss' => 'iss',
-            'token_created_at' => now()->toISOString(),
             'expires_in' => 3600,
+            'access_token' => JsonWebToken::encode(
+                [],
+                [
+                    'exp' => now()->addSeconds(3600)->timestamp,
+                ],
+                OAuthKey::load()->privatePEM(),
+            ),
         ]);
         $agent = new OAuthAgent($session);
 
@@ -147,6 +155,13 @@ class OAuthAgentTest extends TestCase
         $session = OAuthSession::create([
             'token_created_at' => now()->toISOString(),
             'expires_in' => 3600,
+            'access_token' => JsonWebToken::encode(
+                [],
+                [
+                    'exp' => now()->addSeconds(3600)->timestamp,
+                ],
+                OAuthKey::load()->privatePEM(),
+            ),
         ]);
 
         $agent = OAuthAgent::create($session);

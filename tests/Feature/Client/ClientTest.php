@@ -13,6 +13,7 @@ use Revolution\AtProto\Lexicon\Contracts\App\Bsky\Actor;
 use Revolution\AtProto\Lexicon\Enum\ListPurpose;
 use Revolution\Bluesky\Agent\OAuthAgent;
 use Revolution\Bluesky\BlueskyManager;
+use Revolution\Bluesky\Crypto\JsonWebToken;
 use Revolution\Bluesky\Facades\Bluesky;
 use Revolution\Bluesky\Record\Block;
 use Revolution\Bluesky\Record\Follow;
@@ -23,6 +24,7 @@ use Revolution\Bluesky\Record\Repost;
 use Revolution\Bluesky\Record\UserList;
 use Revolution\Bluesky\Session\LegacySession;
 use Revolution\Bluesky\Session\OAuthSession;
+use Revolution\Bluesky\Socialite\Key\OAuthKey;
 use Revolution\Bluesky\Support\DNS;
 use Revolution\Bluesky\Support\Identity;
 use Revolution\Bluesky\Traits\WithBluesky;
@@ -52,6 +54,16 @@ class ClientTest extends TestCase
 
     public function test_login(): void
     {
+        $this->session = [
+            'accessJwt' => JsonWebToken::encode(
+                [],
+                [
+                    'exp' => now()->addSeconds(3600)->timestamp,
+                ],
+                OAuthKey::load()->privatePEM())
+            , 'refreshJwt' => 'test',
+        ];
+
         Http::fake(fn () => $this->session);
 
         $client = new BlueskyManager();
@@ -62,7 +74,7 @@ class ClientTest extends TestCase
             return $request['identifier'] === 'identifier';
         });
 
-        $this->assertSame('test', $client->agent()->session('accessJwt'));
+        $this->assertNotEmpty($client->agent()->session('accessJwt'));
         $this->assertTrue($client->check());
     }
 
@@ -112,6 +124,17 @@ class ClientTest extends TestCase
 
     public function test_feed(): void
     {
+        $this->session = [
+            'did' => 'did:plc:test',
+            'accessJwt' => JsonWebToken::encode(
+                [],
+                [
+                    'exp' => now()->addSeconds(3600)->timestamp,
+                ],
+                OAuthKey::load()->privatePEM())
+            , 'refreshJwt' => 'test',
+        ];
+
         Http::fakeSequence()
             ->push($this->session)
             ->push(['feed' => ['post' => []]]);
