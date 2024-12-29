@@ -19,6 +19,9 @@ use Revolution\Bluesky\Events\Jetstream\JetstreamMessageReceived;
 use Workerman\Connection\AsyncTcpConnection;
 use Workerman\Worker;
 
+/**
+ * @internal
+ */
 final class JetstreamServer
 {
     use InteractsWithIO;
