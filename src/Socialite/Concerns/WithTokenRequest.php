@@ -69,7 +69,6 @@ trait WithTokenRequest
         $sub = $res->json('sub');
         if (filled($sub)) {
             $this->getOAuthSession()->put('sub', $sub);
-            $this->getOAuthSession()->put('token_created_at', now()->toISOString());
         }
 
         DPoPNonceReceived::dispatch($dpop_nonce, $this->getOAuthSession());
