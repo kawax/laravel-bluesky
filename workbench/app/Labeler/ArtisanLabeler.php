@@ -2,7 +2,6 @@
 
 namespace Workbench\App\Labeler;
 
-use Workbench\App\Models\Label;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Config;
 use Revolution\Bluesky\Crypto\JsonWebToken;
@@ -17,6 +16,7 @@ use Revolution\Bluesky\Labeler\SignedLabel;
 use Revolution\Bluesky\Labeler\UnsignedLabel;
 use Revolution\Bluesky\Types\RepoRef;
 use Revolution\Bluesky\Types\StrongRef;
+use Workbench\App\Models\Label;
 
 readonly class ArtisanLabeler extends AbstractLabeler
 {
