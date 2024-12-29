@@ -63,7 +63,9 @@ final class LabelerServer
 
         $cursor = $request->get('cursor');
         $cursor = is_null($cursor) ? null : intval($cursor);
+
         Labeler::log('subscribeLabels cursor: ', $cursor);
+        Labeler::log('subscribeLabels header: ', $request->header());
 
         foreach (Labeler::subscribeLabels($cursor) as $label) {
             $bytes = $label->toBytes();
