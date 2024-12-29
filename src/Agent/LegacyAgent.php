@@ -46,7 +46,7 @@ final class LegacyAgent implements Agent
     {
         $response = Http::baseUrl($this->baseUrl())
             ->withToken(token: $this->session->refresh())
-            ->post(Server::refreshSession);
+            ->post(Server::refreshSession, null);
 
         $this->session = LegacySession::create($response->collect());
 
