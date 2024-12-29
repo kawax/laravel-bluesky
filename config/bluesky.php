@@ -89,7 +89,6 @@ return [
         'disabled' => env('BLUESKY_LABELER_DISABLED', false),
 
         'did' => env('BLUESKY_LABELER_DID'),
-
         'identifier' => env('BLUESKY_LABELER_IDENTIFIER'),
         'password' => env('BLUESKY_LABELER_APP_PASSWORD'),
 
@@ -98,6 +97,7 @@ return [
 
         'host' => env('BLUESKY_LABELER_HOST', '127.0.0.1'),
 
+        // WebSocket server port. Http server port is this port + 1.
         'port' => (int) env('BLUESKY_LABELER_PORT', 7000),
 
         'logging' => [
