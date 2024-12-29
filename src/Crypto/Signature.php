@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Revolution\Bluesky\Crypto;
 
-use Illuminate\Support\Str;
 use phpseclib3\Crypt\EC\Formats\Signature\ASN1;
 use phpseclib3\Math\BigInteger;
 
