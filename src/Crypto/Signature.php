@@ -20,8 +20,7 @@ final class Signature
             return $sig;
         }
 
-        $r = substr($sig, 0, 32);
-        $s = substr($sig, 32, 32);
+        [$r, $s] = str_split($sig, 32);
 
         $r = new BigInteger($r, 256);
         $s = new BigInteger($s, 256);
