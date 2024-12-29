@@ -102,4 +102,17 @@ return [
             'path' => env('BLUESKY_LABELER_LOG_PATH', storage_path('logs/labeler.log')),
         ],
     ],
+
+    // WebSocket Jetstream
+    'jetstream' => [
+        'host' => env('BLUESKY_JETSTREAM_HOST', 'jetstream1.us-west.bsky.network'),
+
+        'max' => env('BLUESKY_JETSTREAM_MAX', 0),
+
+        'logging' => [
+            'driver' => env('BLUESKY_JETSTREAM_LOG_DRIVER', 'daily'),
+            'days' => 14,
+            'path' => env('BLUESKY_JETSTREAM_LOG_PATH', storage_path('logs/jetstream.log')),
+        ],
+    ],
 ];

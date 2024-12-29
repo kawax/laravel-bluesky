@@ -44,8 +44,6 @@ final class LabelerServer
         $this->ws->onWebSocketConnected = $this->onWebSocketConnected(...);
 
         $this->ws->onMessage = $this->onMessage(...);
-
-        Worker::runAll();
     }
 
     private function onWorkerStart(Worker $worker): void
