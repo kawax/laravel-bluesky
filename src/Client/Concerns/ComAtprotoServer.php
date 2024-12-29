@@ -75,7 +75,7 @@ trait ComAtprotoServer
         );
     }
 
-    public function createSession(string $identifier, #[\SensitiveParameter] string $password, ?string $authFactorToken = null): Response
+    public function createSession(string $identifier, #[\SensitiveParameter] string $password, ?string $authFactorToken = null, ?bool $allowTakendown = null): Response
     {
         return $this->call(
             api: Server::createSession,
