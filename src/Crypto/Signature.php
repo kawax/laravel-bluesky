@@ -28,6 +28,9 @@ final class Signature
         return ASN1::save($r, $s);
     }
 
+    /**
+     * Convert signature to compact.
+     */
     public static function toCompact(string $sig): string
     {
         if (strlen($sig) === 64) {
