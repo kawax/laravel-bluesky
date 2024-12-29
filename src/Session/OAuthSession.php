@@ -42,19 +42,4 @@ class OAuthSession extends AbstractSession
     {
         return $this->get('profile.avatar', $this->get('avatar', $default));
     }
-
-    public function tokenExpired(): bool
-    {
-        $token_created_at = $this->get('token_created_at');
-        $expires_in = $this->get('expires_in');
-
-        if (empty($token_created_at) || empty($expires_in)) {
-            return true;
-        }
-
-        $date = Carbon::parse($token_created_at, 'UTC')
-            ->addSeconds($expires_in);
-
-        return $date->lessThan(now());
-    }
 }
