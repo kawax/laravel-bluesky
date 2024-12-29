@@ -55,13 +55,13 @@ class ClientTest extends TestCase
     public function test_login(): void
     {
         $this->session = [
+            'did' => 'did:plc:test',
             'accessJwt' => JsonWebToken::encode(
                 [],
-                [
-                    'exp' => now()->addSeconds(3600)->timestamp,
-                ],
-                OAuthKey::load()->privatePEM())
-            , 'refreshJwt' => 'test',
+                ['exp' => now()->addSeconds(3600)->timestamp,],
+                OAuthKey::load()->privatePEM(),
+            ),
+            'refreshJwt' => 'test',
         ];
 
         Http::fake(fn () => $this->session);
@@ -128,11 +128,10 @@ class ClientTest extends TestCase
             'did' => 'did:plc:test',
             'accessJwt' => JsonWebToken::encode(
                 [],
-                [
-                    'exp' => now()->addSeconds(3600)->timestamp,
-                ],
-                OAuthKey::load()->privatePEM())
-            , 'refreshJwt' => 'test',
+                ['exp' => now()->addSeconds(3600)->timestamp,],
+                OAuthKey::load()->privatePEM(),
+            ),
+            'refreshJwt' => 'test',
         ];
 
         Http::fakeSequence()
