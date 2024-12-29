@@ -34,7 +34,11 @@ Bluesky::login(identifier: config('bluesky.identifier'), password: config('blues
 
 cache()->forever('bluesky_legacy_session', Bluesky::agent()->session()->toArray());
 
-Bluesky::withToken(LegacySession::create(cache('bluesky_legacy_session')))->refreshSession();
+Bluesky::withToken(LegacySession::create(cache('bluesky_legacy_session', [])));
+
+if(! Bluesky::check(){
+    Bluesky::refreshSession();
+}
 ```
 
 ### OAuth
