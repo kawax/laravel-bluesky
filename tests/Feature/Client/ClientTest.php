@@ -58,7 +58,7 @@ class ClientTest extends TestCase
             'did' => 'did:plc:test',
             'accessJwt' => JsonWebToken::encode(
                 [],
-                ['exp' => now()->addSeconds(3600)->timestamp,],
+                ['exp' => now()->addSeconds(3600)->timestamp],
                 OAuthKey::load()->privatePEM(),
             ),
             'refreshJwt' => 'test',
@@ -128,7 +128,7 @@ class ClientTest extends TestCase
             'did' => 'did:plc:test',
             'accessJwt' => JsonWebToken::encode(
                 [],
-                ['exp' => now()->addSeconds(3600)->timestamp,],
+                ['exp' => now()->addSeconds(3600)->timestamp],
                 OAuthKey::load()->privatePEM(),
             ),
             'refreshJwt' => 'test',

@@ -59,12 +59,11 @@ class OAuthAgentTest extends TestCase
             'expires_in' => 3600,
             'access_token' => JsonWebToken::encode(
                 [],
-                [
-                    'exp' => now()->addSeconds(3600)->timestamp,
-                ],
+                ['exp' => now()->addSeconds(3600)->timestamp],
                 OAuthKey::load()->privatePEM(),
             ),
         ]);
+
         $agent = new OAuthAgent($session);
 
         $http = $agent->http();
