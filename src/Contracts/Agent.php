@@ -24,5 +24,7 @@ interface Agent
 
     public function refresh(string $default = ''): string;
 
+    public function tokenExpired(): bool;
+
     public function baseUrl(bool $auth = true): string;
 }

@@ -145,7 +145,11 @@ class BlueskyManager implements Factory
 
     public function check(): bool
     {
-        return ! empty($this->agent()?->refresh());
+        if (empty($this->agent()?->refresh())) {
+            return false;
+        }
+
+        return ! $this->agent()->tokenExpired();
     }
 
     public function logout(): Factory

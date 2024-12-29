@@ -32,9 +32,9 @@ use Revolution\Bluesky\Session\LegacySession;
 
 Bluesky::login(identifier: config('bluesky.identifier'), password: config('bluesky.password'));
 
-session()->put('bluesky_legacy_session', Bluesky::agent()->session()->toArray());
+cache()->forever('bluesky_legacy_session', Bluesky::agent()->session()->toArray());
 
-Bluesky::withToken(LegacySession::create(session('bluesky_legacy_session')))->refreshSession();
+Bluesky::withToken(LegacySession::create(cache('bluesky_legacy_session')))->refreshSession();
 ```
 
 ### OAuth

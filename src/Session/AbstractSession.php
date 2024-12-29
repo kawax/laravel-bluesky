@@ -5,10 +5,12 @@ declare(strict_types=1);
 namespace Revolution\Bluesky\Session;
 
 use Illuminate\Contracts\Support\Arrayable;
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Traits\Conditionable;
 use Illuminate\Support\Traits\Macroable;
 use Illuminate\Support\Traits\Tappable;
+use Revolution\Bluesky\Crypto\JsonWebToken;
 use Revolution\Bluesky\Support\DidDocument;
 
 abstract class AbstractSession implements Arrayable
@@ -85,6 +87,22 @@ abstract class AbstractSession implements Arrayable
     public function token(string $default = ''): string
     {
         return $this->get('access_token', $default);
+    }
+
+    public function tokenExpired(): bool
+    {
+        $token = $this->token();
+        if (empty($token)) {
+            return true;
+        }
+
+        [, $payload] = JsonWebToken::explode($this->token());
+        $exp = data_get($payload, 'exp');
+        if (empty($exp)) {
+            return true;
+        }
+
+        return now()->greaterThan(Carbon::createFromTimestamp($exp));
     }
 
     public function refresh(string $default = ''): string
