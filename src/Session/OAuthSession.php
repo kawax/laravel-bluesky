@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Revolution\Bluesky\Session;
 
-use Illuminate\Support\Carbon;
 use Illuminate\Support\Str;
 use Revolution\Bluesky\Support\Identity;
 
