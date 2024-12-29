@@ -143,7 +143,7 @@ readonly class ArtisanLabeler extends AbstractLabeler
 
     public function queryLabels(Request $request): array
     {
-        $limit = max(min($request->input('limit', 10), 250), 1);
+        $limit = max(min($request->input('limit', 1), 250), 1);
 
         $labels = Label::latest()->limit($limit)->get();
 
