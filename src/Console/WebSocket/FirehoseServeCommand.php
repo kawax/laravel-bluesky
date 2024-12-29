@@ -42,7 +42,8 @@ class FirehoseServeCommand extends Command
     public function handle(FirehoseServer $firehose): int
     {
         if (! class_exists(Worker::class)) {
-            $this->error('Please install workerman/workerman');
+            $this->error('Please install "workerman"');
+            $this->warn('composer require workerman/workerman');
 
             return 1;
         }
