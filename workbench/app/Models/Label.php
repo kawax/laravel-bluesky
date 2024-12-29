@@ -21,9 +21,9 @@ class Label extends Model
     /**
      * The attributes that should be hidden for serialization.
      *
-     * @var array<string>
+     * @var list<string>
      */
-    protected $hidden = ['id', 'created_at', 'updated_at'];
+    protected $hidden = ['created_at', 'updated_at'];
 
     /**
      * Get the attributes that should be cast.
