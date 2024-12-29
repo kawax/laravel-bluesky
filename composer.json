@@ -46,8 +46,8 @@
     "suggest": {
         "ext-pcntl": "*",
         "ext-gmp": "*",
-        "workerman/workerman": "",
-        "revolt/event-loop": ""
+        "workerman/workerman": "Required to use WebSocket.(^4.2|^5.0)",
+        "revolt/event-loop": "Required to use WebSocket."
     },
     "authors": [
         {
