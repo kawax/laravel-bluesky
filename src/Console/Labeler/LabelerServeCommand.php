@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Revolution\Bluesky\Console\Labeler;
 
 use Illuminate\Console\Command;
+use Illuminate\Support\Facades\Config;
 use Revolution\Bluesky\Labeler\Server\LabelerServer;
 use Revolution\Bluesky\WebSocket\FirehoseServer;
 use Revolution\Bluesky\WebSocket\JetstreamServer;
@@ -17,6 +18,7 @@ use Workerman\Worker;
  * Working with Jetstream
  * ```
  * php artisan bluesky:labeler:server start --jetstream
+ * php artisan bluesky:labeler:server start --jetstream -C app.bsky.graph.follow -C app.bsky.feed.like
  * ```
  * Working with Firehose
  * ```
@@ -30,7 +32,7 @@ class LabelerServeCommand extends Command
      *
      * @var string
      */
-    protected $signature = 'bluesky:labeler:server {cmd} {--H|host=127.0.0.1} {--P|port=7000} {--jetstream} {--firehose}';
+    protected $signature = 'bluesky:labeler:server {cmd} {--jetstream} {--firehose} {--C|collection=*} {--D|did=*}';
 
     /**
      * The console command description.
@@ -52,13 +54,13 @@ class LabelerServeCommand extends Command
             return 1;
         }
 
-        $host = (string) $this->option('host');
-        $port = (int) $this->option('port');
+        $host = Config::string('bluesky.labeler.host', '127.0.0.1');
+        $port = Config::integer('bluesky.labeler.port', 7000);
 
         $labeler->start($host, $port);
 
         if ($this->option('jetstream')) {
-            $jetstream->withCommand($this)->start();
+            $jetstream->withCommand($this)->start($this->option('collection'), $this->option('did'));
         }
 
         if ($this->option('firehose')) {
