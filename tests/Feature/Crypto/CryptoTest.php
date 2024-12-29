@@ -55,9 +55,11 @@ class CryptoTest extends TestCase
     {
         $sk = K256::create()->privateKey();
 
-        $sign = $sk->sign('test');
+        foreach (range(1, 100) as $i) {
+            $sign = $sk->sign('test'.$i);
 
-        $compact = Signature::toCompact($sign);
-        $this->assertSame(64, strlen($compact));
+            $compact = Signature::toCompact($sign);
+            $this->assertSame(64, strlen($compact));
+        }
     }
 }
