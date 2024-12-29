@@ -18,13 +18,6 @@ if [ -f artisan ]; then
     npm run build
 
     # After being stopped during deployment, the Labeler Server is automatically restarted by Supervisor.
-    # Since it cannot be started simultaneously with Jetstream or Firehose, copy the `artisan` file as is, create a `labeler` file, and use it instead.
-    $FORGE_PHP labeler bluesky:labeler:server status
-    $FORGE_PHP labeler bluesky:labeler:server stop
-
-    $FORGE_PHP jetstream bluesky:ws status
-    $FORGE_PHP jetstream bluesky:ws stop
-
-    $FORGE_PHP firehose bluesky:firehose status
-    $FORGE_PHP firehose bluesky:firehose stop
+    $FORGE_PHP artisan bluesky:labeler:server status
+    $FORGE_PHP artisan bluesky:labeler:server stop
 fi
