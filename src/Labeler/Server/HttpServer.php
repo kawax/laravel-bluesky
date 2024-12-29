@@ -53,7 +53,7 @@ final class HttpServer
         );
 
         try {
-            $token = Str::after($request->header('Authorization'), 'Bearer ');
+            $token = Str::chopStart($request->header('Authorization', ''), 'Bearer ');
 
             $seq = 0;
 
@@ -84,7 +84,9 @@ final class HttpServer
             Labeler::log('emitEvent response', $emitEvent->toArray());
 
             $connection->send($this->json($emitEvent->toArray()));
-        } catch (LabelerException) {
+        } catch (LabelerException $e) {
+            Labeler::log($e->error, $e->getMessage());
+
             $connection->send($this->json(['error' => 'Forbidden'], status: 403));
         }
     }
