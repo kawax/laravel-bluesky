@@ -22,14 +22,6 @@ use Workerman\Worker;
  * php artisan bluesky:ws start -C app.bsky.feed.post -D did:plc:... -D did:...
  * ```
  * ```
- * // Specify the host
- * php artisan bluesky:ws start -H jetstream2.us-east.bsky.network
- * ```
- * ```
- * // Set maxMessageSizeBytes
- * php artisan bluesky:ws start -M 1000000
- * ```
- * ```
  * // Display all received messages for debugging.
  * php artisan bluesky:ws start -v
  * ```
@@ -47,7 +39,7 @@ class JetstreamServeCommand extends Command
      *
      * @var string
      */
-    protected $signature = 'bluesky:ws {cmd} {--H|host=jetstream1.us-west.bsky.network} {--C|collection=*} {--D|did=*} {--M|max=0 : Set maxMessageSizeBytes}';
+    protected $signature = 'bluesky:ws {cmd} {--C|collection=*} {--D|did=*}';
 
     /**
      * The console command description.
@@ -63,8 +55,13 @@ class JetstreamServeCommand extends Command
      */
     public function handle(JetstreamServer $jetstream): int
     {
-        $jetstream->withCommand($this)
-            ->start($this->option('collection'), $this->option('did'));
+        if (! class_exists(Worker::class)) {
+            $this->error('Please install "workerman/workerman"');
+
+            return 1;
+        }
+
+        $jetstream->start($this->option('collection'), $this->option('did'));
 
         Worker::runAll();
 

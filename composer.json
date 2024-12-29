@@ -6,7 +6,9 @@
         "bluesky",
         "atproto",
         "socialite",
-        "notifications"
+        "notifications",
+        "feed-generator",
+        "labeler"
     ],
     "type": "library",
     "license": "MIT",
@@ -19,14 +21,14 @@
         "phpseclib/phpseclib": "^3.0",
         "revolution/atproto-lexicon-contracts": "1.0.39",
         "yocto/yoclib-multibase": "^1.2",
-        "jetbrains/phpstorm-attributes": "^1.2",
-        "workerman/workerman": "^5.0-rc.3",
-        "revolt/event-loop": "^1.0"
+        "jetbrains/phpstorm-attributes": "^1.2"
     },
     "require-dev": {
         "orchestra/testbench": "^9.0",
         "larastan/larastan": "^3.0",
-        "phpstan/extension-installer": "^1.4"
+        "phpstan/extension-installer": "^1.4",
+        "workerman/workerman": "^5.0-rc.3",
+        "revolt/event-loop": "^1.0"
     },
     "autoload": {
         "psr-4": {
@@ -43,7 +45,9 @@
     },
     "suggest": {
         "ext-pcntl": "*",
-        "ext-gmp": "*"
+        "ext-gmp": "*",
+        "workerman/workerman": "",
+        "revolt/event-loop": ""
     },
     "authors": [
         {

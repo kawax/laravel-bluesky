@@ -115,4 +115,15 @@ return [
             'path' => env('BLUESKY_JETSTREAM_LOG_PATH', storage_path('logs/jetstream.log')),
         ],
     ],
+
+    // WebSocket Firehose
+    'firehose' => [
+        'host' => env('BLUESKY_FIREHOSE_HOST', 'bsky.network'),
+
+        'logging' => [
+            'driver' => env('BLUESKY_FIREHOSE_LOG_DRIVER', 'daily'),
+            'days' => 14,
+            'path' => env('BLUESKY_FIREHOSE_LOG_PATH', storage_path('logs/firehose.log')),
+        ],
+    ],
 ];

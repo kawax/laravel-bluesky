@@ -6,12 +6,21 @@ namespace Revolution\Bluesky\Console\Labeler;
 
 use Illuminate\Console\Command;
 use Revolution\Bluesky\Labeler\Server\LabelerServer;
+use Revolution\Bluesky\WebSocket\FirehoseServer;
 use Revolution\Bluesky\WebSocket\JetstreamServer;
 use Workerman\Worker;
 
 /**
  * ```
  * php artisan bluesky:labeler:server start
+ * ```
+ * Working with Jetstream
+ * ```
+ * php artisan bluesky:labeler:server start --jetstream
+ * ```
+ * Working with Firehose
+ * ```
+ * php artisan bluesky:labeler:server start --firehose
  * ```
  */
 class LabelerServeCommand extends Command
@@ -21,7 +30,7 @@ class LabelerServeCommand extends Command
      *
      * @var string
      */
-    protected $signature = 'bluesky:labeler:server {cmd} {--H|host=127.0.0.1} {--P|port=7000} {--jetstream}';
+    protected $signature = 'bluesky:labeler:server {cmd} {--H|host=127.0.0.1} {--P|port=7000} {--jetstream} {--firehose}';
 
     /**
      * The console command description.
@@ -35,7 +44,7 @@ class LabelerServeCommand extends Command
      *
      * @return int
      */
-    public function handle(LabelerServer $labeler, JetstreamServer $jetstream): int
+    public function handle(LabelerServer $labeler, JetstreamServer $jetstream, FirehoseServer $firehose): int
     {
         if (! class_exists(Worker::class)) {
             $this->error('Please install workerman/workerman');
@@ -50,6 +59,10 @@ class LabelerServeCommand extends Command
 
         if ($this->option('jetstream')) {
             $jetstream->withCommand($this)->start();
+        }
+
+        if ($this->option('firehose')) {
+            $firehose->withCommand($this)->start();
         }
 
         Worker::runAll();

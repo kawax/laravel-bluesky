@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Revolution\Bluesky\WebSocket;
 
 use Illuminate\Console\Command;
@@ -98,7 +100,7 @@ final class JetstreamServer
             return;
         }
 
-        if ($this->output->isVerbose()) {
+        if ($this->with_command && $this->getOutput()->isVerbose()) {
             $this->log('message', $message);
             /** @var ?array $record */
             $record = data_get($message, 'commit.record');
