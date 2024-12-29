@@ -22,7 +22,7 @@ final class Labeler
 {
     public const VERSION = 1;
 
-    protected static string $labeler;
+    protected static AbstractLabeler $labeler;
 
     /**
      * Only one Labeler can be registered.
@@ -39,15 +39,12 @@ final class Labeler
             throw new InvalidArgumentException('Labeler must be an instance of AbstractLabeler');
         }
 
-        self::$labeler = $labeler::class;
+        self::$labeler = $labeler;
     }
 
     public static function getLabelDefinitions(): array
     {
-        /** @var AbstractLabeler $labeler */
-        $labeler = app(self::$labeler);
-
-        return collect($labeler->labels())->toArray();
+        return collect(self::$labeler->labels())->toArray();
     }
 
     /**
@@ -55,10 +52,7 @@ final class Labeler
      */
     public static function subscribeLabels(?int $cursor): iterable
     {
-        /** @var AbstractLabeler $labeler */
-        $labeler = app(self::$labeler);
-
-        yield from $labeler->subscribeLabels($cursor);
+        yield from self::$labeler->subscribeLabels($cursor);
     }
 
     /**
@@ -68,16 +62,13 @@ final class Labeler
      */
     public static function emitEvent(Request $request, ?string $token): iterable
     {
-        /** @var AbstractLabeler $labeler */
-        $labeler = app(self::$labeler);
-
         $did = self::verifyJWT($request, $token);
 
         if (empty($did) || $did !== Config::string('bluesky.labeler.did')) {
             throw new LabelerException('Invalid JWT');
         }
 
-        yield from $labeler->emitEvent($request, $did, $token);
+        yield from self::$labeler->emitEvent($request, $did, $token);
     }
 
     private static function verifyJWT(Request $request, ?string $token): ?string
@@ -87,26 +78,17 @@ final class Labeler
 
     public static function saveLabel(SignedLabel $label, string $sign): ?SavedLabel
     {
-        /** @var AbstractLabeler $labeler */
-        $labeler = app(self::$labeler);
-
-        return $labeler->saveLabel($label, $sign);
+        return self::$labeler->saveLabel($label, $sign);
     }
 
     public static function queryLabels(Request $request): array
     {
-        /** @var AbstractLabeler $labeler */
-        $labeler = app(self::$labeler);
-
-        return $labeler->queryLabels($request);
+        return self::$labeler->queryLabels($request);
     }
 
     public static function createReport(Request $request): array
     {
-        /** @var AbstractLabeler $labeler */
-        $labeler = app(self::$labeler);
-
-        return $labeler->createReport($request);
+        return self::$labeler->createReport($request);
     }
 
     /**
@@ -124,12 +106,8 @@ final class Labeler
      */
     public static function signLabel(UnsignedLabel $unsigned): array
     {
-        if (isset(self::$labeler)) {
-            /** @var AbstractLabeler $labeler */
-            $labeler = app(self::$labeler);
-            if (method_exists($labeler, 'signLabel')) {
-                return $labeler->signLabel($unsigned);
-            }
+        if (isset(self::$labeler) && method_exists(self::$labeler, 'signLabel')) {
+            return self::$labeler->signLabel($unsigned);
         }
 
         $label = $unsigned->toArray();
@@ -165,12 +143,8 @@ final class Labeler
 
     public static function health(?array $header = null): array
     {
-        if (isset(self::$labeler)) {
-            /** @var AbstractLabeler $labeler */
-            $labeler = app(self::$labeler);
-            if (method_exists($labeler, 'health')) {
-                return $labeler->health($header);
-            }
+        if (isset(self::$labeler) && method_exists(self::$labeler, 'health')) {
+            return self::$labeler->health($header);
         }
 
         return ['version' => app()->version()];
