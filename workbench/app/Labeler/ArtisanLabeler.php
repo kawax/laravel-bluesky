@@ -9,6 +9,7 @@ use Revolution\Bluesky\Facades\Bluesky;
 use Revolution\Bluesky\Labeler\AbstractLabeler;
 use Revolution\Bluesky\Labeler\LabelDefinition;
 use Revolution\Bluesky\Labeler\Labeler;
+use Revolution\Bluesky\Labeler\LabelerException;
 use Revolution\Bluesky\Labeler\LabelLocale;
 use Revolution\Bluesky\Labeler\Response\SubscribeLabelResponse;
 use Revolution\Bluesky\Labeler\SavedLabel;
@@ -38,14 +39,20 @@ readonly class ArtisanLabeler extends AbstractLabeler
     }
 
     /**
+     * Called when connected via WebSocket.
+     *
      * @return iterable<SubscribeLabelResponse>
      *
-     * @throw LabelerException
+     * @throws LabelerException
      */
     public function subscribeLabels(?int $cursor): iterable
     {
         if (is_null($cursor)) {
             return null;
+        }
+
+        if ($cursor > Label::max('id')) {
+            throw new LabelerException('FutureCursor', 'Cursor is in the future');
         }
 
         foreach (Label::where('id', '>', $cursor)->lazy() as $label) {
@@ -59,8 +66,22 @@ readonly class ArtisanLabeler extends AbstractLabeler
         }
     }
 
+    /**
+     * Called when adding or removing labels.
+     *
+     * @return iterable<UnsignedLabel>
+     *
+     * @throws LabelerException
+     *
+     * @link https://docs.bsky.app/docs/api/tools-ozone-moderation-emit-event
+     */
     public function emitEvent(Request $request, ?string $did, ?string $token): iterable
     {
+        $type = data_get($request->input('event'), '$type');
+        if ($type !== 'tools.ozone.moderation.defs#modEventLabel') {
+            throw new LabelerException('InvalidRequest', 'Unsupported event type');
+        }
+
         $subject = $request->input('subject');
         $uri = data_get($subject, 'uri', data_get($subject, 'did'));
         $cid = data_get($subject, 'cid');
@@ -90,6 +111,13 @@ readonly class ArtisanLabeler extends AbstractLabeler
         );
     }
 
+    /**
+     * Save to database, etc.
+     *
+     * @param  string  $sign  raw bytes compact signature
+     *
+     * @throws LabelerException
+     */
     public function saveLabel(SignedLabel $signed, string $sign): ?SavedLabel
     {
         $saved = Label::create($signed->toArray());
@@ -100,6 +128,11 @@ readonly class ArtisanLabeler extends AbstractLabeler
         );
     }
 
+    /**
+     * @return array{id: int, reasonType: string, reason: string, subject: array, reportedBy: string, createdAt: string}
+     *
+     * @link https://docs.bsky.app/docs/api/com-atproto-moderation-create-report
+     */
     public function createReport(Request $request): array
     {
         $reasonType = $request->input('reasonType');
@@ -141,6 +174,11 @@ readonly class ArtisanLabeler extends AbstractLabeler
         ];
     }
 
+    /**
+     * @return array{cursor: string, labels: array{ver?: int, src: string, uri: string, cid?: string, val: string, neg?: bool, cts: string, exp?: string, sig?: mixed}}
+     *
+     * @link https://docs.bsky.app/docs/api/com-atproto-label-query-labels
+     */
     public function queryLabels(Request $request): array
     {
         $limit = max(min($request->input('limit', 1), 250), 1);
