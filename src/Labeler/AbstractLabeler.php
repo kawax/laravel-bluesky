@@ -44,7 +44,7 @@ abstract readonly class AbstractLabeler
      *
      * @return iterable<SubscribeLabelResponse>
      *
-     * @throw LabelerException
+     * @throws LabelerException
      */
     abstract public function subscribeLabels(?int $cursor): iterable;
 
@@ -53,7 +53,7 @@ abstract readonly class AbstractLabeler
      *
      * @return iterable<UnsignedLabel>
      *
-     * @throw LabelerException
+     * @throws LabelerException
      *
      * @link https://docs.bsky.app/docs/api/tools-ozone-moderation-emit-event
      */
@@ -64,7 +64,7 @@ abstract readonly class AbstractLabeler
      *
      * @param  string  $sign  raw bytes compact signature
      *
-     * @throw LabelerException
+     * @throws LabelerException
      */
     abstract public function saveLabel(SignedLabel $signed, string $sign): ?SavedLabel;
 
