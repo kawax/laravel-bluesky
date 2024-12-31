@@ -651,10 +651,20 @@ trait HasShortHand
     }
 
     /**
+     * Add label to account.
      * ```
+     * use Revolution\Bluesky\Types\RepoRef;
+     *
      * $response = Bluesky::login(config('bluesky.labeler.identifier'), config('bluesky.labeler.password'))
      *                    ->createLabels(RepoRef::to('did'), ['label1', 'label2']);
      * ```
+     * Add label to record.
+     * ```
+     * use Revolution\Bluesky\Types\StrongRef;
+     *
+     * $response = Bluesky::login(config('bluesky.labeler.identifier'), config('bluesky.labeler.password'))
+     *                     ->createLabels(StrongRef::to('uri', 'cid'), ['label1', 'label2']);
+     *  ```
      */
     public function createLabels(RepoRef|StrongRef|array $subject, array $labels): Response
     {
