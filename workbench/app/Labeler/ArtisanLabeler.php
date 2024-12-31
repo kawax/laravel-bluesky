@@ -55,7 +55,7 @@ readonly class ArtisanLabeler extends AbstractLabeler
             throw new LabelerException('FutureCursor', 'Cursor is in the future');
         }
 
-        foreach (Label::where('id', '>', $cursor)->lazy() as $label) {
+        foreach (Label::oldest()->where('id', '>', $cursor)->lazy() as $label) {
             $arr = $label->toArray();
             $arr = Labeler::formatLabel($arr);
 
