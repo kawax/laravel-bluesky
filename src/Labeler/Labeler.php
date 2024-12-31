@@ -134,7 +134,7 @@ final class Labeler
     {
         return collect($label)
             ->put('ver', self::VERSION)
-            ->except('id')
+            ->except(['id', 'created_at', 'updated_at'])
             ->reject(fn ($value) => is_null($value))
             ->reject(fn ($value, $key) => $key === 'neg' && $value === false)
             ->sortKeysUsing(new MapKeySort())
