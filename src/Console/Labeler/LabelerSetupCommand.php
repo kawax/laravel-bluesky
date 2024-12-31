@@ -84,6 +84,13 @@ class LabelerSetupCommand extends Command
             hint: 'URL of the PDS where the account is located',
         );
 
+        $endpoint = text(
+            label: 'Enter Endpoint URL',
+            default: Str::rtrim(url('/'), '/'),
+            required: true,
+            hint: 'URL where the labeler will be hosted',
+        );
+
         $res = Bluesky::login($did, $password, $service)
             ->client()
             ->requestPlcOperationSignature();
@@ -98,13 +105,6 @@ class LabelerSetupCommand extends Command
             label: 'Enter PLC Token',
             required: true,
             hint: 'You will receive a confirmation code via email.',
-        );
-
-        $endpoint = text(
-            label: 'Enter Endpoint URL',
-            default: Str::rtrim(url('/'), '/'),
-            required: true,
-            hint: 'URL where the labeler will be hosted:',
         );
 
         $setup($did, $password, $service, $plcToken, $endpoint);
