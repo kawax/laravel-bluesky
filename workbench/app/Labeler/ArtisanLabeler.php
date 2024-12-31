@@ -1,9 +1,12 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Workbench\App\Labeler;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Config;
+use Illuminate\Support\Number;
 use Revolution\Bluesky\Crypto\JsonWebToken;
 use Revolution\Bluesky\Facades\Bluesky;
 use Revolution\Bluesky\Labeler\AbstractLabeler;
@@ -181,7 +184,7 @@ readonly class ArtisanLabeler extends AbstractLabeler
      */
     public function queryLabels(Request $request): array
     {
-        $limit = max(min($request->input('limit', 1), 250), 1);
+        $limit = Number::clamp($request->input('limit', 1), min: 1, max: 50);
 
         $labels = Label::latest()->limit($limit)->get();
 
