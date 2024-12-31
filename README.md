@@ -137,6 +137,7 @@ To authenticate with OAuth, read the Socialite documentation.
 - [Identity](./docs/identity.md)
 - [Verify](./docs/verify.md)
 - [Route](./docs/route.md)
+- [Labeler](./docs/labeler.md)
 
 ## Contracts
 https://github.com/kawax/atproto-lexicon-contracts
