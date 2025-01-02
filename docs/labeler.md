@@ -30,10 +30,10 @@ The easiest way to get Labeler up and running is with Laravel Forge, so this doc
 
 If you can only use a shared server, go back here.
 
-## Install additional package
+## Install additional packages
 
 ```shell
-composer require workerman/workerman
+composer require workerman/workerman revolt/event-loop
 ```
 
 ## Configuration
