@@ -54,6 +54,7 @@ readonly class ArtisanLabeler extends AbstractLabeler
             return null;
         }
 
+        // Always throw a LabelerException when returning an error response.
         if ($cursor > Label::max('id')) {
             throw new LabelerException('FutureCursor', 'Cursor is in the future');
         }
@@ -108,6 +109,7 @@ readonly class ArtisanLabeler extends AbstractLabeler
             cid: $cid,
             val: $val,
             src: Config::string('bluesky.labeler.did'),
+            // If you don't want to store microseconds in the database, set this to 0.
             cts: now()->micro(0)->toISOString(),
             exp: null,
             neg: $neg,
