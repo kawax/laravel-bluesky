@@ -23,8 +23,6 @@ final class LabelerServer
 
     protected int $port = 7000;
 
-    protected int $count = 1;
-
     public function start(?string $host = null, ?int $port = null): void
     {
         if (! is_null($host)) {
@@ -37,8 +35,6 @@ final class LabelerServer
 
         $this->ws = new Worker('websocket://'.$this->host.':'.$this->port);
 
-        $this->ws->count = 1;
-
         $this->ws->onWorkerStart = $this->onWorkerStart(...);
 
         $this->ws->onWebSocketConnected = $this->onWebSocketConnected(...);
@@ -50,7 +46,6 @@ final class LabelerServer
     {
         $http = new Worker('http://'.$this->host.':'.$this->port + 1);
         $http->reusePort = true;
-        $http->count = $this->count;
 
         $http->onMessage = (new HttpServer($this->ws))->onMessage(...);
 
