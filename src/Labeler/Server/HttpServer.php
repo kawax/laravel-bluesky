@@ -31,15 +31,11 @@ final class HttpServer
 
     public function onMessage(TcpConnection $connection, Request $request): void
     {
-        $path = $request->path();
-
-        if (Str::endsWith($path, Moderation::emitEvent)) {
-            $this->emitEvent($connection, $request);
-        } elseif (Str::endsWith($path, '/xrpc/_health')) {
-            $this->health($connection, $request);
-        } else {
-            $connection->send($this->json(['error' => 'Not Found'], status: 404));
-        }
+        match ($request->path()) {
+            '/xrpc/'.Moderation::emitEvent => $this->emitEvent($connection, $request),
+            '/xrpc/_health' => $this->health($connection, $request),
+            default => $connection->send($this->json(['error' => 'Not Found'], status: 404)),
+        };
     }
 
     private function emitEvent(TcpConnection $connection, Request $request): void
