@@ -27,7 +27,7 @@
         "orchestra/testbench": "^9.0",
         "larastan/larastan": "^3.0",
         "phpstan/extension-installer": "^1.4",
-        "workerman/workerman": "^5.0-rc.3",
+        "workerman/workerman": "^5.0",
         "revolt/event-loop": "^1.0"
     },
     "autoload": {
@@ -46,7 +46,7 @@
     "suggest": {
         "ext-pcntl": "*",
         "ext-gmp": "*",
-        "workerman/workerman": "Required to use WebSocket.(^4.2|^5.0)",
+        "workerman/workerman": "Required to use WebSocket.",
         "revolt/event-loop": "Required to use WebSocket."
     },
     "authors": [
