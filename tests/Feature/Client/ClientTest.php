@@ -620,4 +620,15 @@ class ClientTest extends TestCase
 
         $this->assertTrue($response->successful());
     }
+
+    public function test_public_client(): void
+    {
+        Http::fakeSequence()
+            ->push([]);
+
+        $response = Bluesky::public()
+            ->getProfile(actor: '');
+
+        $this->assertTrue($response->successful());
+    }
 }

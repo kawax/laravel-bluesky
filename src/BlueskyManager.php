@@ -77,6 +77,13 @@ class BlueskyManager implements Factory
             ->withHttp($this->http($auth));
     }
 
+    public function public(): AtpClient
+    {
+        return Container::getInstance()
+            ->make(AtpClient::class)
+            ->withHttp(Http::baseUrl($this->publicEndpoint()));
+    }
+
     /**
      * Send any API request.
      *
@@ -98,7 +105,7 @@ class BlueskyManager implements Factory
     protected function http(bool $auth = true): PendingRequest
     {
         if (! $auth || ! $this->check() || is_null($this->agent())) {
-            return Http::baseUrl($this->publicEndpoint());
+            return Http::baseUrl($this->entryway('/xrpc/'));
         }
 
         return $this->agent()->http($auth);
@@ -164,8 +171,12 @@ class BlueskyManager implements Factory
         return Str::rtrim(config('bluesky.public_endpoint'), '/').'/xrpc/';
     }
 
-    public function entryway(): string
+    public function entryway(?string $path = null): string
     {
-        return config('bluesky.service') ?? 'https://bsky.social';
+        /** @var string $url */
+        $url = config('bluesky.service') ?? 'https://bsky.social';
+        $url = Str::rtrim($url, '/');
+
+        return $url.$path;
     }
 }

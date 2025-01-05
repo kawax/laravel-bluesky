@@ -17,6 +17,7 @@ use Revolution\Bluesky\Support\PDS;
 /**
  * @method static static withToken(?AbstractSession $token)
  * @method static AtpClient client(bool $auth = true)
+ * @method static AtpClient public()
  * @method static Response send(BackedEnum|string $api, string $method = 'get', bool $auth = true, ?array $params = null, ?callable $callback = null)
  * @method static Agent agent()
  * @method static static withAgent(?Agent $agent)
@@ -25,7 +26,7 @@ use Revolution\Bluesky\Support\PDS;
  * @method static bool check()
  * @method static Identity identity()
  * @method static PDS pds()
- * @method static string entryway()
+ * @method static string entryway(?string $path = null)
  *
  * @mixin \Revolution\Bluesky\BlueskyManager
  */
