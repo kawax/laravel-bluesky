@@ -508,43 +508,7 @@ $profile = Bluesky::getProfile(actor: 'did')->json();
 $feed = Bluesky::getAuthorFeed(actor: 'did')->json('feed');
 ```
 
-The request content will automatically change depending on whether you are authenticated or not. To explicitly use the
-public API, use `logout()`.
-
-```php
-use Revolution\Bluesky\Facades\Bluesky;
-
-// public requests
-$profile = Bluesky::getProfile(actor: 'did')->json();
-
-// authed requests
-Bluesky::login();
-$profile = Bluesky::getProfile(actor: 'did')->json();
-// The DID of the authed user is set automatically.
-$profile = Bluesky::getProfile()->json();
-
-// public requests
-Bluesky::logout();
-$profile = Bluesky::getProfile(actor: 'did')->json();
-```
-
-There are some APIs whose responses change slightly depending on the authentication state.
-
-```php
-use Revolution\Bluesky\Facades\Bluesky;
-
-// authed
-$profile = Bluesky::login()->getProfile(actor: 'did')->json();
-// has "viewer"
-dump($profile['viewer']);
-
-// public
-$profile = Bluesky::logout()->getProfile(actor: 'did')->json();
-// no "viewer"
-dump($profile['viewer']);
-```
-
-Use `Bluesky::public()` to explicitly specify a public endpoint.
+Use `Bluesky::public()` to explicitly specify a `app.bsky.*` public endpoint.
 
 ```php
 use Revolution\Bluesky\Facades\Bluesky;
@@ -552,6 +516,16 @@ use Revolution\Bluesky\Facades\Bluesky;
 $profile = Bluesky::public()->getProfile(actor: 'did')->json();
 
 $feed = Bluesky::public()->getAuthorFeed(actor: 'did')->json('feed');
+```
+
+For `com.atproto.*` APIs, `client(auth: false)` or `logout()` will ensure that the public endpoint is used.
+
+```php
+use Revolution\Bluesky\Facades\Bluesky;
+
+$res = Bluesky::client(auth: false)->getRecord();
+
+$res = Bluesky::logout()->getRecord();
 ```
 
 ## Macroable
