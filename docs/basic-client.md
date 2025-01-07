@@ -498,17 +498,7 @@ dump($response->json());
 
 In fact, many of Bluesky's APIs can be used without authentication.
 
-Strictly speaking, only `app.bsky.*` APIs have public endpoints. `com.atproto.*` APIs cannot use them.
-
-```php
-use Revolution\Bluesky\Facades\Bluesky;
-
-$profile = Bluesky::getProfile(actor: 'did')->json();
-
-$feed = Bluesky::getAuthorFeed(actor: 'did')->json('feed');
-```
-
-Use `Bluesky::public()` to explicitly specify a `app.bsky.*` public endpoint.
+For `app.bsky.*` APIs, use `Bluesky::public()` to explicitly specify a public endpoint.
 
 ```php
 use Revolution\Bluesky\Facades\Bluesky;
@@ -518,7 +508,7 @@ $profile = Bluesky::public()->getProfile(actor: 'did')->json();
 $feed = Bluesky::public()->getAuthorFeed(actor: 'did')->json('feed');
 ```
 
-For `com.atproto.*` APIs, `client(auth: false)` or `logout()` will ensure that the public endpoint is used.
+For `com.atproto.*` APIs, `client(auth: false)` or `logout()` will ensure that the public endpoint is used. However, most APIs require authentication.
 
 ```php
 use Revolution\Bluesky\Facades\Bluesky;
