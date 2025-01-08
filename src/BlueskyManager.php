@@ -77,6 +77,11 @@ class BlueskyManager implements Factory
             ->withHttp($this->http($auth));
     }
 
+    /**
+     * Public client.
+     *
+     * Only `app.bsky.*` APIs can use this public endpoint.
+     */
     public function public(): AtpClient
     {
         return Container::getInstance()
