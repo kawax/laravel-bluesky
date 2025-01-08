@@ -513,6 +513,8 @@ For `com.atproto.*` APIs, `client(auth: false)` or `logout()` will ensure that t
 ```php
 use Revolution\Bluesky\Facades\Bluesky;
 
+$res = Bluesky::getRecord();
+
 $res = Bluesky::client(auth: false)->getRecord();
 
 $res = Bluesky::logout()->getRecord();
