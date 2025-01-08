@@ -9,6 +9,8 @@ Some routes are defined in the package. You can disable a route by setting it in
 | `/bluesky/oauth/jwks.json`                  | `bluesky.oauth.jwks`            |
 | `/xrpc/app.bsky.feed.getFeedSkeleton`       | `bluesky.feed.skeleton`         |
 | `/xrpc/app.bsky.feed.describeFeedGenerator` | `bluesky.feed.describe`         |
+| `/xrpc/com.atproto.label.queryLabels`       | `bluesky.labeler.query`         |
+| `/xrpc/com.atproto.moderation.createReport` | `bluesky.labeler.report`        |
 | `/.well-known/did.json`                     | `bluesky.well-known.did`        |
 | `/.well-known/atproto-did`                  | `bluesky.well-known.atproto`    |
 
