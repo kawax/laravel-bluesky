@@ -498,6 +498,14 @@ dump($response->json());
 
 In fact, many of Bluesky's APIs can be used without authentication.
 
+```php
+use Revolution\Bluesky\Facades\Bluesky;
+
+$profile = Bluesky::getProfile(actor: 'did')->json();
+
+$feed = Bluesky::getAuthorFeed(actor: 'did')->json('feed');
+```
+
 For `app.bsky.*` APIs, use `Bluesky::public()` to explicitly specify a public endpoint.
 
 ```php

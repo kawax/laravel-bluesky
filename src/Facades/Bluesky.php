@@ -8,6 +8,7 @@ use BackedEnum;
 use Illuminate\Http\Client\Response;
 use Illuminate\Support\Facades\Facade;
 use Revolution\Bluesky\Client\AtpClient;
+use Revolution\Bluesky\Client\SubClient\BskyClient;
 use Revolution\Bluesky\Contracts\Agent;
 use Revolution\Bluesky\Contracts\Factory;
 use Revolution\Bluesky\Session\AbstractSession;
@@ -17,7 +18,7 @@ use Revolution\Bluesky\Support\PDS;
 /**
  * @method static static withToken(?AbstractSession $token)
  * @method static AtpClient client(bool $auth = true)
- * @method static AtpClient public()
+ * @method static BskyClient public()
  * @method static Response send(BackedEnum|string $api, string $method = 'get', bool $auth = true, ?array $params = null, ?callable $callback = null)
  * @method static Agent agent()
  * @method static static withAgent(?Agent $agent)

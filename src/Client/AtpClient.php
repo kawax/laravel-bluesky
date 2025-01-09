@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Revolution\Bluesky\Client;
 
 use Illuminate\Support\Traits\Conditionable;
+use Illuminate\Support\Traits\ForwardsCalls;
 use Illuminate\Support\Traits\Macroable;
 use Revolution\AtProto\Lexicon\Contracts\App\Bsky\Actor;
 use Revolution\AtProto\Lexicon\Contracts\App\Bsky\Feed;
@@ -25,42 +26,25 @@ use Revolution\Bluesky\Client\Concerns\ComAtprotoModeration;
 use Revolution\Bluesky\Client\Concerns\ComAtprotoRepo;
 use Revolution\Bluesky\Client\Concerns\ComAtprotoServer;
 use Revolution\Bluesky\Client\SubClient\AdminClient;
+use Revolution\Bluesky\Client\SubClient\AtProtoClient;
+use Revolution\Bluesky\Client\SubClient\BskyClient;
 use Revolution\Bluesky\Client\SubClient\BskyNotification;
 use Revolution\Bluesky\Client\SubClient\ChatClient;
 use Revolution\Bluesky\Client\SubClient\OzoneClient;
 use Revolution\Bluesky\Client\SubClient\SyncClient;
 use Revolution\Bluesky\Client\SubClient\VideoClient;
 use Revolution\Bluesky\Contracts\XrpcClient;
+use Revolution\Bluesky\Facades\Bluesky;
 
-class AtpClient implements
-    XrpcClient,
-    Actor,
-    Feed,
-    Graph,
-    Labeler,
-    Identity,
-    Label,
-    Moderation,
-    Repo,
-    Server
+class AtpClient implements XrpcClient
 {
-    use Macroable;
+    use Macroable {
+        Macroable::__call as macroCall;
+    }
+    use ForwardsCalls;
     use Conditionable;
 
     use HasHttp;
-
-    // app.bsky
-    use AppBskyActor;
-    use AppBskyFeed;
-    use AppBskyGraph;
-    use AppBskyLabeler;
-
-    // com.atproto
-    use ComAtprotoIdentity;
-    use ComAtprotoLabel;
-    use ComAtprotoModeration;
-    use ComAtprotoRepo;
-    use ComAtprotoServer;
 
     /**
      * VideoClient.
@@ -84,6 +68,30 @@ class AtpClient implements
         return app(ChatClient::class)
             ->withHttp($this->http())
             ->withServiceProxy(ChatClient::CHAT_SERVICE_DID);
+    }
+
+    /**
+     * AtProtoClient
+     *
+     * com.atproto
+     */
+    public function atproto(): AtProtoClient
+    {
+        return app(AtProtoClient::class)->withHttp($this->http());
+    }
+
+    /**
+     * BskyClient
+     *
+     * app.bsky
+     */
+    public function bsky(): BskyClient
+    {
+        return app(BskyClient::class)
+            ->withHttp($this->http())
+            ->when(empty(data_get($this->http()->getOptions(), 'headers.Authorization')), function ($client) {
+                $client->baseUrl(Bluesky::publicEndpoint());
+            });
     }
 
     /**
@@ -124,5 +132,29 @@ class AtpClient implements
     public function ozone(): OzoneClient
     {
         return app(OzoneClient::class)->withHttp($this->http());
+    }
+
+    /**
+     * Dynamically proxy other methods to the underlying response.
+     *
+     * @param  string  $method
+     * @param  array  $parameters
+     * @return mixed
+     */
+    public function __call($method, $parameters)
+    {
+        if (static::hasMacro($method)) {
+            $this->macroCall($method, $parameters);
+        }
+
+        if (method_exists($this->atproto(), $method)) {
+            return $this->forwardCallTo($this->atproto(), $method, $parameters);
+        }
+
+        if (method_exists($this->bsky(), $method)) {
+            return $this->forwardCallTo($this->bsky(), $method, $parameters);
+        }
+
+        static::throwBadMethodCallException($method);
     }
 }

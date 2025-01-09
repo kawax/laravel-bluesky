@@ -18,6 +18,7 @@ use Revolution\AtProto\Lexicon\Attributes\KnownValues;
 use Revolution\Bluesky\Agent\LegacyAgent;
 use Revolution\Bluesky\Agent\OAuthAgent;
 use Revolution\Bluesky\Client\AtpClient;
+use Revolution\Bluesky\Client\SubClient\BskyClient;
 use Revolution\Bluesky\Contracts\Agent;
 use Revolution\Bluesky\Contracts\Factory;
 use Revolution\Bluesky\Session\AbstractSession;
@@ -82,11 +83,12 @@ class BlueskyManager implements Factory
      *
      * Only `app.bsky.*` APIs can use this public endpoint.
      */
-    public function public(): AtpClient
+    public function public(): BskyClient
     {
         return Container::getInstance()
             ->make(AtpClient::class)
-            ->withHttp(Http::baseUrl($this->publicEndpoint()));
+            ->withHttp(Http::baseUrl($this->publicEndpoint()))
+            ->bsky();
     }
 
     /**
@@ -171,7 +173,7 @@ class BlueskyManager implements Factory
         return $this;
     }
 
-    protected function publicEndpoint(): string
+    public function publicEndpoint(): string
     {
         return Str::rtrim(config('bluesky.public_endpoint'), '/').'/xrpc/';
     }
