@@ -86,9 +86,8 @@ class BlueskyManager implements Factory
     public function public(): BskyClient
     {
         return Container::getInstance()
-            ->make(AtpClient::class)
-            ->withHttp(Http::baseUrl($this->publicEndpoint()))
-            ->bsky();
+            ->make(BskyClient::class)
+            ->withHttp(Http::baseUrl($this->publicEndpoint()));
     }
 
     /**
