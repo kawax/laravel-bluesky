@@ -528,6 +528,11 @@ $res = Bluesky::client(auth: false)->getRecord();
 $res = Bluesky::logout()->getRecord();
 ```
 
+| API             | Endpoint                      | Docs                                                                           |
+|-----------------|-------------------------------|--------------------------------------------------------------------------------|
+| `app.bsky.*`    | `https://public.api.bsky.app` | [API Hosts and Auth](https://docs.bsky.app/docs/advanced-guides/api-directory) |
+| `com.atproto.*` | `https://bsky.social`         | [PDS Entryway](https://docs.bsky.app/docs/advanced-guides/entryway)            |
+
 ## Macroable
 
 ```php
