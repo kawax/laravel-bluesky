@@ -129,11 +129,11 @@ class AtpClient implements XrpcClient
             $this->macroCall($method, $parameters);
         }
 
-        if (method_exists($this->atproto(), $method)) {
+        if (method_exists(AtProtoClient::class, $method)) {
             return $this->forwardCallTo($this->atproto(), $method, $parameters);
         }
 
-        if (method_exists($this->bsky(), $method)) {
+        if (method_exists(BskyClient::class, $method)) {
             return $this->forwardCallTo($this->bsky(), $method, $parameters);
         }
 
