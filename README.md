@@ -34,7 +34,7 @@ use Revolution\Bluesky\Facades\Bluesky;
 
 Route::get('search', function () {
     /** @var \Illuminate\Http\Client\Response $response */
-    $response = Bluesky::searchPosts(q: '#bluesky', limit: 10);
+    $response = Bluesky::public()->searchPosts(q: '#bluesky', limit: 10);
 
     $response->collect('posts')
         ->each(function (array $post) {
@@ -56,7 +56,7 @@ use Revolution\Bluesky\Facades\Bluesky;
 
 Route::get('feed', function () {
     // "actor" is did(did:plc:***) or handle(***.bsky.social, alice.test)
-    $response = Bluesky::getAuthorFeed(actor: '***.bsky.social');
+    $response = Bluesky::public()->getAuthorFeed(actor: '***.bsky.social');
 
     $response->collect('feed')
         ->each(function (array $feed) {
