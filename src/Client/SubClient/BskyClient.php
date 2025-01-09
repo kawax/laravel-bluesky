@@ -17,7 +17,8 @@ use Revolution\Bluesky\Client\Concerns\AppBskyLabeler;
 use Revolution\Bluesky\Client\HasHttp;
 use Revolution\Bluesky\Contracts\XrpcClient;
 
-class BskyClient implements XrpcClient,
+class BskyClient implements
+    XrpcClient,
     Actor,
     Feed,
     Graph,
