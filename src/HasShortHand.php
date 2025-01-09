@@ -123,6 +123,7 @@ trait HasShortHand
     public function getTimeline(?string $algorithm = null, ?int $limit = 50, ?string $cursor = null): Response
     {
         return $this->client(auth: true)
+            ->bsky()
             ->getTimeline(
                 algorithm: $algorithm,
                 limit: $limit,
@@ -139,6 +140,7 @@ trait HasShortHand
     public function getAuthorFeed(#[Format('at-identifier')] ?string $actor = null, ?int $limit = 50, ?string $cursor = null, #[KnownValues(['posts_with_replies', 'posts_no_replies', 'posts_with_media', 'posts_and_author_threads'])] ?string $filter = 'posts_with_replies', ?bool $includePins = null): Response
     {
         return $this->client(auth: true)
+            ->bsky()
             ->getAuthorFeed(
                 actor: $actor ?? $this->assertDid(),
                 limit: $limit,
@@ -152,6 +154,7 @@ trait HasShortHand
     public function searchPosts(string $q, #[KnownValues(['top', 'latest'])] ?string $sort = 'latest', ?string $since = null, ?string $until = null, #[Format('at-identifier')] ?string $mentions = null, #[Format('at-identifier')] ?string $author = null, #[Format('language')] ?string $lang = null, ?string $domain = null, #[Format('uri')] ?string $url = null, ?array $tag = null, ?int $limit = 25, ?string $cursor = null): Response
     {
         return $this->client(auth: true)
+            ->bsky()
             ->searchPosts(
                 q: $q,
                 sort: $sort,
@@ -177,6 +180,7 @@ trait HasShortHand
     public function getProfile(#[Format('at-identifier')] ?string $actor = null): Response
     {
         return $this->client(auth: true)
+            ->bsky()
             ->getProfile(
                 actor: $actor ?? $this->assertDid(),
             );
