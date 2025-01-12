@@ -3,7 +3,9 @@
 namespace Workbench\App\Providers;
 
 use Illuminate\Support\ServiceProvider;
+use Revolution\Bluesky\FeedGenerator\FeedGenerator;
 use Revolution\Bluesky\Labeler\Labeler;
+use Workbench\App\FeedGenerator\ArtisanFeed;
 use Workbench\App\Labeler\ArtisanLabeler;
 
 class WorkbenchServiceProvider extends ServiceProvider
@@ -21,6 +23,8 @@ class WorkbenchServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
+        FeedGenerator::register('artisan', ArtisanFeed::class);
+
         Labeler::register(ArtisanLabeler::class);
     }
 }
