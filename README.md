@@ -139,6 +139,11 @@ To authenticate with OAuth, read the Socialite documentation.
 - [Route](./docs/route.md)
 - [Labeler](./docs/labeler.md)
 
+## Sample project
+
+- [Labeler](https://github.com/kawax/laralabeler)
+- [Statusphere Laravel edition](https://github.com/puklipo/statusphere)
+
 ## Contracts
 https://github.com/kawax/atproto-lexicon-contracts
 
