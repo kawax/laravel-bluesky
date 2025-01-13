@@ -12,6 +12,9 @@ use Revolution\Bluesky\Facades\Bluesky;
 use Revolution\Bluesky\Record\Post;
 use RuntimeException;
 
+/**
+ * Public channel
+ */
 class BlueskyChannel
 {
     /**
