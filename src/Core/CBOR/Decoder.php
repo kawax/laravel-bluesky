@@ -17,11 +17,7 @@ use Revolution\Bluesky\Core\CID;
  */
 final class Decoder
 {
-    protected const MAX_SIZE = 1024 * 1024 * 5;
-
     protected StreamInterface $stream;
-
-    protected int $stream_size = 0;
 
     /**
      * If the CBOR contains multiple data items, decode only the first item and return an array with the remainder left as is.
@@ -31,7 +27,6 @@ final class Decoder
         throw_unless($stream->isReadable());
 
         $this->stream = $stream;
-        $this->stream_size = (int) min($stream->getSize(), self::MAX_SIZE);
 
         $first = $this->readValue();
         $remainder = $this->stream->getContents();
@@ -59,7 +54,6 @@ final class Decoder
         $arr = [];
 
         $this->stream = $stream;
-        $this->stream_size = (int) min($stream->getSize(), self::MAX_SIZE);
 
         while (! $stream->eof()) {
             $value = $this->readValue();
@@ -141,17 +135,17 @@ final class Decoder
 
     private function readString(int $length): string
     {
-        return $this->stream->read(min($length, $this->stream_size));
+        return $this->stream->read($length);
     }
 
     private function readBytes(int $length): AtBytes
     {
-        return new AtBytes($this->stream->read(min($length, $this->stream_size)));
+        return new AtBytes($this->stream->read($length));
     }
 
     private function readCid(int $length): CIDLinkWrapper
     {
-        $cid = $this->stream->read(min($length, $this->stream_size));
+        $cid = $this->stream->read($length);
         $cid = Str::ltrim($cid, CID::ZERO);
 
         return new CIDLinkWrapper($cid);
