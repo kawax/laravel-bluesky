@@ -13,6 +13,9 @@ use Revolution\Bluesky\Facades\Bluesky;
 use Revolution\Bluesky\Support\Identity;
 use RuntimeException;
 
+/**
+ * Private channel
+ */
 class BlueskyPrivateChannel
 {
     /**
