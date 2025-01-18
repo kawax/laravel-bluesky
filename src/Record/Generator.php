@@ -86,4 +86,11 @@ final class Generator extends AbstractGenerator implements Arrayable, Recordable
 
         return $this;
     }
+
+    public function contentMode(?string $contentMode = null): self
+    {
+        $this->contentMode = $contentMode;
+
+        return $this;
+    }
 }
