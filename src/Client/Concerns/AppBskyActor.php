@@ -57,7 +57,7 @@ trait AppBskyActor
         );
     }
 
-    public function searchActors(?string $term = null, ?string $q = null, ?int $limit = 25, ?string $cursor = null): Response
+    public function searchActors(?string $q = null, ?int $limit = 25, ?string $cursor = null): Response
     {
         return $this->call(
             api: Actor::searchActors,
@@ -66,7 +66,7 @@ trait AppBskyActor
         );
     }
 
-    public function searchActorsTypeahead(?string $term = null, ?string $q = null, ?int $limit = 10): Response
+    public function searchActorsTypeahead(?string $q = null, ?int $limit = 10): Response
     {
         return $this->call(
             api: Actor::searchActorsTypeahead,

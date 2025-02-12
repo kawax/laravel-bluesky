@@ -57,7 +57,7 @@ trait ComAtprotoSync
         );
     }
 
-    public function getRecord(string $did, string $collection, string $rkey, ?string $commit = null): Response
+    public function getRecord(string $did, string $collection, string $rkey): Response
     {
         return $this->call(
             api: Sync::getRecord,

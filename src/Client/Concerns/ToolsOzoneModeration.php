@@ -75,7 +75,7 @@ trait ToolsOzoneModeration
         );
     }
 
-    public function queryStatuses(?int $queueCount = null, ?int $queueIndex = null, ?string $queueSeed = null, ?bool $includeAllUserRecords = null, ?string $subject = null, ?string $comment = null, ?string $reportedAfter = null, ?string $reportedBefore = null, ?string $reviewedAfter = null, ?string $hostingDeletedAfter = null, ?string $hostingDeletedBefore = null, ?string $hostingUpdatedAfter = null, ?string $hostingUpdatedBefore = null, ?array $hostingStatuses = null, ?string $reviewedBefore = null, ?bool $includeMuted = null, ?bool $onlyMuted = null, ?string $reviewState = null, ?array $ignoreSubjects = null, ?string $lastReviewedBy = null, ?string $sortField = 'lastReportedAt', ?string $sortDirection = 'desc', ?bool $takendown = null, ?bool $appealed = null, ?int $limit = 50, ?array $tags = null, ?array $excludeTags = null, ?string $cursor = null, ?array $collections = null, ?string $subjectType = null, ?int $minAccountSuspendCount = null, ?int $minReportedRecordsCount = null, ?int $minTakendownRecordsCount = null): Response
+    public function queryStatuses(?int $queueCount = null, ?int $queueIndex = null, ?string $queueSeed = null, ?bool $includeAllUserRecords = null, ?string $subject = null, ?string $comment = null, ?string $reportedAfter = null, ?string $reportedBefore = null, ?string $reviewedAfter = null, ?string $hostingDeletedAfter = null, ?string $hostingDeletedBefore = null, ?string $hostingUpdatedAfter = null, ?string $hostingUpdatedBefore = null, ?array $hostingStatuses = null, ?string $reviewedBefore = null, ?bool $includeMuted = null, ?bool $onlyMuted = null, ?string $reviewState = null, ?array $ignoreSubjects = null, ?string $lastReviewedBy = null, ?string $sortField = 'lastReportedAt', ?string $sortDirection = 'desc', ?bool $takendown = null, ?bool $appealed = null, ?int $limit = 50, ?array $tags = null, ?array $excludeTags = null, ?string $cursor = null, ?array $collections = null, ?string $subjectType = null, ?int $minAccountSuspendCount = null, ?int $minReportedRecordsCount = null, ?int $minTakendownRecordsCount = null, ?int $minPriorityScore = null): Response
     {
         return $this->call(
             api: Moderation::queryStatuses,
@@ -84,7 +84,7 @@ trait ToolsOzoneModeration
         );
     }
 
-    public function searchRepos(?string $term = null, ?string $q = null, ?int $limit = 50, ?string $cursor = null): Response
+    public function searchRepos(?string $q = null, ?int $limit = 50, ?string $cursor = null): Response
     {
         return $this->call(
             api: Moderation::searchRepos,

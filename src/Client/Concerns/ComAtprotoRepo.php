@@ -75,7 +75,7 @@ trait ComAtprotoRepo
         );
     }
 
-    public function listRecords(string $repo, string $collection, ?int $limit = 50, ?string $cursor = null, ?string $rkeyStart = null, ?string $rkeyEnd = null, ?bool $reverse = null): Response
+    public function listRecords(string $repo, string $collection, ?int $limit = 50, ?string $cursor = null, ?bool $reverse = null): Response
     {
         return $this->call(
             api: Repo::listRecords,

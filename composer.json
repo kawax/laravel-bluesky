@@ -19,7 +19,7 @@
         "guzzlehttp/guzzle": "^7.8",
         "firebase/php-jwt": "^6.10",
         "phpseclib/phpseclib": "^3.0",
-        "revolution/atproto-lexicon-contracts": "1.0.46",
+        "revolution/atproto-lexicon-contracts": "1.0.49",
         "yocto/yoclib-multibase": "^1.2",
         "jetbrains/phpstorm-attributes": "^1.2"
     },
