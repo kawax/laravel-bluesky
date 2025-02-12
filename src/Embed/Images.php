@@ -35,7 +35,7 @@ final class Images extends AbstractImages implements Arrayable
      * ```
      *
      * @param  BlobRef|array|callable  $blob
-     * @param ?array{width: int|string, height: int|string} $aspectRatio
+     * @param  ?array{width: int|string, height: int|string}  $aspectRatio
      */
     public function add(string $alt, BlobRef|array|callable $blob, ?array $aspectRatio = null): self
     {
