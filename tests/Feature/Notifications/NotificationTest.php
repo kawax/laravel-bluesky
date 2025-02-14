@@ -184,7 +184,7 @@ class NotificationTest extends TestCase
         ]);
 
         $images = Images::create()
-            ->add(alt: 'alt', blob: ['blob'])
+            ->add(alt: 'alt', blob: ['blob'], aspectRatio: ['width' => 100, 'height' => 100])
             ->add('alt2', fn () => $blob2);
 
         $m = Post::create(text: 'test')
@@ -192,6 +192,7 @@ class NotificationTest extends TestCase
 
         $this->assertIsArray($m->toArray()['embed']);
         $this->assertSame('alt', $m->toArray()['embed']['images'][0]['alt']);
+        $this->assertSame(['width' => 100, 'height' => 100], $m->toArray()['embed']['images'][0]['aspectRatio']);
         $this->assertSame('alt2', $m->toArray()['embed']['images'][1]['alt']);
         $this->assertSame($blob2->toArray(), $m->toArray()['embed']['images'][1]['image']);
         $this->assertSame(Embed::Images->value, $m->toArray()['embed']['$type']);
