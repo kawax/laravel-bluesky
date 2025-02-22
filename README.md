@@ -7,6 +7,13 @@ Bluesky(AT Protocol) for Laravel
 - PHP >= 8.2
 - Laravel >= 11.x
 
+## Version
+| ver | PHP  | Laravel |
+|-----|------|---------|
+| 1.x | ^8.2 | ^11.x   |
+
+- The auto-generated code from lexicon may contain breaking changes.
+
 ## Installation
 
 ```shell
