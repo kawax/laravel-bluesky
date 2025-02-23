@@ -57,6 +57,15 @@ trait ToolsOzoneModeration
         );
     }
 
+    public function getReporterStats(array $dids): Response
+    {
+        return $this->call(
+            api: Moderation::getReporterStats,
+            method: self::GET,
+            params: compact($this->params(__METHOD__)),
+        );
+    }
+
     public function getRepos(array $dids): Response
     {
         return $this->call(

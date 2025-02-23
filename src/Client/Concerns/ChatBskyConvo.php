@@ -12,6 +12,15 @@ use Revolution\AtProto\Lexicon\Contracts\Chat\Bsky\Convo;
 
 trait ChatBskyConvo
 {
+    public function acceptConvo(string $convoId): Response
+    {
+        return $this->call(
+            api: Convo::acceptConvo,
+            method: self::POST,
+            params: compact($this->params(__METHOD__)),
+        );
+    }
+
     public function deleteMessageForSelf(string $convoId, string $messageId): Response
     {
         return $this->call(
@@ -25,6 +34,15 @@ trait ChatBskyConvo
     {
         return $this->call(
             api: Convo::getConvo,
+            method: self::GET,
+            params: compact($this->params(__METHOD__)),
+        );
+    }
+
+    public function getConvoAvailability(array $members): Response
+    {
+        return $this->call(
+            api: Convo::getConvoAvailability,
             method: self::GET,
             params: compact($this->params(__METHOD__)),
         );
@@ -66,7 +84,7 @@ trait ChatBskyConvo
         );
     }
 
-    public function listConvos(?int $limit = 50, ?string $cursor = null): Response
+    public function listConvos(?int $limit = 50, ?string $cursor = null, ?string $readState = null, ?string $status = null): Response
     {
         return $this->call(
             api: Convo::listConvos,

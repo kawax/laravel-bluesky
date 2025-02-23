@@ -102,6 +102,15 @@ trait ComAtprotoSync
         );
     }
 
+    public function listReposByCollection(string $collection, ?int $limit = 500, ?string $cursor = null): Response
+    {
+        return $this->call(
+            api: Sync::listReposByCollection,
+            method: self::GET,
+            params: compact($this->params(__METHOD__)),
+        );
+    }
+
     public function notifyOfUpdate(string $hostname): Response
     {
         return $this->call(
