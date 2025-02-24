@@ -46,8 +46,6 @@ use function Illuminate\Support\enum_value;
  */
 trait HasShortHand
 {
-    use HasShortHandStash;
-
     #[ArrayShape(AtRepo::createRecordResponse)]
     public function createRecord(#[Format('at-identifier')] string $repo, #[Format('nsid')] string $collection, Recordable|array $record, ?string $rkey = null, ?bool $validate = null, ?string $swapCommit = null): Response
     {
