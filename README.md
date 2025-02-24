@@ -1,8 +1,6 @@
 Bluesky(AT Protocol) for Laravel
 ====
 
-**Work in progress**
-
 ## Requirements
 - PHP >= 8.2
 - Laravel >= 11.x
