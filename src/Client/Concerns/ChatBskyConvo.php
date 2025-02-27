@@ -129,6 +129,15 @@ trait ChatBskyConvo
         );
     }
 
+    public function updateAllRead(?string $status = null): Response
+    {
+        return $this->call(
+            api: Convo::updateAllRead,
+            method: self::POST,
+            params: compact($this->params(__METHOD__)),
+        );
+    }
+
     public function updateRead(string $convoId, ?string $messageId = null): Response
     {
         return $this->call(
