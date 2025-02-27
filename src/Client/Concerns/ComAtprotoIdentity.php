@@ -21,6 +21,15 @@ trait ComAtprotoIdentity
         );
     }
 
+    public function refreshIdentity(string $identifier): Response
+    {
+        return $this->call(
+            api: Identity::refreshIdentity,
+            method: self::POST,
+            params: compact($this->params(__METHOD__)),
+        );
+    }
+
     public function requestPlcOperationSignature(): Response
     {
         return $this->call(
@@ -30,10 +39,28 @@ trait ComAtprotoIdentity
         );
     }
 
+    public function resolveDid(string $did): Response
+    {
+        return $this->call(
+            api: Identity::resolveDid,
+            method: self::GET,
+            params: compact($this->params(__METHOD__)),
+        );
+    }
+
     public function resolveHandle(string $handle): Response
     {
         return $this->call(
             api: Identity::resolveHandle,
+            method: self::GET,
+            params: compact($this->params(__METHOD__)),
+        );
+    }
+
+    public function resolveIdentity(string $identifier): Response
+    {
+        return $this->call(
+            api: Identity::resolveIdentity,
             method: self::GET,
             params: compact($this->params(__METHOD__)),
         );
