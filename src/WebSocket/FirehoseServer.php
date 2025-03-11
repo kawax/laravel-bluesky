@@ -98,12 +98,6 @@ final class FirehoseServer
 
         $payload = rescue(fn () => CBOR::decode($remainder ?? []));
 
-        if ($kind === '#commit' && ! Arr::has($payload, ['tooBig'])) {
-            $this->log('payload', Arr::set($payload, 'blocks', '...Invalid payload...'));
-
-            return;
-        }
-
         // Event processing subdivided by kind
         match ($kind) {
             '#commit' => $this->commit($header, $payload, $data),
@@ -116,11 +110,11 @@ final class FirehoseServer
     }
 
     /**
-     * @param  array{ops: list<array{cid: ?string, path: string, action: string}>, rev: string,seq: int, prev: null, repo: string, time: string, blobs: array, since: string, blocks: array, commit: string, rebase: bool, tooBig: bool}  $payload
+     * @param  array{ops: list<array{cid: ?string, path: string, action: string}>, rev: string,seq: int, repo: string, time: string, since: string, blocks: array, commit: string, rebase: bool}  $payload
      */
     private function commit(array $header, array $payload, string $raw): void
     {
-        $required = ['seq', 'rebase', 'tooBig', 'repo', 'commit', 'rev', 'since', 'blocks', 'ops', 'blobs', 'time'];
+        $required = ['seq', 'rebase', 'repo', 'commit', 'rev', 'since', 'blocks', 'ops', 'time'];
         if (! Arr::has($payload, $required)) {
             return;
         }
