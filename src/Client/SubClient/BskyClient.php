@@ -33,4 +33,6 @@ class BskyClient implements
     use AppBskyFeed;
     use AppBskyGraph;
     use AppBskyLabeler;
+
+    public const APPVIEW_SERVICE_DID = 'did:web:api.bsky.app#bsky_appview';
 }
