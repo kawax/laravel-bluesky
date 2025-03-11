@@ -71,6 +71,7 @@ class AtpClient implements XrpcClient
     {
         return app(BskyClient::class)
             ->withHttp($this->http())
+            ->withServiceProxy(BskyClient::APPVIEW_SERVICE_DID)
             ->when(empty(data_get($this->http()->getOptions(), 'headers.Authorization')), function ($client) {
                 $client->baseUrl(Bluesky::publicEndpoint());
             });
