@@ -35,12 +35,6 @@ final class FirehoseServer
         '#commit',
         '#identity',
         '#account',
-
-        // DEPRECATED
-        // '#handle',
-        // '#migrate',
-        // '#tombstone',
-        // '#info',
     ];
 
     protected const ACTIONS = [
