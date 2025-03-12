@@ -15,6 +15,11 @@ use Workerman\Worker;
  * php artisan bluesky:firehose start
  * ```
  *
+ * ```
+ * // develop
+ * vendor/bin/testbench bluesky:firehose start -v
+ * ```
+ *
  * @link https://docs.bsky.app/docs/advanced-guides/firehose
  * @link https://atproto.com/specs/event-stream
  */
