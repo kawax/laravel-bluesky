@@ -30,6 +30,11 @@ use Workerman\Worker;
  *
  * To run this on a production server, you will need to start the artisan command as a daemon using Supervisor or similar.
  *
+ * ```
+ * // develop
+ * vendor/bin/testbench bluesky:ws start -v
+ * ```
+ *
  * @link https://github.com/bluesky-social/jetstream
  */
 class JetstreamServeCommand extends Command
