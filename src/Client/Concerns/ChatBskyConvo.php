@@ -21,6 +21,15 @@ trait ChatBskyConvo
         );
     }
 
+    public function addReaction(string $convoId, string $messageId, string $value): Response
+    {
+        return $this->call(
+            api: Convo::addReaction,
+            method: self::POST,
+            params: compact($this->params(__METHOD__)),
+        );
+    }
+
     public function deleteMessageForSelf(string $convoId, string $messageId): Response
     {
         return $this->call(
@@ -97,6 +106,15 @@ trait ChatBskyConvo
     {
         return $this->call(
             api: Convo::muteConvo,
+            method: self::POST,
+            params: compact($this->params(__METHOD__)),
+        );
+    }
+
+    public function removeReaction(string $convoId, string $messageId, string $value): Response
+    {
+        return $this->call(
+            api: Convo::removeReaction,
             method: self::POST,
             params: compact($this->params(__METHOD__)),
         );

@@ -30,7 +30,7 @@ trait ToolsOzoneTeam
         );
     }
 
-    public function listMembers(?bool $disabled = null, ?array $roles = null, ?int $limit = 50, ?string $cursor = null): Response
+    public function listMembers(?string $q = null, ?bool $disabled = null, ?array $roles = null, ?int $limit = 50, ?string $cursor = null): Response
     {
         return $this->call(
             api: Team::listMembers,
