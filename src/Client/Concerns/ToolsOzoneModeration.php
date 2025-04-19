@@ -76,6 +76,15 @@ trait ToolsOzoneModeration
         );
     }
 
+    public function getSubjects(array $subjects): Response
+    {
+        return $this->call(
+            api: Moderation::getSubjects,
+            method: self::GET,
+            params: compact($this->params(__METHOD__)),
+        );
+    }
+
     public function queryEvents(?array $types = null, ?string $createdBy = null, ?string $sortDirection = 'desc', ?string $createdAfter = null, ?string $createdBefore = null, ?string $subject = null, ?array $collections = null, ?string $subjectType = null, ?bool $includeAllUserRecords = null, ?int $limit = 50, ?bool $hasComment = null, ?string $comment = null, ?array $addedLabels = null, ?array $removedLabels = null, ?array $addedTags = null, ?array $removedTags = null, ?array $reportTypes = null, ?array $policies = null, ?string $cursor = null): Response
     {
         return $this->call(

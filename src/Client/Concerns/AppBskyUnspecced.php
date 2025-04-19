@@ -31,6 +31,60 @@ trait AppBskyUnspecced
         );
     }
 
+    public function getSuggestedFeeds(?int $limit = 10): Response
+    {
+        return $this->call(
+            api: Unspecced::getSuggestedFeeds,
+            method: self::GET,
+            params: compact($this->params(__METHOD__)),
+        );
+    }
+
+    public function getSuggestedFeedsSkeleton(?string $viewer = null, ?int $limit = 10): Response
+    {
+        return $this->call(
+            api: Unspecced::getSuggestedFeedsSkeleton,
+            method: self::GET,
+            params: compact($this->params(__METHOD__)),
+        );
+    }
+
+    public function getSuggestedStarterPacks(?int $limit = 10): Response
+    {
+        return $this->call(
+            api: Unspecced::getSuggestedStarterPacks,
+            method: self::GET,
+            params: compact($this->params(__METHOD__)),
+        );
+    }
+
+    public function getSuggestedStarterPacksSkeleton(?string $viewer = null, ?int $limit = 10): Response
+    {
+        return $this->call(
+            api: Unspecced::getSuggestedStarterPacksSkeleton,
+            method: self::GET,
+            params: compact($this->params(__METHOD__)),
+        );
+    }
+
+    public function getSuggestedUsers(?string $category = null, ?int $limit = 25): Response
+    {
+        return $this->call(
+            api: Unspecced::getSuggestedUsers,
+            method: self::GET,
+            params: compact($this->params(__METHOD__)),
+        );
+    }
+
+    public function getSuggestedUsersSkeleton(?string $viewer = null, ?string $category = null, ?int $limit = 25): Response
+    {
+        return $this->call(
+            api: Unspecced::getSuggestedUsersSkeleton,
+            method: self::GET,
+            params: compact($this->params(__METHOD__)),
+        );
+    }
+
     public function getSuggestionsSkeleton(?string $viewer = null, ?int $limit = 50, ?string $cursor = null, ?string $relativeToDid = null): Response
     {
         return $this->call(
@@ -53,6 +107,24 @@ trait AppBskyUnspecced
     {
         return $this->call(
             api: Unspecced::getTrendingTopics,
+            method: self::GET,
+            params: compact($this->params(__METHOD__)),
+        );
+    }
+
+    public function getTrends(?int $limit = 10): Response
+    {
+        return $this->call(
+            api: Unspecced::getTrends,
+            method: self::GET,
+            params: compact($this->params(__METHOD__)),
+        );
+    }
+
+    public function getTrendsSkeleton(?string $viewer = null, ?int $limit = 10): Response
+    {
+        return $this->call(
+            api: Unspecced::getTrendsSkeleton,
             method: self::GET,
             params: compact($this->params(__METHOD__)),
         );

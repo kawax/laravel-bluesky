@@ -49,6 +49,15 @@ trait ComAtprotoSync
         );
     }
 
+    public function getHostStatus(string $hostname): Response
+    {
+        return $this->call(
+            api: Sync::getHostStatus,
+            method: self::GET,
+            params: compact($this->params(__METHOD__)),
+        );
+    }
+
     public function getLatestCommit(string $did): Response
     {
         return $this->call(
@@ -89,6 +98,15 @@ trait ComAtprotoSync
     {
         return $this->call(
             api: Sync::listBlobs,
+            method: self::GET,
+            params: compact($this->params(__METHOD__)),
+        );
+    }
+
+    public function listHosts(?int $limit = 200, ?string $cursor = null): Response
+    {
+        return $this->call(
+            api: Sync::listHosts,
             method: self::GET,
             params: compact($this->params(__METHOD__)),
         );

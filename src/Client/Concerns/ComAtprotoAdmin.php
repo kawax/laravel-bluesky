@@ -130,6 +130,15 @@ trait ComAtprotoAdmin
         );
     }
 
+    public function updateAccountSigningKey(string $did, string $signingKey): Response
+    {
+        return $this->call(
+            api: Admin::updateAccountSigningKey,
+            method: self::POST,
+            params: compact($this->params(__METHOD__)),
+        );
+    }
+
     public function updateSubjectStatus(array $subject, ?array $takedown = null, ?array $deactivated = null): Response
     {
         return $this->call(
