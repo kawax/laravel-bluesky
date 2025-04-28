@@ -137,6 +137,7 @@ To authenticate with OAuth, read the Socialite documentation.
 - [Socialite](./docs/socialite.md)
 - [FeedGenerator](./docs/feed-generator.md)
 - [Testing](./docs/testing.md)
+- [DeepWiki](https://deepwiki.com/kawax/laravel-bluesky)
 
 ## Advanced
 - [Identity](./docs/identity.md)
