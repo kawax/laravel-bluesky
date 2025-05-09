@@ -36,7 +36,7 @@ cache()->put('bluesky_legacy_session', Bluesky::agent()->session()->toArray(), n
 
 Bluesky::withToken(LegacySession::create(cache('bluesky_legacy_session', [])));
 
-if (! Bluesky::check() {
+if (! Bluesky::check()) {
     Bluesky::refreshSession();
 }
 ```
