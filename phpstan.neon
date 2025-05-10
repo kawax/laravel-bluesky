@@ -6,13 +6,14 @@ parameters:
     # Level 10 is the highest level
     level: 10
 
+    noEnvCallsOutsideOfConfig: false
+
     ignoreErrors:
         #- '#PHPDoc tag @var#'
         #- identifier: trait.unused
         - identifier: method.notFound
         #- identifier: return.unusedType
         #- identifier: phpDoc.parseError
-        - identifier: larastan.noEnvCallsOutsideOfConfig
         - identifier: missingType.generics
         - identifier: missingType.iterableValue
         - identifier: argument.type
