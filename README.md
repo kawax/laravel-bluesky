@@ -1,6 +1,8 @@
 Bluesky(AT Protocol) for Laravel
 ====
 
+[![Ask DeepWiki](https://deepwiki.com/badge.svg)](https://deepwiki.com/invokable/laravel-bluesky)
+
 ## Requirements
 - PHP >= 8.2
 - Laravel >= 11.x
@@ -137,7 +139,6 @@ To authenticate with OAuth, read the Socialite documentation.
 - [Socialite](./docs/socialite.md)
 - [FeedGenerator](./docs/feed-generator.md)
 - [Testing](./docs/testing.md)
-- [DeepWiki](https://deepwiki.com/kawax/laravel-bluesky)
 
 ## Advanced
 - [Identity](./docs/identity.md)
