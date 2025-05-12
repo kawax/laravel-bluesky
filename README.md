@@ -2,6 +2,8 @@ Bluesky(AT Protocol) for Laravel
 ====
 
 [![Ask DeepWiki](https://deepwiki.com/badge.svg)](https://deepwiki.com/invokable/laravel-bluesky)
+[![Maintainability](https://qlty.sh/badges/cd9f285b-4006-4a23-bbf0-fdf266b38cc2/maintainability.svg)](https://qlty.sh/gh/invokable/projects/laravel-bluesky)
+[![Code Coverage](https://qlty.sh/badges/cd9f285b-4006-4a23-bbf0-fdf266b38cc2/test_coverage.svg)](https://qlty.sh/gh/invokable/projects/laravel-bluesky)
 
 ## Requirements
 - PHP >= 8.2
