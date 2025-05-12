@@ -660,4 +660,33 @@ class ClientTest extends TestCase
                    $request['reverse'] === true;
         });
     }
+
+    public function test_delete_record(): void
+    {
+        Http::fakeSequence()
+            ->push($this->session)
+            ->push(['uri' => 'at://did:plc:test/app.bsky.feed.post/123']);
+
+        $response = Bluesky::login(identifier: 'identifier', password: 'password')
+            ->deleteRecord(
+                repo: 'did:plc:test',
+                collection: 'app.bsky.feed.post',
+                rkey: '123',
+                swapRecord: 'cid123',
+                swapCommit: 'commit123'
+            );
+
+        $this->assertTrue($response->successful());
+        $this->assertTrue($response->collect()->has('uri'));
+        $this->assertSame('at://did:plc:test/app.bsky.feed.post/123', $response->json('uri'));
+
+        Http::assertSent(function (Request $request) {
+            return str_contains($request->url(), 'xrpc/com.atproto.repo.deleteRecord') &&
+                   $request['repo'] === 'did:plc:test' &&
+                   $request['collection'] === 'app.bsky.feed.post' &&
+                   $request['rkey'] === '123' &&
+                   $request['swapRecord'] === 'cid123' &&
+                   $request['swapCommit'] === 'commit123';
+        });
+    }
 }
