@@ -10,6 +10,12 @@
         </include>
         <exclude>
             <directory>src/Client/Concerns</directory>
+            <directory>src/Console</directory>
+            <directory>src/Events/Firehose</directory>
+            <directory>src/Events/Jetstream</directory>
+            <directory>src/Events/Labeler</directory>
+            <directory>src/Labeler</directory>
+            <directory>src/WebSocket</directory>
         </exclude>
     </source>
     <coverage>
