@@ -631,4 +631,33 @@ class ClientTest extends TestCase
 
         $this->assertTrue($response->successful());
     }
+
+    public function test_list_records(): void
+    {
+        Http::fakeSequence()
+            ->push($this->session)
+            ->push(['records' => [['uri' => 'at://test/collection/123']]]);
+
+        $response = Bluesky::login(identifier: 'identifier', password: 'password')
+            ->listRecords(
+                repo: 'did:plc:test',
+                collection: 'app.bsky.feed.post',
+                limit: 10,
+                cursor: 'cursor123',
+                reverse: true
+            );
+
+        $this->assertTrue($response->successful());
+        $this->assertTrue($response->collect()->has('records'));
+        $this->assertSame('at://test/collection/123', $response->json('records.0.uri'));
+
+        Http::assertSent(function (Request $request) {
+            return str_contains($request->url(), 'xrpc/com.atproto.repo.listRecords') &&
+                   $request['repo'] === 'did:plc:test' &&
+                   $request['collection'] === 'app.bsky.feed.post' &&
+                   $request['limit'] === 10 &&
+                   $request['cursor'] === 'cursor123' &&
+                   $request['reverse'] === true;
+        });
+    }
 }
