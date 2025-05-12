@@ -823,4 +823,146 @@ class ClientTest extends TestCase
                    $request['seenAt'] === '2023-01-01T00:00:00Z';
         });
     }
+
+    public function test_get_actor_likes(): void
+    {
+        Http::fakeSequence()
+            ->push($this->session)
+            ->push([
+                'likes' => [
+                    [
+                        'uri' => 'at://did:plc:test/app.bsky.feed.like/123',
+                        'subject' => ['uri' => 'at://did:plc:test/app.bsky.feed.post/456'],
+                        'createdAt' => '2023-01-01T00:00:00Z'
+                    ]
+                ]
+            ]);
+
+        $response = Bluesky::login(identifier: 'identifier', password: 'password')
+            ->getActorLikes(
+                actor: 'did:plc:test',
+                limit: 30,
+                cursor: 'cursor123'
+            );
+
+        $this->assertTrue($response->successful());
+        $this->assertTrue($response->collect()->has('likes'));
+        $this->assertCount(1, $response->json('likes'));
+        $this->assertSame('at://did:plc:test/app.bsky.feed.like/123', $response->json('likes.0.uri'));
+
+        Http::assertSent(function (Request $request) {
+            return str_contains($request->url(), 'xrpc/app.bsky.feed.getActorLikes') &&
+                   $request['actor'] === 'did:plc:test' &&
+                   $request['limit'] === 30 &&
+                   $request['cursor'] === 'cursor123';
+        });
+    }
+
+    public function test_delete_like(): void
+    {
+        Http::fakeSequence()
+            ->push($this->session)
+            ->push(['uri' => 'at://did:plc:test/app.bsky.feed.like/123']);
+
+        $response = Bluesky::login(identifier: 'identifier', password: 'password')
+            ->deleteLike(uri: 'at://did:plc:test/app.bsky.feed.like/123');
+
+        $this->assertTrue($response->successful());
+        $this->assertTrue($response->collect()->has('uri'));
+        $this->assertSame('at://did:plc:test/app.bsky.feed.like/123', $response->json('uri'));
+
+        Http::assertSent(function (Request $request) {
+            return str_contains($request->url(), 'xrpc/com.atproto.repo.deleteRecord') &&
+                   $request['repo'] === 'did:plc:test' &&
+                   $request['collection'] === 'app.bsky.feed.like' &&
+                   $request['rkey'] === '123';
+        });
+    }
+
+    public function test_get_followers(): void
+    {
+        Http::fakeSequence()
+            ->push($this->session)
+            ->push([
+                'followers' => [
+                    [
+                        'did' => 'did:plc:follower1',
+                        'handle' => 'follower1.bsky.social',
+                        'displayName' => 'Follower One'
+                    ]
+                ]
+            ]);
+
+        $response = Bluesky::login(identifier: 'identifier', password: 'password')
+            ->getFollowers(
+                actor: 'did:plc:test',
+                limit: 25,
+                cursor: 'cursor123'
+            );
+
+        $this->assertTrue($response->successful());
+        $this->assertTrue($response->collect()->has('followers'));
+        $this->assertCount(1, $response->json('followers'));
+        $this->assertSame('did:plc:follower1', $response->json('followers.0.did'));
+
+        Http::assertSent(function (Request $request) {
+            return str_contains($request->url(), 'xrpc/app.bsky.graph.getFollowers') &&
+                   $request['actor'] === 'did:plc:test' &&
+                   $request['limit'] === 25 &&
+                   $request['cursor'] === 'cursor123';
+        });
+    }
+
+    public function test_get_follows(): void
+    {
+        Http::fakeSequence()
+            ->push($this->session)
+            ->push([
+                'follows' => [
+                    [
+                        'did' => 'did:plc:follow1',
+                        'handle' => 'follow1.bsky.social',
+                        'displayName' => 'Follow One'
+                    ]
+                ]
+            ]);
+
+        $response = Bluesky::login(identifier: 'identifier', password: 'password')
+            ->getFollows(
+                actor: 'did:plc:test',
+                limit: 25,
+                cursor: 'cursor123'
+            );
+
+        $this->assertTrue($response->successful());
+        $this->assertTrue($response->collect()->has('follows'));
+        $this->assertCount(1, $response->json('follows'));
+        $this->assertSame('did:plc:follow1', $response->json('follows.0.did'));
+
+        Http::assertSent(function (Request $request) {
+            return str_contains($request->url(), 'xrpc/app.bsky.graph.getFollows') &&
+                   $request['actor'] === 'did:plc:test' &&
+                   $request['limit'] === 25 &&
+                   $request['cursor'] === 'cursor123';
+        });
+    }
+
+    public function test_update_seen_notifications(): void
+    {
+        Http::fakeSequence()
+            ->push($this->session)
+            ->push(['success' => true]);
+
+        $response = Bluesky::login(identifier: 'identifier', password: 'password')
+            ->updateSeenNotifications(seenAt: '2023-01-01T00:00:00Z');
+
+        $this->assertTrue($response->successful());
+        $this->assertTrue($response->collect()->has('success'));
+        $this->assertTrue($response->json('success'));
+
+        Http::assertSent(function (Request $request) {
+            return str_contains($request->url(), 'xrpc/app.bsky.notification.updateSeen') &&
+                   $request['seenAt'] === '2023-01-01T00:00:00Z';
+        });
+    }
 }
