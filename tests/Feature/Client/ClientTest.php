@@ -689,4 +689,138 @@ class ClientTest extends TestCase
                    $request['swapCommit'] === 'commit123';
         });
     }
+
+    public function test_get_post(): void
+    {
+        Http::fakeSequence()
+            ->push($this->session)
+            ->push(['uri' => 'at://did:plc:test/app.bsky.feed.post/123', 'value' => ['text' => 'Test post']]);
+
+        $response = Bluesky::login(identifier: 'identifier', password: 'password')
+            ->getPost(uri: 'at://did:plc:test/app.bsky.feed.post/123');
+
+        $this->assertTrue($response->successful());
+        $this->assertTrue($response->collect()->has('uri'));
+        $this->assertSame('at://did:plc:test/app.bsky.feed.post/123', $response->json('uri'));
+        $this->assertSame('Test post', $response->json('value.text'));
+
+        Http::assertSent(function (Request $request) {
+            return str_contains($request->url(), 'xrpc/com.atproto.repo.getRecord') &&
+                   $request['repo'] === 'did:plc:test' &&
+                   $request['collection'] === 'app.bsky.feed.post' &&
+                   $request['rkey'] === '123';
+        });
+    }
+
+    public function test_get_posts(): void
+    {
+        Http::fakeSequence()
+            ->push($this->session)
+            ->push(['posts' => [
+                ['uri' => 'at://did:plc:test/app.bsky.feed.post/123', 'value' => ['text' => 'First post']],
+                ['uri' => 'at://did:plc:test/app.bsky.feed.post/456', 'value' => ['text' => 'Second post']]
+            ]]);
+
+        $response = Bluesky::login(identifier: 'identifier', password: 'password')
+            ->getPosts(uris: [
+                'at://did:plc:test/app.bsky.feed.post/123',
+                'at://did:plc:test/app.bsky.feed.post/456'
+            ]);
+
+        $this->assertTrue($response->successful());
+        $this->assertTrue($response->collect()->has('posts'));
+        $this->assertCount(2, $response->json('posts'));
+        $this->assertSame('First post', $response->json('posts.0.value.text'));
+        $this->assertSame('Second post', $response->json('posts.1.value.text'));
+
+        Http::assertSent(function (Request $request) {
+            return str_contains($request->url(), 'xrpc/app.bsky.feed.getPosts') &&
+                   $request['uris'] === [
+                       'at://did:plc:test/app.bsky.feed.post/123',
+                       'at://did:plc:test/app.bsky.feed.post/456'
+                   ];
+        });
+    }
+
+    public function test_delete_post(): void
+    {
+        Http::fakeSequence()
+            ->push($this->session)
+            ->push(['uri' => 'at://did:plc:test/app.bsky.feed.post/123']);
+
+        $response = Bluesky::login(identifier: 'identifier', password: 'password')
+            ->deletePost(uri: 'at://did:plc:test/app.bsky.feed.post/123');
+
+        $this->assertTrue($response->successful());
+        $this->assertTrue($response->collect()->has('uri'));
+        $this->assertSame('at://did:plc:test/app.bsky.feed.post/123', $response->json('uri'));
+
+        Http::assertSent(function (Request $request) {
+            return str_contains($request->url(), 'xrpc/com.atproto.repo.deleteRecord') &&
+                   $request['repo'] === 'did:plc:test' &&
+                   $request['collection'] === 'app.bsky.feed.post' &&
+                   $request['rkey'] === '123';
+        });
+    }
+
+    public function test_list_notifications(): void
+    {
+        Http::fakeSequence()
+            ->push($this->session)
+            ->push([
+                'notifications' => [
+                    [
+                        'uri' => 'at://did:plc:test/app.bsky.feed.like/123',
+                        'reason' => 'like',
+                        'isRead' => false
+                    ]
+                ]
+            ]);
+
+        $response = Bluesky::login(identifier: 'identifier', password: 'password')
+            ->listNotifications(
+                reasons: ['like', 'mention'],
+                limit: 20,
+                priority: true,
+                cursor: 'cursor123',
+                seenAt: '2023-01-01T00:00:00Z'
+            );
+
+        $this->assertTrue($response->successful());
+        $this->assertTrue($response->collect()->has('notifications'));
+        $this->assertCount(1, $response->json('notifications'));
+        $this->assertSame('like', $response->json('notifications.0.reason'));
+
+        Http::assertSent(function (Request $request) {
+            return str_contains($request->url(), 'xrpc/app.bsky.notification.listNotifications') &&
+                   $request['reasons'] === ['like', 'mention'] &&
+                   $request['limit'] === 20 &&
+                   $request['priority'] === true &&
+                   $request['cursor'] === 'cursor123' &&
+                   $request['seenAt'] === '2023-01-01T00:00:00Z';
+        });
+    }
+
+    public function test_count_unread_notifications(): void
+    {
+        Http::fakeSequence()
+            ->push($this->session)
+            ->push(['count' => 5]);
+
+        $response = Bluesky::login(identifier: 'identifier', password: 'password')
+            ->countUnreadNotifications(
+                priority: true,
+                seenAt: '2023-01-01T00:00:00Z'
+            );
+
+        $this->assertTrue($response->successful());
+        $this->assertTrue($response->collect()->has('count'));
+        $this->assertSame(5, $response->json('count'));
+
+        Http::assertSent(function (Request $request) {
+            return str_contains($request->url(), 'xrpc/app.bsky.notification.getUnreadCount') &&
+                   $request['priority'] === true &&
+                   $request['seenAt'] === '2023-01-01T00:00:00Z';
+        });
+    }
 }
